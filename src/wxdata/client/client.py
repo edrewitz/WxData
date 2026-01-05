@@ -21,10 +21,16 @@ year = yesterday.year
 month = yesterday.month
 day = yesterday.day
 
-if day >= 10:
-    yesterday = f"{year}-{month}-{day}"
+if month < 10:
+    if day >= 10:
+        yesterday = f"{year}-0{month}-{day}"
+    else:
+        yesterday = f"{year}-0{month}-0{day}"   
 else:
-    yesterday = f"{year}-{month}-0{day}"
+    if day >= 10:
+        yesterday = f"{year}-{month}-{day}"
+    else:
+        yesterday = f"{year}-{month}-0{day}" 
 
 def get_gridded_data(url,
              path,

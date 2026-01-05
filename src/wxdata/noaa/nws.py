@@ -8,6 +8,7 @@ This file has the function that downloads NOAA/NWS and NOAA/SPC Forecast Data
 import wxdata.client.client as client
 import xarray as xr
 import numpy as np
+import sys
 import os
 import warnings
 warnings.filterwarnings('ignore')
@@ -19,7 +20,58 @@ alaska = '/SL.us008001/ST.opnl/DF.gr2/DC.ndfd/AR.alaska/'
 conus = '/SL.us008001/ST.opnl/DF.gr2/DC.ndfd/AR.conus/'
 hawaii = '/SL.us008001/ST.opnl/DF.gr2/DC.ndfd/AR.hawaii/'
 
-def FIX_1D_GRIB_DATA(ds_short, 
+def _eccodes_error_intructions():
+    
+    """
+    This function will print instructions if the user is using an incompatible Python environment with the eccodes C++ library.
+    
+    Known Errors:
+    
+    1) Using the pip version of eccodes with Python 3.14
+    
+    Fixes:
+    
+    1) Either downgrade the Python environment to be Python >= 3.10 and Python <= 3.13
+    
+    2) Install WxData via Anaconda rather than pip if the user must use Python >= 3.14
+    
+    Returns
+    -------
+    
+    Instructions on how to resolve compatibility issues with the Python environment and eccodes.    
+    """
+    
+    print("""
+          Error: Incompatible Python version with the eccodes library.
+          
+          This is likely due to issues between Python >= 3.14 and eccodes
+          
+          Methods to fix:
+          
+          1) Uninstall the pip version of WxData and install WxData via Anaconda
+             
+             ***Steps For Method 1***
+             1) pip uninstall wxdata
+             2) conda install wxdata
+             
+          2) If the user is unable to use Anaconda as a package manager, the user must set up a new Python environment with the following specifications:
+          
+            ***Specifications***
+            
+            Python >= 3.10 and Python <= 3.13
+            
+            Python 3.10 is compatible.
+            Python 3.11 is compatible.
+            Python 3.12 is compatible.
+            Python 3.13 is compatible
+            
+            Then pip install wxdata after the new Python environment is set up. 
+            
+          System Exiting...
+          
+          """)
+
+def _FIX_1D_GRIB_DATA(ds_short, 
                      ds_extended, 
                      varKey, 
                      short_term_fname, 
@@ -180,7 +232,7 @@ def FIX_1D_GRIB_DATA(ds_short,
     
     return ds_short, ds_extended
 
-def get_parameters(parameter):
+def _get_parameters(parameter):
     
     """
     This function returns the filename for a given NDFD Weather Element. 
@@ -403,7 +455,7 @@ def get_ndfd_grids(parameter,
         except Exception as e:
             pass
 
-    fname = get_parameters(parameter)
+    fname = _get_parameters(parameter)
 
     short_term_fname = f"ds.{parameter}_short.bin"
     extended_fname = f"ds.{parameter}_extended.bin"
@@ -455,11 +507,15 @@ def get_ndfd_grids(parameter,
         os.remove(parameter)
     except Exception as e:
         pass
-
-    if state != 'AK' or state != 'ak' or state == None:
-        ds1 = xr.open_dataset(f"NWS Data/{short_term_fname}", engine='cfgrib', decode_timedelta=False)
-    else:
-        ds1 = xr.open_dataset(f"NWS Data/{short_term_fname}", engine='cfgrib', decode_timedelta=False).sel(x=slice(20, 1400, 2), y=slice(100, 1400, 2)) 
+    
+    try:
+        if state != 'AK' or state != 'ak' or state == None:
+            ds1 = xr.open_dataset(f"NWS Data/{short_term_fname}", engine='cfgrib', decode_timedelta=False)
+        else:
+            ds1 = xr.open_dataset(f"NWS Data/{short_term_fname}", engine='cfgrib', decode_timedelta=False).sel(x=slice(20, 1400, 2), y=slice(100, 1400, 2)) 
+    except Exception as e:
+        _eccodes_error_intructions()
+        sys.exit(1)
     try:
         if ds1['time'][1] == True:
             ds1 = ds1.isel(time=1)
@@ -521,7 +577,7 @@ def get_ndfd_grids(parameter,
     
     if state == 'HI':
         
-        ds1, ds2 = FIX_1D_GRIB_DATA(ds1, ds2, parameter, short_term_fname, extended_fname)
+        ds1, ds2 = _FIX_1D_GRIB_DATA(ds1, ds2, parameter, short_term_fname, extended_fname)
         
     else:
         pass

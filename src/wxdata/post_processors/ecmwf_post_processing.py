@@ -20,6 +20,57 @@ from wxdata.utils.file_funcs import(
 sys.tracebacklimit = 0
 logging.disable()
 
+def _eccodes_error_intructions():
+    
+    """
+    This function will print instructions if the user is using an incompatible Python environment with the eccodes C++ library.
+    
+    Known Errors:
+    
+    1) Using the pip version of eccodes with Python 3.14
+    
+    Fixes:
+    
+    1) Either downgrade the Python environment to be Python >= 3.10 and Python <= 3.13
+    
+    2) Install WxData via Anaconda rather than pip if the user must use Python >= 3.14
+    
+    Returns
+    -------
+    
+    Instructions on how to resolve compatibility issues with the Python environment and eccodes.    
+    """
+    
+    print("""
+          Error: Incompatible Python version with the eccodes library.
+          
+          This is likely due to issues between Python >= 3.14 and eccodes
+          
+          Methods to fix:
+          
+          1) Uninstall the pip version of WxData and install WxData via Anaconda
+             
+             ***Steps For Method 1***
+             1) pip uninstall wxdata
+             2) conda install wxdata
+             
+          2) If the user is unable to use Anaconda as a package manager, the user must set up a new Python environment with the following specifications:
+          
+            ***Specifications***
+            
+            Python >= 3.10 and Python <= 3.13
+            
+            Python 3.10 is compatible.
+            Python 3.11 is compatible.
+            Python 3.12 is compatible.
+            Python 3.13 is compatible
+            
+            Then pip install wxdata after the new Python environment is set up. 
+            
+          System Exiting...
+          
+          """)
+
 def ecmwf_ifs_post_processing(path,
                             western_bound, 
                             eastern_bound, 
@@ -524,7 +575,11 @@ def ecmwf_ifs_post_processing(path,
     
     clear_idx_files_in_path(path)
         
-    ds = ds.sortby('step')
+    try:    
+        ds = ds.sortby('step')
+    except Exception as e:
+        _eccodes_error_intructions()
+        sys.exit(1)
     return ds
 
 
@@ -963,7 +1018,11 @@ def ecmwf_aifs_post_processing(path,
     
     clear_idx_files_in_path(path)
     
-    ds = ds.sortby('step')
+    try:    
+        ds = ds.sortby('step')
+    except Exception as e:
+        _eccodes_error_intructions()
+        sys.exit(1)
     return ds
 
 def ecmwf_ifs_wave_post_processing(path,
@@ -1056,5 +1115,9 @@ def ecmwf_ifs_wave_post_processing(path,
     
     clear_idx_files_in_path(path)
     
-    ds = ds.sortby('step')
+    try:    
+        ds = ds.sortby('step')
+    except Exception as e:
+        _eccodes_error_intructions()
+        sys.exit(1)
     return ds

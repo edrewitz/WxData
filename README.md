@@ -55,6 +55,35 @@ Copy and paste either command into your terminal or anaconda prompt:
 
 `pip install --upgrade wxdata`
 
+***Important Compatibility Information***
+
+*Python 3.14 is not compatible with the pip version of the eccodes library*
+
+Methods to fix eccodes compatibility with Python 3.14:
+
+1) Uninstall the pip version of WxData and install WxData via Anaconda
+ 
+    *Steps For Method 1*
+    1) pip uninstall wxdata
+    2) conda install wxdata
+
+
+2) If the user is unable to use Anaconda as a package manager, the user must set up a new Python environment with the following specifications:
+
+*Specifications*
+
+Python >= 3.10 and Python <= 3.13
+
+Python 3.10 is compatible.
+
+Python 3.11 is compatible.
+
+Python 3.12 is compatible.
+
+Python 3.13 is compatible
+
+Then pip install wxdata after the new Python environment is set up. 
+
 1) Friendly for users working on VPN/PROXY connections.
    - Users input their PROXY IP address as a dictionary and pass it into the function to avoid SSL errors
      - If the user is on a VPN/PROXY Connection the following is needed:

@@ -19,7 +19,7 @@ PIP Downloads:
 
 
 
-**(C) Eric J. Drewitz 2025**
+**(C) Eric J. Drewitz 2025-2026**
 
 An open-source package that helps meteorologists and weather enthusiats download, pre-process and post-process various types of weather data. 
 

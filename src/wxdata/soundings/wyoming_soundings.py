@@ -680,6 +680,8 @@ def get_observed_sounding_data(station_id,
         theta_24 = df_24['THETA'].values * units('degK')
         df_24['BVF'] = mpcalc.brunt_vaisala_frequency(height_24, theta_24, vertical_dim=0)
         df_24['WET-BULB'] = mpcalc.wet_bulb_temperature(pressure_24, temperature_24, dewpoint_24)
+        
+        df_24 = df_24.metpy.dequantify()
     
         return df, df_24, date, date_24
 

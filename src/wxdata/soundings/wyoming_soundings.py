@@ -670,7 +670,7 @@ def get_observed_sounding_data(station_id,
         df_24['RH'] = relative_humidity(df_24['TEMP'], df_24['DWPT'])
         pressure_24 = df_24['PRES'].values * units('hPa')
         temperature_24 = df_24['TEMP'].values * units('degC')
-        dewpoint_24 = df['DWPT'].values * units('degC')
+        dewpoint_24 = df_24['DWPT'].values * units('degC')
         df_24['THETA'] = mpcalc.potential_temperature(pressure_24, temperature_24)
         height_24 = df_24['HGHT'].values * units('meters')
         theta_24 = df_24['THETA'].values * units('degK')

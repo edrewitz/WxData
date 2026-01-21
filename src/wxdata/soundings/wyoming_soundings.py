@@ -501,8 +501,6 @@ def get_observed_sounding_data(station_id,
         theta = df['THETA'].values * units('degK')
         df['BVF'] = mpcalc.brunt_vaisala_frequency(height, theta, vertical_dim=0) 
         df['WET-BULB'] = mpcalc.wet_bulb_temperature(pressure, temperature, dewpoint)
-        
-        df = df.metpy.dequantify()
     
         return df, date
 
@@ -664,8 +662,6 @@ def get_observed_sounding_data(station_id,
         theta = df['THETA'].values * units('degK')
         df['BVF'] = mpcalc.brunt_vaisala_frequency(height, theta, vertical_dim=0) 
         df['WET-BULB'] = mpcalc.wet_bulb_temperature(pressure, temperature, dewpoint)
-        
-        df = df.metpy.dequantify()
 
         df_24 = pd.read_fwf(data_24, widths=[7] * 8, skiprows=5,
                              usecols=[0, 1, 2, 3, 6, 7], names=col_names)
@@ -680,8 +676,6 @@ def get_observed_sounding_data(station_id,
         theta_24 = df_24['THETA'].values * units('degK')
         df_24['BVF'] = mpcalc.brunt_vaisala_frequency(height_24, theta_24, vertical_dim=0)
         df_24['WET-BULB'] = mpcalc.wet_bulb_temperature(pressure_24, temperature_24, dewpoint_24)
-        
-        df_24 = df_24.metpy.dequantify()
     
         return df, df_24, date, date_24
 

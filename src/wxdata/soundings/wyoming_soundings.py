@@ -495,24 +495,37 @@ def get_observed_sounding_data(station_id,
         df['RH'] = relative_humidity(df['TEMP'], df['DWPT'])
         pressure = df['PRES'].values * units('hPa')
         temperature = df['TEMP'].values * units('degC')
+        dewpoint = df['DWPT'] * units('degC')
         df['THETA'] = mpcalc.potential_temperature(pressure, temperature)
         height = df['HGHT'].values * units('meters')
         theta = df['THETA'].values * units('degK')
         df['BVF'] = mpcalc.brunt_vaisala_frequency(height, theta, vertical_dim=0) 
+        df['WET-BULB'] = mpcalc.wet_bulb_temperature(pressure, temperature, dewpoint)
+        
+        df = df.metpy.dequantify()
     
         return df, date
 
     else:
-        date = now
-        if date.hour <= 12:
-            hour = 00
+        if current == True:
+            date = now
+            if date.hour <= 12:
+                hour = 00
+            else:
+                hour = 12
+    
+            y = date.year
+            m = date.month
+            d = date.day
+            date = datetime(y, m, d, hour)
         else:
-            hour = 12
-
-        y = date.year
-        m = date.month
-        d = date.day
-        date = datetime(y, m, d, hour)
+            year = int(f"{custom_time[0]}{custom_time[1]}{custom_time[2]}{custom_time[3]}")
+            month = int(f"{custom_time[5]}{custom_time[6]}")
+            day = int(f"{custom_time[8]}{custom_time[9]}")
+            hour = int(f"{custom_time[11]}{custom_time[12]}")
+    
+            date = datetime(year, month, day, hour)
+            
         date_24 = date - timedelta(hours=24)
     
         if hour == 0:  
@@ -645,10 +658,14 @@ def get_observed_sounding_data(station_id,
         df['RH'] = relative_humidity(df['TEMP'], df['DWPT'])
         pressure = df['PRES'].values * units('hPa')
         temperature = df['TEMP'].values * units('degC')
+        dewpoint = df['DWPT'] * units('degC')
         df['THETA'] = mpcalc.potential_temperature(pressure, temperature)
         height = df['HGHT'].values * units('meters')
         theta = df['THETA'].values * units('degK')
-        df['BVF'] = mpcalc.brunt_vaisala_frequency(height, theta, vertical_dim=0)
+        df['BVF'] = mpcalc.brunt_vaisala_frequency(height, theta, vertical_dim=0) 
+        df['WET-BULB'] = mpcalc.wet_bulb_temperature(pressure, temperature, dewpoint)
+        
+        df = df.metpy.dequantify()
 
         df_24 = pd.read_fwf(data_24, widths=[7] * 8, skiprows=5,
                              usecols=[0, 1, 2, 3, 6, 7], names=col_names)
@@ -657,10 +674,12 @@ def get_observed_sounding_data(station_id,
         df_24['RH'] = relative_humidity(df_24['TEMP'], df_24['DWPT'])
         pressure_24 = df_24['PRES'].values * units('hPa')
         temperature_24 = df_24['TEMP'].values * units('degC')
+        dewpoint_24 = df['DWPT'] * units('degC')
         df_24['THETA'] = mpcalc.potential_temperature(pressure_24, temperature_24)
         height_24 = df_24['HGHT'].values * units('meters')
         theta_24 = df_24['THETA'].values * units('degK')
         df_24['BVF'] = mpcalc.brunt_vaisala_frequency(height_24, theta_24, vertical_dim=0)
+        df_24['WET-BULB'] = mpcalc.wet_bulb_temperature(pressure_24, temperature_24, dewpoint_24)
     
         return df, df_24, date, date_24
 

@@ -5,7 +5,7 @@
                             start_date=None, 
                             end_date=None, 
                             fuel_model='Y', 
-                            clear_recycle_bin=True,
+                            clear_recycle_bin=False,
                             path='FEMS Data',
                             proxies=None):***
 
@@ -37,8 +37,9 @@
 
     4) to_csv (Boolean) - Default = True. This will save the data into a CSV file and build a directory to hold the CSV files. 
     
-    5) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    5) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine.  
         
     6) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 

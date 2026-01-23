@@ -1,4 +1,12 @@
-# `client.get_gridded_data()`
+# Get Gridded Data
+
+***def get_gridded_data(url,
+             path,
+             filename,
+             proxies=None,
+             chunk_size=8192,
+             notifications='on',
+             clear_recycle_bin=False):***
 
     This function is the client that retrieves gridded weather/climate data (GRIB2 and NETCDF) files. 
     This client supports VPN/PROXY connections. 

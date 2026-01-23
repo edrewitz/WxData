@@ -5,7 +5,7 @@
          hours=24,
          proxies=None,
          process_data=True,
-         clear_recycle_bin=True,
+         clear_recycle_bin=False,
          western_bound=None,
          eastern_bound=None,
          southern_bound=None,
@@ -54,8 +54,9 @@
     5) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
        
-    6) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    6) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
         
     7) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 

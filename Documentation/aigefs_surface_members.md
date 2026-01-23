@@ -10,7 +10,7 @@
                       11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                       21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
              process_data=True,
-             clear_recycle_bin=True,
+             clear_recycle_bin=False,
             convert_temperature=True,
             convert_to='celsius',
             custom_directory=None,
@@ -55,8 +55,9 @@
         the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
         be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
     
-    11) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
         
     12) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.

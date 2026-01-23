@@ -5,7 +5,7 @@
                       fuel_model='Y',
                       proxies=None, 
                       start_date=None,
-                      clear_recycle_bin=True):***
+                      clear_recycle_bin=False):***
 
     This function does the following:
 
@@ -35,8 +35,9 @@
     3) start_date (String) - Default=None. If the user wishes to use a selected start date as the starting point enter the start_date
         as a string in the following format: YYYY-mm-dd
         
-    4) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    4) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
         
     5) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 

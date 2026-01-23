@@ -7,7 +7,7 @@
               southern_bound=-90,
               proxies=None,
               process_data=True,
-              clear_recycle_bin=True,
+              clear_recycle_bin=False,
               convert_temperature=True,
               convert_to='celsius',
               custom_directory=None,
@@ -39,8 +39,9 @@
     7) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
        
-    8) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    8) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine.  
         
     9) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.

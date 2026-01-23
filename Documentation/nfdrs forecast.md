@@ -3,7 +3,7 @@
 ***def get_nfdrs_forecast_data(gacc_region, 
                             fuel_model='Y',
                             proxies=None,
-                            clear_recycle_bin=True):***
+                            clear_recycle_bin=False):***
 
     This function retrieves the latest fuels forecast data from FEMS.
 
@@ -22,8 +22,9 @@
         V - Grass
         Z - Slash 
         
-    2) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    2) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
         
     3) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 

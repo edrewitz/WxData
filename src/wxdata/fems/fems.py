@@ -299,7 +299,7 @@ def get_single_station_data(station_id,
                             start_date=None, 
                             end_date=None, 
                             fuel_model='Y', 
-                            clear_recycle_bin=True,
+                            clear_recycle_bin=False,
                             path=f'{folder_modified}/FEMS Data',
                             proxies=None):
 
@@ -332,8 +332,9 @@ def get_single_station_data(station_id,
 
     4) to_csv (Boolean) - Default = True. This will save the data into a CSV file and build a directory to hold the CSV files. 
     
-    5) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    5) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
         
     6) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
@@ -399,7 +400,7 @@ def get_raws_sig_data(gacc_region,
                       fuel_model='Y',
                       proxies=None, 
                       start_date=None,
-                      clear_recycle_bin=True):
+                      clear_recycle_bin=False):
 
     """
     This function does the following:
@@ -430,8 +431,9 @@ def get_raws_sig_data(gacc_region,
     3) start_date (String) - Default=None. If the user wishes to use a selected start date as the starting point enter the start_date
         as a string in the following format: YYYY-mm-dd
         
-    4) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
         
     5) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
@@ -563,7 +565,6 @@ def get_raws_sig_data(gacc_region,
     for i in range(0, len(files)):
 
         fname = f"{psa_IDs[i]}.png"
-        psaID = psa_IDs[i]
 
         try:
             df_data = pd.read_csv(f"{data_dir}/zone_{psa}.csv") 
@@ -589,7 +590,7 @@ def get_raws_sig_data(gacc_region,
 def get_nfdrs_forecast_data(gacc_region, 
                             fuel_model='Y',
                             proxies=None,
-                            clear_recycle_bin=True):
+                            clear_recycle_bin=False):
 
     """
     This function retrieves the latest fuels forecast data from FEMS.
@@ -609,8 +610,9 @@ def get_nfdrs_forecast_data(gacc_region,
         V - Grass
         Z - Slash 
         
-    2) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    2) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
         
     3) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 

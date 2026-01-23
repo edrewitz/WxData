@@ -33,7 +33,7 @@ def get_csv_column_names_csv_module(file_path):
         header = next(reader) 
         return header
 
-def download_metar_data(clear_recycle_bin=True):
+def download_metar_data(clear_recycle_bin=False):
     
     """
     Downloads the latest METAR Data from NOAA/AWC and returns a Pandas DataFrame.
@@ -42,8 +42,9 @@ def download_metar_data(clear_recycle_bin=True):
     
     Optional Arguments:
     
-    1) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    1) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
 
     Returns:        
     pd.DataFrame: A DataFrame containing the METAR data.

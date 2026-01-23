@@ -39,8 +39,8 @@ def aigefs_pressure_members(final_forecast_hour=384,
              members=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
                       11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                       21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
-             process_data=True,
-             clear_recycle_bin=True,
+            process_data=True,
+            clear_recycle_bin=False,
             convert_temperature=True,
             convert_to='celsius',
             custom_directory=None,
@@ -79,8 +79,9 @@ def aigefs_pressure_members(final_forecast_hour=384,
     8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
        
-    9) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
             
     10) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
         the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
@@ -213,8 +214,8 @@ def aigefs_surface_members(final_forecast_hour=384,
              members=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
                       11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                       21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
-             process_data=True,
-             clear_recycle_bin=True,
+            process_data=True,
+            clear_recycle_bin=False,
             convert_temperature=True,
             convert_to='celsius',
             custom_directory=None,
@@ -253,8 +254,9 @@ def aigefs_surface_members(final_forecast_hour=384,
     8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
        
-    9) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
             
     10) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
         the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
@@ -383,7 +385,7 @@ def aigefs_single(final_forecast_hour=384,
                     southern_bound=-90, 
                     proxies=None, 
                     process_data=True,
-                    clear_recycle_bin=True,
+                    clear_recycle_bin=False,
                     convert_temperature=True,
                     convert_to='celsius',
                     custom_directory=None,
@@ -429,8 +431,9 @@ def aigefs_single(final_forecast_hour=384,
         the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
         be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
     
-    10) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    10) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
         
     11) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.

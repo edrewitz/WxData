@@ -25,13 +25,13 @@ def aigfs(final_forecast_hour=384,
              southern_bound=-90, 
              proxies=None, 
              process_data=True,
-             clear_recycle_bin=True,
-            convert_temperature=True,
-            convert_to='celsius',
-            custom_directory=None,
-            chunk_size=8192,
-            notifications='off',
-            type_of_level='pressure'):
+             clear_recycle_bin=False,
+             convert_temperature=True,
+             convert_to='celsius',
+             custom_directory=None,
+             chunk_size=8192,
+             notifications='off',
+             type_of_level='pressure'):
     
     """
     This function downloads, pre-processes and post-processes the latest AIGFS Data. 
@@ -70,8 +70,9 @@ def aigfs(final_forecast_hour=384,
         the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
         be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
     
-    10) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    10) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
         
     11) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.

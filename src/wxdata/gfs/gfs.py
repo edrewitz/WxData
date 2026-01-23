@@ -120,7 +120,7 @@ def gfs_0p25(final_forecast_hour=384,
                        'water equivalent of accumulated snow depth',
                        'wilting point'],
             custom_directory=None,
-            clear_recycle_bin=True,
+            clear_recycle_bin=False,
             convert_temperature=True,
             convert_to='celsius',
             chunk_size=8192,
@@ -255,8 +255,9 @@ def gfs_0p25(final_forecast_hour=384,
         the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
         be used. 
     
-    11) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
         
     12) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
@@ -481,7 +482,7 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
                        'vertical velocity (pressure)',
                        'vertical speed shear'],
             custom_directory=None,
-            clear_recycle_bin=True,
+            clear_recycle_bin=False,
             convert_temperature=True,
             convert_to='celsius',
             chunk_size=8192,
@@ -551,8 +552,9 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
         the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
         be used. 
     
-    11) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
         
     12) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
@@ -784,7 +786,7 @@ def gfs_0p50(final_forecast_hour=384,
                        'clear sky uv-b downward solar flux',
                        'uv-b downward solar flux'],
             custom_directory=None,
-            clear_recycle_bin=True,
+            clear_recycle_bin=False,
             convert_temperature=True,
             convert_to='celsius',
             chunk_size=8192,
@@ -921,8 +923,9 @@ def gfs_0p50(final_forecast_hour=384,
         the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
         be used. 
     
-    11) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
         
     12) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.

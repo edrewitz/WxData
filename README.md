@@ -210,6 +210,12 @@ Then pip install wxdata after the new Python environment is set up.
 ***xmACIS2 Climate Data***
 1. [xmACIS2 Client](https://github.com/edrewitz/WxData/blob/main/Documentation/xmacis2_client.md)
 
+***Custom Gridded Data***
+1. [Gridded Data Client](https://github.com/edrewitz/WxData/blob/main/Documentation/get_gridded_data.md#get-gridded-data)
+
+***Custom CSV Data***
+1. [CSV Data Client](https://github.com/edrewitz/WxData/blob/main/Documentation/get_csv_data.md#get-csv-data)
+
 ***Cyclic Points For Hemispheric Plots***
 1. [Cyclic Points](https://github.com/edrewitz/wxdata/blob/main/Documentation/cyclic_point.md#using-wxdata-to-add-cyclic-points-for-hemispheric-plots)
 

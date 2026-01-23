@@ -5,7 +5,7 @@
                                custom_time=None, 
                                comparison_24=False, 
                                proxies=None,
-                               clear_recycle_bin=True):***
+                               clear_recycle_bin=False):***
 
     This function scrapes the University of Wyoming Sounding Database and returns the data in a Pandas DataFrame
 
@@ -31,8 +31,9 @@
     4) proxies (String) - Default = None. If the user is requesting the data on a machine using a proxy server,
     the user must set proxy='proxy_url'. The default setting assumes the user is not using a proxy server conenction.
     
-    5) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    5) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
 
     Returns
     -------

@@ -95,6 +95,9 @@ Then pip install wxdata after the new Python environment is set up.
 
                         [e.g. get_observed_sounding_data('nkx', proxies=proxies)]
 
+          <img src="https://github.com/edrewitz/WxData/blob/main/diagrams/proxy.png?raw=true" width="500" alt="Alt text" /> 
+
+
    For more information on configuring proxies: https://requests.readthedocs.io/en/latest/user/advanced/#proxies
 
    - Some data access functions work on VPN/PROXY connections without needing to define VPN/PROXY settings:

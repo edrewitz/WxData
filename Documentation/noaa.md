@@ -5,7 +5,7 @@
                    proxies=None,
                    chunk_size=8192,
                    notifications='on',
-                   clear_recycle_bin=True,
+                   clear_recycle_bin=False,
                    include_extended_grids=True):***
 
     This function retrieves the latest NWS Forecast (NDFD) files from the NWS FTP Server. 
@@ -30,8 +30,9 @@
     
     3) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    4) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    4) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
         
     5) include_extended_grids (Boolean) - Default=True. Most NOAA/NWS products have extended grids. However, SPC products do not have extended grids.
         When downloading SPC plots or if the user does not wish to include the extended grids, set include_extended_grids=False.

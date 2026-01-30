@@ -19,6 +19,8 @@ def clean_data(df):
     
     new_df = pd.DataFrame()
     
+    df = df.dropna()
+    
     new_df['station_id'] = df['station_id']
     new_df['observation_time'] = pd.to_datetime(df['observation_time'])
     new_df['latitude'] = pd.to_numeric(df['latitude'])

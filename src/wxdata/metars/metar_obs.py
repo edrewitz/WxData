@@ -108,6 +108,6 @@ def download_metar_data(clear_recycle_bin=False):
     
     df = _clean_data.clean_data(df)
     
-    df['u_wind'], df['v_wind'] = get_u_and_v(df['wind_speed_kt'], df['wind_dir_degrees'])
+    df['u_wind'], df['v_wind'] = get_u_and_v(df['wind_speed'], df['wind_direction'])
     
     return df

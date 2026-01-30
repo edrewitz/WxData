@@ -9,6 +9,7 @@ import csv
 import urllib.request
 import os
 import time
+import wxdata.metars._clean_data as _clean_data
 
 from wxdata.calc.kinematics import get_u_and_v
 from wxdata.utils.file_funcs import extract_gzipped_file
@@ -104,6 +105,8 @@ def download_metar_data(clear_recycle_bin=False):
     df = df.drop('raw_text', axis=1)
 
     df = df.drop(index=0)
+    
+    df = _clean_data.clean_data(df)
     
     df['u_wind'], df['v_wind'] = get_u_and_v(df['wind_speed_kt'], df['wind_dir_degrees'])
     

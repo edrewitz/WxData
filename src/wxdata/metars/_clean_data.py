@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 def clean_data(df):
     
@@ -18,6 +19,12 @@ def clean_data(df):
     """
     
     new_df = pd.DataFrame()
+    
+    try:
+        df = df.replace({'null':np.NaN})
+    except Exception as e:
+        df = df.infer_objects(copy=False)
+        df.replace('null', np.nan, inplace=True)
     
     df = df.dropna()
     

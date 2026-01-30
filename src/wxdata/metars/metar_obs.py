@@ -6,10 +6,9 @@ This module has the functions that download, unzip and return METAR data.
 
 import pandas as pd
 import csv
-import urllib.request
-import os
-import time
+import wxdata.client.client as client
 
+from wxdata.calc.kinematics import get_u_and_v
 from wxdata.utils.file_funcs import extract_gzipped_file
 from wxdata.utils.recycle_bin import *
 
@@ -33,7 +32,9 @@ def get_csv_column_names_csv_module(file_path):
         header = next(reader) 
         return header
 
-def download_metar_data(clear_recycle_bin=False):
+def download_metar_data(clear_recycle_bin=False,
+                        proxies=None,
+                        notifications='off'):
     
     """
     Downloads the latest METAR Data from NOAA/AWC and returns a Pandas DataFrame.
@@ -45,6 +46,15 @@ def download_metar_data(clear_recycle_bin=False):
     1) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
         This setting is to help preserve memory on the machine. 
+        
+    2) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies={
+                           'http':'http://url',
+                           'https':'https://url'
+                        } 
+                        
+    3) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
 
     Returns:        
     pd.DataFrame: A DataFrame containing the METAR data.
@@ -56,30 +66,15 @@ def download_metar_data(clear_recycle_bin=False):
     else:
         pass
     
-    try:
-        urllib.request.urlretrieve(f"https://aviationweather.gov/data/cache/metars.cache.csv.gz", f"metars.cache.csv.gz")
-    except Exception as e:
-        for i in range(0, 6, 1):
-            time.sleep(30)
-            try:
-                urllib.request.urlretrieve(f"https://aviationweather.gov/data/cache/metars.cache.csv.gz", f"metars.cache.csv.gz")
-                break
-            except Exception as e:
-                i = i
-    extract_gzipped_file('metars.cache.csv.gz', 'metars.csv')
+    client.get_csv_data("https://aviationweather.gov/data/cache/metars.cache.csv.gz",
+                        f"METAR Data",
+                        f"metars.cache.csv.gz",
+                        proxies=proxies,
+                        notifications=notifications,
+                        return_pandas_df=False,
+                        clear_recycle_bin=clear_recycle_bin)
     
-    if os.path.exists(f"METAR Data"):
-        pass
-    else:
-        os.mkdir(f"METAR Data")
-
-    try:
-        for file in os.listdir(f"METAR Data"):
-            os.remove(f"METAR Data/{file}")
-    except Exception as e:
-        pass
-        
-    os.replace(f"metars.csv", f"METAR Data/metars.csv")
+    extract_gzipped_file('METAR Data/metars.cache.csv.gz', 'METAR Data/metars.csv')
 
     with open('METAR Data/metars.csv', 'r', newline='') as csvfile:
         # Create a reader object
@@ -101,7 +96,8 @@ def download_metar_data(clear_recycle_bin=False):
 
     df = df.drop('raw_text', axis=1)
 
-    
     df = df.drop(index=0)
+    
+    df['u_wind'], df['v_wind'] = get_u_and_v(df['wind_speed_kt'], df['wind_dir_degrees'])
     
     return df

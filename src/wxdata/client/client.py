@@ -2,9 +2,6 @@ import requests
 import time
 import sys
 import os
-import json
-import urllib
-import numpy as np
 import pandas as pd
 
 from io import BytesIO
@@ -271,21 +268,21 @@ def get_csv_data(url,
                         sys.exit(1) 
 
                 
-                   
-    data_stream = BytesIO(response.content)
-    if response:
-        response.close() # Ensure the connection is closed.
-    
-    df = pd.read_csv(data_stream)
-    
-    df.to_csv(f"{path}/{filename}", index=False)
-    if notifications == True:
-        print(f"{filename} saved to {path}")
-    else:
-        pass
-    
-    if return_pandas_df == True:
-    
+    if return_pandas_df == True:               
+        data_stream = BytesIO(response.content)
+        if response:
+            response.close() # Ensure the connection is closed.
+        
+        df = pd.read_csv(data_stream)
+        
+        df.to_csv(f"{path}/{filename}", index=False)
+        if notifications == True:
+            print(f"{filename} saved to {path}")
+        else:
+            pass
+        
+        
+        
         return df
     
     else:

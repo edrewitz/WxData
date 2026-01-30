@@ -22,8 +22,10 @@ def get_u_and_v(wind_speed,
 
     u and v wind components
     """
+    
+    radians = np.deg2rad(wind_dir)
 
-    u = wind_speed * np.cos(wind_dir)
-    v = wind_speed * np.sin(wind_dir)
+    u = -wind_speed * np.sin(radians)
+    v = -wind_speed * np.cos(radians)
 
     return u, v

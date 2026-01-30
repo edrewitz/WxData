@@ -12,6 +12,7 @@ import time
 import wxdata.metars._clean_data as _clean_data
 
 from wxdata.calc.kinematics import get_u_and_v
+from wxdata.calc.thermodynamics import relative_humidity
 from wxdata.utils.file_funcs import extract_gzipped_file
 from wxdata.utils.recycle_bin import *
 
@@ -109,5 +110,6 @@ def download_metar_data(clear_recycle_bin=False):
     df = _clean_data.clean_data(df)
     
     df['u_wind'], df['v_wind'] = get_u_and_v(df['wind_speed'], df['wind_direction'])
+    df['relative_humidity'] = relative_humidity(df['temperature'], df['dew_point'])
     
     return df

@@ -268,11 +268,11 @@ def get_csv_data(url,
                         sys.exit(1) 
 
                 
-    if return_pandas_df == True:               
-        data_stream = BytesIO(response.content)
-        if response:
-            response.close() # Ensure the connection is closed.
-        
+                 
+    data_stream = BytesIO(response.content)
+    if response:
+        response.close() # Ensure the connection is closed.
+    if return_pandas_df == True:  
         df = pd.read_csv(data_stream)
         
         df.to_csv(f"{path}/{filename}", index=False)
@@ -280,9 +280,9 @@ def get_csv_data(url,
             print(f"{filename} saved to {path}")
         else:
             pass
-        
-        
-        
+    
+    
+    
         return df
     
     else:

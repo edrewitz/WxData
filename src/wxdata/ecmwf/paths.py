@@ -1,7 +1,7 @@
 """
 This file hosts the functions that find the various paths to the ECMWF data files for data pre-processing
 
-(C) Eric J. Drewitz 2025
+(C) Eric J. Drewitz 2025-2026
 """
 import os
 

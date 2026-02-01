@@ -1,3 +1,9 @@
+"""
+This file hosts the function that cleans and organizes the METAR Observational Data.
+
+(C) Eric J. Drewitz 2025-2026
+"""
+
 import pandas as pd
 import numpy as np
 

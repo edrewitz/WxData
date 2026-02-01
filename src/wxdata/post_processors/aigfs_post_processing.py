@@ -1,3 +1,11 @@
+"""
+This file hosts the function responsible for AIGFS data post-processing. 
+
+GRIB variable keys will be post-processed into Plain Language variable keys. 
+
+(C) Eric J. Drewitz 2025-2026
+"""
+
 import xarray as xr
 import sys
 import logging

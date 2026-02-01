@@ -1,7 +1,7 @@
 """
 This file hosts the function that downloads and returns RTMA Data from the NCEP/NOMADS Server. 
 
-(C) Eric J. Drewitz 2025
+(C) Eric J. Drewitz 2025-2026
 """
 import os
 import warnings

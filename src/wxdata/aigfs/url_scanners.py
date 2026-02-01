@@ -1,7 +1,7 @@
 """
 This file hosts the URL Scanner for the AIGFS
 
-(C) Eric J. Drewitz 2025
+(C) Eric J. Drewitz 2025-2026
 """
 
 import requests

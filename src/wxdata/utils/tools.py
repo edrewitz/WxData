@@ -7,7 +7,7 @@ These functions are useful for users who wish to extract the following:
 
 2) Data points along a line connecting points A and B (Plotting Model Cross-Sections)
 
-(C) Eric J. Drewitz 2025
+(C) Eric J. Drewitz 2025-2026
 """
 
 import urllib.request

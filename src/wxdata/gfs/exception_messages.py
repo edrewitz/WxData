@@ -1,7 +1,7 @@
 """
 This file hosts the functions that have exception messages for downloading GFS data.
 
-(C) Eric J. Drewitz 2025
+(C) Eric J. Drewitz 2025-2026
 """
 
 def forecast_hour_error():

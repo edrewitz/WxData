@@ -1,3 +1,12 @@
+"""
+This file hosts the functions that retrieve data from the FEMS RAWS Network.
+
+These functions also process the data into Pandas.DataFrame format. 
+
+(C) Eric J. Drewitz 2025-2026
+"""
+
+
 import pandas as pd
 import os
 import shutil

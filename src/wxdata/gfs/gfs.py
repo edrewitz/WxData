@@ -1,7 +1,7 @@
 """
 This file hosts the functions the user interacts with to download GFS data. 
 
-(C) Eric J. Drewitz 2025
+(C) Eric J. Drewitz 2025-2026
 """
 
 import wxdata.client.client as client

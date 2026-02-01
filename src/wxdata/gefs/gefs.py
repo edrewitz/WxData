@@ -1,7 +1,7 @@
 """
 This file hosts functions that download various types of GEFS Data
 
-(C) Eric J. Drewitz 2025
+(C) Eric J. Drewitz 2025-2026
 """
 
 import wxdata.client.client as client

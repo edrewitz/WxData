@@ -1,7 +1,7 @@
 """
 This file hosts functions that perform calculations using kinematics equations
 
-(C) Eric J. Drewitz 2025
+(C) Eric J. Drewitz 2025-2026
 """
 import numpy as np
 

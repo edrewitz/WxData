@@ -1,7 +1,7 @@
 """
 This file hosts the functions that build the directory for the AIGEFS.
 
-(C) Eric J. Drewitz 2025
+(C) Eric J. Drewitz 2025-2026
 """
 
 import os

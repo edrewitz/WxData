@@ -1,7 +1,7 @@
 """
 This file hosts functions that process geographical coordinates in netCDF data.
 
-(C) Eric J. Drewitz 2025
+(C) Eric J. Drewitz 2025-2026
 """
 from cartopy.util import add_cyclic_point
 

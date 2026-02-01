@@ -3,13 +3,14 @@ This file hosts the function to retrieve Wyoming Sounding Data.
 
 This data is for observed soundings. 
 
-(C) Eric J. Drewitz
+(C) Eric J. Drewitz 2025-2026
 """
 # Imports the needed libraries
 import requests
 import pandas as pd
 import metpy.calc as mpcalc
 import sys
+import wxdata.soundings._exceptions as _exceptions
 
 from wxdata.calc.thermodynamics import relative_humidity
 from wxdata.calc.kinematics import get_u_and_v
@@ -57,6 +58,11 @@ def station_ids(station_id):
         'PAYA':'70361',
         'PANT':'70398',
         'PAVA':'70361',
+        'PANC':'70273',
+        'PACD':'70316',
+        'PADQ':'70350',
+        'PASY':'70414',
+        'PABE':'70219',
         'NKX':'72293',
         'OTX':'72786',
         'SLE':'72694',
@@ -397,8 +403,11 @@ def get_observed_sounding_data(station_id,
             month = int(f"{custom_time[5]}{custom_time[6]}")
             day = int(f"{custom_time[8]}{custom_time[9]}")
             hour = int(f"{custom_time[11]}{custom_time[12]}")
-    
-            date = datetime(year, month, day, hour)
+
+            try:
+                date = datetime(year, month, day, hour)
+            except Exception as e:
+                _exceptions.date_format_exception(date)
     
     
         if hour == 0:  
@@ -484,9 +493,13 @@ def get_observed_sounding_data(station_id,
             
                    
         col_names = ['PRES', 'HGHT', 'TEMP', 'DWPT', 'RELH', 'MIXR', 'DRCT', 'SKNT', 'THTA', 'THTE', 'THTV']
-        df = pd.read_fwf(data, widths=[7] * 8, skiprows=5,
-                             usecols=[0, 1, 2, 3, 6, 7], names=col_names)
         
+        try:
+            df = pd.read_fwf(data, widths=[7] * 8, skiprows=5,
+                                usecols=[0, 1, 2, 3, 6, 7], names=col_names)
+        except Exception as e:
+            _exceptions.station_id_exception(station_id)
+            
         df['U-WIND'], df['V-WIND'] = get_u_and_v(df['SKNT'], df['DRCT'])
         df['RH'] = relative_humidity(df['TEMP'], df['DWPT'])
         pressure = df['PRES'].values * units('hPa')
@@ -521,7 +534,10 @@ def get_observed_sounding_data(station_id,
             day = int(f"{custom_time[8]}{custom_time[9]}")
             hour = int(f"{custom_time[11]}{custom_time[12]}")
     
-            date = datetime(year, month, day, hour)
+            try:
+                date = datetime(year, month, day, hour)
+            except Exception as e:
+                _exceptions.date_format_exception(date)
             
         date_24 = date - timedelta(hours=24)
     
@@ -648,8 +664,12 @@ def get_observed_sounding_data(station_id,
             
                    
         col_names = ['PRES', 'HGHT', 'TEMP', 'DWPT', 'RELH', 'MIXR', 'DRCT', 'SKNT', 'THTA', 'THTE', 'THTV']
-        df = pd.read_fwf(data, widths=[7] * 8, skiprows=5,
-                             usecols=[0, 1, 2, 3, 6, 7], names=col_names)
+        
+        try:
+            df = pd.read_fwf(data, widths=[7] * 8, skiprows=5,
+                                usecols=[0, 1, 2, 3, 6, 7], names=col_names)
+        except Exception as e:
+            _exceptions.station_id_exception(station_id)
         
         df['U-WIND'], df['V-WIND'] = get_u_and_v(df['SKNT'], df['DRCT'])
         df['RH'] = relative_humidity(df['TEMP'], df['DWPT'])
@@ -662,8 +682,11 @@ def get_observed_sounding_data(station_id,
         df['BVF'] = mpcalc.brunt_vaisala_frequency(height, theta, vertical_dim=0) 
         df['WET-BULB'] = mpcalc.wet_bulb_temperature(pressure, temperature, dewpoint)
 
-        df_24 = pd.read_fwf(data_24, widths=[7] * 8, skiprows=5,
-                             usecols=[0, 1, 2, 3, 6, 7], names=col_names)
+        try:
+            df_24 = pd.read_fwf(data_24, widths=[7] * 8, skiprows=5,
+                                usecols=[0, 1, 2, 3, 6, 7], names=col_names)
+        except Exception as e:
+            _exceptions.station_id_exception(station_id)
         
         df_24['U-WIND'], df_24['V-WIND'] = get_u_and_v(df_24['SKNT'], df_24['DRCT'])
         df_24['RH'] = relative_humidity(df_24['TEMP'], df_24['DWPT'])

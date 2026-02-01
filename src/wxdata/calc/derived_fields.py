@@ -3,7 +3,7 @@ This file hosts the functions that will calculate derived model fields.
 
 These calculations will occur after the post-processing. 
 
-(C) Eric J. Drewitz
+(C) Eric J. Drewitz 2025-2026
 """
 
 import xarray as xr

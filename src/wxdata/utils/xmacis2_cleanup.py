@@ -1,7 +1,7 @@
 """
 This file hosts the functions that clean up the xmACIS2 Pandas.DataFrame to make the data easier to work with. 
 
-(C) Eric J. Drewitz 2025
+(C) Eric J. Drewitz 2025-2026
 """
 
 import pandas as pd

@@ -1,7 +1,7 @@
 """
 This file hosts functions that clear recycle/trash bins on different OS to preserve memory.
 
-(C) Eric J. Drewitz 2025
+(C) Eric J. Drewitz 2025-2026
 """
 
 import subprocess

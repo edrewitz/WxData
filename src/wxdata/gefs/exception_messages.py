@@ -1,7 +1,7 @@
 """
 This file will host exception messages to alert the user when they enter something wrong. 
 
-(C) Eric J. Drewitz 2025
+(C) Eric J. Drewitz 2025-2026
 """
 
 class gefs0p50:

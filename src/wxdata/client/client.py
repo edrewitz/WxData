@@ -1,3 +1,12 @@
+"""
+This file hosts the functions that are the client that retrieves the data from the data server and stores the data locally.
+
+These functions are compatible with users on VPN/PROXY connections as well as normal connections.
+
+(C) Eric J. Drewitz 2025-2026
+"""
+
+
 import requests
 import time
 import sys

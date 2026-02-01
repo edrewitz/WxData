@@ -2,7 +2,7 @@
 """
 This file hosts the functions that scan files to make sure existing files are up to date. 
 
-(C) Eric J. Drewitz 2025
+(C) Eric J. Drewitz 2025-2026
 """
 
 import os

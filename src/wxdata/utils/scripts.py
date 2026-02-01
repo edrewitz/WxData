@@ -1,7 +1,7 @@
 """
 This file hosts the function on automating external Python scripts
 
-(C) Eric J. Drewitz 2025
+(C) Eric J. Drewitz 2025-2026
 """
 
 import subprocess

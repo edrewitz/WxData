@@ -3,7 +3,7 @@ This file hosts the RTMA URL Scanner Functions.
 
 These functions return the URL and filename for the latest available data on the dataservers.
 
-(C) Eric J. Drewitz 2025
+(C) Eric J. Drewitz 2025-2026
 """
 
 import requests

@@ -1,7 +1,7 @@
 """
 This file hosts the functions that convert units
 
-(C) Eric J. Drewitz
+(C) Eric J. Drewitz 2025-2026
 """
 
 def convert_temperature_units(ds, 

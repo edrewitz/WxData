@@ -1,3 +1,5 @@
+# (C) Eric J. Drewitz 2025-2026
+
 from wxdata.utils.recycle_bin import(
     
     clear_trash_bin_mac,

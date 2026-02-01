@@ -1,7 +1,7 @@
 """
 This file hosts all of the functions in the WxData Python library that directly interact with the user. 
 
-(C) Eric J. Drewitz 2025
+(C) Eric J. Drewitz 2025-2026
 """
 
 

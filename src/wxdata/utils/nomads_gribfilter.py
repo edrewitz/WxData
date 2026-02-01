@@ -1,7 +1,7 @@
 """
 This file hosts the functions that parse the plain language into NCEP/NOMADS GRIB Filter variable keys for the data request URL
 
-(C) Eric J. Drewitz 2025
+(C) Eric J. Drewitz 2025-2026
 """
 
 def var_keys(varKey):

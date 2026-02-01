@@ -1,4 +1,6 @@
 
+# (C) Eric J. Drewitz 2025-2026
+
 from wxdata.gefs.gefs import(
     
     gefs_0p50,

@@ -1,7 +1,7 @@
 """
 This file hosts dictionary functions that return values based on keys.
 
-(C) Eric J. Drewitz 2025
+(C) Eric J. Drewitz 2025-2026
 """
 
 def get_run_by_keyword(url):

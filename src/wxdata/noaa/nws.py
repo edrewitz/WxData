@@ -1,7 +1,7 @@
 """
 This file has the function that downloads NOAA/NWS and NOAA/SPC Forecast Data
 
-(c) Eric J. Drewitz 2025
+(c) Eric J. Drewitz 2025-2026
 """
 # Import the needed libraries
 

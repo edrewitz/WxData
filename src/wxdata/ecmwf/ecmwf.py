@@ -1,7 +1,7 @@
 """
 This file hosts the functions the user has to download ECMWF model data. 
 
-(C) Eric J. Drewitz 2025
+(C) Eric J. Drewitz 2025-2026
 """
 
 import warnings

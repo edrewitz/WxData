@@ -1,7 +1,7 @@
 """
 This file hosts the clients that download, pre-process and post-process AIGFS Data.
 
-(C) Eric J. Drewitz 2025
+(C) Eric J. Drewitz 2025-2026
 """
 
 import wxdata.client.client as client

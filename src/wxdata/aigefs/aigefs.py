@@ -4,31 +4,36 @@ This file hosts the clients that download, pre-process and post-process AIGEFS D
 (C) Eric J. Drewitz 2025-2026
 """
 
-import wxdata.client.client as client
-import wxdata.post_processors.aigefs_post_processing as aigefs_post_processing
-import os
-import warnings
-warnings.filterwarnings('ignore')
+import wxdata.client.client as _client
+import wxdata.post_processors.aigefs_post_processing as _aigefs_post_processing
+import os as _os
+import warnings as _warnings
+_warnings.filterwarnings('ignore')
 
 from wxdata.aigefs.url_scanners import(
-    aigefs_pres_members_url_scanner,
-    aigefs_sfc_members_url_scanner,
-    aigefs_single_url_scanner
+    aigefs_pres_members_url_scanner as _aigefs_pres_members_url_scanner,
+    aigefs_sfc_members_url_scanner as _aigefs_sfc_members_url_scanner,
+    aigefs_single_url_scanner as _aigefs_single_url_scanner
 )
 
 from wxdata.aigefs.paths import(
-    build_aigefs_directory,
-    build_aigefs_single_directory
+    build_aigefs_directory as _build_aigefs_directory,
+    build_aigefs_single_directory as _build_aigefs_single_directory
 )
 
 from wxdata.utils.file_funcs import(
-    custom_branches,
-    custom_branch
+    custom_branches as _custom_branches,
+    custom_branch as _custom_branch
 )
 
-from wxdata.calc.unit_conversion import convert_temperature_units
-from wxdata.utils.file_scanner import local_file_scanner
-from wxdata.utils.recycle_bin import *
+from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
+from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
+from wxdata.utils.recycle_bin import(
+    
+    clear_recycle_bin_windows as _clear_recycle_bin_windows,
+    clear_trash_bin_mac as _clear_trash_bin_mac,
+    clear_trash_bin_linux as _clear_trash_bin_linux
+)
 
 def aigefs_pressure_members(final_forecast_hour=384, 
              western_bound=-180, 
@@ -120,23 +125,23 @@ def aigefs_pressure_members(final_forecast_hour=384,
     'vertical_velocity'
     """
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass    
     
     if custom_directory == None:
-        paths = build_aigefs_directory('pressure',
+        paths = _build_aigefs_directory('pressure',
                                        members)
     else:
-        paths = custom_branches(custom_directory)
+        paths = _custom_branches(custom_directory)
         
-    urls, file, run = aigefs_pres_members_url_scanner(final_forecast_hour,
+    urls, file, run = _aigefs_pres_members_url_scanner(final_forecast_hour,
                             proxies,
                             members)
     
-    download = local_file_scanner(paths[-1], 
+    download = _local_file_scanner(paths[-1], 
                                     file,
                                     'nomads',
                                     run,
@@ -147,8 +152,8 @@ def aigefs_pressure_members(final_forecast_hour=384,
         
         try:
             for path in paths:
-                for file in os.listdir(f"{path}"):
-                    os.remove(f"{path}/{file}")
+                for file in _os.listdir(f"{path}"):
+                    _os.remove(f"{path}/{file}")
         except Exception as e:
             pass
          
@@ -160,21 +165,21 @@ def aigefs_pressure_members(final_forecast_hour=384,
         for path, url in zip(paths, urls):
             for i in range(0, stop, 6):
                 if i < 10:
-                    client.get_gridded_data(f"{url}/aigefs.t{run}z.pres.f00{i}.grib2",
+                    _client.get_gridded_data(f"{url}/aigefs.t{run}z.pres.f00{i}.grib2",
                                 path,
                                 f"aigefs.t{run}z.pres.f00{i}.grib2",
                                 proxies=proxies,
                                 chunk_size=chunk_size,
                                 notifications=notifications)  
                 elif i >= 10 and i < 100:
-                    client.get_gridded_data(f"{url}/aigefs.t{run}z.pres.f0{i}.grib2",
+                    _client.get_gridded_data(f"{url}/aigefs.t{run}z.pres.f0{i}.grib2",
                                 path,
                                 f"aigefs.t{run}z.pres.f0{i}.grib2",
                                 proxies=proxies,
                                 chunk_size=chunk_size,
                                 notifications=notifications)  
                 else:
-                    client.get_gridded_data(f"{url}/aigefs.t{run}z.pres.f{i}.grib2",
+                    _client.get_gridded_data(f"{url}/aigefs.t{run}z.pres.f{i}.grib2",
                                 path,
                                 f"aigefs.t{run}z.pres.f{i}.grib2",
                                 proxies=proxies,
@@ -186,14 +191,14 @@ def aigefs_pressure_members(final_forecast_hour=384,
     if process_data == True:
         print(f"AIGEFS Pressure Parameters Data Processing...")    
         
-        ds = aigefs_post_processing.aigefs_members_post_processing(paths,
+        ds = _aigefs_post_processing.aigefs_members_post_processing(paths,
                                                                     western_bound,
                                                                     eastern_bound,
                                                                     northern_bound,
                                                                     southern_bound)
         
         if convert_temperature == True:
-            ds = convert_temperature_units(ds, 
+            ds = _convert_temperature_units(ds, 
                                            convert_to, 
                                            cat='mean')
                 
@@ -293,23 +298,23 @@ def aigefs_surface_members(final_forecast_hour=384,
     '2m_temperature'
     """
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass    
     
     if custom_directory == None:
-        paths = build_aigefs_directory('surface',
+        paths = _build_aigefs_directory('surface',
                                        members)
     else:
-        paths = custom_branches(custom_directory)
+        paths = _custom_branches(custom_directory)
         
-    urls, file, run = aigefs_sfc_members_url_scanner(final_forecast_hour,
+    urls, file, run = _aigefs_sfc_members_url_scanner(final_forecast_hour,
                             proxies,
                             members)
     
-    download = local_file_scanner(paths[-1], 
+    download = _local_file_scanner(paths[-1], 
                                     file,
                                     'nomads',
                                     run,
@@ -320,8 +325,8 @@ def aigefs_surface_members(final_forecast_hour=384,
         
         try:
             for path in paths:
-                for file in os.listdir(f"{path}"):
-                    os.remove(f"{path}/{file}")
+                for file in _os.listdir(f"{path}"):
+                    _os.remove(f"{path}/{file}")
         except Exception as e:
             pass
          
@@ -333,21 +338,21 @@ def aigefs_surface_members(final_forecast_hour=384,
         for path, url in zip(paths, urls):
             for i in range(0, stop, 6):
                 if i < 10:
-                    client.get_gridded_data(f"{url}/aigefs.t{run}z.sfc.f00{i}.grib2",
+                    _client.get_gridded_data(f"{url}/aigefs.t{run}z.sfc.f00{i}.grib2",
                                 path,
                                 f"aigefs.t{run}z.sfc.f00{i}.grib2",
                                 proxies=proxies,
                                 chunk_size=chunk_size,
                                 notifications=notifications)  
                 elif i >= 10 and i < 100:
-                    client.get_gridded_data(f"{url}/aigefs.t{run}z.sfc.f0{i}.grib2",
+                    _client.get_gridded_data(f"{url}/aigefs.t{run}z.sfc.f0{i}.grib2",
                                 path,
                                 f"aigefs.t{run}z.sfc.f0{i}.grib2",
                                 proxies=proxies,
                                 chunk_size=chunk_size,
                                 notifications=notifications)  
                 else:
-                    client.get_gridded_data(f"{url}/aigefs.t{run}z.sfc.f{i}.grib2",
+                    _client.get_gridded_data(f"{url}/aigefs.t{run}z.sfc.f{i}.grib2",
                                 path,
                                 f"aigefs.t{run}z.sfc.f{i}.grib2",
                                 proxies=proxies,
@@ -360,14 +365,14 @@ def aigefs_surface_members(final_forecast_hour=384,
     if process_data == True:
         print(f"AIGEFS Surface Parameters Data Processing...")    
         
-        ds = aigefs_post_processing.aigefs_members_post_processing(paths,
+        ds = _aigefs_post_processing.aigefs_members_post_processing(paths,
                                                                     western_bound,
                                                                     eastern_bound,
                                                                     northern_bound,
                                                                     southern_bound)
         
         if convert_temperature == True:
-            ds = convert_temperature_units(ds, 
+            ds = _convert_temperature_units(ds, 
                                            convert_to, 
                                            cat='mean')
                 
@@ -502,24 +507,24 @@ def aigefs_single(final_forecast_hour=384,
         level = 'sfc'
         
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass    
     
     if custom_directory == None:
-        path = build_aigefs_single_directory(type_of_level,
+        path = _build_aigefs_single_directory(type_of_level,
                                   cat)
     else:
-        path = custom_branch(custom_directory)
+        path = _custom_branch(custom_directory)
         
-    url, file, run = aigefs_single_url_scanner(final_forecast_hour,
+    url, file, run = _aigefs_single_url_scanner(final_forecast_hour,
                                                         proxies,
                                                         cat,
                                                         type_of_level)
     
-    download = local_file_scanner(path, 
+    download = _local_file_scanner(path, 
                                     file,
                                     'nomads',
                                     run,
@@ -529,8 +534,8 @@ def aigefs_single(final_forecast_hour=384,
         print(f"Downloading AIGEFS {type_of_level.upper()} {cat.upper()} Files...")
         
         try:
-            for file in os.listdir(f"{path}"):
-                os.remove(f"{path}/{file}")
+            for file in _os.listdir(f"{path}"):
+                _os.remove(f"{path}/{file}")
         except Exception as e:
             pass
         
@@ -542,21 +547,21 @@ def aigefs_single(final_forecast_hour=384,
         
         for i in range(0, stop, 6):
             if i < 10:
-                client.get_gridded_data(f"{url}aigefs.t{run}z.{level}.{cat}.f00{i}.grib2",
+                _client.get_gridded_data(f"{url}aigefs.t{run}z.{level}.{cat}.f00{i}.grib2",
                             path,
                             f"aigefs.t{run}z.{level}.{cat}.f00{i}.grib2",
                             proxies=proxies,
                             chunk_size=chunk_size,
                             notifications=notifications)  
             elif i >= 10 and i < 100:
-                client.get_gridded_data(f"{url}aigefs.t{run}z.{level}.{cat}.f0{i}.grib2",
+                _client.get_gridded_data(f"{url}aigefs.t{run}z.{level}.{cat}.f0{i}.grib2",
                             path,
                             f"aigefs.t{run}z.{level}.{cat}.f0{i}.grib2",
                             proxies=proxies,
                             chunk_size=chunk_size,
                             notifications=notifications)  
             else:
-                client.get_gridded_data(f"{url}aigefs.t{run}z.{level}.{cat}.f{i}.grib2",
+                _client.get_gridded_data(f"{url}aigefs.t{run}z.{level}.{cat}.f{i}.grib2",
                             path,
                             f"aigefs.t{run}z.{level}.{cat}.f{i}.grib2",
                             proxies=proxies,
@@ -569,14 +574,14 @@ def aigefs_single(final_forecast_hour=384,
     if process_data == True:
         print(f"AIGEFS {type_of_level.upper()} {cat.upper()} Data Processing...")    
         
-        ds = aigefs_post_processing.aigefs_single_post_processing(path,
+        ds = _aigefs_post_processing.aigefs_single_post_processing(path,
                                                                     western_bound,
                                                                     eastern_bound,
                                                                     northern_bound,
                                                                     southern_bound)
         
         if convert_temperature == True:
-            ds = convert_temperature_units(ds, 
+            ds = _convert_temperature_units(ds, 
                                            convert_to, 
                                            cat='mean')
                 

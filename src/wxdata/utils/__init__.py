@@ -18,7 +18,8 @@ from wxdata.utils.nomads_gribfilter import(
 
 from wxdata.utils.tools import(
     pixel_query,
-    line_query
+    line_query,
+    linear_anti_aliasing
 )
 
 from wxdata.utils.scripts import run_external_scripts

@@ -4,18 +4,23 @@ This file hosts the clients that download, pre-process and post-process AIGFS Da
 (C) Eric J. Drewitz 2025-2026
 """
 
-import wxdata.client.client as client
-import wxdata.post_processors.aigfs_post_processing as aigfs_post_processing
-import os
-import warnings
-warnings.filterwarnings('ignore')
+import wxdata.client.client as _client
+import wxdata.post_processors.aigfs_post_processing as _aigfs_post_processing
+import os as _os
+import warnings as _warnings
+_warnings.filterwarnings('ignore')
 
-from wxdata.aigfs.url_scanners import aigfs_url_scanner
-from wxdata.aigfs.paths import build_aigfs_directory
-from wxdata.utils.file_funcs import custom_branch
-from wxdata.calc.unit_conversion import convert_temperature_units
-from wxdata.utils.file_scanner import local_file_scanner
-from wxdata.utils.recycle_bin import *
+from wxdata.aigfs.url_scanners import aigfs_url_scanner as _aigfs_url_scanner
+from wxdata.aigfs.paths import build_aigfs_directory as _build_aigfs_directory
+from wxdata.utils.file_funcs import custom_branch as _custom_branch
+from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
+from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
+from wxdata.utils.recycle_bin import(
+    
+    clear_recycle_bin_windows as _clear_recycle_bin_windows,
+    clear_trash_bin_mac as _clear_trash_bin_mac,
+    clear_trash_bin_linux as _clear_trash_bin_linux
+)
 
 
 def aigfs(final_forecast_hour=384, 
@@ -128,22 +133,22 @@ def aigfs(final_forecast_hour=384,
         level = 'sfc'
     
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass   
     
     if custom_directory == None:
-        path = build_aigfs_directory(type_of_level)
+        path = _build_aigfs_directory(type_of_level)
     else:
-        path = custom_branch(custom_directory)
+        path = _custom_branch(custom_directory)
         
-    url, file, run = aigfs_url_scanner(final_forecast_hour,
+    url, file, run = _aigfs_url_scanner(final_forecast_hour,
                                                         proxies,
                                                         type_of_level)
     
-    download = local_file_scanner(path, 
+    download = _local_file_scanner(path, 
                                     file,
                                     'nomads',
                                     run,
@@ -154,8 +159,8 @@ def aigfs(final_forecast_hour=384,
         print(f"Downloading AIGFS {type_of_level.upper()} Files...")
         
         try:
-            for file in os.listdir(f"{path}"):
-                os.remove(f"{path}/{file}")
+            for file in _os.listdir(f"{path}"):
+                _os.remove(f"{path}/{file}")
         except Exception as e:
             pass
         
@@ -167,21 +172,21 @@ def aigfs(final_forecast_hour=384,
         
         for i in range(0, stop, 6):
             if i < 10:
-                client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f00{i}.grib2",
+                _client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f00{i}.grib2",
                             path,
                             f"aigfs.t{run}z.{level}.f00{i}.grib2",
                             proxies=proxies,
                             chunk_size=chunk_size,
                             notifications=notifications)  
             elif i >= 10 and i < 100:
-                client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f0{i}.grib2",
+                _client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f0{i}.grib2",
                             path,
                             f"aigfs.t{run}z.{level}.f0{i}.grib2",
                             proxies=proxies,
                             chunk_size=chunk_size,
                             notifications=notifications)  
             else:
-                client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f{i}.grib2",
+                _client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f{i}.grib2",
                             path,
                             f"aigfs.t{run}z.{level}.f{i}.grib2",
                             proxies=proxies,
@@ -194,14 +199,14 @@ def aigfs(final_forecast_hour=384,
     if process_data == True:
         print(f"AIGFS {type_of_level.upper()} Data Processing...")    
         
-        ds = aigfs_post_processing.aigfs_post_processing(path,
+        ds = _aigfs_post_processing.aigfs_post_processing(path,
                                                         western_bound,
                                                         eastern_bound,
                                                         northern_bound,
                                                         southern_bound)
         
         if convert_temperature == True:
-            ds = convert_temperature_units(ds, 
+            ds = _convert_temperature_units(ds, 
                                            convert_to, 
                                            cat='mean')
                 

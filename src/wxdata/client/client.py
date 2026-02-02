@@ -7,36 +7,45 @@ These functions are compatible with users on VPN/PROXY connections as well as no
 """
 
 
-import requests
-import time
-import sys
-import os
-import pandas as pd
+import requests as _requests
+import time as _time
+import sys as _sys
+import os as _os
+import pandas as _pd
 
-from io import BytesIO
-from datetime import datetime, timedelta
-from wxdata.utils.xmacis2_cleanup import clean_pandas_dataframe
-from wxdata.utils.recycle_bin import *
+from io import BytesIO as _BytesIO
+
+from datetime import(
+    datetime as _datetime, 
+    timedelta as _timedelta
+)
+from wxdata.utils.xmacis2_cleanup import clean_pandas_dataframe as _clean_pandas_dataframe
+from wxdata.utils.recycle_bin import(
+    
+    clear_recycle_bin_windows as _clear_recycle_bin_windows,
+    clear_trash_bin_mac as _clear_trash_bin_mac,
+    clear_trash_bin_linux as _clear_trash_bin_linux
+)
 
 # Getting yesterday's date for the default end date for the xmACIS2 client
 
-now = datetime.now()
-yesterday = now - timedelta(days=1)
+_now = _datetime.now()
+_yesterday = _now - _timedelta(days=1)
 
-year = yesterday.year
-month = yesterday.month
-day = yesterday.day
+_year = _yesterday.year
+_month = _yesterday.month
+_day = _yesterday.day
 
-if month < 10:
-    if day >= 10:
-        yesterday = f"{year}-0{month}-{day}"
+if _month < 10:
+    if _day >= 10:
+        _yesterday = f"{_year}-0{_month}-{_day}"
     else:
-        yesterday = f"{year}-0{month}-0{day}"   
+        _yesterday = f"{_year}-0{_month}-0{_day}"   
 else:
-    if day >= 10:
-        yesterday = f"{year}-{month}-{day}"
+    if _day >= 10:
+        _yesterday = f"{_year}-{_month}-{_day}"
     else:
-        yesterday = f"{year}-{month}-0{day}" 
+        _yesterday = f"{_year}-{_month}-0{_day}" 
 
 def get_gridded_data(url,
              path,
@@ -82,20 +91,20 @@ def get_gridded_data(url,
     """
     
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass
     
     try:
-        os.makedirs(f"{path}")
+        _os.makedirs(f"{path}")
     except Exception as e:
         pass
 
     if proxies == None:
         try:
-            with requests.get(url, stream=True) as r:
+            with _requests.get(url, stream=True) as r:
                 r.raise_for_status() 
                 with open(f"{path}/{filename}", 'wb') as f:
                     for chunk in r.iter_content(chunk_size=chunk_size):
@@ -104,17 +113,17 @@ def get_gridded_data(url,
                 print(f"Successfully saved {filename} to f:{path}")
             else:
                 pass
-        except requests.exceptions.RequestException as e:
+        except _requests.exceptions.RequestException as e:
             for i in range(0, 6, 1):
                 if i < 3:
                     print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
-                    time.sleep(30)
+                    _time.sleep(30)
                 else:
                     print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
-                    time.sleep(60)  
+                    _time.sleep(60)  
                     
                 try:
-                    with requests.get(url, stream=True) as r:
+                    with _requests.get(url, stream=True) as r:
                         r.raise_for_status() 
                         with open(f"{path}/{filename}", 'wb') as f:
                             for chunk in r.iter_content(chunk_size=chunk_size):
@@ -122,11 +131,11 @@ def get_gridded_data(url,
                     if notifications == 'on':
                         print(f"Successfully saved {filename} to f:{path}")  
                     break
-                except requests.exceptions.RequestException as e:
+                except _requests.exceptions.RequestException as e:
                     i = i 
                     if i >= 5:
                         print(f"Error - File Cannot Be Downloaded.\nError Code: {e}")    
-                        sys.exit(1)      
+                        _sys.exit(1)      
                         
         finally:
             if r:
@@ -134,7 +143,7 @@ def get_gridded_data(url,
             
     else:
         try:
-            with requests.get(url, stream=True, proxies=proxies) as r:
+            with _requests.get(url, stream=True, proxies=proxies) as r:
                 r.raise_for_status() 
                 with open(f"{path}/{filename}", 'wb') as f:
                     for chunk in r.iter_content(chunk_size=chunk_size):
@@ -143,17 +152,17 @@ def get_gridded_data(url,
                 print(f"Successfully saved {filename} to f:{path}")
             else:
                 pass
-        except requests.exceptions.RequestException as e:
+        except _requests.exceptions.RequestException as e:
             for i in range(0, 6, 1):
                 if i < 3:
                     print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
-                    time.sleep(30)
+                    _time.sleep(30)
                 else:
                     print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
-                    time.sleep(60)  
+                    _time.sleep(60)  
                     
                 try:
-                    with requests.get(url, stream=True, proxies=proxies) as r:
+                    with _requests.get(url, stream=True, proxies=proxies) as r:
                         r.raise_for_status() 
                         with open(f"{path}/{filename}", 'wb') as f:
                             for chunk in r.iter_content(chunk_size=chunk_size):
@@ -161,11 +170,11 @@ def get_gridded_data(url,
                     if notifications == 'on':
                         print(f"Successfully saved {filename} to f:{path}")  
                     break
-                except requests.exceptions.RequestException as e:
+                except _requests.exceptions.RequestException as e:
                     i = i 
                     if i >= 5:
                         print(f"Error - File Cannot Be Downloaded.\nError Code: {e}")    
-                        sys.exit(1)    
+                        _sys.exit(1)    
                         
         finally:
             if r:
@@ -220,70 +229,70 @@ def get_csv_data(url,
     """
     
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass
     
     try:
-        os.makedirs(f"{path}")
+        _os.makedirs(f"{path}")
     except Exception as e:
         pass
     
     if proxies==None:
         try:
-            response = requests.get(url)
+            response = _requests.get(url)
         except Exception as e:
             for i in range(0, 6, 1):
                 if i < 3:
                     print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
-                    time.sleep(30)
+                    _time.sleep(30)
                 else:
                     print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
-                    time.sleep(60)  
+                    _time.sleep(60)  
                     
                 try:
-                    response = requests.get(url)
+                    response = _requests.get(url)
                     break
                 except Exception as e:
                     i = i                    
                     if i >= 5:
                         print(f"Error - File Cannot Be Downloaded.\nError Code: {e}")    
-                        sys.exit(1)    
+                        _sys.exit(1)    
         finally:
             if response:
                 response.close() # Ensure the connection is closed.
                         
     else:
         try:
-            response = requests.get(url, proxies=proxies)
+            response = _requests.get(url, proxies=proxies)
         except Exception as e:
             for i in range(0, 6, 1):
                 if i < 3:
                     print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
-                    time.sleep(30)
+                    _time.sleep(30)
                 else:
                     print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
-                    time.sleep(60)  
+                    _time.sleep(60)  
                     
                 try:
-                    response = requests.get(url, proxies=proxies)
+                    response = _requests.get(url, proxies=proxies)
                     break
                 except Exception as e:
                     i = i                    
                     if i >= 5:
                         print(f"Error - File Cannot Be Downloaded.\nError Code: {e}")    
-                        sys.exit(1) 
+                        _sys.exit(1) 
 
                 
                  
 
-    data_stream = BytesIO(response.content)
+    data_stream = _BytesIO(response.content)
     if response:
         response.close() # Ensure the connection is closed.
     
-    df = pd.read_csv(data_stream)
+    df = _pd.read_csv(data_stream)
     
     df.to_csv(f"{path}/{filename}", index=False)
     if notifications == True:
@@ -302,7 +311,7 @@ def get_csv_data(url,
 def get_xmacis_data(station,
                     start_date=None,
                     end_date=None,
-                    from_when=yesterday,
+                    from_when=_yesterday,
                     time_delta=30,
                     proxies=None,
                     clear_recycle_bin=False,
@@ -362,9 +371,9 @@ def get_xmacis_data(station,
     A Pandas.DataFrame of the xmACIS2 climate data the user specifies
     """
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass  
     
@@ -389,11 +398,11 @@ def get_xmacis_data(station,
                     iyear = int(f"{from_when[0]}{from_when[1]}{from_when[2]}{from_when[3]}")
                     imonth = int(f"{from_when[5]}{from_when[6]}")
                     iday = int(f"{from_when[8]}{from_when[9]}")
-                    end_date = datetime(iyear, imonth, iday)
+                    end_date = _datetime(iyear, imonth, iday)
                 else:
                     end_date = from_when
                     
-                start_date = end_date - timedelta(days=time_delta)  
+                start_date = end_date - _timedelta(days=time_delta)  
                     
         except Exception as e:
             print(f"""Error: Invalid Time Entry
@@ -447,10 +456,10 @@ def get_xmacis_data(station,
     output_cols = ['Date', 'Maximum Temperature', 'Minimum Temperature', 'Average Temperature', 'Average Temperature Departure', 'Heating Degree Days', 'Cooling Degree Days', 'Precipitation', 'Snowfall', 'Snow Depth', 'Growing Degree Days']
         
     if proxies == None:
-        response = requests.post('http://data.rcc-acis.org/StnData', 
+        response = _requests.post('http://data.rcc-acis.org/StnData', 
                                  json=input_dict)
     else:
-        response = requests.post('http://data.rcc-acis.org/StnData', 
+        response = _requests.post('http://data.rcc-acis.org/StnData', 
                                  json=input_dict,
                                  proxies=proxies)
         
@@ -458,18 +467,18 @@ def get_xmacis_data(station,
         
     data = response.json()
     
-    df = pd.json_normalize(data,
+    df = _pd.json_normalize(data,
                       record_path=['data'])
     
     df.columns = output_cols
     
-    df = clean_pandas_dataframe(df)
+    df = _clean_pandas_dataframe(df)
     
-    df['Date'] = pd.to_datetime(df['Date'])
+    df['Date'] = _pd.to_datetime(df['Date'])
     
     if to_csv == True:
         try:
-            os.makedirs(path)
+            _os.makedirs(path)
         except Exception as e:
             pass
         df.to_csv(f"{full_path}", index=False)

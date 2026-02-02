@@ -149,9 +149,11 @@ from wxdata.utils.coords import(
 )
 
 # Functions to pixel query and query pixels along a line between points A and B
+# Function to interpolate to n amount of points in between x and y values respectively
 from wxdata.utils.tools import(
     pixel_query,
-    line_query
+    line_query,
+    linear_anti_aliasing
 )
 
 """

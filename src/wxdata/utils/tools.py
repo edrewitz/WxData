@@ -13,9 +13,59 @@ These functions are useful for users who wish to extract the following:
 import urllib.request
 import pandas as pd
 import xarray as xr
+import numpy as np
 import os
 
 from metpy.interpolate import cross_section
+
+def linear_anti_aliasing(x, 
+                         y, 
+                         anti_aliasing):
+    """
+    This function interpolates between x and y. 
+    
+    Required Arguments:
+    
+    1) x (array) - Array of x-values.
+    
+    2) y (array) - Array of y-values.
+    
+    3) anti_aliasing (Integer) - The amount of points in between x and y values. 
+    
+    Returns
+    -------
+    
+    An interpolated numpy.array of x and y data. 
+    """
+    
+    x = np.asarray(x)
+    y = np.asarray(y)
+    
+    y_point_list = []
+    for i in range(0, len(y), 1):
+        try:
+            y_points = np.linspace(y[i], y[i+1], anti_aliasing)
+        except Exception as e:
+            pass
+
+        y_point_list.append(y_points)
+
+    x_point_list = []
+    for i in range(0, len(x), 1):
+        try:
+            x_points = np.linspace(x[i], x[i+1], anti_aliasing)
+        except Exception as e:
+            pass
+
+        x_point_list.append(x_points)
+        
+    x_point_arr = np.asarray(x_point_list)
+    y_point_arr = np.asarray(y_point_list)
+    
+    x_point_arr = x_point_arr.flatten()
+    y_point_arr = y_point_arr.flatten()
+    
+    return x_point_arr, y_point_arr
 
 def station_coords(station_id):
     

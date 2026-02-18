@@ -435,6 +435,8 @@ Then pip install wxdata after the new Python environment is set up.
 
 **cfgrib**: Author: ECMWF, Year: (2025), Title: cfgrib: A Python interface to map GRIB files to xarray, Source: https://github.com/ecmwf/cfgrib 
 
+**requests**: K. Reitz, "Requests: HTTP for Humans". Available: https://requests.readthedocs.io/.
+
 ## Data Sources
 
 1) [National Oceanic and Atmospheric Administration/National Center for Environmental Prediction](https://nomads.ncep.noaa.gov/)

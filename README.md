@@ -448,6 +448,7 @@ Then pip install wxdata after the new Python environment is set up.
 3) [University of Wyoming](http://www.weather.uwyo.edu/upperair/sounding.shtml)
 4) [National Oceanic and Atmospheric Administration/National Weather Service](https://tgftp.nws.noaa.gov/)
 5) [National Oceanic and Atmospheric Administration/Aviation Weather Center](https://aviationweather.gov/)
-6) [Applied Climate Information System (ACIS)](https://www.rcc-acis.org/docs_webservices.html)
+6) [National Oceanic and Atmospheric Administration/Climate Prediction Center](https://www.cpc.ncep.noaa.gov/products/GIS/GIS_DATA/us_tempprcpfcst/index.php)
+7) [Applied Climate Information System (ACIS)](https://www.rcc-acis.org/docs_webservices.html)
 
 

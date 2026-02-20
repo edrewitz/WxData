@@ -437,6 +437,8 @@ Then pip install wxdata after the new Python environment is set up.
 
 **requests**: K. Reitz, "Requests: HTTP for Humans". Available: https://requests.readthedocs.io/.
 
+**shapeography**: Eric J. Drewitz. (2026). edrewitz/shapeography: shapeography 1.0 Released (shapeography1.0). Zenodo. https://doi.org/10.5281/zenodo.18676845
+
 ## Data Sources
 
 1) [National Oceanic and Atmospheric Administration/National Center for Environmental Prediction](https://nomads.ncep.noaa.gov/)

@@ -437,6 +437,10 @@ Then pip install wxdata after the new Python environment is set up.
 
 **requests**: K. Reitz, "Requests: HTTP for Humans". Available: https://requests.readthedocs.io/.
 
+**shapeography**: Eric J. Drewitz. (2026). edrewitz/shapeography: shapeography 1.0 Released (shapeography1.0). Zenodo. https://doi.org/10.5281/zenodo.18676845
+
+**geopandas**: Kelsey Jordahl, Joris Van den Bossche, Martin Fleischmann, Jacob Wasserman, James McBride, Jeffrey Gerard, … François Leblanc. (2020, July 15). geopandas/geopandas: v0.8.1 (Version v0.8.1). Zenodo. http://doi.org/10.5281/zenodo.3946761
+
 ## Data Sources
 
 1) [National Oceanic and Atmospheric Administration/National Center for Environmental Prediction](https://nomads.ncep.noaa.gov/)
@@ -444,6 +448,7 @@ Then pip install wxdata after the new Python environment is set up.
 3) [University of Wyoming](http://www.weather.uwyo.edu/upperair/sounding.shtml)
 4) [National Oceanic and Atmospheric Administration/National Weather Service](https://tgftp.nws.noaa.gov/)
 5) [National Oceanic and Atmospheric Administration/Aviation Weather Center](https://aviationweather.gov/)
-6) [Applied Climate Information System (ACIS)](https://www.rcc-acis.org/docs_webservices.html)
+6) [National Oceanic and Atmospheric Administration/Climate Prediction Center](https://www.cpc.ncep.noaa.gov/products/GIS/GIS_DATA/us_tempprcpfcst/index.php)
+7) [Applied Climate Information System (ACIS)](https://www.rcc-acis.org/docs_webservices.html)
 
 

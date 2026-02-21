@@ -6,20 +6,20 @@ GRIB variable keys will be post-processed into Plain Language variable keys.
 (C) Eric J. Drewitz 2025-2026
 """
 
-import xarray as xr
-import sys
-import logging
-import warnings
-warnings.filterwarnings('ignore')
+import xarray as _xr
+import sys as _sys
+import logging as _logging
+import warnings as _warnings
+_warnings.filterwarnings('ignore')
 
 from wxdata.utils.file_funcs import(
-    clear_idx_files_in_path,
-    sorted_paths
+    clear_idx_files_in_path as _clear_idx_files_in_path,
+    sorted_paths as _sorted_paths
 )
-from wxdata.utils.coords import shift_longitude 
+from wxdata.utils.coords import shift_longitude as _shift_longitude
 
-sys.tracebacklimit = 0
-logging.disable()
+_sys.tracebacklimit = 0
+_logging.disable()
 
 
 def _eccodes_error_intructions():
@@ -285,11 +285,11 @@ def primary_gfs_post_processing(path):
     'potential_vorticity_level_vertical_speed_shear'
     """
     
-    clear_idx_files_in_path(path)
-    files = sorted_paths(path)
+    _clear_idx_files_in_path(path)
+    files = _sorted_paths(path)
 
     try:
-        ds = xr.open_mfdataset(files, 
+        ds = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -298,12 +298,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'meanSea'})
         
-        ds = shift_longitude(ds)
+        ds = _shift_longitude(ds)
     except Exception as e:
         pass
     
     try:
-        ds1 = xr.open_mfdataset(files, 
+        ds1 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -312,12 +312,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'hybrid'})
         
-        ds1 = shift_longitude(ds1)
+        ds1 = _shift_longitude(ds1)
     except Exception as e:
         pass
     
     try:
-        ds2 = xr.open_mfdataset(files, 
+        ds2 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -326,12 +326,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'hybrid', 'shortName':'refd'})
         
-        ds2 = shift_longitude(ds2)
+        ds2 = _shift_longitude(ds2)
     except Exception as e:
         pass
     
     try:
-        ds3 = xr.open_mfdataset(files, 
+        ds3 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -340,13 +340,13 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'atmosphere'})
         
-        ds3 = shift_longitude(ds3)
+        ds3 = _shift_longitude(ds3)
     except Exception as e:
         pass
     
 
     try:
-        ds4 = xr.open_mfdataset(files, 
+        ds4 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -355,12 +355,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'surface'})
         
-        ds4 = shift_longitude(ds4)
+        ds4 = _shift_longitude(ds4)
     except Exception as e:
         pass
     
     try:
-        ds5 = xr.open_mfdataset(files, 
+        ds5 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -369,12 +369,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'planetaryBoundaryLayer'})
         
-        ds5 = shift_longitude(ds5)
+        ds5 = _shift_longitude(ds5)
     except Exception as e:
         pass
     
     try:
-        ds6 = xr.open_mfdataset(files, 
+        ds6 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -383,12 +383,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'isobaricInhPa'})
         
-        ds6 = shift_longitude(ds6)
+        ds6 = _shift_longitude(ds6)
     except Exception as e:
         pass
     
     try:
-        ds7 = xr.open_mfdataset(files, 
+        ds7 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -397,12 +397,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'tcc'})
         
-        ds7 = shift_longitude(ds7)
+        ds7 = _shift_longitude(ds7)
     except Exception as e:
         pass
     
     try:
-        ds8 = xr.open_mfdataset(files, 
+        ds8 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -411,12 +411,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'clwmr'})
         
-        ds8 = shift_longitude(ds8)
+        ds8 = _shift_longitude(ds8)
     except Exception as e:
         pass
     
     try:
-        ds9 = xr.open_mfdataset(files, 
+        ds9 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -425,12 +425,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'icmr'})
         
-        ds9 = shift_longitude(ds9)
+        ds9 = _shift_longitude(ds9)
     except Exception as e:
         pass
     
     try:
-        ds10 = xr.open_mfdataset(files, 
+        ds10 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -439,12 +439,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'rwmr'})
         
-        ds10 = shift_longitude(ds10)
+        ds10 = _shift_longitude(ds10)
     except Exception as e:
         pass
     
     try:
-        ds11 = xr.open_mfdataset(files, 
+        ds11 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -452,12 +452,12 @@ def primary_gfs_post_processing(path):
                             compat='override', 
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'snmr'})
-        ds11 = shift_longitude(ds11)
+        ds11 = _shift_longitude(ds11)
     except Exception as e:
         pass
     
     try:
-        ds12 = xr.open_mfdataset(files, 
+        ds12 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -466,13 +466,13 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'grle'})
         
-        ds12 = shift_longitude(ds12)
+        ds12 = _shift_longitude(ds12)
     except Exception as e:
         pass
     
     
     try:
-        ds13 = xr.open_mfdataset(files, 
+        ds13 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -481,12 +481,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'heightAboveGround'})
         
-        ds13 = shift_longitude(ds13)
+        ds13 = _shift_longitude(ds13)
     except Exception as e:
         pass
     
     try:
-        ds14 = xr.open_mfdataset(files, 
+        ds14 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -495,12 +495,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':167})
         
-        ds14 = shift_longitude(ds14)
+        ds14 = _shift_longitude(ds14)
     except Exception as e:
         pass
     
     try:
-        ds15 = xr.open_mfdataset(files, 
+        ds15 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -509,12 +509,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':174096})
         
-        ds15 = shift_longitude(ds15)
+        ds15 = _shift_longitude(ds15)
     except Exception as e:
         pass
     
     try:
-        ds16 = xr.open_mfdataset(files, 
+        ds16 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -523,12 +523,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':168})
         
-        ds16 = shift_longitude(ds16)
+        ds16 = _shift_longitude(ds16)
     except Exception as e:
         pass
     
     try:
-        ds17 = xr.open_mfdataset(files, 
+        ds17 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -537,12 +537,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':260242})
         
-        ds17 = shift_longitude(ds17)
+        ds17 = _shift_longitude(ds17)
     except Exception as e:
         pass
     
     try:
-        ds18 = xr.open_mfdataset(files, 
+        ds18 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -551,12 +551,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':165})
         
-        ds18 = shift_longitude(ds18)
+        ds18 = _shift_longitude(ds18)
     except Exception as e:
         pass
     
     try:
-        ds19 = xr.open_mfdataset(files, 
+        ds19 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -565,12 +565,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':166})
         
-        ds19 = shift_longitude(ds19)
+        ds19 = _shift_longitude(ds19)
     except Exception as e:
         pass
     
     try:
-        ds20 = xr.open_mfdataset(files, 
+        ds20 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -579,12 +579,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':131})
         
-        ds20 = shift_longitude(ds20)
+        ds20 = _shift_longitude(ds20)
     except Exception as e:
         pass
     
     try:
-        ds21 = xr.open_mfdataset(files, 
+        ds21 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -593,12 +593,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':132})
         
-        ds21 = shift_longitude(ds21)
+        ds21 = _shift_longitude(ds21)
     except Exception as e:
         pass
     
     try:
-        ds22 = xr.open_mfdataset(files, 
+        ds22 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -607,12 +607,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':130})
         
-        ds22 = shift_longitude(ds22)
+        ds22 = _shift_longitude(ds22)
     except Exception as e:
         pass
     
     try:
-        ds23 = xr.open_mfdataset(files, 
+        ds23 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -621,12 +621,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':133})
         
-        ds23 = shift_longitude(ds23)
+        ds23 = _shift_longitude(ds23)
     except Exception as e:
         pass
     
     try:
-        ds24 = xr.open_mfdataset(files, 
+        ds24 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -635,12 +635,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':54})
         
-        ds24 = shift_longitude(ds24)
+        ds24 = _shift_longitude(ds24)
     except Exception as e:
         pass
     
     try:
-        ds25 = xr.open_mfdataset(files, 
+        ds25 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -649,12 +649,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':228246})
         
-        ds25 = shift_longitude(ds25)
+        ds25 = _shift_longitude(ds25)
     except Exception as e:
         pass
     
     try:
-        ds26 = xr.open_mfdataset(files, 
+        ds26 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -663,12 +663,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':228247})
         
-        ds26 = shift_longitude(ds26)
+        ds26 = _shift_longitude(ds26)
     except Exception as e:
         pass
     
     try:
-        ds27 = xr.open_mfdataset(files, 
+        ds27 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -677,12 +677,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'depthBelowLandLayer'})
         
-        ds27 = shift_longitude(ds27)
+        ds27 = _shift_longitude(ds27)
     except Exception as e:
         pass
     
     try:
-        ds28 = xr.open_mfdataset(files, 
+        ds28 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -691,12 +691,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'heightAboveSea','paramId':130})
         
-        ds28 = shift_longitude(ds28)
+        ds28 = _shift_longitude(ds28)
     except Exception as e:
         pass
     
     try:
-        ds29 = xr.open_mfdataset(files, 
+        ds29 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -705,12 +705,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'heightAboveSea','paramId':131})
         
-        ds29 = shift_longitude(ds29)
+        ds29 = _shift_longitude(ds29)
     except Exception as e:
         pass
     
     try:
-        ds30 = xr.open_mfdataset(files, 
+        ds30 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -719,12 +719,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'heightAboveSea','paramId':132})
         
-        ds30 = shift_longitude(ds30)
+        ds30 = _shift_longitude(ds30)
     except Exception as e:
         pass
     
     try:
-        ds31 = xr.open_mfdataset(files, 
+        ds31 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -733,12 +733,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'atmosphereSingleLayer'})
         
-        ds31 = shift_longitude(ds31)
+        ds31 = _shift_longitude(ds31)
     except Exception as e:
         pass
     
     try:
-        ds32 = xr.open_mfdataset(files, 
+        ds32 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -747,12 +747,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'lowCloudLayer'})
         
-        ds32 = shift_longitude(ds32)
+        ds32 = _shift_longitude(ds32)
     except Exception as e:
         pass
     
     try:
-        ds33 = xr.open_mfdataset(files, 
+        ds33 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -761,12 +761,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'middleCloudLayer'})
         
-        ds33 = shift_longitude(ds33)
+        ds33 = _shift_longitude(ds33)
     except Exception as e:
         pass
     
     try:
-        ds34 = xr.open_mfdataset(files, 
+        ds34 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -775,12 +775,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'highCloudLayer'})
         
-        ds34 = shift_longitude(ds34)
+        ds34 = _shift_longitude(ds34)
     except Exception as e:
         pass
     
     try:
-        ds35 = xr.open_mfdataset(files, 
+        ds35 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -789,12 +789,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'cloudCeiling'})
         
-        ds35 = shift_longitude(ds35)
+        ds35 = _shift_longitude(ds35)
     except Exception as e:
         pass
     
     try:
-        ds36 = xr.open_mfdataset(files, 
+        ds36 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -803,12 +803,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'heightAboveGroundLayer'})
         
-        ds36 = shift_longitude(ds36)
+        ds36 = _shift_longitude(ds36)
     except Exception as e:
         pass
     
     try:
-        ds37 = xr.open_mfdataset(files, 
+        ds37 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -817,12 +817,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'heightAboveGroundLayer','paramId':260070})
         
-        ds37 = shift_longitude(ds37)
+        ds37 = _shift_longitude(ds37)
     except Exception as e:
         pass
     
     try:
-        ds38 = xr.open_mfdataset(files, 
+        ds38 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -831,12 +831,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'heightAboveGroundLayer','paramId':260071})
         
-        ds38 = shift_longitude(ds38)
+        ds38 = _shift_longitude(ds38)
     except Exception as e:
         pass
     
     try:
-        ds39 = xr.open_mfdataset(files, 
+        ds39 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -845,12 +845,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'tropopause'})
         
-        ds39 = shift_longitude(ds39)
+        ds39 = _shift_longitude(ds39)
     except Exception as e:
         pass
     
     try:
-        ds40 = xr.open_mfdataset(files, 
+        ds40 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -859,12 +859,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'maxWind'})
         
-        ds40 = shift_longitude(ds40)
+        ds40 = _shift_longitude(ds40)
     except Exception as e:
         pass
     
     try:
-        ds41 = xr.open_mfdataset(files, 
+        ds41 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -873,12 +873,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'isothermZero'})
         
-        ds41 = shift_longitude(ds41)
+        ds41 = _shift_longitude(ds41)
     except Exception as e:
         pass
     
     try:
-        ds42 = xr.open_mfdataset(files, 
+        ds42 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -887,12 +887,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'highestTroposphericFreezing'})
         
-        ds42 = shift_longitude(ds42)
+        ds42 = _shift_longitude(ds42)
     except Exception as e:
         pass
     
     try:
-        ds43 = xr.open_mfdataset(files, 
+        ds43 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -901,12 +901,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer'})
         
-        ds43 = shift_longitude(ds43)
+        ds43 = _shift_longitude(ds43)
     except Exception as e:
         pass
     
     try:
-        ds44 = xr.open_mfdataset(files, 
+        ds44 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -915,12 +915,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer','paramId':59})
         
-        ds44 = shift_longitude(ds44)
+        ds44 = _shift_longitude(ds44)
     except Exception as e:
         pass
     
     try:
-        ds45 = xr.open_mfdataset(files, 
+        ds45 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -929,12 +929,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer','paramId':228001})
         
-        ds45 = shift_longitude(ds45)
+        ds45 = _shift_longitude(ds45)
     except Exception as e:
         pass
     
     try:
-        ds46 = xr.open_mfdataset(files, 
+        ds46 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -943,12 +943,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer','paramId':260325})
         
-        ds46 = shift_longitude(ds46)
+        ds46 = _shift_longitude(ds46)
     except Exception as e:
         pass
     
     try:
-        ds47 = xr.open_mfdataset(files, 
+        ds47 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -957,12 +957,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'sigmaLayer'})
         
-        ds47 = shift_longitude(ds47)
+        ds47 = _shift_longitude(ds47)
     except Exception as e:
         pass
     
     try:
-        ds48 = xr.open_mfdataset(files, 
+        ds48 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -971,12 +971,12 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'sigma'})
         
-        ds48 = shift_longitude(ds48)
+        ds48 = _shift_longitude(ds48)
     except Exception as e:
         pass
     
     try:
-        ds49 = xr.open_mfdataset(files, 
+        ds49 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -985,7 +985,7 @@ def primary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'potentialVorticity'})
         
-        ds49 = shift_longitude(ds49)
+        ds49 = _shift_longitude(ds49)
     except Exception as e:
         pass
     
@@ -1611,13 +1611,13 @@ def primary_gfs_post_processing(path):
     except Exception as e:
         pass    
     
-    clear_idx_files_in_path(path)
+    _clear_idx_files_in_path(path)
     
     try:    
         ds = ds.sortby('step')
     except Exception as e:
         _eccodes_error_intructions()
-        sys.exit(1)
+        _sys.exit(1)
     
     return ds
 
@@ -1676,11 +1676,11 @@ def secondary_gfs_post_processing(path):
     
     """
     
-    clear_idx_files_in_path(path)
-    files = sorted_paths(path)
+    _clear_idx_files_in_path(path)
+    files = _sorted_paths(path)
 
     try:
-        ds = xr.open_mfdataset(files, 
+        ds = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -1689,12 +1689,12 @@ def secondary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'isobaricInhPa'})
         
-        ds = shift_longitude(ds)
+        ds = _shift_longitude(ds)
     except Exception as e:
         pass
     
     try:
-        ds1 = xr.open_mfdataset(files, 
+        ds1 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -1703,12 +1703,12 @@ def secondary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'isobaricInhPa','paramId':260131})
         
-        ds1 = shift_longitude(ds1)
+        ds1 = _shift_longitude(ds1)
     except Exception as e:
         pass
     
     try:
-        ds2 = xr.open_mfdataset(files, 
+        ds2 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -1717,12 +1717,12 @@ def secondary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'isobaricInhPa','paramId':228164})
         
-        ds2 = shift_longitude(ds2)
+        ds2 = _shift_longitude(ds2)
     except Exception as e:
         pass
     
     try:
-        ds3 = xr.open_mfdataset(files, 
+        ds3 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -1731,12 +1731,12 @@ def secondary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'isobaricInhPa','paramId':260018})
         
-        ds3 = shift_longitude(ds3)
+        ds3 = _shift_longitude(ds3)
     except Exception as e:
         pass
     
     try:
-        ds4 = xr.open_mfdataset(files, 
+        ds4 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -1745,12 +1745,12 @@ def secondary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'isobaricInhPa','paramId':260019})
         
-        ds4 = shift_longitude(ds4)
+        ds4 = _shift_longitude(ds4)
     except Exception as e:
         pass
     
     try:
-        ds5 = xr.open_mfdataset(files, 
+        ds5 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -1759,12 +1759,12 @@ def secondary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'isobaricInhPa','paramId':260020})
         
-        ds5 = shift_longitude(ds5)
+        ds5 = _shift_longitude(ds5)
     except Exception as e:
         pass
     
     try:
-        ds6 = xr.open_mfdataset(files, 
+        ds6 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -1773,12 +1773,12 @@ def secondary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'isobaricInhPa','paramId':260021})
         
-        ds6 = shift_longitude(ds6)
+        ds6 = _shift_longitude(ds6)
     except Exception as e:
         pass
     
     try:
-        ds7 = xr.open_mfdataset(files, 
+        ds7 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -1787,12 +1787,12 @@ def secondary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'isobaricInhPa','paramId':260028})
         
-        ds7 = shift_longitude(ds7)
+        ds7 = _shift_longitude(ds7)
     except Exception as e:
         pass
     
     try:
-        ds8 = xr.open_mfdataset(files, 
+        ds8 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -1801,12 +1801,12 @@ def secondary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'isobaricInhPa','paramId':135})
         
-        ds8 = shift_longitude(ds8)
+        ds8 = _shift_longitude(ds8)
     except Exception as e:
         pass
     
     try:
-        ds9 = xr.open_mfdataset(files, 
+        ds9 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -1815,12 +1815,12 @@ def secondary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'isobaricInhPa','paramId':260238})
         
-        ds9 = shift_longitude(ds9)
+        ds9 = _shift_longitude(ds9)
     except Exception as e:
         pass
     
     try:
-        ds10 = xr.open_mfdataset(files, 
+        ds10 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -1829,12 +1829,12 @@ def secondary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'depthBelowLandLayer'})
         
-        ds10 = shift_longitude(ds10)
+        ds10 = _shift_longitude(ds10)
     except Exception as e:
         pass
     
     try:
-        ds11 = xr.open_mfdataset(files, 
+        ds11 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -1843,12 +1843,12 @@ def secondary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'surface'})
         
-        ds11 = shift_longitude(ds11)
+        ds11 = _shift_longitude(ds11)
     except Exception as e:
         pass
     
     try:
-        ds12 = xr.open_mfdataset(files, 
+        ds12 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -1857,12 +1857,12 @@ def secondary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'heightAboveSea'})
         
-        ds12 = shift_longitude(ds12)
+        ds12 = _shift_longitude(ds12)
     except Exception as e:
         pass
     
     try:
-        ds13 = xr.open_mfdataset(files, 
+        ds13 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -1871,12 +1871,12 @@ def secondary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer'})
         
-        ds13 = shift_longitude(ds13)
+        ds13 = _shift_longitude(ds13)
     except Exception as e:
         pass 
     
     try:
-        ds14 = xr.open_mfdataset(files, 
+        ds14 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -1885,7 +1885,7 @@ def secondary_gfs_post_processing(path):
                             decode_timedelta=False,
                             filter_by_keys={'typeOfLevel': 'potentialVorticity'})
         
-        ds14 = shift_longitude(ds14)
+        ds14 = _shift_longitude(ds14)
     except Exception as e:
         pass 
     
@@ -2061,12 +2061,12 @@ def secondary_gfs_post_processing(path):
     except Exception as e:
         pass    
     
-    clear_idx_files_in_path(path)
+    _clear_idx_files_in_path(path)
     
     try:    
         ds = ds.sortby('step')
     except Exception as e:
         _eccodes_error_intructions()
-        sys.exit(1)
+        _sys.exit(1)
     
     return ds

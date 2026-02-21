@@ -3,29 +3,33 @@ This file hosts the function that downloads and returns RTMA Data from the NCEP/
 
 (C) Eric J. Drewitz 2025-2026
 """
-import os
-import warnings
-import wxdata.client.client as client
-warnings.filterwarnings('ignore')
+import os as _os
+import warnings as _warnings
+import wxdata.client.client as _client
+_warnings.filterwarnings('ignore')
 
 from wxdata.rtma.file_funcs import(
-     build_directory,
-     clear_idx_files
+     build_directory as _build_directory,
+     clear_idx_files as _clear_idx_files
 )
 
 from wxdata.rtma.url_scanners import(
-    rtma_url_scanner,
-    rtma_comparison_url_scanner
+    rtma_url_scanner as _rtma_url_scanner,
+    rtma_comparison_url_scanner as _rtma_comparison_url_scanner
 )
 
-from wxdata.utils.file_funcs import custom_branch
-from wxdata.calc.derived_fields import rtma_derived_fields
-from wxdata.utils.file_scanner import local_file_scanner
-from wxdata.calc.unit_conversion import convert_temperature_units
-from wxdata.rtma.process import process_rtma_data
-from wxdata.utils.recycle_bin import *
+from wxdata.utils.file_funcs import custom_branch as _custom_branch
+from wxdata.calc.derived_fields import rtma_derived_fields as _rtma_derived_fields
+from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
+from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
+from wxdata.rtma.process import process_rtma_data as _process_rtma_data
+from wxdata.utils.recycle_bin import(
+    clear_recycle_bin_windows as _clear_recycle_bin_windows,
+    clear_trash_bin_mac as _clear_trash_bin_mac,
+    clear_trash_bin_linux as _clear_trash_bin_linux
+)
 
-def bounds(model):
+def _bounds(model):
     
     """
     This function determines the boundaries for the data based on the region.
@@ -159,23 +163,23 @@ def rtma(model='rtma',
     """
     
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     
     model = model.upper()
     cat = cat.upper()
     
     if custom_directory == None:
-        path = build_directory(model,
+        path = _build_directory(model,
                             cat)
     else:
-        path = custom_branch(custom_directory)
+        path = _custom_branch(custom_directory)
     
-    clear_idx_files(path)
+    _clear_idx_files(path)
     
     if western_bound == None and eastern_bound == None and southern_bound == None and northern_bound == None:
-        western_bound, eastern_bound, southern_bound, northern_bound = bounds(model)
+        western_bound, eastern_bound, southern_bound, northern_bound = _bounds(model)
     else:
         western_bound = western_bound
         eastern_bound = eastern_bound 
@@ -184,17 +188,17 @@ def rtma(model='rtma',
             
     try:
         files = []
-        for file in os.listdir(f"{path}"):
+        for file in _os.listdir(f"{path}"):
             files.append(file)
         if len(files) > 2:
-            for file in os.listdir(f"{path}"):
-                os.remove(f"{path}/{file}")
+            for file in _os.listdir(f"{path}"):
+                _os.remove(f"{path}/{file}")
         else:
             pass
     except Exception as e:
         pass
     
-    url, filename, run = rtma_url_scanner(model, 
+    url, filename, run = _rtma_url_scanner(model, 
                     cat,
                     western_bound, 
                     eastern_bound, 
@@ -202,9 +206,7 @@ def rtma(model='rtma',
                     southern_bound, 
                     proxies)
     
-    print(filename)
-    
-    download = local_file_scanner(path, 
+    download = _local_file_scanner(path, 
                                 filename,
                                 'nomads',
                                 run) 
@@ -218,12 +220,12 @@ def rtma(model='rtma',
         print(f"Downloading {model.upper()}...")
         
         try:
-            for file in os.listdir(f"{path}"):
-                os.remove(f"{path}/{file}")
+            for file in _os.listdir(f"{path}"):
+                _os.remove(f"{path}/{file}")
         except Exception as e:
             pass
 
-        client.get_gridded_data(f"{url}", 
+        _client.get_gridded_data(f"{url}", 
                     path,
                     f"{filename}.grib2",
                     proxies=proxies,
@@ -237,14 +239,14 @@ def rtma(model='rtma',
     if process_data == True:
         print(f"{model.upper()} Data Processing...")
         filename = f"{filename}.grib2"
-        ds = process_rtma_data(path, 
+        ds = _process_rtma_data(path, 
                                 filename, 
                                 model)
         
         
         if convert_temperature == True:
             try:
-                ds = convert_temperature_units(ds, 
+                ds = _convert_temperature_units(ds, 
                                                 convert_to)
             except Exception as e:
                 pass
@@ -253,13 +255,13 @@ def rtma(model='rtma',
             pass
         
         try:
-            ds = rtma_derived_fields(ds,
+            ds = _rtma_derived_fields(ds,
                                     convert_temperature,
                                     convert_to)
         except Exception as e:
             pass
 
-        clear_idx_files(path)
+        _clear_idx_files(path)
         
         print(f"{model.upper()} Data Processing Complete.")
         return ds
@@ -384,42 +386,42 @@ def rtma_comparison(model='rtma',
     """
     
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     
     model = model.upper()
     cat = cat.upper()
     
     if custom_directory == None:
-        path = build_directory(model,
+        path = _build_directory(model,
                             cat)
     else:
-        path = custom_branch(custom_directory)
+        path = _custom_branch(custom_directory)
     
-    clear_idx_files(path)
+    _clear_idx_files(path)
     
     try:
         files = []
-        for file in os.listdir(f"{path}"):
+        for file in _os.listdir(f"{path}"):
             files.append(file)
         if len(files) > 2:
-            for file in os.listdir(f"{path}"):
-                os.remove(f"{path}/{file}")
+            for file in _os.listdir(f"{path}"):
+                _os.remove(f"{path}/{file}")
         else:
             pass
     except Exception as e:
         pass
     
     if western_bound == None and eastern_bound == None and southern_bound == None and northern_bound == None:
-        western_bound, eastern_bound, southern_bound, northern_bound = bounds(model)
+        western_bound, eastern_bound, southern_bound, northern_bound = _bounds(model)
     else:
         western_bound = western_bound
         eastern_bound = eastern_bound 
         southern_bound = southern_bound 
         northern_bound = northern_bound
     
-    url, url_dt, filename, filename_dt, run = rtma_comparison_url_scanner(model, 
+    url, url_dt, filename, filename_dt, run = _rtma_comparison_url_scanner(model, 
                     cat,
                     western_bound, 
                     eastern_bound, 
@@ -428,7 +430,7 @@ def rtma_comparison(model='rtma',
                     proxies,
                     hours)
     
-    download = local_file_scanner(path, 
+    download = _local_file_scanner(path, 
                                 filename,
                                 source='nomads',
                                 run=run) 
@@ -441,20 +443,20 @@ def rtma_comparison(model='rtma',
     if download == True:
         
         try:
-            for file in os.listdir(f"{path}"):
-                os.remove(f"{path}/{file}")
+            for file in _os.listdir(f"{path}"):
+                _os.remove(f"{path}/{file}")
         except Exception as e:
             pass
         
         print(f"Current {model.upper()} Data Downloading...")
-        client.get_gridded_data(f"{url}", 
+        _client.get_gridded_data(f"{url}", 
                     path,
                     f"{filename}.grib2",
                     proxies=proxies,
                     chunk_size=chunk_size,
                     notifications=notifications)
         print(f"Comparison {model.upper()} Data Downloading...")
-        client.get_gridded_data(f"{url_dt}", 
+        _client.get_gridded_data(f"{url_dt}", 
                     path,
                     f"{filename_dt}.grib2",
                     proxies=proxies,
@@ -467,21 +469,21 @@ def rtma_comparison(model='rtma',
     if process_data == True:
         print(f"{model.upper()} Data Processing...")
         filename = f"{filename}.grib2"
-        ds = process_rtma_data(path, 
+        ds = _process_rtma_data(path, 
                                 filename, 
                                 model)
         
         filename_dt = f"{filename_dt}.grib2"
-        ds_dt = process_rtma_data(path, 
+        ds_dt = _process_rtma_data(path, 
                                 filename_dt, 
                                 model)
         
         if convert_temperature == True:
             try:
-                ds = convert_temperature_units(ds, 
+                ds = _convert_temperature_units(ds, 
                                                 convert_to)
                 
-                ds_dt = convert_temperature_units(ds_dt, 
+                ds_dt = _convert_temperature_units(ds_dt, 
                                                 convert_to)
             except Exception as e:
                 pass
@@ -490,18 +492,18 @@ def rtma_comparison(model='rtma',
             pass
         
         try:    
-            ds = rtma_derived_fields(ds,
+            ds = _rtma_derived_fields(ds,
                                 convert_temperature,
                                 convert_to)
                 
-            ds_dt = rtma_derived_fields(ds_dt,
+            ds_dt = _rtma_derived_fields(ds_dt,
                                 convert_temperature,
                                 convert_to)
         except Exception as e:
             pass
 
 
-        clear_idx_files(path)
+        _clear_idx_files(path)
         
         print(f"{model.upper()} Data Processing Complete.")
         return ds, ds_dt

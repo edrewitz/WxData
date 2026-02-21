@@ -4,9 +4,9 @@ This file hosts the function on automating external Python scripts
 (C) Eric J. Drewitz 2025-2026
 """
 
-import subprocess
-import sys
-import os
+import subprocess as _subprocess
+import sys as _sys
+import os as _os
 
 def run_external_scripts(paths,
                          show_values=False):
@@ -41,16 +41,16 @@ def run_external_scripts(paths,
     """
     
     for path in paths:
-        command = [sys.executable, path]
+        command = [_sys.executable, path]
 
-        fname = os.path.basename(path)
+        fname = _os.path.basename(path)
         
         try:
-            result = subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            result = _subprocess.run(command, check=True, stdout=_subprocess.PIPE, stderr=_subprocess.PIPE, text=True)
             if show_values == True:
                 print(result.stdout)
             print(f"{fname} ran successfully.")
-        except subprocess.CalledProcessError as e:
+        except _subprocess.CalledProcessError as e:
             print(f"Script failed with return code {e.returncode}. Error:")
             print(e.stderr)
         except FileNotFoundError:

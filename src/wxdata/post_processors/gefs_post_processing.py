@@ -5,21 +5,21 @@ GRIB variable keys will be post-processed into Plain Language variable keys.
 
 (C) Eric J. Drewitz 2025-2026
 """
-import xarray as xr
-import sys
-import logging
-import warnings
-warnings.filterwarnings('ignore')
+import xarray as _xr
+import sys as _sys
+import logging as _logging
+import warnings as _warnings
+_warnings.filterwarnings('ignore')
 
 from wxdata.utils.file_funcs import(
-    file_paths_for_xarray,
-    clear_gefs_idx_files
+    file_paths_for_xarray as _file_paths_for_xarray,
+    clear_gefs_idx_files as _clear_gefs_idx_files
 )
 
-from wxdata.utils.coords import shift_longitude
+from wxdata.utils.coords import shift_longitude as _shift_longitude
 
-sys.tracebacklimit = 0
-logging.disable()
+_sys.tracebacklimit = 0
+_logging.disable()
 
 def _eccodes_error_intructions():
     
@@ -168,17 +168,17 @@ def primary_gefs_post_processing(paths):
     
     """
 
-    clear_gefs_idx_files(paths)
+    _clear_gefs_idx_files(paths)
 
     if len(paths) > 1:
         
-        paths = file_paths_for_xarray(paths)
+        paths = _file_paths_for_xarray(paths)
         try:
             ds_list_1 = []
             
             for path in paths:
                 file_pattern = path
-                ds1 = xr.open_mfdataset(file_pattern, 
+                ds1 = _xr.open_mfdataset(file_pattern, 
                                         concat_dim='step', 
                                         combine='nested', 
                                         coords='minimal', 
@@ -186,7 +186,7 @@ def primary_gefs_post_processing(paths):
                                         compat='override', 
                                         decode_timedelta=False, 
                                         filter_by_keys={'typeOfLevel': 'surface'})
-                ds1 = shift_longitude(ds1)
+                ds1 = _shift_longitude(ds1)
                 ds_list_1.append(ds1)
         except Exception as e:
             pass
@@ -194,7 +194,7 @@ def primary_gefs_post_processing(paths):
             ds_list_2 = []
             for path in paths:
                 file_pattern = path
-                ds2 = xr.open_mfdataset(file_pattern, 
+                ds2 = _xr.open_mfdataset(file_pattern, 
                                         concat_dim='step', 
                                         combine='nested', 
                                         coords='minimal', 
@@ -202,7 +202,7 @@ def primary_gefs_post_processing(paths):
                                         compat='override', 
                                         decode_timedelta=False, 
                                         filter_by_keys={'typeOfLevel': 'meanSea'})
-                ds2 = shift_longitude(ds2)
+                ds2 = _shift_longitude(ds2)
                 ds_list_2.append(ds2)
         except Exception as e:
             pass                
@@ -210,7 +210,7 @@ def primary_gefs_post_processing(paths):
             ds_list_3 = []
             for path in paths:
                 file_pattern = path
-                ds3 = xr.open_mfdataset(file_pattern, 
+                ds3 = _xr.open_mfdataset(file_pattern, 
                                         concat_dim='step', 
                                         combine='nested', 
                                         coords='minimal', 
@@ -218,7 +218,7 @@ def primary_gefs_post_processing(paths):
                                         compat='override', 
                                         decode_timedelta=False, 
                                         filter_by_keys={'typeOfLevel': 'depthBelowLandLayer'})
-                ds3 = shift_longitude(ds3)
+                ds3 = _shift_longitude(ds3)
                 ds_list_3.append(ds3)
         except Exception as e:
             pass                
@@ -226,7 +226,7 @@ def primary_gefs_post_processing(paths):
             ds_list_4 = []
             for path in paths:
                 file_pattern = path
-                ds4 = xr.open_mfdataset(file_pattern, 
+                ds4 = _xr.open_mfdataset(file_pattern, 
                                         concat_dim='step', 
                                         combine='nested', 
                                         coords='minimal', 
@@ -234,7 +234,7 @@ def primary_gefs_post_processing(paths):
                                         compat='override', 
                                         decode_timedelta=False, 
                                         filter_by_keys={'typeOfLevel': 'heightAboveGround'})
-                ds4 = shift_longitude(ds4)
+                ds4 = _shift_longitude(ds4)
                 ds_list_4.append(ds4)
         except Exception as e:
             pass       
@@ -243,7 +243,7 @@ def primary_gefs_post_processing(paths):
             ds_list_5 = []
             for path in paths:
                 file_pattern = path
-                ds5 = xr.open_mfdataset(file_pattern, 
+                ds5 = _xr.open_mfdataset(file_pattern, 
                                         concat_dim='step', 
                                         combine='nested', 
                                         coords='minimal', 
@@ -251,7 +251,7 @@ def primary_gefs_post_processing(paths):
                                         compat='override', 
                                         decode_timedelta=False, 
                                         filter_by_keys={'typeOfLevel': 'heightAboveGround', 'shortName':'10u'})
-                ds5 = shift_longitude(ds5)
+                ds5 = _shift_longitude(ds5)
                 ds_list_5.append(ds5)
         except Exception as e:
             pass  
@@ -260,7 +260,7 @@ def primary_gefs_post_processing(paths):
             ds_list_6 = []
             for path in paths:
                 file_pattern = path
-                ds6 = xr.open_mfdataset(file_pattern, 
+                ds6 = _xr.open_mfdataset(file_pattern, 
                                         concat_dim='step', 
                                         combine='nested', 
                                         coords='minimal', 
@@ -268,7 +268,7 @@ def primary_gefs_post_processing(paths):
                                         compat='override', 
                                         decode_timedelta=False, 
                                         filter_by_keys={'typeOfLevel': 'heightAboveGround', 'shortName':'10v'})
-                ds6 = shift_longitude(ds6)
+                ds6 = _shift_longitude(ds6)
                 ds_list_6.append(ds6)
         except Exception as e:
             pass           
@@ -277,7 +277,7 @@ def primary_gefs_post_processing(paths):
             ds_list_7 = []
             for path in paths:
                 file_pattern = path
-                ds7 = xr.open_mfdataset(file_pattern, 
+                ds7 = _xr.open_mfdataset(file_pattern, 
                                         concat_dim='step', 
                                         combine='nested', 
                                         coords='minimal', 
@@ -285,7 +285,7 @@ def primary_gefs_post_processing(paths):
                                         compat='override', 
                                         decode_timedelta=False, 
                                         filter_by_keys={'typeOfLevel': 'atmosphereSingleLayer'})
-                ds7 = shift_longitude(ds7)
+                ds7 = _shift_longitude(ds7)
                 ds_list_7.append(ds7)
         except Exception as e:
             pass    
@@ -293,7 +293,7 @@ def primary_gefs_post_processing(paths):
             ds_list_8 = []
             for path in paths:
                 file_pattern = path
-                ds8 = xr.open_mfdataset(file_pattern, 
+                ds8 = _xr.open_mfdataset(file_pattern, 
                                         concat_dim='step', 
                                         combine='nested', 
                                         coords='minimal', 
@@ -301,7 +301,7 @@ def primary_gefs_post_processing(paths):
                                         compat='override', 
                                         decode_timedelta=False, 
                                         filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer'})
-                ds8 = shift_longitude(ds8)
+                ds8 = _shift_longitude(ds8)
                 ds_list_8.append(ds8)
         except Exception as e:
             pass    
@@ -309,7 +309,7 @@ def primary_gefs_post_processing(paths):
             ds_list_9 = []
             for path in paths:
                 file_pattern = path
-                ds9 = xr.open_mfdataset(file_pattern, 
+                ds9 = _xr.open_mfdataset(file_pattern, 
                                         concat_dim='step', 
                                         combine='nested', 
                                         coords='minimal', 
@@ -317,7 +317,7 @@ def primary_gefs_post_processing(paths):
                                         compat='override', 
                                         decode_timedelta=False, 
                                         filter_by_keys={'typeOfLevel': 'isobaricInhPa'})
-                ds9 = shift_longitude(ds9)
+                ds9 = _shift_longitude(ds9)
                 ds_list_9.append(ds9)
         except Exception as e:
             pass    
@@ -325,7 +325,7 @@ def primary_gefs_post_processing(paths):
             ds_list_10 = []
             for path in paths:
                 file_pattern = path
-                ds10 = xr.open_mfdataset(file_pattern, 
+                ds10 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step', 
                                          combine='nested', 
                                          coords='minimal', 
@@ -333,7 +333,7 @@ def primary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'t'})
-                ds10 = shift_longitude(ds10)
+                ds10 = _shift_longitude(ds10)
                 ds_list_10.append(ds10)
         except Exception as e:
             pass    
@@ -341,7 +341,7 @@ def primary_gefs_post_processing(paths):
             ds_list_11 = []
             for path in paths:
                 file_pattern = path
-                ds11 = xr.open_mfdataset(file_pattern, 
+                ds11 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step', 
                                          combine='nested', 
                                          coords='minimal', 
@@ -349,7 +349,7 @@ def primary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'r'})
-                ds11 = shift_longitude(ds11)
+                ds11 = _shift_longitude(ds11)
                 ds_list_11.append(ds11)
         except Exception as e:
             pass    
@@ -357,7 +357,7 @@ def primary_gefs_post_processing(paths):
             ds_list_12 = []
             for path in paths:
                 file_pattern = path
-                ds12 = xr.open_mfdataset(file_pattern, 
+                ds12 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step', 
                                          combine='nested', 
                                          coords='minimal', 
@@ -365,7 +365,7 @@ def primary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'u'})
-                ds12 = shift_longitude(ds12)
+                ds12 = _shift_longitude(ds12)
                 ds_list_12.append(ds12)
         except Exception as e:
             pass    
@@ -373,7 +373,7 @@ def primary_gefs_post_processing(paths):
             ds_list_13 = []
             for path in paths:
                 file_pattern = path
-                ds13 = xr.open_mfdataset(file_pattern, 
+                ds13 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step', 
                                          combine='nested', 
                                          coords='minimal', 
@@ -381,7 +381,7 @@ def primary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'v'})
-                ds13 = shift_longitude(ds13)
+                ds13 = _shift_longitude(ds13)
                 ds_list_13.append(ds13)
         except Exception as e:
             pass   
@@ -390,7 +390,7 @@ def primary_gefs_post_processing(paths):
             ds_list_14 = []
             for path in paths:
                 file_pattern = path
-                ds14 = xr.open_mfdataset(file_pattern, 
+                ds14 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step', 
                                          combine='nested', 
                                          coords='minimal', 
@@ -398,82 +398,82 @@ def primary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'heightAboveGroundLayer'})
-                ds14 = shift_longitude(ds14)
+                ds14 = _shift_longitude(ds14)
                 ds_list_14.append(ds14)
         except Exception as e:
             pass                       
         
 
         try:
-            ds = xr.concat(ds_list_1, 
+            ds = _xr.concat(ds_list_1, 
                            dim='number')
         except Exception as e:
             pass                
         try:    
-            ds1 = xr.concat(ds_list_2, 
+            ds1 = _xr.concat(ds_list_2, 
                             dim='number')
         except Exception as e:
             pass                
         try:            
-            ds2 = xr.concat(ds_list_3, 
+            ds2 = _xr.concat(ds_list_3, 
                             dim='number')
         except Exception as e:
             pass                
         try:            
-            ds3 = xr.concat(ds_list_4, 
+            ds3 = _xr.concat(ds_list_4, 
                             dim='number')
         except Exception as e:
             pass                
         try:            
-            ds4 = xr.concat(ds_list_5, 
+            ds4 = _xr.concat(ds_list_5, 
                             dim='number')
         except Exception as e:
             pass                
         try:            
-            ds5 = xr.concat(ds_list_6, 
+            ds5 = _xr.concat(ds_list_6, 
                             dim='number')
         except Exception as e:
             pass                
         try:            
-            ds6 = xr.concat(ds_list_7, 
+            ds6 = _xr.concat(ds_list_7, 
                             dim='number')
         except Exception as e:
             pass                
         try:            
-            ds7 = xr.concat(ds_list_8, 
+            ds7 = _xr.concat(ds_list_8, 
                             dim='number')
         except Exception as e:
             pass                
         try:            
-            ds8 = xr.concat(ds_list_9, 
+            ds8 = _xr.concat(ds_list_9, 
                             dim='number')
         except Exception as e:
             pass                
         try:            
-            ds9 = xr.concat(ds_list_10, 
+            ds9 = _xr.concat(ds_list_10, 
                             dim='number')
         except Exception as e:
             pass                
         try:            
-            ds10 = xr.concat(ds_list_11, 
+            ds10 = _xr.concat(ds_list_11, 
                              dim='number') 
         except Exception as e:
             pass    
         
         try:            
-            ds11 = xr.concat(ds_list_12, 
+            ds11 = _xr.concat(ds_list_12, 
                              dim='number') 
         except Exception as e:
             pass    
         
         try:            
-            ds12 = xr.concat(ds_list_13, 
+            ds12 = _xr.concat(ds_list_13, 
                              dim='number') 
         except Exception as e:
             pass  
         
         try:            
-            ds13 = xr.concat(ds_list_14, 
+            ds13 = _xr.concat(ds_list_14, 
                              dim='number') 
         except Exception as e:
             pass  
@@ -530,10 +530,10 @@ def primary_gefs_post_processing(paths):
         
     else:
         
-        file_pattern = file_paths_for_xarray(paths)
+        file_pattern = _file_paths_for_xarray(paths)
         
         try:
-            ds = xr.open_mfdataset(file_pattern, 
+            ds = _xr.open_mfdataset(file_pattern, 
                                 concat_dim='step', 
                                 combine='nested', 
                                 coords='minimal', 
@@ -541,12 +541,12 @@ def primary_gefs_post_processing(paths):
                                 compat='override', 
                                 decode_timedelta=False, 
                                 filter_by_keys={'typeOfLevel': 'surface'})
-            ds = shift_longitude(ds)
+            ds = _shift_longitude(ds)
         except Exception as e:
             pass
 
         try:        
-            ds1 = xr.open_mfdataset(file_pattern, 
+            ds1 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step', 
                                     combine='nested', 
                                     coords='minimal', 
@@ -554,12 +554,12 @@ def primary_gefs_post_processing(paths):
                                     compat='override', 
                                     decode_timedelta=False, 
                                     filter_by_keys={'typeOfLevel': 'meanSea'})
-            ds1 = shift_longitude(ds1)
+            ds1 = _shift_longitude(ds1)
         except Exception as e:
             pass
 
         try: 
-            ds2 = xr.open_mfdataset(file_pattern, 
+            ds2 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step', 
                                     combine='nested', 
                                     coords='minimal', 
@@ -567,11 +567,11 @@ def primary_gefs_post_processing(paths):
                                     compat='override', 
                                     decode_timedelta=False, 
                                     filter_by_keys={'typeOfLevel': 'depthBelowLandLayer'})
-            ds2 = shift_longitude(ds2)
+            ds2 = _shift_longitude(ds2)
         except Exception as e:
             pass
         try: 
-            ds3 = xr.open_mfdataset(file_pattern, 
+            ds3 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step', 
                                     combine='nested', 
                                     coords='minimal', 
@@ -579,11 +579,11 @@ def primary_gefs_post_processing(paths):
                                     compat='override', 
                                     decode_timedelta=False, 
                                     filter_by_keys={'typeOfLevel': 'heightAboveGround'})
-            ds3 = shift_longitude(ds3)
+            ds3 = _shift_longitude(ds3)
         except Exception as e:
             pass
         try: 
-            ds4 = xr.open_mfdataset(file_pattern, 
+            ds4 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step', 
                                     combine='nested', 
                                     coords='minimal', 
@@ -591,12 +591,12 @@ def primary_gefs_post_processing(paths):
                                     compat='override', 
                                     decode_timedelta=False,
                                     filter_by_keys={'typeOfLevel': 'heightAboveGround', 'shortName':'10u'})
-            ds4 = shift_longitude(ds4)
+            ds4 = _shift_longitude(ds4)
         except Exception as e:
             pass
         
         try: 
-            ds5 = xr.open_mfdataset(file_pattern, 
+            ds5 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step', 
                                     combine='nested', 
                                     coords='minimal', 
@@ -604,12 +604,12 @@ def primary_gefs_post_processing(paths):
                                     compat='override', 
                                     decode_timedelta=False, 
                                     filter_by_keys={'typeOfLevel': 'heightAboveGround', 'shortName':'10v'})
-            ds5 = shift_longitude(ds5)
+            ds5 = _shift_longitude(ds5)
         except Exception as e:
             pass
         
         try: 
-            ds6 = xr.open_mfdataset(file_pattern, 
+            ds6 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step', 
                                     combine='nested', 
                                     coords='minimal', 
@@ -617,11 +617,11 @@ def primary_gefs_post_processing(paths):
                                     compat='override', 
                                     decode_timedelta=False, 
                                     filter_by_keys={'typeOfLevel': 'atmosphereSingleLayer'})
-            ds6 = shift_longitude(ds6)
+            ds6 = _shift_longitude(ds6)
         except Exception as e:
             pass            
         try: 
-            ds7 = xr.open_mfdataset(file_pattern, 
+            ds7 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step', 
                                     combine='nested',
                                     coords='minimal', 
@@ -629,11 +629,11 @@ def primary_gefs_post_processing(paths):
                                     compat='override', 
                                     decode_timedelta=False, 
                                     filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer'})
-            ds7 = shift_longitude(ds7)
+            ds7 = _shift_longitude(ds7)
         except Exception as e:
             pass
         try: 
-            ds8 = xr.open_mfdataset(file_pattern, 
+            ds8 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step', 
                                     combine='nested', 
                                     coords='minimal', 
@@ -641,11 +641,11 @@ def primary_gefs_post_processing(paths):
                                     compat='override', 
                                     decode_timedelta=False, 
                                     filter_by_keys={'typeOfLevel': 'isobaricInhPa'})
-            ds8 = shift_longitude(ds8)
+            ds8 = _shift_longitude(ds8)
         except Exception as e:
             pass
         try: 
-            ds9 = xr.open_mfdataset(file_pattern, 
+            ds9 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step', 
                                     combine='nested', 
                                     coords='minimal', 
@@ -653,11 +653,11 @@ def primary_gefs_post_processing(paths):
                                     compat='override', 
                                     decode_timedelta=False, 
                                     filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'t'})
-            ds9 = shift_longitude(ds9)
+            ds9 = _shift_longitude(ds9)
         except Exception as e:
             pass
         try: 
-            ds10 = xr.open_mfdataset(file_pattern, 
+            ds10 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step', 
                                     combine='nested', 
                                     coords='minimal', 
@@ -665,11 +665,11 @@ def primary_gefs_post_processing(paths):
                                     compat='override', 
                                     decode_timedelta=False, 
                                     filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'r'})
-            ds10 = shift_longitude(ds10)
+            ds10 = _shift_longitude(ds10)
         except Exception as e:
             pass
         try: 
-            ds11 = xr.open_mfdataset(file_pattern, 
+            ds11 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step', 
                                     combine='nested',
                                     coords='minimal', 
@@ -677,11 +677,11 @@ def primary_gefs_post_processing(paths):
                                     compat='override', 
                                     decode_timedelta=False, 
                                     filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'u'})
-            ds11 = shift_longitude(ds11)
+            ds11 = _shift_longitude(ds11)
         except Exception as e:
             pass
         try: 
-            ds12 = xr.open_mfdataset(file_pattern, 
+            ds12 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step', 
                                     combine='nested', 
                                     coords='minimal', 
@@ -689,12 +689,12 @@ def primary_gefs_post_processing(paths):
                                     compat='override', 
                                     decode_timedelta=False, 
                                     filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'v'})
-            ds12 = shift_longitude(ds12)
+            ds12 = _shift_longitude(ds12)
         except Exception as e:
             pass     
         
         try: 
-            ds13 = xr.open_mfdataset(file_pattern, 
+            ds13 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step', 
                                     combine='nested', 
                                     coords='minimal', 
@@ -702,7 +702,7 @@ def primary_gefs_post_processing(paths):
                                     compat='override', 
                                     decode_timedelta=False,
                                     filter_by_keys={'typeOfLevel': 'heightAboveGroundLayer'})
-            ds13 = shift_longitude(ds13)
+            ds13 = _shift_longitude(ds13)
         except Exception as e:
             pass       
         
@@ -924,13 +924,13 @@ def primary_gefs_post_processing(paths):
     except Exception as e:
         pass
     
-    clear_gefs_idx_files(paths)
+    _clear_gefs_idx_files(paths)
     
     try:    
         ds = ds.sortby('step')
     except Exception as e:
         _eccodes_error_intructions()
-        sys.exit(1)
+        _sys.exit(1)
     
     return ds
 
@@ -1068,14 +1068,14 @@ def secondary_gefs_post_processing(paths):
 
     
             
-    clear_gefs_idx_files(paths)
+    _clear_gefs_idx_files(paths)
 
     if len(paths) == 1:
         
-        file_pattern = file_paths_for_xarray(paths)
+        file_pattern = _file_paths_for_xarray(paths)
         
         try:
-            ds = xr.open_mfdataset(file_pattern, 
+            ds = _xr.open_mfdataset(file_pattern, 
                                    concat_dim='step', 
                                    combine='nested', 
                                    coords='minimal', 
@@ -1083,11 +1083,11 @@ def secondary_gefs_post_processing(paths):
                                    compat='override',
                                    decode_timedelta=False,
                                    filter_by_keys={'typeOfLevel': 'surface'})
-            ds = shift_longitude(ds)
+            ds = _shift_longitude(ds)
         except Exception as e:
             pass    
         try:        
-            ds1 = xr.open_mfdataset(file_pattern, 
+            ds1 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step', 
                                     combine='nested', 
                                     coords='minimal', 
@@ -1095,11 +1095,11 @@ def secondary_gefs_post_processing(paths):
                                     compat='override', 
                                     decode_timedelta=False,
                                     filter_by_keys={'typeOfLevel': 'meanSea'})
-            ds1 = shift_longitude(ds1) 
+            ds1 = _shift_longitude(ds1) 
         except Exception as e:
             pass        
         try:        
-            ds2 = xr.open_mfdataset(file_pattern, 
+            ds2 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step', 
                                     combine='nested', 
                                     coords='minimal',
@@ -1107,11 +1107,11 @@ def secondary_gefs_post_processing(paths):
                                     compat='override', 
                                     decode_timedelta=False, 
                                     filter_by_keys={'typeOfLevel': 'planetaryBoundaryLayer'})
-            ds2 = shift_longitude(ds2)
+            ds2 = _shift_longitude(ds2)
         except Exception as e:
             pass          
         try:        
-            ds3 = xr.open_mfdataset(file_pattern, 
+            ds3 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step',
                                     combine='nested', 
                                     coords='minimal', 
@@ -1119,22 +1119,22 @@ def secondary_gefs_post_processing(paths):
                                     compat='override', 
                                     decode_timedelta=False,
                                     filter_by_keys={'typeOfLevel': 'isobaricInhPa'})
-            ds3 = shift_longitude(ds3)  
+            ds3 = _shift_longitude(ds3)  
         except Exception as e:
             pass        
         try:        
-            ds4 = xr.open_mfdataset(file_pattern, 
+            ds4 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step',
                                     combine='nested', 
                                     coords='minimal', 
                                     engine='cfgrib', 
                                     compat='override', 
                                     decode_timedelta=False, filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'t'})
-            ds4 = shift_longitude(ds4)
+            ds4 = _shift_longitude(ds4)
         except Exception as e:
             pass                    
         try:        
-            ds5 = xr.open_mfdataset(file_pattern, 
+            ds5 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step', 
                                     combine='nested', 
                                     coords='minimal', 
@@ -1142,11 +1142,11 @@ def secondary_gefs_post_processing(paths):
                                     compat='override',
                                     decode_timedelta=False, 
                                     filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'w'})
-            ds5 = shift_longitude(ds5)
+            ds5 = _shift_longitude(ds5)
         except Exception as e:
             pass        
         try:        
-            ds6 = xr.open_mfdataset(file_pattern, 
+            ds6 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step', 
                                     combine='nested',
                                     coords='minimal', 
@@ -1154,11 +1154,11 @@ def secondary_gefs_post_processing(paths):
                                     compat='override', 
                                     decode_timedelta=False, 
                                     filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'u'})
-            ds6 = shift_longitude(ds6)
+            ds6 = _shift_longitude(ds6)
         except Exception as e:
             pass        
         try:        
-            ds7 = xr.open_mfdataset(file_pattern, 
+            ds7 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step',
                                     combine='nested', 
                                     coords='minimal', 
@@ -1166,11 +1166,11 @@ def secondary_gefs_post_processing(paths):
                                     compat='override', 
                                     decode_timedelta=False, 
                                     filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'v'})
-            ds7 = shift_longitude(ds7)
+            ds7 = _shift_longitude(ds7)
         except Exception as e:
             pass        
         try:        
-            ds8 = xr.open_mfdataset(file_pattern, 
+            ds8 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step', 
                                     combine='nested', 
                                     coords='minimal', 
@@ -1178,11 +1178,11 @@ def secondary_gefs_post_processing(paths):
                                     compat='override',
                                     decode_timedelta=False, 
                                     filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'o3mr'})
-            ds8 = shift_longitude(ds8)
+            ds8 = _shift_longitude(ds8)
         except Exception as e:
             pass        
         try:        
-            ds9 = xr.open_mfdataset(file_pattern, 
+            ds9 = _xr.open_mfdataset(file_pattern, 
                                     concat_dim='step', 
                                     combine='nested', 
                                     coords='minimal', 
@@ -1190,11 +1190,11 @@ def secondary_gefs_post_processing(paths):
                                     compat='override', 
                                     decode_timedelta=False, 
                                     filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'absv'})
-            ds9 = shift_longitude(ds9)
+            ds9 = _shift_longitude(ds9)
         except Exception as e:
             pass        
         try:        
-            ds10 = xr.open_mfdataset(file_pattern,
+            ds10 = _xr.open_mfdataset(file_pattern,
                                      concat_dim='step', 
                                      combine='nested', 
                                      coords='minimal',
@@ -1202,11 +1202,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False,
                                      filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'clwmr'})
-            ds10 = shift_longitude(ds10)
+            ds10 = _shift_longitude(ds10)
         except Exception as e:
             pass        
         try:        
-            ds12 = xr.open_mfdataset(file_pattern,
+            ds12 = _xr.open_mfdataset(file_pattern,
                                      concat_dim='step',
                                      combine='nested', 
                                      coords='minimal', 
@@ -1214,11 +1214,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'ICSEV'})
-            ds12 = shift_longitude(ds12)
+            ds12 = _shift_longitude(ds12)
         except Exception as e:
             pass        
         try:        
-            ds13 = xr.open_mfdataset(file_pattern,
+            ds13 = _xr.open_mfdataset(file_pattern,
                                      concat_dim='step', 
                                      combine='nested', 
                                      coords='minimal',
@@ -1226,11 +1226,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'tcc'})
-            ds13 = shift_longitude(ds13)
+            ds13 = _shift_longitude(ds13)
         except Exception as e:
             pass        
         try:        
-            ds14 = xr.open_mfdataset(file_pattern, 
+            ds14 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step',
                                      combine='nested', 
                                      coords='minimal', 
@@ -1238,11 +1238,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False,
                                      filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'r'})
-            ds14 = shift_longitude(ds14) 
+            ds14 = _shift_longitude(ds14) 
         except Exception as e:
             pass        
         try:        
-            ds15 = xr.open_mfdataset(file_pattern, 
+            ds15 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step',
                                      combine='nested',
                                      coords='minimal', 
@@ -1250,11 +1250,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'depthBelowLandLayer'})
-            ds15 = shift_longitude(ds15)
+            ds15 = _shift_longitude(ds15)
         except Exception as e:
             pass        
         try:        
-            ds16 = xr.open_mfdataset(file_pattern, 
+            ds16 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step', 
                                      combine='nested', 
                                      coords='minimal', 
@@ -1262,11 +1262,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'depthBelowLandLayer', 'shortName':'st'})
-            ds16 = shift_longitude(ds16)
+            ds16 = _shift_longitude(ds16)
         except Exception as e:
             pass        
         try:        
-            ds17 = xr.open_mfdataset(file_pattern, 
+            ds17 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step', 
                                      combine='nested',
                                      coords='minimal', 
@@ -1274,11 +1274,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'depthBelowLandLayer', 'shortName':'soilw'})
-            ds17 = shift_longitude(ds17)
+            ds17 = _shift_longitude(ds17)
         except Exception as e:
             pass        
         try:        
-            ds18 = xr.open_mfdataset(file_pattern, 
+            ds18 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step', 
                                      combine='nested',
                                      coords='minimal', 
@@ -1286,11 +1286,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override',
                                      decode_timedelta=False,
                                      filter_by_keys={'typeOfLevel': 'heightAboveGround'})
-            ds18 = shift_longitude(ds18)
+            ds18 = _shift_longitude(ds18)
         except Exception as e:
             pass        
         try:        
-            ds19 = xr.open_mfdataset(file_pattern, 
+            ds19 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step',
                                      combine='nested', 
                                      coords='minimal', 
@@ -1298,11 +1298,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'heightAboveGround', 'shortName':'q'})
-            ds19 = shift_longitude(ds19)
+            ds19 = _shift_longitude(ds19)
         except Exception as e:
             pass        
         try:        
-            ds20 = xr.open_mfdataset(file_pattern, 
+            ds20 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step', 
                                      combine='nested', 
                                      coords='minimal', 
@@ -1310,11 +1310,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'heightAboveGround', 'shortName':'t'})
-            ds20 = shift_longitude(ds20)
+            ds20 = _shift_longitude(ds20)
         except Exception as e:
             pass        
         try:        
-            ds21 = xr.open_mfdataset(file_pattern, 
+            ds21 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step', 
                                      combine='nested', 
                                      coords='minimal', 
@@ -1322,11 +1322,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'heightAboveGround', 'shortName':'pres'})
-            ds21 = shift_longitude(ds21)
+            ds21 = _shift_longitude(ds21)
         except Exception as e:
             pass        
         try:        
-            ds22 = xr.open_mfdataset(file_pattern, 
+            ds22 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step', 
                                      combine='nested',
                                      coords='minimal', 
@@ -1334,11 +1334,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False,
                                      filter_by_keys={'typeOfLevel': 'heightAboveGround', 'shortName':'u'})
-            ds22= shift_longitude(ds22)
+            ds22= _shift_longitude(ds22)
         except Exception as e:
             pass        
         try:        
-            ds23 = xr.open_mfdataset(file_pattern, 
+            ds23 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step',
                                      combine='nested',
                                      coords='minimal', 
@@ -1346,11 +1346,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'heightAboveGround', 'shortName':'v'})
-            ds23 = shift_longitude(ds23)
+            ds23 = _shift_longitude(ds23)
         except Exception as e:
             pass        
         try:        
-            ds24 = xr.open_mfdataset(file_pattern,
+            ds24 = _xr.open_mfdataset(file_pattern,
                                      concat_dim='step', 
                                      combine='nested', 
                                      coords='minimal', 
@@ -1358,11 +1358,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False,
                                      filter_by_keys={'typeOfLevel': 'atmosphereSingleLayer'})
-            ds24 = shift_longitude(ds24)
+            ds24 = _shift_longitude(ds24)
         except Exception as e:
             pass        
         try:        
-            ds25 = xr.open_mfdataset(file_pattern,
+            ds25 = _xr.open_mfdataset(file_pattern,
                                      concat_dim='step',
                                      combine='nested',
                                      coords='minimal', 
@@ -1370,11 +1370,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False,
                                      filter_by_keys={'typeOfLevel': 'cloudCeiling'})
-            ds25 = shift_longitude(ds25)
+            ds25 = _shift_longitude(ds25)
         except Exception as e:
             pass        
         try:        
-            ds26 = xr.open_mfdataset(file_pattern,
+            ds26 = _xr.open_mfdataset(file_pattern,
                                      concat_dim='step',
                                      combine='nested', 
                                      coords='minimal', 
@@ -1382,11 +1382,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'nominalTop'})
-            ds26 = shift_longitude(ds26)
+            ds26 = _shift_longitude(ds26)
         except Exception as e:
             pass        
         try:        
-            ds27 = xr.open_mfdataset(file_pattern, 
+            ds27 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step',
                                      combine='nested', 
                                      coords='minimal', 
@@ -1394,11 +1394,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'heightAboveGroundLayer'})
-            ds27 = shift_longitude(ds27)
+            ds27 = _shift_longitude(ds27)
         except Exception as e:
             pass        
         try:        
-            ds28 = xr.open_mfdataset(file_pattern, 
+            ds28 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step',
                                      combine='nested',
                                      coords='minimal', 
@@ -1406,11 +1406,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'heightAboveGroundLayer', 'shortName':'ustm'})
-            ds28 = shift_longitude(ds28)
+            ds28 = _shift_longitude(ds28)
         except Exception as e:
             pass        
         try:        
-            ds29 = xr.open_mfdataset(file_pattern,
+            ds29 = _xr.open_mfdataset(file_pattern,
                                      concat_dim='step',
                                      combine='nested', 
                                      coords='minimal',
@@ -1418,11 +1418,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'heightAboveGroundLayer', 'shortName':'vstm'})
-            ds29 = shift_longitude(ds29)
+            ds29 = _shift_longitude(ds29)
         except Exception as e:
             pass        
         try:        
-            ds30 = xr.open_mfdataset(file_pattern, 
+            ds30 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step',
                                      combine='nested',
                                      coords='minimal', 
@@ -1430,11 +1430,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'tropopause'})
-            ds30 = shift_longitude(ds30)
+            ds30 = _shift_longitude(ds30)
         except Exception as e:
             pass        
         try:        
-            ds31 = xr.open_mfdataset(file_pattern, 
+            ds31 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step',
                                      combine='nested', 
                                      coords='minimal', 
@@ -1442,11 +1442,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'maxWind'})
-            ds31 = shift_longitude(ds31)
+            ds31 = _shift_longitude(ds31)
         except Exception as e:
             pass        
         try:        
-            ds32 = xr.open_mfdataset(file_pattern, 
+            ds32 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step',
                                      combine='nested',
                                      coords='minimal',
@@ -1454,11 +1454,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'isothermZero'})
-            ds32 = shift_longitude(ds32)
+            ds32 = _shift_longitude(ds32)
         except Exception as e:
             pass        
         try:        
-            ds33 = xr.open_mfdataset(file_pattern, 
+            ds33 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step',
                                      combine='nested', 
                                      coords='minimal', 
@@ -1466,11 +1466,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override',
                                      decode_timedelta=False,
                                      filter_by_keys={'typeOfLevel': 'highestTroposphericFreezing'})
-            ds33 = shift_longitude(ds33)
+            ds33 = _shift_longitude(ds33)
         except Exception as e:
             pass        
         try:        
-            ds34 = xr.open_mfdataset(file_pattern, 
+            ds34 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step',
                                      combine='nested',
                                      coords='minimal',
@@ -1478,11 +1478,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'sigmaLayer'})
-            ds34 = shift_longitude(ds33)
+            ds34 = _shift_longitude(ds33)
         except Exception as e:
             pass        
         try:        
-            ds35 = xr.open_mfdataset(file_pattern, 
+            ds35 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step',
                                      combine='nested',
                                      coords='minimal', 
@@ -1490,11 +1490,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'sigma'})
-            ds35 = shift_longitude(ds35)
+            ds35 = _shift_longitude(ds35)
         except Exception as e:
             pass        
         try:        
-            ds36 = xr.open_mfdataset(file_pattern, 
+            ds36 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step',
                                      combine='nested',
                                      coords='minimal',
@@ -1502,11 +1502,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False,
                                      filter_by_keys={'typeOfLevel': 'theta'})
-            ds36 = shift_longitude(ds36)
+            ds36 = _shift_longitude(ds36)
         except Exception as e:
             pass        
         try:        
-            ds37 = xr.open_mfdataset(file_pattern,
+            ds37 = _xr.open_mfdataset(file_pattern,
                                      concat_dim='step', 
                                      combine='nested',
                                      coords='minimal', 
@@ -1514,11 +1514,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'theta', 'shortName':'u'})
-            ds37 = shift_longitude(ds37)
+            ds37 = _shift_longitude(ds37)
         except Exception as e:
             pass        
         try:        
-            ds38 = xr.open_mfdataset(file_pattern,
+            ds38 = _xr.open_mfdataset(file_pattern,
                                      concat_dim='step',
                                      combine='nested', 
                                      coords='minimal', 
@@ -1526,11 +1526,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'theta', 'shortName':'v'})
-            ds38 = shift_longitude(ds38)
+            ds38 = _shift_longitude(ds38)
         except Exception as e:
             pass        
         try:        
-            ds39 = xr.open_mfdataset(file_pattern,
+            ds39 = _xr.open_mfdataset(file_pattern,
                                      concat_dim='step', 
                                      combine='nested', 
                                      coords='minimal', 
@@ -1538,11 +1538,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override',
                                      decode_timedelta=False,
                                      filter_by_keys={'typeOfLevel': 'theta', 'shortName':'t'})
-            ds39 = shift_longitude(ds39)
+            ds39 = _shift_longitude(ds39)
         except Exception as e:
             pass        
         try:        
-            ds40 = xr.open_mfdataset(file_pattern, 
+            ds40 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step',
                                      combine='nested',
                                      coords='minimal', 
@@ -1550,11 +1550,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False,
                                      filter_by_keys={'typeOfLevel': 'theta', 'shortName':'mont'})
-            ds40 = shift_longitude(ds40)
+            ds40 = _shift_longitude(ds40)
         except Exception as e:
             pass        
         try:        
-            ds41 = xr.open_mfdataset(file_pattern, 
+            ds41 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step',
                                      combine='nested', 
                                      coords='minimal', 
@@ -1562,11 +1562,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'potentialVorticity'})
-            ds41 = shift_longitude(ds41)
+            ds41 = _shift_longitude(ds41)
         except Exception as e:
             pass        
         try:        
-            ds42 = xr.open_mfdataset(file_pattern,
+            ds42 = _xr.open_mfdataset(file_pattern,
                                      concat_dim='step', 
                                      combine='nested', 
                                      coords='minimal', 
@@ -1574,11 +1574,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override',
                                      decode_timedelta=False,
                                      filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer'})
-            ds42 = shift_longitude(ds42)
+            ds42 = _shift_longitude(ds42)
         except Exception as e:
             pass        
         try:        
-            ds43 = xr.open_mfdataset(file_pattern, 
+            ds43 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step',
                                      combine='nested', 
                                      coords='minimal', 
@@ -1586,11 +1586,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer', 'shortName':'dpt'})
-            ds43 = shift_longitude(ds43)
+            ds43 = _shift_longitude(ds43)
         except Exception as e:
             pass        
         try:        
-            ds44 = xr.open_mfdataset(file_pattern, 
+            ds44 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step',
                                      combine='nested', 
                                      coords='minimal', 
@@ -1598,11 +1598,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False,
                                      filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer', 'shortName':'pwat'})
-            ds44 = shift_longitude(ds44)
+            ds44 = _shift_longitude(ds44)
         except Exception as e:
             pass        
         try:        
-            ds45 = xr.open_mfdataset(file_pattern, 
+            ds45 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step', 
                                      combine='nested', 
                                      coords='minimal', 
@@ -1610,11 +1610,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False,
                                      filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer', 'shortName':'pli'})
-            ds45 = shift_longitude(ds45)
+            ds45 = _shift_longitude(ds45)
         except Exception as e:
             pass        
         try:        
-            ds46 = xr.open_mfdataset(file_pattern, 
+            ds46 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step',
                                      combine='nested', 
                                      coords='minimal', 
@@ -1622,11 +1622,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer', 'shortName':'cape'})
-            ds46 = shift_longitude(ds46)
+            ds46 = _shift_longitude(ds46)
         except Exception as e:
             pass        
         try:        
-            ds47 = xr.open_mfdataset(file_pattern,
+            ds47 = _xr.open_mfdataset(file_pattern,
                                      concat_dim='step', 
                                      combine='nested', 
                                      coords='minimal', 
@@ -1634,11 +1634,11 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer', 'shortName':'cin'})
-            ds47 = shift_longitude(ds47)
+            ds47 = _shift_longitude(ds47)
         except Exception as e:
             pass        
         try:        
-            ds48 = xr.open_mfdataset(file_pattern, 
+            ds48 = _xr.open_mfdataset(file_pattern, 
                                      concat_dim='step', 
                                      combine='nested', 
                                      coords='minimal', 
@@ -1646,20 +1646,20 @@ def secondary_gefs_post_processing(paths):
                                      compat='override', 
                                      decode_timedelta=False, 
                                      filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer', 'shortName':'plpl'})
-            ds48 = shift_longitude(ds48)
+            ds48 = _shift_longitude(ds48)
         except Exception as e:
             pass        
         
     else:
         
-        clear_gefs_idx_files(paths)
+        _clear_gefs_idx_files(paths)
 
-        paths = file_paths_for_xarray(paths)
+        paths = _file_paths_for_xarray(paths)
         try:
             ds_list_1 = []      
             for path in paths:
                 file_pattern = path
-                ds = xr.open_mfdataset(file_pattern, 
+                ds = _xr.open_mfdataset(file_pattern, 
                                        concat_dim='step',
                                        combine='nested',
                                        coords='minimal', 
@@ -1667,7 +1667,7 @@ def secondary_gefs_post_processing(paths):
                                        compat='override', 
                                        decode_timedelta=False,
                                        filter_by_keys={'typeOfLevel': 'surface'})
-                ds = shift_longitude(ds)
+                ds = _shift_longitude(ds)
                 ds_list_1.append(ds)
         except Exception as e:
             pass           
@@ -1675,7 +1675,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_2 = []
             for path in paths:
                 file_pattern = path
-                ds1 = xr.open_mfdataset(file_pattern,
+                ds1 = _xr.open_mfdataset(file_pattern,
                                         concat_dim='step',
                                         combine='nested',
                                         coords='minimal',
@@ -1683,7 +1683,7 @@ def secondary_gefs_post_processing(paths):
                                         compat='override',
                                         decode_timedelta=False,
                                         filter_by_keys={'typeOfLevel': 'meanSea'})
-                ds1 = shift_longitude(ds1) 
+                ds1 = _shift_longitude(ds1) 
                 ds_list_2.append(ds1)
         except Exception as e:
             pass                   
@@ -1691,7 +1691,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_3 = []
             for path in paths:
                 file_pattern = path
-                ds2 = xr.open_mfdataset(file_pattern, 
+                ds2 = _xr.open_mfdataset(file_pattern, 
                                         concat_dim='step',
                                         combine='nested', 
                                         coords='minimal', 
@@ -1699,7 +1699,7 @@ def secondary_gefs_post_processing(paths):
                                         compat='override', 
                                         decode_timedelta=False,
                                         filter_by_keys={'typeOfLevel': 'planetaryBoundaryLayer'})
-                ds2 = shift_longitude(ds2)
+                ds2 = _shift_longitude(ds2)
                 ds_list_3.append(ds2)
         except Exception as e:
             pass           
@@ -1707,7 +1707,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_4 = []
             for path in paths:
                 file_pattern = path
-                ds3 = xr.open_mfdataset(file_pattern,
+                ds3 = _xr.open_mfdataset(file_pattern,
                                         concat_dim='step',
                                         combine='nested',
                                         coords='minimal', 
@@ -1715,7 +1715,7 @@ def secondary_gefs_post_processing(paths):
                                         compat='override',
                                         decode_timedelta=False, 
                                         filter_by_keys={'typeOfLevel': 'isobaricInhPa'})
-                ds3 = shift_longitude(ds3)
+                ds3 = _shift_longitude(ds3)
                 ds_list_4.append(ds3)  
         except Exception as e:
             pass           
@@ -1723,7 +1723,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_5 = []
             for path in paths:
                 file_pattern = path
-                ds4 = xr.open_mfdataset(file_pattern,
+                ds4 = _xr.open_mfdataset(file_pattern,
                                         concat_dim='step', 
                                         combine='nested', 
                                         coords='minimal', 
@@ -1731,7 +1731,7 @@ def secondary_gefs_post_processing(paths):
                                         compat='override', 
                                         decode_timedelta=False,
                                         filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'t'})
-                ds4 = shift_longitude(ds4)
+                ds4 = _shift_longitude(ds4)
                 ds_list_5.append(ds4)
         except Exception as e:
             pass           
@@ -1739,7 +1739,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_6 = []
             for path in paths:
                 file_pattern = path
-                ds5 = xr.open_mfdataset(file_pattern, 
+                ds5 = _xr.open_mfdataset(file_pattern, 
                                         concat_dim='step', 
                                         combine='nested', 
                                         coords='minimal', 
@@ -1747,7 +1747,7 @@ def secondary_gefs_post_processing(paths):
                                         compat='override', 
                                         decode_timedelta=False, 
                                         filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'w'})
-                ds5 = shift_longitude(ds5)
+                ds5 = _shift_longitude(ds5)
                 ds_list_6.append(ds5)
         except Exception as e:
             pass           
@@ -1755,7 +1755,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_7 = []
             for path in paths:
                 file_pattern = path
-                ds6 = xr.open_mfdataset(file_pattern, 
+                ds6 = _xr.open_mfdataset(file_pattern, 
                                         concat_dim='step',
                                         combine='nested', 
                                         coords='minimal', 
@@ -1763,7 +1763,7 @@ def secondary_gefs_post_processing(paths):
                                         compat='override', 
                                         decode_timedelta=False, 
                                         filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'u'})
-                ds6 = shift_longitude(ds6)
+                ds6 = _shift_longitude(ds6)
                 ds_list_7.append(ds6)  
         except Exception as e:
             pass           
@@ -1771,7 +1771,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_8 = []
             for path in paths:
                 file_pattern = path
-                ds7 = xr.open_mfdataset(file_pattern, 
+                ds7 = _xr.open_mfdataset(file_pattern, 
                                         concat_dim='step',
                                         combine='nested', 
                                         coords='minimal', 
@@ -1779,7 +1779,7 @@ def secondary_gefs_post_processing(paths):
                                         compat='override', 
                                         decode_timedelta=False,
                                         filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'v'})
-                ds7 = shift_longitude(ds7)
+                ds7 = _shift_longitude(ds7)
                 ds_list_8.append(ds7)
         except Exception as e:
             pass           
@@ -1787,7 +1787,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_9 = []
             for path in paths:
                 file_pattern = path
-                ds8 = xr.open_mfdataset(file_pattern, 
+                ds8 = _xr.open_mfdataset(file_pattern, 
                                         concat_dim='step',
                                         combine='nested', 
                                         coords='minimal',
@@ -1795,7 +1795,7 @@ def secondary_gefs_post_processing(paths):
                                         compat='override', 
                                         decode_timedelta=False,
                                         filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'o3mr'})
-                ds8 = shift_longitude(ds8)
+                ds8 = _shift_longitude(ds8)
                 ds_list_9.append(ds8) 
         except Exception as e:
             pass           
@@ -1803,7 +1803,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_10 = []
             for path in paths:
                 file_pattern = path
-                ds9 = xr.open_mfdataset(file_pattern, 
+                ds9 = _xr.open_mfdataset(file_pattern, 
                                         concat_dim='step',
                                         combine='nested', 
                                         coords='minimal', 
@@ -1811,7 +1811,7 @@ def secondary_gefs_post_processing(paths):
                                         compat='override', 
                                         decode_timedelta=False,
                                         filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'absv'})
-                ds9 = shift_longitude(ds9)
+                ds9 = _shift_longitude(ds9)
                 ds_list_10.append(ds9)
         except Exception as e:
             pass           
@@ -1819,7 +1819,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_11 = []
             for path in paths:
                 file_pattern = path
-                ds10 = xr.open_mfdataset(file_pattern, 
+                ds10 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step',
                                          combine='nested',
                                          coords='minimal', 
@@ -1827,7 +1827,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override',
                                          decode_timedelta=False,
                                          filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'clwmr'})
-                ds10 = shift_longitude(ds10)
+                ds10 = _shift_longitude(ds10)
                 ds_list_11.append(ds10)  
         except Exception as e:
             pass           
@@ -1835,7 +1835,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_12 = []
             for path in paths:
                 file_pattern = path
-                ds12 = xr.open_mfdataset(file_pattern,
+                ds12 = _xr.open_mfdataset(file_pattern,
                                          concat_dim='step',
                                          combine='nested',
                                          coords='minimal', 
@@ -1843,7 +1843,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override',
                                          decode_timedelta=False,
                                          filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'ICSEV'})
-                ds12 = shift_longitude(ds12)
+                ds12 = _shift_longitude(ds12)
                 ds_list_12.append(ds12) 
         except Exception as e:
             pass           
@@ -1851,7 +1851,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_13 = []
             for path in paths:
                 file_pattern = path
-                ds13 = xr.open_mfdataset(file_pattern,
+                ds13 = _xr.open_mfdataset(file_pattern,
                                          concat_dim='step',
                                          combine='nested',
                                          coords='minimal', 
@@ -1859,7 +1859,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'tcc'})
-                ds13 = shift_longitude(ds13)
+                ds13 = _shift_longitude(ds13)
                 ds_list_13.append(ds13)
         except Exception as e:
             pass           
@@ -1867,7 +1867,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_14 = []
             for path in paths:
                 file_pattern = path
-                ds14 = xr.open_mfdataset(file_pattern, 
+                ds14 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step',
                                          combine='nested',
                                          coords='minimal',
@@ -1875,7 +1875,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'r'})
-                ds14 = shift_longitude(ds14)
+                ds14 = _shift_longitude(ds14)
                 ds_list_14.append(ds14)
         except Exception as e:
             pass           
@@ -1883,7 +1883,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_15 = []
             for path in paths:
                 file_pattern = path
-                ds15 = xr.open_mfdataset(file_pattern, 
+                ds15 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step',
                                          combine='nested', 
                                          coords='minimal',
@@ -1891,7 +1891,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'depthBelowLandLayer'})
-                ds15 = shift_longitude(ds15)
+                ds15 = _shift_longitude(ds15)
                 ds_list_15.append(ds15) 
         except Exception as e:
             pass           
@@ -1899,7 +1899,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_16 = []
             for path in paths:
                 file_pattern = path
-                ds16 = xr.open_mfdataset(file_pattern, 
+                ds16 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step', 
                                          combine='nested', 
                                          coords='minimal', 
@@ -1907,7 +1907,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override',
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'depthBelowLandLayer', 'shortName':'st'})
-                ds16 = shift_longitude(ds16)
+                ds16 = _shift_longitude(ds16)
                 ds_list_16.append(ds16)
         except Exception as e:
             pass           
@@ -1915,7 +1915,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_17 = []
             for path in paths:
                 file_pattern = path
-                ds17 = xr.open_mfdataset(file_pattern,
+                ds17 = _xr.open_mfdataset(file_pattern,
                                          concat_dim='step', 
                                          combine='nested', 
                                          coords='minimal', 
@@ -1923,7 +1923,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False,
                                          filter_by_keys={'typeOfLevel': 'depthBelowLandLayer', 'shortName':'soilw'})
-                ds17 = shift_longitude(ds17)
+                ds17 = _shift_longitude(ds17)
                 ds_list_17.append(ds17)
         except Exception as e:
             pass           
@@ -1931,7 +1931,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_18 = []
             for path in paths:
                 file_pattern = path
-                ds18 = xr.open_mfdataset(file_pattern, 
+                ds18 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step', 
                                          combine='nested',
                                          coords='minimal', 
@@ -1939,7 +1939,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False,
                                          filter_by_keys={'typeOfLevel': 'heightAboveGround'})
-                ds18 = shift_longitude(ds18)
+                ds18 = _shift_longitude(ds18)
                 ds_list_18.append(ds18)
         except Exception as e:
             pass           
@@ -1947,7 +1947,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_19 = []
             for path in paths:
                 file_pattern = path
-                ds19 = xr.open_mfdataset(file_pattern,
+                ds19 = _xr.open_mfdataset(file_pattern,
                                          concat_dim='step',
                                          combine='nested', 
                                          coords='minimal', 
@@ -1955,7 +1955,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override',
                                          decode_timedelta=False,
                                          filter_by_keys={'typeOfLevel': 'heightAboveGround', 'shortName':'q'})
-                ds19 = shift_longitude(ds19)
+                ds19 = _shift_longitude(ds19)
                 ds_list_19.append(ds19)                
         except Exception as e:
             pass           
@@ -1963,7 +1963,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_20 = []
             for path in paths:
                 file_pattern = path
-                ds20 = xr.open_mfdataset(file_pattern,
+                ds20 = _xr.open_mfdataset(file_pattern,
                                          concat_dim='step',
                                          combine='nested',
                                          coords='minimal',
@@ -1971,7 +1971,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override',
                                          decode_timedelta=False,
                                          filter_by_keys={'typeOfLevel': 'heightAboveGround', 'shortName':'t'})
-                ds20 = shift_longitude(ds20)
+                ds20 = _shift_longitude(ds20)
                 ds_list_20.append(ds20)            
         except Exception as e:
             pass           
@@ -1979,7 +1979,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_21 = []
             for path in paths:
                 file_pattern = path
-                ds21 = xr.open_mfdataset(file_pattern,
+                ds21 = _xr.open_mfdataset(file_pattern,
                                          concat_dim='step',
                                          combine='nested',
                                          coords='minimal', 
@@ -1987,7 +1987,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override',
                                          decode_timedelta=False,
                                          filter_by_keys={'typeOfLevel': 'heightAboveGround', 'shortName':'pres'})
-                ds21 = shift_longitude(ds21) 
+                ds21 = _shift_longitude(ds21) 
                 ds_list_21.append(ds21)            
         except Exception as e:
             pass           
@@ -1995,7 +1995,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_22 = []
             for path in paths:
                 file_pattern = path
-                ds22 = xr.open_mfdataset(file_pattern,
+                ds22 = _xr.open_mfdataset(file_pattern,
                                          concat_dim='step',
                                          combine='nested',
                                          coords='minimal', 
@@ -2003,7 +2003,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override',
                                          decode_timedelta=False,
                                          filter_by_keys={'typeOfLevel': 'heightAboveGround', 'shortName':'u'})
-                ds22 = shift_longitude(ds22)
+                ds22 = _shift_longitude(ds22)
                 ds_list_22.append(ds22)            
         except Exception as e:
             pass           
@@ -2011,7 +2011,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_23 = []
             for path in paths:
                 file_pattern = path
-                ds23 = xr.open_mfdataset(file_pattern, 
+                ds23 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step',
                                          combine='nested',
                                          coords='minimal',
@@ -2019,7 +2019,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override',
                                          decode_timedelta=False,
                                          filter_by_keys={'typeOfLevel': 'heightAboveGround', 'shortName':'v'})
-                ds23 = shift_longitude(ds23)
+                ds23 = _shift_longitude(ds23)
                 ds_list_23.append(ds23)            
         except Exception as e:
             pass           
@@ -2027,7 +2027,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_24 = []
             for path in paths:
                 file_pattern = path
-                ds24 = xr.open_mfdataset(file_pattern, 
+                ds24 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step',
                                          combine='nested', 
                                          coords='minimal', 
@@ -2035,7 +2035,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False,
                                          filter_by_keys={'typeOfLevel': 'atmosphereSingleLayer'})
-                ds24 = shift_longitude(ds24)
+                ds24 = _shift_longitude(ds24)
                 ds_list_24.append(ds24)
         except Exception as e:
             pass   
@@ -2043,7 +2043,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_25= []
             for path in paths:
                 file_pattern = path
-                ds25 = xr.open_mfdataset(file_pattern, 
+                ds25 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step', 
                                          combine='nested', 
                                          coords='minimal', 
@@ -2051,7 +2051,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False,
                                          filter_by_keys={'typeOfLevel': 'cloudCeiling'})
-                ds25 = shift_longitude(ds25)
+                ds25 = _shift_longitude(ds25)
                 ds_list_25.append(ds25)            
         except Exception as e:
             pass           
@@ -2059,7 +2059,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_26 = []
             for path in paths:
                 file_pattern = path
-                ds26 = xr.open_mfdataset(file_pattern,
+                ds26 = _xr.open_mfdataset(file_pattern,
                                          concat_dim='step',
                                          combine='nested',
                                          coords='minimal',
@@ -2067,7 +2067,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override',
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'nominalTop'})
-                ds26 = shift_longitude(ds26)
+                ds26 = _shift_longitude(ds26)
                 ds_list_26.append(ds26)            
         except Exception as e:
             pass           
@@ -2075,7 +2075,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_27 = []
             for path in paths:
                 file_pattern = path
-                ds27 = xr.open_mfdataset(file_pattern,
+                ds27 = _xr.open_mfdataset(file_pattern,
                                          concat_dim='step',
                                          combine='nested',
                                          coords='minimal',
@@ -2083,7 +2083,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'heightAboveGroundLayer'})
-                ds27 = shift_longitude(ds27)
+                ds27 = _shift_longitude(ds27)
                 ds_list_27.append(ds27)            
         except Exception as e:
             pass           
@@ -2091,7 +2091,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_28 = []
             for path in paths:
                 file_pattern = path
-                ds28 = xr.open_mfdataset(file_pattern,
+                ds28 = _xr.open_mfdataset(file_pattern,
                                          concat_dim='step',
                                          combine='nested', 
                                          coords='minimal',
@@ -2099,7 +2099,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override',
                                          decode_timedelta=False,
                                          filter_by_keys={'typeOfLevel': 'heightAboveGroundLayer', 'shortName':'ustm'})
-                ds28 = shift_longitude(ds28)
+                ds28 = _shift_longitude(ds28)
                 ds_list_28.append(ds28)            
         except Exception as e:
             pass           
@@ -2107,7 +2107,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_29 = []
             for path in paths:
                 file_pattern = path
-                ds29 = xr.open_mfdataset(file_pattern, 
+                ds29 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step',
                                          combine='nested', 
                                          coords='minimal', 
@@ -2115,7 +2115,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override',
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'heightAboveGroundLayer', 'shortName':'vstm'})
-                ds29 = shift_longitude(ds29) 
+                ds29 = _shift_longitude(ds29) 
                 ds_list_29.append(ds29)            
         except Exception as e:
             pass           
@@ -2123,7 +2123,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_30 = []
             for path in paths:
                 file_pattern = path
-                ds30 = xr.open_mfdataset(file_pattern,
+                ds30 = _xr.open_mfdataset(file_pattern,
                                          concat_dim='step',
                                          combine='nested',
                                          coords='minimal', 
@@ -2131,7 +2131,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'tropopause'})
-                ds30 = shift_longitude(ds30)
+                ds30 = _shift_longitude(ds30)
                 ds_list_30.append(ds30)
         except Exception as e:
             pass   
@@ -2139,7 +2139,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_31 = []
             for path in paths:
                 file_pattern = path
-                ds31 = xr.open_mfdataset(file_pattern, 
+                ds31 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step',
                                          combine='nested', 
                                          coords='minimal',
@@ -2147,7 +2147,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'maxWind'})
-                ds31 = shift_longitude(ds31)
+                ds31 = _shift_longitude(ds31)
                 ds_list_31.append(ds31)
         except Exception as e:
             pass           
@@ -2155,7 +2155,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_32 = []
             for path in paths:
                 file_pattern = path
-                ds32 = xr.open_mfdataset(file_pattern,
+                ds32 = _xr.open_mfdataset(file_pattern,
                                          concat_dim='step',
                                          combine='nested', 
                                          coords='minimal', 
@@ -2163,7 +2163,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override',
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'isothermZero'})
-                ds32 = shift_longitude(ds32)
+                ds32 = _shift_longitude(ds32)
                 ds_list_32.append(ds32)
         except Exception as e:
             pass   
@@ -2171,7 +2171,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_33 = []
             for path in paths:
                 file_pattern = path
-                ds33 = xr.open_mfdataset(file_pattern, 
+                ds33 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step',
                                          combine='nested', 
                                          coords='minimal', 
@@ -2179,7 +2179,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override',
                                          decode_timedelta=False,
                                          filter_by_keys={'typeOfLevel': 'highestTroposphericFreezing'})
-                ds33 = shift_longitude(ds33)
+                ds33 = _shift_longitude(ds33)
                 ds_list_33.append(ds33)  
         except Exception as e:
             pass           
@@ -2187,7 +2187,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_34 = []
             for path in paths:
                 file_pattern = path
-                ds34 = xr.open_mfdataset(file_pattern, 
+                ds34 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step', 
                                          combine='nested', 
                                          coords='minimal', 
@@ -2195,7 +2195,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False,
                                          filter_by_keys={'typeOfLevel': 'sigmaLayer'})
-                ds34 = shift_longitude(ds33)
+                ds34 = _shift_longitude(ds33)
                 ds_list_34.append(ds34)            
         except Exception as e:
             pass           
@@ -2203,7 +2203,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_35 = []
             for path in paths:
                 file_pattern = path
-                ds35 = xr.open_mfdataset(file_pattern,
+                ds35 = _xr.open_mfdataset(file_pattern,
                                          concat_dim='step',
                                          combine='nested', 
                                          coords='minimal', 
@@ -2211,7 +2211,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False,
                                          filter_by_keys={'typeOfLevel': 'sigma'})
-                ds35 = shift_longitude(ds35)
+                ds35 = _shift_longitude(ds35)
                 ds_list_35.append(ds35)
         except Exception as e:
             pass           
@@ -2219,7 +2219,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_36 = []
             for path in paths:
                 file_pattern = path
-                ds36 = xr.open_mfdataset(file_pattern, 
+                ds36 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step',
                                          combine='nested', 
                                          coords='minimal', 
@@ -2227,7 +2227,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'theta'})
-                ds36 = shift_longitude(ds36)
+                ds36 = _shift_longitude(ds36)
                 ds_list_36.append(ds36)            
         except Exception as e:
             pass           
@@ -2235,7 +2235,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_37 = []
             for path in paths:
                 file_pattern = path
-                ds37 = xr.open_mfdataset(file_pattern, 
+                ds37 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step',
                                          combine='nested',
                                          coords='minimal', 
@@ -2243,7 +2243,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False,
                                          filter_by_keys={'typeOfLevel': 'theta', 'shortName':'u'})
-                ds37 = shift_longitude(ds37)
+                ds37 = _shift_longitude(ds37)
                 ds_list_37.append(ds37)            
         except Exception as e:
             pass           
@@ -2251,7 +2251,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_38 = []
             for path in paths:
                 file_pattern = path
-                ds38 = xr.open_mfdataset(file_pattern,
+                ds38 = _xr.open_mfdataset(file_pattern,
                                          concat_dim='step',
                                          combine='nested',
                                          coords='minimal', 
@@ -2259,7 +2259,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override',
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'theta', 'shortName':'v'})
-                ds38 = shift_longitude(ds38)
+                ds38 = _shift_longitude(ds38)
                 ds_list_38.append(ds38)            
         except Exception as e:
             pass           
@@ -2267,7 +2267,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_39 = []
             for path in paths:
                 file_pattern = path
-                ds39 = xr.open_mfdataset(file_pattern,
+                ds39 = _xr.open_mfdataset(file_pattern,
                                          concat_dim='step', 
                                          combine='nested', 
                                          coords='minimal', 
@@ -2275,7 +2275,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override',
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'theta', 'shortName':'t'})
-                ds39 = shift_longitude(ds39)
+                ds39 = _shift_longitude(ds39)
                 ds_list_39.append(ds39)            
         except Exception as e:
             pass           
@@ -2283,7 +2283,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_40 = []
             for path in paths:
                 file_pattern = path
-                ds40 = xr.open_mfdataset(file_pattern,
+                ds40 = _xr.open_mfdataset(file_pattern,
                                          concat_dim='step',
                                          combine='nested',
                                          coords='minimal', 
@@ -2291,7 +2291,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override',
                                          decode_timedelta=False,
                                          filter_by_keys={'typeOfLevel': 'theta', 'shortName':'mont'})
-                ds40 = shift_longitude(ds40)
+                ds40 = _shift_longitude(ds40)
                 ds_list_40.append(ds40)            
         except Exception as e:
             pass           
@@ -2299,7 +2299,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_41 = []
             for path in paths:
                 file_pattern = path
-                ds41 = xr.open_mfdataset(file_pattern, 
+                ds41 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step',
                                          combine='nested', 
                                          coords='minimal', 
@@ -2307,7 +2307,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override',
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'potentialVorticity'})
-                ds41 = shift_longitude(ds41)
+                ds41 = _shift_longitude(ds41)
                 ds_list_41.append(ds41)
         except Exception as e:
             pass           
@@ -2315,7 +2315,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_42 = []
             for path in paths:
                 file_pattern = path
-                ds42 = xr.open_mfdataset(file_pattern,
+                ds42 = _xr.open_mfdataset(file_pattern,
                                          concat_dim='step',
                                          combine='nested',
                                          coords='minimal', 
@@ -2323,7 +2323,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override',
                                          decode_timedelta=False,
                                          filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer'})
-                ds42 = shift_longitude(ds42)
+                ds42 = _shift_longitude(ds42)
                 ds_list_42.append(ds42)
         except Exception as e:
             pass           
@@ -2331,7 +2331,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_43 = []
             for path in paths:
                 file_pattern = path
-                ds43 = xr.open_mfdataset(file_pattern, 
+                ds43 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step',
                                          combine='nested', 
                                          coords='minimal',
@@ -2339,7 +2339,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override',
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer', 'shortName':'dpt'})
-                ds43 = shift_longitude(ds43)
+                ds43 = _shift_longitude(ds43)
                 ds_list_43.append(ds43)            
         except Exception as e:
             pass           
@@ -2347,7 +2347,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_44 = []
             for path in paths:
                 file_pattern = path
-                ds44 = xr.open_mfdataset(file_pattern,
+                ds44 = _xr.open_mfdataset(file_pattern,
                                          concat_dim='step',
                                          combine='nested', 
                                          coords='minimal', 
@@ -2355,7 +2355,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer', 'shortName':'pwat'})
-                ds44 = shift_longitude(ds44)
+                ds44 = _shift_longitude(ds44)
                 ds_list_44.append(ds44)            
         except Exception as e:
             pass           
@@ -2363,7 +2363,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_45 = []
             for path in paths:
                 file_pattern = path
-                ds45 = xr.open_mfdataset(file_pattern, 
+                ds45 = _xr.open_mfdataset(file_pattern, 
                                          concat_dim='step',
                                          combine='nested',
                                          coords='minimal', 
@@ -2371,7 +2371,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override',
                                          decode_timedelta=False,
                                          filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer', 'shortName':'pli'})
-                ds45 = shift_longitude(ds45)
+                ds45 = _shift_longitude(ds45)
                 ds_list_45.append(ds45)            
         except Exception as e:
             pass           
@@ -2379,7 +2379,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_46 = []
             for path in paths:
                 file_pattern = path
-                ds46 = xr.open_mfdataset(file_pattern,
+                ds46 = _xr.open_mfdataset(file_pattern,
                                          concat_dim='step',
                                          combine='nested',
                                          coords='minimal',
@@ -2387,7 +2387,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False,
                                          filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer', 'shortName':'cape'})
-                ds46 = shift_longitude(ds46)
+                ds46 = _shift_longitude(ds46)
                 ds_list_46.append(ds46)            
         except Exception as e:
             pass           
@@ -2395,7 +2395,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_47 = []
             for path in paths:
                 file_pattern = path
-                ds47 = xr.open_mfdataset(file_pattern,
+                ds47 = _xr.open_mfdataset(file_pattern,
                                          concat_dim='step',
                                          combine='nested', 
                                          coords='minimal', 
@@ -2403,7 +2403,7 @@ def secondary_gefs_post_processing(paths):
                                          compat='override',
                                          decode_timedelta=False,
                                          filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer', 'shortName':'cin'})
-                ds47 = shift_longitude(ds47)
+                ds47 = _shift_longitude(ds47)
                 ds_list_47.append(ds47)            
         except Exception as e:
             pass           
@@ -2411,7 +2411,7 @@ def secondary_gefs_post_processing(paths):
             ds_list_48 = []
             for path in paths:
                 file_pattern = path
-                ds48 = xr.open_mfdataset(file_pattern,
+                ds48 = _xr.open_mfdataset(file_pattern,
                                          concat_dim='step',
                                          combine='nested',
                                          coords='minimal', 
@@ -2419,248 +2419,248 @@ def secondary_gefs_post_processing(paths):
                                          compat='override', 
                                          decode_timedelta=False, 
                                          filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer', 'shortName':'plpl'})
-                ds48 = shift_longitude(ds48)
+                ds48 = _shift_longitude(ds48)
                 ds_list_48.append(ds48) 
         except Exception as e:
             pass           
     
         try:    
-            ds = xr.concat(ds_list_1,
+            ds = _xr.concat(ds_list_1,
                            dim='number')
         except Exception as e:
             pass               
         try:            
-            ds1 = xr.concat(ds_list_2,
+            ds1 = _xr.concat(ds_list_2,
                             dim='number')
         except Exception as e:
             pass               
         try:            
-            ds2 = xr.concat(ds_list_3,
+            ds2 = _xr.concat(ds_list_3,
                             dim='number')
         except Exception as e:
             pass               
         try:            
-            ds3 = xr.concat(ds_list_4,
+            ds3 = _xr.concat(ds_list_4,
                             dim='number')
         except Exception as e:
             pass               
         try:            
-            ds4 = xr.concat(ds_list_5,
+            ds4 = _xr.concat(ds_list_5,
                             dim='number')
         except Exception as e:
             pass               
         try:            
-            ds5 = xr.concat(ds_list_6,
+            ds5 = _xr.concat(ds_list_6,
                             dim='number')
         except Exception as e:
             pass               
         try:            
-            ds6 = xr.concat(ds_list_7,
+            ds6 = _xr.concat(ds_list_7,
                             dim='number')
         except Exception as e:
             pass               
         try:            
-            ds7 = xr.concat(ds_list_8,
+            ds7 = _xr.concat(ds_list_8,
                             dim='number')
         except Exception as e:
             pass               
         try:            
-            ds8 = xr.concat(ds_list_9,
+            ds8 = _xr.concat(ds_list_9,
                             dim='number')
         except Exception as e:
             pass               
         try:            
-            ds9 = xr.concat(ds_list_10, 
+            ds9 = _xr.concat(ds_list_10, 
                             dim='number')
         except Exception as e:
             pass               
         try:            
-            ds10 = xr.concat(ds_list_11,
+            ds10 = _xr.concat(ds_list_11,
                              dim='number')
         except Exception as e:
             pass           
         try:        
-            ds12 = xr.concat(ds_list_12,
+            ds12 = _xr.concat(ds_list_12,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds13 = xr.concat(ds_list_13, 
+            ds13 = _xr.concat(ds_list_13, 
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds14 = xr.concat(ds_list_14, 
+            ds14 = _xr.concat(ds_list_14, 
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds15 = xr.concat(ds_list_15,
+            ds15 = _xr.concat(ds_list_15,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds16 = xr.concat(ds_list_16,
+            ds16 = _xr.concat(ds_list_16,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds17 = xr.concat(ds_list_17,
+            ds17 = _xr.concat(ds_list_17,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds18 = xr.concat(ds_list_18, 
+            ds18 = _xr.concat(ds_list_18, 
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds19 = xr.concat(ds_list_19, 
+            ds19 = _xr.concat(ds_list_19, 
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds20 = xr.concat(ds_list_20,
+            ds20 = _xr.concat(ds_list_20,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds21 = xr.concat(ds_list_21, 
+            ds21 = _xr.concat(ds_list_21, 
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds22 = xr.concat(ds_list_22, 
+            ds22 = _xr.concat(ds_list_22, 
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds23 = xr.concat(ds_list_23,
+            ds23 = _xr.concat(ds_list_23,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds24 = xr.concat(ds_list_24,
+            ds24 = _xr.concat(ds_list_24,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds25 = xr.concat(ds_list_25,
+            ds25 = _xr.concat(ds_list_25,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds26 = xr.concat(ds_list_26,
+            ds26 = _xr.concat(ds_list_26,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds27 = xr.concat(ds_list_27,
+            ds27 = _xr.concat(ds_list_27,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds28 = xr.concat(ds_list_28,
+            ds28 = _xr.concat(ds_list_28,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds29 = xr.concat(ds_list_29,
+            ds29 = _xr.concat(ds_list_29,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds30 = xr.concat(ds_list_30,
+            ds30 = _xr.concat(ds_list_30,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds31 = xr.concat(ds_list_31,
+            ds31 = _xr.concat(ds_list_31,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds32 = xr.concat(ds_list_32,
+            ds32 = _xr.concat(ds_list_32,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds33 = xr.concat(ds_list_33,
+            ds33 = _xr.concat(ds_list_33,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds34 = xr.concat(ds_list_34, 
+            ds34 = _xr.concat(ds_list_34, 
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds35 = xr.concat(ds_list_35, 
+            ds35 = _xr.concat(ds_list_35, 
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds36 = xr.concat(ds_list_36,
+            ds36 = _xr.concat(ds_list_36,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds37 = xr.concat(ds_list_37,
+            ds37 = _xr.concat(ds_list_37,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds38 = xr.concat(ds_list_38,
+            ds38 = _xr.concat(ds_list_38,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds39 = xr.concat(ds_list_39,
+            ds39 = _xr.concat(ds_list_39,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds40 = xr.concat(ds_list_40, 
+            ds40 = _xr.concat(ds_list_40, 
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds41 = xr.concat(ds_list_41, 
+            ds41 = _xr.concat(ds_list_41, 
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds42 = xr.concat(ds_list_42, 
+            ds42 = _xr.concat(ds_list_42, 
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds43 = xr.concat(ds_list_43,
+            ds43 = _xr.concat(ds_list_43,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds44 = xr.concat(ds_list_44, 
+            ds44 = _xr.concat(ds_list_44, 
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds45 = xr.concat(ds_list_45,
+            ds45 = _xr.concat(ds_list_45,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds46 = xr.concat(ds_list_46,
+            ds46 = _xr.concat(ds_list_46,
                              dim='number')
         except Exception as e:
             pass               
         try:            
-            ds47 = xr.concat(ds_list_47, 
+            ds47 = _xr.concat(ds_list_47, 
                              dim='number')
         except Exception as e:
             pass               
         try:
-            ds48 = xr.concat(ds_list_48,
+            ds48 = _xr.concat(ds_list_48,
                              dim='number')
         except Exception as e:
             pass                           
@@ -3149,13 +3149,13 @@ def secondary_gefs_post_processing(paths):
     except Exception as e:
         pass
 
-    clear_gefs_idx_files(paths)
+    _clear_gefs_idx_files(paths)
     
     try:    
         ds = ds.sortby('step')
     except Exception as e:
         _eccodes_error_intructions()
-        sys.exit(1)
+        _sys.exit(1)
 
     return ds
 

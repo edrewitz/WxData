@@ -49,6 +49,9 @@ from wxdata.gfs.gfs import(
 # AI Global Forecast System (AIGFS)
 from wxdata.aigfs.aigfs import aigfs
 
+# Hybrid Global Ensemble Forecast System (HGEFS)
+from wxdata.hgefs.hgefs import hgefs_mean_spread
+
 # Global Ensemble Forecast System (GEFS)
 from wxdata.gefs.gefs import(
     gefs_0p50,
@@ -86,8 +89,12 @@ from wxdata.rtma.rtma import(
 
 # NOAA 
 # Storm Prediction Center Outlooks
+# Climate Prediction Center Outlooks
 # National Weather Service Forecasts
-from wxdata.noaa.nws import get_ndfd_grids
+from wxdata.noaa.nws import(
+    get_ndfd_grids,
+    get_cpc_outlook
+)
 
 # Observed Upper-Air Soundings
 # (University of Wyoming Database)
@@ -111,6 +118,9 @@ import wxdata.post_processors.gfs_post_processing as gfs_post_processing
 
 # AI Global Forecast System (AIGFS)
 import wxdata.post_processors.aigfs_post_processing as aigfs_post_processing
+
+# Hybrid Global Ensemble Forecast System (HGEFS)
+import wxdata.post_processors.hgefs_post_processing as hgefs_post_processing
 
 # Global Ensemble Forecast System (GEFS)
 import wxdata.post_processors.gefs_post_processing as gefs_post_processing
@@ -171,5 +181,3 @@ import wxdata.client.client as client
 
 # This function executes a list of Python scripts in the order the user lists them
 from wxdata.utils.scripts import run_external_scripts
-
-

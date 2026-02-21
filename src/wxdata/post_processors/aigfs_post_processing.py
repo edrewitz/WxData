@@ -6,20 +6,20 @@ GRIB variable keys will be post-processed into Plain Language variable keys.
 (C) Eric J. Drewitz 2025-2026
 """
 
-import xarray as xr
-import sys
-import logging
-import warnings
-warnings.filterwarnings('ignore')
+import xarray as _xr
+import sys as _sys
+import logging as _logging
+import warnings as _warnings
+_warnings.filterwarnings('ignore')
 
-from wxdata.utils.file_funcs import file_paths_for_xarray
+from wxdata.utils.file_funcs import file_paths_for_xarray as _file_paths_for_xarray
 from wxdata.utils.coords import(
-    shift_longitude,
-    convert_lon
+    shift_longitude as _shift_longitude,
+    convert_lon as _convert_lon
 )
 
-sys.tracebacklimit = 0
-logging.disable()
+_sys.tracebacklimit = 0
+_logging.disable()
 
 def _eccodes_error_intructions():
     
@@ -119,13 +119,13 @@ def aigfs_post_processing(path,
     '2m_temperature'
     """
     
-    western_bound, eastern_bound = convert_lon(western_bound, 
+    western_bound, eastern_bound = _convert_lon(western_bound, 
                                                     eastern_bound) 
     
-    path = file_paths_for_xarray(path)
+    path = _file_paths_for_xarray(path)
     
     try:
-        ds = xr.open_mfdataset(path, 
+        ds = _xr.open_mfdataset(path, 
                                 concat_dim='step', 
                                 combine='nested', 
                                 coords='minimal', 
@@ -134,7 +134,7 @@ def aigfs_post_processing(path,
                                 decode_timedelta=False, 
                                 backend_kwargs={"indexpath": ""}).sel(longitude=slice(western_bound, eastern_bound, 1), 
                                                                                             latitude=slice(northern_bound, southern_bound, 1))
-        ds = shift_longitude(ds)
+        ds = _shift_longitude(ds)
         
         try:
             ds['10m_u_wind_component'] = ds['u10']
@@ -206,7 +206,7 @@ def aigfs_post_processing(path,
         pass
     
     try:
-        ds1 = xr.open_mfdataset(path, 
+        ds1 = _xr.open_mfdataset(path, 
                                 concat_dim='step', 
                                 combine='nested', 
                                 coords='minimal', 
@@ -216,7 +216,7 @@ def aigfs_post_processing(path,
                                 filter_by_keys={'paramId':167},
                                 backend_kwargs={"indexpath": ""}).sel(longitude=slice(western_bound, eastern_bound, 1), 
                                                                                             latitude=slice(northern_bound, southern_bound, 1))
-        ds1 = shift_longitude(ds1)
+        ds1 = _shift_longitude(ds1)
         
         try:
             ds['2m_temperature'] = ds1['t2m']
@@ -230,5 +230,5 @@ def aigfs_post_processing(path,
         ds = ds.sortby('step')
     except Exception as e:
         _eccodes_error_intructions()
-        sys.exit(1)
+        _sys.exit(1)
     return ds

@@ -100,7 +100,7 @@ def local_file_scanner(path,
     download = False
     
     if source == 'nomads':
-        if model == 'aigefs' or model == 'aigfs':
+        if model == 'aigefs' or model == 'aigfs' or model == 'hgefs':
             filename = filename
         else:
             filename = f"{filename}.grib2"

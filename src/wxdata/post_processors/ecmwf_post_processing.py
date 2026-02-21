@@ -5,20 +5,20 @@ GRIB variable keys will be post-processed into Plain Language variable keys.
 
 (C) Eric J. Drewitz 2025-2026
 """
-import xarray as xr
-import sys
-import logging
-import warnings
-warnings.filterwarnings('ignore')
+import xarray as _xr
+import sys as _sys
+import logging as _logging
+import warnings as _warnings
+_warnings.filterwarnings('ignore')
 
-from wxdata.calc.thermodynamics import relative_humidity
+from wxdata.calc.thermodynamics import relative_humidity as _relative_humidity
 from wxdata.utils.file_funcs import(
-    clear_idx_files_in_path,
-    sorted_paths
+    clear_idx_files_in_path as _clear_idx_files_in_path,
+    sorted_paths as _sorted_paths
 )
 
-sys.tracebacklimit = 0
-logging.disable()
+_sys.tracebacklimit = 0
+_logging.disable()
 
 def _eccodes_error_intructions():
     
@@ -158,12 +158,12 @@ def ecmwf_ifs_post_processing(path,
     'time_maximum_10m_wind_gust'
 
     """
-    clear_idx_files_in_path(path)
+    _clear_idx_files_in_path(path)
     
-    files = sorted_paths(path)
+    files = _sorted_paths(path)
     
     try:
-        ds = xr.open_mfdataset(files, 
+        ds = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -175,7 +175,7 @@ def ecmwf_ifs_post_processing(path,
         pass
     
     try:
-        ds1 = xr.open_mfdataset(files, 
+        ds1 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -189,7 +189,7 @@ def ecmwf_ifs_post_processing(path,
         pass
     
     try:
-        ds2 = xr.open_mfdataset(files, 
+        ds2 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -203,7 +203,7 @@ def ecmwf_ifs_post_processing(path,
         pass
     
     try:
-        ds3 = xr.open_mfdataset(files, 
+        ds3 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -217,7 +217,7 @@ def ecmwf_ifs_post_processing(path,
         pass
     
     try:
-        ds4 = xr.open_mfdataset(files, 
+        ds4 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -553,7 +553,7 @@ def ecmwf_ifs_post_processing(path,
         pass
     
     try:
-        ds['2m_relative_humidity'] = relative_humidity(ds['2m_temperature'],
+        ds['2m_relative_humidity'] = _relative_humidity(ds['2m_temperature'],
                                                        ds['2m_dew_point'])
     except Exception as e:
         pass
@@ -573,13 +573,13 @@ def ecmwf_ifs_post_processing(path,
     except Exception as e:
         pass
     
-    clear_idx_files_in_path(path)
+    _clear_idx_files_in_path(path)
         
     try:    
         ds = ds.sortby('step')
     except Exception as e:
         _eccodes_error_intructions()
-        sys.exit(1)
+        _sys.exit(1)
     return ds
 
 
@@ -654,12 +654,12 @@ def ecmwf_aifs_post_processing(path,
     'mslp'
         
     """
-    clear_idx_files_in_path(path)
+    _clear_idx_files_in_path(path)
     
-    files = sorted_paths(path)
+    files = _sorted_paths(path)
     
     try:
-        ds = xr.open_mfdataset(files, 
+        ds = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -673,7 +673,7 @@ def ecmwf_aifs_post_processing(path,
         pass
     
     try:
-        ds1 = xr.open_mfdataset(files, 
+        ds1 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -687,7 +687,7 @@ def ecmwf_aifs_post_processing(path,
         pass
     
     try:
-        ds2 = xr.open_mfdataset(files, 
+        ds2 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -701,7 +701,7 @@ def ecmwf_aifs_post_processing(path,
         pass
     
     try:
-        ds3 = xr.open_mfdataset(files, 
+        ds3 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -716,7 +716,7 @@ def ecmwf_aifs_post_processing(path,
     
     
     try:
-        ds4 = xr.open_mfdataset(files, 
+        ds4 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -730,7 +730,7 @@ def ecmwf_aifs_post_processing(path,
         pass
     
     try:
-        ds5 = xr.open_mfdataset(files, 
+        ds5 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -744,7 +744,7 @@ def ecmwf_aifs_post_processing(path,
         pass
     
     try:
-        ds6 = xr.open_mfdataset(files, 
+        ds6 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -758,7 +758,7 @@ def ecmwf_aifs_post_processing(path,
         pass
     
     try:
-        ds7 = xr.open_mfdataset(files, 
+        ds7 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -772,7 +772,7 @@ def ecmwf_aifs_post_processing(path,
         pass
     
     try:
-        ds8 = xr.open_mfdataset(files, 
+        ds8 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -786,7 +786,7 @@ def ecmwf_aifs_post_processing(path,
         pass
     
     try:
-        ds9 = xr.open_mfdataset(files, 
+        ds9 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -800,7 +800,7 @@ def ecmwf_aifs_post_processing(path,
         pass
     
     try:
-        ds10 = xr.open_mfdataset(files, 
+        ds10 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -814,7 +814,7 @@ def ecmwf_aifs_post_processing(path,
         pass
     
     try:
-        ds11 = xr.open_mfdataset(files, 
+        ds11 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -828,7 +828,7 @@ def ecmwf_aifs_post_processing(path,
         pass
     
     try:
-        ds12 = xr.open_mfdataset(files, 
+        ds12 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -915,7 +915,7 @@ def ecmwf_aifs_post_processing(path,
         pass
     
     try:
-        ds['2m_relative_humidity'] = relative_humidity(ds['2m_temperature'],
+        ds['2m_relative_humidity'] = _relative_humidity(ds['2m_temperature'],
                                                        ds['2m_dew_point'])
     except Exception as e:
         pass
@@ -1016,13 +1016,13 @@ def ecmwf_aifs_post_processing(path,
         pass
     
     
-    clear_idx_files_in_path(path)
+    _clear_idx_files_in_path(path)
     
     try:    
         ds = ds.sortby('step')
     except Exception as e:
         _eccodes_error_intructions()
-        sys.exit(1)
+        _sys.exit(1)
     return ds
 
 def ecmwf_ifs_wave_post_processing(path,
@@ -1067,12 +1067,12 @@ def ecmwf_ifs_wave_post_processing(path,
     'mean_wave_period'
 
     """
-    clear_idx_files_in_path(path)
+    _clear_idx_files_in_path(path)
     
-    files = sorted_paths(path)
+    files = _sorted_paths(path)
     
     try:
-        ds = xr.open_mfdataset(files, 
+        ds = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -1113,11 +1113,11 @@ def ecmwf_ifs_wave_post_processing(path,
     except Exception as e:
         pass
     
-    clear_idx_files_in_path(path)
+    _clear_idx_files_in_path(path)
     
     try:    
         ds = ds.sortby('step')
     except Exception as e:
         _eccodes_error_intructions()
-        sys.exit(1)
+        _sys.exit(1)
     return ds

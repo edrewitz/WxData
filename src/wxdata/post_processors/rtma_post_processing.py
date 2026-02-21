@@ -4,19 +4,19 @@ This file hosts the function that preprocesses RTMA Data.
 (C) Eric J. Drewitz 2025-2026
 """
     
-import xarray as xr
-import numpy as np
-import metpy.calc as mpcalc
-import sys
-import logging
-import warnings
-warnings.filterwarnings('ignore')
+import xarray as _xr
+import numpy as _np
+import metpy.calc as _mpcalc
+import sys as _sys
+import logging as _logging
+import warnings as _warnings
+_warnings.filterwarnings('ignore')
 
-from wxdata.calc.thermodynamics import relative_humidity
-from wxdata.utils.file_funcs import clear_idx_files_in_path
+from wxdata.calc.thermodynamics import relative_humidity as _relative_humidity
+from wxdata.utils.file_funcs import clear_idx_files_in_path as _clear_idx_files_in_path
 
-sys.tracebacklimit = 0
-logging.disable()
+_sys.tracebacklimit = 0
+_logging.disable()
 
 def _eccodes_error_intructions():
     
@@ -69,7 +69,7 @@ def _eccodes_error_intructions():
           
           """)
 
-def rows_and_cols(model):
+def _rows_and_cols(model):
     
     """
     This function returns the number of rows and columns for the low-latitude island RTMA datasets.
@@ -160,21 +160,21 @@ def process_rtma_data(filename,
     """
     model = model.upper()
     
-    clear_idx_files_in_path(directory)
+    _clear_idx_files_in_path(directory)
     
     filepath = f"{directory}/{filename}"
 
     try:
-        ds = xr.open_dataset(f"{filepath}", engine='cfgrib')
+        ds = _xr.open_dataset(f"{filepath}", engine='cfgrib')
     except Exception as e:
         _eccodes_error_intructions()
-        sys.exit(1)
+        _sys.exit(1)
     
     ds['orography'] = ds['orog']
     ds['surface_pressure'] = ds['sp']
     ds['2m_temperature'] = ds['t2m']
     ds['2m_dew_point'] = ds['d2m']
-    ds['2m_relative_humidity'] = relative_humidity(ds['2m_temperature'], ds['2m_dew_point'])
+    ds['2m_relative_humidity'] = _relative_humidity(ds['2m_temperature'], ds['2m_dew_point'])
     ds['2m_specific_humidity'] = ds['sh2']
     ds['surface_visibility'] = ds['vis']
     ds['cloud_ceiling_height'] = ds['ceil']
@@ -192,34 +192,34 @@ def process_rtma_data(filename,
          'tcc']
     )
     
-    ds1 = xr.open_dataset(f"{filepath}", 
+    ds1 = _xr.open_dataset(f"{filepath}", 
                         engine='cfgrib', 
                         decode_timedelta=False, 
                         filter_by_keys={'typeOfLevel': 'heightAboveGround','shortName':'10u'})
     ds['10m_u_wind_component'] = ds1['u10']
     
-    ds2 = xr.open_dataset(f"{filepath}", 
+    ds2 = _xr.open_dataset(f"{filepath}", 
                           engine='cfgrib', 
                           decode_timedelta=False, 
                           filter_by_keys={'typeOfLevel': 'heightAboveGround','shortName':'10v'})
     ds['10m_v_wind_component'] = ds2['v10']    
     
 
-    ds3 = xr.open_dataset(f"{filepath}", 
+    ds3 = _xr.open_dataset(f"{filepath}", 
                           engine='cfgrib', 
                           decode_timedelta=False, 
                           filter_by_keys={'typeOfLevel': 'heightAboveGround','shortName':'10wdir'})
     ds['10m_wind_direction'] = ds3['wdir10']
     
 
-    ds4 = xr.open_dataset(f"{filepath}", 
+    ds4 = _xr.open_dataset(f"{filepath}", 
                           engine='cfgrib', 
                           decode_timedelta=False, 
                           filter_by_keys={'typeOfLevel': 'heightAboveGround','shortName':'10si'})
     ds['10m_wind_speed'] = ds4['si10']
     
 
-    ds5 = xr.open_dataset(f"{filepath}",
+    ds5 = _xr.open_dataset(f"{filepath}",
                           engine='cfgrib',
                           decode_timedelta=False, 
                           filter_by_keys={'typeOfLevel': 'heightAboveGround','shortName':'i10fg'})
@@ -227,7 +227,7 @@ def process_rtma_data(filename,
     
     if model == 'HI RTMA' or model == 'GU RTMA' or model == 'PR RTMA':
         
-        nrows, ncols = rows_and_cols(model)
+        nrows, ncols = _rows_and_cols(model)
         
         orog = ds['orography'].values
         pressure = ds['surface_pressure'].values
@@ -247,22 +247,22 @@ def process_rtma_data(filename,
         lon = ds['longitude'].values
         time = ds['time'].values
 
-        orog_2d = np.empty([nrows,ncols])
-        pressure_2d = np.empty([nrows,ncols])
-        temp_2d = np.empty([nrows,ncols])
-        dwpt_2d = np.empty([nrows,ncols])
-        rh_2d = np.empty([nrows,ncols])
-        sh_2d = np.empty([nrows,ncols])
-        vis_2d = np.empty([nrows,ncols])
-        ceil_2d = np.empty([nrows,ncols])
-        tcc_2d = np.empty([nrows,ncols])
-        u_2d = np.empty([nrows,ncols])
-        v_2d = np.empty([nrows,ncols])
-        wdir_2d = np.empty([nrows,ncols])
-        ws_2d = np.empty([nrows,ncols])
-        wgust_2d = np.empty([nrows,ncols])
-        lat_2d = np.empty([nrows,ncols])
-        lon_2d = np.empty([nrows,ncols])    
+        orog_2d = _np.empty([nrows,ncols])
+        pressure_2d = _np.empty([nrows,ncols])
+        temp_2d = _np.empty([nrows,ncols])
+        dwpt_2d = _np.empty([nrows,ncols])
+        rh_2d = _np.empty([nrows,ncols])
+        sh_2d = _np.empty([nrows,ncols])
+        vis_2d = _np.empty([nrows,ncols])
+        ceil_2d = _np.empty([nrows,ncols])
+        tcc_2d = _np.empty([nrows,ncols])
+        u_2d = _np.empty([nrows,ncols])
+        v_2d = _np.empty([nrows,ncols])
+        wdir_2d = _np.empty([nrows,ncols])
+        ws_2d = _np.empty([nrows,ncols])
+        wgust_2d = _np.empty([nrows,ncols])
+        lat_2d = _np.empty([nrows,ncols])
+        lon_2d = _np.empty([nrows,ncols])    
         
         for i in range(0,nrows):
             start = i*ncols
@@ -297,20 +297,20 @@ def process_rtma_data(filename,
             "longitude": lon1d,  
         }
         
-        ds1 = xr.DataArray(orog_2d, coords=coords, dims=dims)
-        ds2 = xr.DataArray(pressure_2d, coords=coords, dims=dims)
-        ds3 = xr.DataArray(temp_2d, coords=coords, dims=dims)
-        ds4 = xr.DataArray(dwpt_2d, coords=coords, dims=dims)
-        ds5 = xr.DataArray(rh_2d, coords=coords, dims=dims)
-        ds6 = xr.DataArray(sh_2d, coords=coords, dims=dims)
-        ds7 = xr.DataArray(vis_2d, coords=coords, dims=dims)
-        ds8 = xr.DataArray(ceil_2d, coords=coords, dims=dims)
-        ds9 = xr.DataArray(tcc_2d, coords=coords, dims=dims)
-        ds10 = xr.DataArray(u_2d, coords=coords, dims=dims)
-        ds11 = xr.DataArray(v_2d, coords=coords, dims=dims)
-        ds12 = xr.DataArray(wdir_2d, coords=coords, dims=dims)
-        ds13 = xr.DataArray(ws_2d, coords=coords, dims=dims)
-        ds14 = xr.DataArray(wgust_2d, coords=coords, dims=dims)
+        ds1 = _xr.DataArray(orog_2d, coords=coords, dims=dims)
+        ds2 = _xr.DataArray(pressure_2d, coords=coords, dims=dims)
+        ds3 = _xr.DataArray(temp_2d, coords=coords, dims=dims)
+        ds4 = _xr.DataArray(dwpt_2d, coords=coords, dims=dims)
+        ds5 = _xr.DataArray(rh_2d, coords=coords, dims=dims)
+        ds6 = _xr.DataArray(sh_2d, coords=coords, dims=dims)
+        ds7 = _xr.DataArray(vis_2d, coords=coords, dims=dims)
+        ds8 = _xr.DataArray(ceil_2d, coords=coords, dims=dims)
+        ds9 = _xr.DataArray(tcc_2d, coords=coords, dims=dims)
+        ds10 = _xr.DataArray(u_2d, coords=coords, dims=dims)
+        ds11 = _xr.DataArray(v_2d, coords=coords, dims=dims)
+        ds12 = _xr.DataArray(wdir_2d, coords=coords, dims=dims)
+        ds13 = _xr.DataArray(ws_2d, coords=coords, dims=dims)
+        ds14 = _xr.DataArray(wgust_2d, coords=coords, dims=dims)
         
         ds1['orography'] = ds1
         ds1['surface_pressure'] = ds2
@@ -327,26 +327,26 @@ def process_rtma_data(filename,
         ds1['10m_wind_speed'] = ds13
         ds1['10m_wind_gust'] = ds14
         
-        ds1['surface_pressure'] = mpcalc.smooth_gaussian(ds1['surface_pressure'], n=8)
-        ds1['2m_temperature'] = mpcalc.smooth_gaussian(ds1['2m_temperature'], n=8)
-        ds1['2m_dew_point'] = mpcalc.smooth_gaussian(ds1['2m_dew_point'], n=8)
-        ds1['2m_relative_humidity'] = mpcalc.smooth_gaussian(ds1['2m_relative_humidity'], n=8)
-        ds1['2m_specific_humidity'] = mpcalc.smooth_gaussian(ds1['2m_specific_humidity'], n=8)
-        ds1['surface_visibility'] = mpcalc.smooth_gaussian(ds1['surface_visibility'], n=8)
-        ds1['cloud_ceiling_height'] = mpcalc.smooth_gaussian(ds1['cloud_ceiling_height'], n=8)
-        ds1['total_cloud_cover'] = mpcalc.smooth_gaussian(ds1['total_cloud_cover'], n=8)
-        ds1['10m_u_wind_component'] = mpcalc.smooth_gaussian(ds1['10m_u_wind_component'], n=8)
-        ds1['10m_v_wind_component'] = mpcalc.smooth_gaussian(ds1['10m_v_wind_component'], n=8)
-        ds1['10m_wind_direction'] = mpcalc.smooth_gaussian(ds1['10m_wind_direction'], n=8)
-        ds1['10m_wind_speed'] = mpcalc.smooth_gaussian(ds1['10m_wind_speed'], n=8)
-        ds1['10m_wind_gust'] = mpcalc.smooth_gaussian(ds1['10m_wind_gust'], n=8)
+        ds1['surface_pressure'] = _mpcalc.smooth_gaussian(ds1['surface_pressure'], n=8)
+        ds1['2m_temperature'] = _mpcalc.smooth_gaussian(ds1['2m_temperature'], n=8)
+        ds1['2m_dew_point'] = _mpcalc.smooth_gaussian(ds1['2m_dew_point'], n=8)
+        ds1['2m_relative_humidity'] = _mpcalc.smooth_gaussian(ds1['2m_relative_humidity'], n=8)
+        ds1['2m_specific_humidity'] = _mpcalc.smooth_gaussian(ds1['2m_specific_humidity'], n=8)
+        ds1['surface_visibility'] = _mpcalc.smooth_gaussian(ds1['surface_visibility'], n=8)
+        ds1['cloud_ceiling_height'] = _mpcalc.smooth_gaussian(ds1['cloud_ceiling_height'], n=8)
+        ds1['total_cloud_cover'] = _mpcalc.smooth_gaussian(ds1['total_cloud_cover'], n=8)
+        ds1['10m_u_wind_component'] = _mpcalc.smooth_gaussian(ds1['10m_u_wind_component'], n=8)
+        ds1['10m_v_wind_component'] = _mpcalc.smooth_gaussian(ds1['10m_v_wind_component'], n=8)
+        ds1['10m_wind_direction'] = _mpcalc.smooth_gaussian(ds1['10m_wind_direction'], n=8)
+        ds1['10m_wind_speed'] = _mpcalc.smooth_gaussian(ds1['10m_wind_speed'], n=8)
+        ds1['10m_wind_gust'] = _mpcalc.smooth_gaussian(ds1['10m_wind_gust'], n=8)
         
-        clear_idx_files_in_path(directory)
+        _clear_idx_files_in_path(directory)
         
         return ds1
         
     else:
         
-        clear_idx_files_in_path(directory)
+        _clear_idx_files_in_path(directory)
     
         return ds

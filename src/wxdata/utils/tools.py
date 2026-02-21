@@ -10,13 +10,13 @@ These functions are useful for users who wish to extract the following:
 (C) Eric J. Drewitz 2025-2026
 """
 
-import urllib.request
-import pandas as pd
-import xarray as xr
-import numpy as np
-import os
+import urllib.request as _request
+import pandas as _pd
+import xarray as _xr
+import numpy as _np
+import os as _os
 
-from metpy.interpolate import cross_section
+from metpy.interpolate import cross_section as _cross_section
 
 def linear_anti_aliasing(x, 
                          y, 
@@ -38,13 +38,13 @@ def linear_anti_aliasing(x,
     An interpolated numpy.array of x and y data. 
     """
     
-    x = np.asarray(x)
-    y = np.asarray(y)
+    x = _np.asarray(x)
+    y = _np.asarray(y)
     
     y_point_list = []
     for i in range(0, len(y), 1):
         try:
-            y_points = np.linspace(y[i], y[i+1], anti_aliasing)
+            y_points = _np.linspace(y[i], y[i+1], anti_aliasing)
         except Exception as e:
             pass
 
@@ -53,21 +53,21 @@ def linear_anti_aliasing(x,
     x_point_list = []
     for i in range(0, len(x), 1):
         try:
-            x_points = np.linspace(x[i], x[i+1], anti_aliasing)
+            x_points = _np.linspace(x[i], x[i+1], anti_aliasing)
         except Exception as e:
             pass
 
         x_point_list.append(x_points)
         
-    x_point_arr = np.asarray(x_point_list)
-    y_point_arr = np.asarray(y_point_list)
+    x_point_arr = _np.asarray(x_point_list)
+    y_point_arr = _np.asarray(y_point_list)
     
     x_point_arr = x_point_arr.flatten()
     y_point_arr = y_point_arr.flatten()
     
     return x_point_arr, y_point_arr
 
-def station_coords(station_id):
+def _station_coords(station_id):
     
     """
     This function will retrieve the latitude/longitude point for an ASOS Station ID.
@@ -86,17 +86,17 @@ def station_coords(station_id):
 
     station_id = station_id.upper()
     
-    if os.path.exists(f"Airport Codes"):
+    if _os.path.exists(f"Airport Codes"):
         pass
     else:
-        os.mkdir(f"Airport Codes")
+        _os.mkdir(f"Airport Codes")
         
-    if os.path.exists(f"Airport Codes/airport-codes.csv"):
+    if _os.path.exists(f"Airport Codes/airport-codes.csv"):
         pass
     else:
-        urllib.request.urlretrieve(f"https://raw.githubusercontent.com/Unidata/MetPy/refs/heads/main/staticdata/airport-codes.csv", f"Airport Codes/airport-codes.csv")
+        _request.urlretrieve(f"https://raw.githubusercontent.com/Unidata/MetPy/refs/heads/main/staticdata/airport-codes.csv", f"Airport Codes/airport-codes.csv")
         
-    df = pd.read_csv(f"Airport Codes/airport-codes.csv")
+    df = _pd.read_csv(f"Airport Codes/airport-codes.csv")
     
     df = df[(df['type'] == 'large_airport') | (df['type'] == 'medium_airport') | (df['type'] == 'small_airport')]
 
@@ -165,7 +165,7 @@ def pixel_query(ds,
 
     else:
         
-        longitude, latitude = station_coords(station_id)
+        longitude, latitude = _station_coords(station_id)
         
         if coord_names[0] == 'latitude' and coord_names[1] == 'longitude':
             ds = ds.sel(longitude=longitude, latitude=latitude, method='nearest')
@@ -244,19 +244,19 @@ def line_query(ds,
     
     if type(starting_point) == str and type(ending_point) == str:
         
-        longitude_1, latitude_1 = station_coords(starting_point)
-        longitude_2, latitude_2 = station_coords(ending_point)
+        longitude_1, latitude_1 = _station_coords(starting_point)
+        longitude_2, latitude_2 = _station_coords(ending_point)
         
         coords_1 = (latitude_1, longitude_1)
         coords_2 = (latitude_2, longitude_2)
         
-        cross = cross_section(ds, coords_1, coords_2)
-        height_cross = cross_section(sfc_pressure, coords_1, coords_2)
-        ds_grid, pressure, index, lon, height = xr.broadcast(cross, cross[pressure_level_key], cross['index'], cross[ref], height_cross) 
+        cross = _cross_section(ds, coords_1, coords_2)
+        height_cross = _cross_section(sfc_pressure, coords_1, coords_2)
+        ds_grid, pressure, index, lon, height = _xr.broadcast(cross, cross[pressure_level_key], cross['index'], cross[ref], height_cross) 
         
     else:
-        cross = cross_section(ds, starting_point, ending_point)
-        height_cross = cross_section(sfc_pressure, starting_point, ending_point)
-        ds_grid, pressure, index, lon, height = xr.broadcast(cross, cross[pressure_level_key], cross['index'], cross[ref], height_cross) 
+        cross = _cross_section(ds, starting_point, ending_point)
+        height_cross = _cross_section(sfc_pressure, starting_point, ending_point)
+        ds_grid, pressure, index, lon, height = _xr.broadcast(cross, cross[pressure_level_key], cross['index'], cross[ref], height_cross) 
         
     return ds_grid, pressure, index, lon, height

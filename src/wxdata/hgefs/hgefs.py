@@ -1,18 +1,21 @@
 """
-This file hosts the clients that download, pre-process and post-process AIGFS Data.
+This file hosts the clients that download, pre-process and post-process AIGEFS Data.
 
 (C) Eric J. Drewitz 2025-2026
 """
 
 import wxdata.client.client as _client
-import wxdata.post_processors.aigfs_post_processing as _aigfs_post_processing
+import wxdata.post_processors.hgefs_post_processing as _hgefs_post_processing
 import os as _os
 import warnings as _warnings
 _warnings.filterwarnings('ignore')
 
-from wxdata.aigfs.url_scanners import aigfs_url_scanner as _aigfs_url_scanner
-from wxdata.aigfs.paths import build_aigfs_directory as _build_aigfs_directory
+from wxdata.hgefs.url_scanner import hgefs_url_scanner as _hgefs_url_scanner
+
+from wxdata.hgefs.paths import build_directory as _build_directory
+
 from wxdata.utils.file_funcs import custom_branch as _custom_branch
+
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
 from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
 from wxdata.utils.recycle_bin import(
@@ -22,33 +25,33 @@ from wxdata.utils.recycle_bin import(
     clear_trash_bin_linux as _clear_trash_bin_linux
 )
 
-
-def aigfs(final_forecast_hour=384, 
-             western_bound=-180, 
-             eastern_bound=180, 
-             northern_bound=90, 
-             southern_bound=-90, 
-             proxies=None, 
-             process_data=True,
-             clear_recycle_bin=False,
-             convert_temperature=True,
-             convert_to='celsius',
-             custom_directory=None,
-             chunk_size=8192,
-             notifications='off',
-             type_of_level='pressure'):
+def hgefs_mean_spread(final_forecast_hour=240, 
+                    western_bound=-180, 
+                    eastern_bound=180, 
+                    northern_bound=90, 
+                    southern_bound=-90, 
+                    proxies=None, 
+                    process_data=True,
+                    clear_recycle_bin=False,
+                    convert_temperature=True,
+                    convert_to='celsius',
+                    custom_directory=None,
+                    chunk_size=8192,
+                    notifications='off',
+                    cat='mean',
+                    type_of_level='pressure'):                   
     
     """
-    This function downloads, pre-processes and post-processes the latest AIGFS Data. 
+    This function downloads, pre-processes and post-processes the latest HGEFS Ensemble Mean or Ensemble Spread for either the Pressure or Surface Parameters. 
     Users can also enter a list of paths for custom_directory if they do not wish to use the default directory.
     
     Required Arguments: None
     
     Optional Arguments:
     
-    1) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The AIGEFS
-    goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    384 by the nereast increment of 6 hours. 
+    1) final_forecast_hour (Integer) - Default = 240. The final forecast hour the user wishes to download. The HGEFS
+    goes out to 240 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
+    240 by the nereast increment of 6 hours. 
     
     2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
@@ -92,7 +95,15 @@ def aigfs(final_forecast_hour=384,
     
     15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    16) type_of_level (String) - Default='pressure'. The type of level the data is in.
+    16) cat (String) - Default='mean'. The category of the data.
+    
+        Catagories
+        ----------
+        
+        1) mean
+        2) spread
+        
+    17) type_of_level (String) - Default='pressure'. The type of level the data is in.
     
         Types of Levels
         ---------------
@@ -124,39 +135,45 @@ def aigfs(final_forecast_hour=384,
     'mslp'
     '2m_temperature'
     """
-    
+    cat = cat.lower()
     type_of_level = type_of_level.lower()
     
+    if cat == 'mean':
+        cat = 'avg'
+    else:
+        cat = 'spr'
+        
     if type_of_level == 'pressure':
         level = 'pres'
     else:
         level = 'sfc'
-    
+        
     if clear_recycle_bin == True:
         _clear_recycle_bin_windows()
         _clear_trash_bin_mac()
         _clear_trash_bin_linux()
     else:
-        pass   
+        pass    
     
     if custom_directory == None:
-        path = _build_aigfs_directory(type_of_level)
+        path = _build_directory(type_of_level,
+                                  cat)
     else:
         path = _custom_branch(custom_directory)
         
-    url, file, run = _aigfs_url_scanner(final_forecast_hour,
+    url, file, run = _hgefs_url_scanner(final_forecast_hour,
                                                         proxies,
+                                                        cat,
                                                         type_of_level)
     
     download = _local_file_scanner(path, 
                                     file,
                                     'nomads',
                                     run,
-                                    model='aigfs')  
-    
+                                    model='hgefs')  
     
     if download == True:
-        print(f"Downloading AIGFS {type_of_level.upper()} Files...")
+        print(f"Downloading HGEFS {type_of_level.upper()} {cat.upper()} Files...")
         
         try:
             for file in _os.listdir(f"{path}"):
@@ -172,38 +189,38 @@ def aigfs(final_forecast_hour=384,
         
         for i in range(0, stop, 6):
             if i < 10:
-                _client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f00{i}.grib2",
+                _client.get_gridded_data(f"{url}hgefs.t{run}z.{level}.{cat}.f00{i}.grib2",
                             path,
-                            f"aigfs.t{run}z.{level}.f00{i}.grib2",
+                            f"hgefs.t{run}z.{level}.{cat}.f00{i}.grib2",
                             proxies=proxies,
                             chunk_size=chunk_size,
                             notifications=notifications)  
             elif i >= 10 and i < 100:
-                _client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f0{i}.grib2",
+                _client.get_gridded_data(f"{url}hgefs.t{run}z.{level}.{cat}.f0{i}.grib2",
                             path,
-                            f"aigfs.t{run}z.{level}.f0{i}.grib2",
+                            f"hgefs.t{run}z.{level}.{cat}.f0{i}.grib2",
                             proxies=proxies,
                             chunk_size=chunk_size,
                             notifications=notifications)  
             else:
-                _client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f{i}.grib2",
+                _client.get_gridded_data(f"{url}hgefs.t{run}z.{level}.{cat}.f{i}.grib2",
                             path,
-                            f"aigfs.t{run}z.{level}.f{i}.grib2",
+                            f"hgefs.t{run}z.{level}.{cat}.f{i}.grib2",
                             proxies=proxies,
                             chunk_size=chunk_size,
                             notifications=notifications)    
                     
     else:
-        print(f"User has latest AIGFS {type_of_level.upper()} Files\nSkipping Download...")  
-    
+        print(f"User has latest HGEFS {type_of_level.upper()} {cat.upper()} Files\nSkipping Download...")  
+            
     if process_data == True:
-        print(f"AIGFS {type_of_level.upper()} Data Processing...")    
+        print(f"HGEFS {type_of_level.upper()} {cat.upper()} Data Processing...")    
         
-        ds = _aigfs_post_processing.aigfs_post_processing(path,
-                                                        western_bound,
-                                                        eastern_bound,
-                                                        northern_bound,
-                                                        southern_bound)
+        ds = _hgefs_post_processing.hgefs_mean_spread_post_processing(path,
+                                                                    western_bound,
+                                                                    eastern_bound,
+                                                                    northern_bound,
+                                                                    southern_bound)
         
         if convert_temperature == True:
             ds = _convert_temperature_units(ds, 
@@ -211,9 +228,7 @@ def aigfs(final_forecast_hour=384,
                                            cat='mean')
                 
         
-        print(f"AIGFS {type_of_level.upper()} Data Processing Complete.")
+        print(f"HGEFS {type_of_level.upper()} {cat.upper()} Data Processing Complete.")
         return ds
     else:
-        pass    
-
-
+        pass       

@@ -4,34 +4,38 @@ This file hosts the functions the user has to download ECMWF model data.
 (C) Eric J. Drewitz 2025-2026
 """
 
-import warnings
-import wxdata.client.client as client
-import wxdata.post_processors.ecmwf_post_processing as ecmwf_post_processing
-warnings.filterwarnings('ignore')
+import warnings as _warnings
+import wxdata.client.client as _client
+import wxdata.post_processors.ecmwf_post_processing as _ecmwf_post_processing
+_warnings.filterwarnings('ignore')
 
 from wxdata.ecmwf.url_scanners import(
-    ecmwf_ifs_url_scanner, 
-    ecmwf_aifs_url_scanner,
-    ecmwf_ifs_high_res_url_scanner,
-    ecmwf_ifs_wave_url_scanner
+    ecmwf_ifs_url_scanner as _ecmwf_ifs_url_scanner, 
+    ecmwf_aifs_url_scanner as _ecmwf_aifs_url_scanner,
+    ecmwf_ifs_high_res_url_scanner as _ecmwf_ifs_high_res_url_scanner,
+    ecmwf_ifs_wave_url_scanner as _ecmwf_ifs_wave_url_scanner
 )
 
 from wxdata.ecmwf.file_funcs import(
-    build_directory,
-    clear_idx_files,
-    clear_old_data,
-    parse_filename
+    build_directory as _build_directory,
+    clear_idx_files as _clear_idx_files,
+    clear_old_data as _clear_old_data,
+    parse_filename as _parse_filename
 )
 
 
-from wxdata.calc.unit_conversion import convert_temperature_units
-from wxdata.utils.file_scanner import local_file_scanner
-from wxdata.ecmwf.paths import ecmwf_branch_paths
+from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
+from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
+from wxdata.ecmwf.paths import ecmwf_branch_paths as _ecmwf_branch_paths
 from wxdata.utils.file_funcs import(
-    custom_branch,
-    clear_idx_files_in_path
+    custom_branch as _custom_branch,
+    clear_idx_files_in_path as _clear_idx_files_in_path
 )
-from wxdata.utils.recycle_bin import *
+from wxdata.utils.recycle_bin import(
+        clear_recycle_bin_windows as _clear_recycle_bin_windows,
+        clear_trash_bin_mac as _clear_trash_bin_mac,
+        clear_trash_bin_linux as _clear_trash_bin_linux
+)
 
 
 def ecmwf_ifs(final_forecast_hour=360,
@@ -151,42 +155,42 @@ def ecmwf_ifs(final_forecast_hour=360,
     """
     
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass
     
     if custom_directory == None:
-        build_directory('ifs', 
+        _build_directory('ifs', 
                         'operational')
         
-        path = ecmwf_branch_paths('ifs', 
+        path = _ecmwf_branch_paths('ifs', 
                         'operational')
         
     else:
-        path = custom_branch(custom_directory)
+        path = _custom_branch(custom_directory)
     
-    clear_idx_files(path)
+    _clear_idx_files(path)
     
-    url, filename, run = ecmwf_ifs_url_scanner(final_forecast_hour,
+    url, filename, run = _ecmwf_ifs_url_scanner(final_forecast_hour,
                           proxies)
 
-    download = local_file_scanner(path, 
+    download = _local_file_scanner(path, 
                                   filename,
                                   'ecmwf',
                                   run,
                                   model='operational ifs')
     
 
-    date = parse_filename(filename)
+    date = _parse_filename(filename)
     
     if download == True:
         print(f"Downloading ECMWF IFS...")
-        clear_old_data(path)
+        _clear_old_data(path)
         if final_forecast_hour <= 144:
             for i in range(0, final_forecast_hour + step, step):
-                client.get_gridded_data(f"{url}/{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2", 
+                _client.get_gridded_data(f"{url}/{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2", 
                             path,
                             f"{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2",
                             proxies=proxies,
@@ -195,7 +199,7 @@ def ecmwf_ifs(final_forecast_hour=360,
                                               
         else:
             for i in range(0, 144 + step, step):
-                client.get_gridded_data(f"{url}/{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2", 
+                _client.get_gridded_data(f"{url}/{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2", 
                             path,
                             f"{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2",
                             proxies=proxies,
@@ -203,7 +207,7 @@ def ecmwf_ifs(final_forecast_hour=360,
                             notifications=notifications)
             
             for i in range(144, final_forecast_hour + 6, 6):
-                client.get_gridded_data(f"{url}/{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2", 
+                _client.get_gridded_data(f"{url}/{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2", 
                             path,
                             f"{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2",
                             proxies=proxies,
@@ -220,16 +224,16 @@ def ecmwf_ifs(final_forecast_hour=360,
     if process_data == True:
         print(f"ECMWF IFS Data Processing...")
         
-        ds = ecmwf_post_processing.ecmwf_ifs_post_processing(path,
+        ds = _ecmwf_post_processing.ecmwf_ifs_post_processing(path,
                                                             western_bound, 
                                                             eastern_bound, 
                                                             northern_bound, 
                                                             southern_bound)
         
-        clear_idx_files_in_path(path)
+        _clear_idx_files_in_path(path)
             
         if convert_temperature == True:
-                ds = convert_temperature_units(ds, 
+                ds = _convert_temperature_units(ds, 
                                             convert_to)
                 
         else:
@@ -345,41 +349,41 @@ def ecmwf_aifs(final_forecast_hour=360,
     """
     
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass
     
     if custom_directory == None:
-        build_directory('aifs', 
+        _build_directory('aifs', 
                         'operational')
         
-        path = ecmwf_branch_paths('aifs', 
+        path = _ecmwf_branch_paths('aifs', 
                         'operational')
         
     else:
-        path = custom_branch(custom_directory)
+        path = _custom_branch(custom_directory)
     
-    clear_idx_files(path)
+    _clear_idx_files(path)
     
-    url, filename, run = ecmwf_aifs_url_scanner(final_forecast_hour,
+    url, filename, run = _ecmwf_aifs_url_scanner(final_forecast_hour,
                           proxies)
 
-    download = local_file_scanner(path, 
+    download = _local_file_scanner(path, 
                                   filename,
                                   'ecmwf',
                                   run)
     
 
-    date = parse_filename(filename)
+    date = _parse_filename(filename)
     
     if download == True:
         print(f"Downloading ECMWF AIFS...")
-        clear_old_data(path)
+        _clear_old_data(path)
         if final_forecast_hour <= 144:
             for i in range(0, final_forecast_hour + 6, 6):
-                client.get_gridded_data(f"{url}/{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2", 
+                _client.get_gridded_data(f"{url}/{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2", 
                             path,
                             f"{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2",
                             proxies=proxies,
@@ -388,7 +392,7 @@ def ecmwf_aifs(final_forecast_hour=360,
                                               
         else:
             for i in range(0, 144 + 6, 6):
-                client.get_gridded_data(f"{url}/{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2", 
+                _client.get_gridded_data(f"{url}/{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2", 
                             path,
                             f"{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2",
                             proxies=proxies,
@@ -396,7 +400,7 @@ def ecmwf_aifs(final_forecast_hour=360,
                             notifications=notifications)
             
             for i in range(144, final_forecast_hour + 6, 6):
-                client.get_gridded_data(f"{url}/{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2", 
+                _client.get_gridded_data(f"{url}/{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2", 
                             path,
                             f"{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2",
                             proxies=proxies,
@@ -411,16 +415,16 @@ def ecmwf_aifs(final_forecast_hour=360,
     if process_data == True:
         print(f"ECMWF AIFS Data Processing...")
         
-        ds = ecmwf_post_processing.ecmwf_aifs_post_processing(path,
+        ds = _ecmwf_post_processing.ecmwf_aifs_post_processing(path,
                                                             western_bound, 
                                                             eastern_bound, 
                                                             northern_bound, 
                                                             southern_bound)
         
-        clear_idx_files_in_path(path)
+        _clear_idx_files_in_path(path)
             
         if convert_temperature == True:
-                ds = convert_temperature_units(ds, 
+                ds = _convert_temperature_units(ds, 
                                             convert_to)
                 
         else:
@@ -550,38 +554,38 @@ def ecmwf_ifs_high_res(final_forecast_hour=144,
     """
     
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass
     
     if custom_directory == None:
-        build_directory('ifs', 
+        _build_directory('ifs', 
                         'high res')
         
-        path = ecmwf_branch_paths('ifs', 
+        path = _ecmwf_branch_paths('ifs', 
                         'high res')
     else:
-        path = custom_branch(custom_directory)
+        path = _custom_branch(custom_directory)
     
-    clear_idx_files(path)
+    _clear_idx_files(path)
     
-    url, filename, run = ecmwf_ifs_high_res_url_scanner(final_forecast_hour,
-                          proxies)
+    url, filename, run = _ecmwf_ifs_high_res_url_scanner(final_forecast_hour,
+                                                         proxies)
 
-    download = local_file_scanner(path, 
+    download = _local_file_scanner(path, 
                                   filename,
                                   'ecmwf',
                                   run)
 
-    date = parse_filename(filename)
+    date = _parse_filename(filename)
     
     if download == True:
         print(f"Downloading ECMWF High Resolution IFS...")
-        clear_old_data(path)
+        _clear_old_data(path)
         for i in range(0, final_forecast_hour + step, step):
-            client.get_gridded_data(f"{url}/{date.strftime('%Y%m%d%H')}0000-{i}h-scda-fc.grib2", 
+            _client.get_gridded_data(f"{url}/{date.strftime('%Y%m%d%H')}0000-{i}h-scda-fc.grib2", 
                         path,
                         f"{date.strftime('%Y%m%d%H')}0000-{i}h-scda-fc.grib2",
                         proxies=proxies,
@@ -596,16 +600,16 @@ def ecmwf_ifs_high_res(final_forecast_hour=144,
     if process_data == True:
         print(f"ECMWF High Resolution IFS Data Processing...")
         
-        ds = ecmwf_post_processing.ecmwf_ifs_post_processing(path,
+        ds = _ecmwf_post_processing.ecmwf_ifs_post_processing(path,
                                                             western_bound, 
                                                             eastern_bound, 
                                                             northern_bound, 
                                                             southern_bound)
         
-        clear_idx_files_in_path(path)
+        _clear_idx_files_in_path(path)
             
         if convert_temperature == True:
-                ds = convert_temperature_units(ds, 
+                ds = _convert_temperature_units(ds, 
                                             convert_to)
                 
         else:
@@ -687,27 +691,27 @@ def ecmwf_ifs_wave(final_forecast_hour=144,
     """
     
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass
     
     if custom_directory == None:
-        build_directory('ifs', 
+        _build_directory('ifs', 
                         'wave')
         
-        path = ecmwf_branch_paths('ifs', 
+        path = _ecmwf_branch_paths('ifs', 
                         'wave')
     else:
-        path = custom_branch(custom_directory)
+        path = _custom_branch(custom_directory)
     
-    clear_idx_files(path)
+    _clear_idx_files(path)
     
-    url, filename, run = ecmwf_ifs_wave_url_scanner(final_forecast_hour,
-                          proxies)
+    url, filename, run = _ecmwf_ifs_wave_url_scanner(final_forecast_hour,
+                                                     proxies)
 
-    download = local_file_scanner(path, 
+    download = _local_file_scanner(path, 
                                   filename,
                                   'ecmwf',
                                   run)
@@ -717,9 +721,9 @@ def ecmwf_ifs_wave(final_forecast_hour=144,
     
     if download == True:
         print(f"Downloading ECMWF IFS Wave...")
-        clear_old_data(path)
+        _clear_old_data(path)
         for i in range(0, final_forecast_hour + step, step):
-            client.get_gridded_data(f"{url}/{date.strftime('%Y%m%d%H')}0000-{i}h-scwv-fc.grib2", 
+            _client.get_gridded_data(f"{url}/{date.strftime('%Y%m%d%H')}0000-{i}h-scwv-fc.grib2", 
                         path,
                         f"{date.strftime('%Y%m%d%H')}0000-{i}h-scwv-fc.grib2",
                         proxies=proxies,
@@ -734,13 +738,13 @@ def ecmwf_ifs_wave(final_forecast_hour=144,
     if process_data == True:
         print(f"ECMWF IFS Wave Data Processing...")
         
-        ds = ecmwf_post_processing.ecmwf_ifs_wave_post_processing(path,
+        ds = _ecmwf_post_processing.ecmwf_ifs_wave_post_processing(path,
                                                             western_bound, 
                                                             eastern_bound, 
                                                             northern_bound, 
                                                             southern_bound)
         
-        clear_idx_files_in_path(path)
+        _clear_idx_files_in_path(path)
         
         print(f"ECMWF IFS Wave Data Processing Complete.")
         return ds

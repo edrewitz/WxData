@@ -7,29 +7,42 @@ These functions also process the data into Pandas.DataFrame format.
 """
 
 
-import pandas as pd
-import os
-import shutil
-import wxdata.fems.raws_sigs as raws
-import wxdata.client.client as client
+import pandas as _pd
+import os as _os
+import shutil as _shutil
+import wxdata.fems.raws_sigs as _raws
+import wxdata.client.client as _client
 
-from wxdata.utils.recycle_bin import *
-from calendar import isleap
+from wxdata.utils.recycle_bin import(
+    clear_recycle_bin_windows as _clear_recycle_bin_windows,
+    clear_trash_bin_mac as _clear_trash_bin_mac,
+    clear_trash_bin_linux as _clear_trash_bin_linux
+)
+
+
+from calendar import isleap as _isleap
 
 try:
-    from datetime import datetime, timedelta, UTC
+    from datetime import(
+        datetime as _datetime, 
+        timedelta as _timedelta, 
+        UTC as _UTC
+    )
 except Exception as e:
-    from datetime import datetime, timedelta 
+    from datetime import(
+        datetime as _datetime, 
+        timedelta as _timedelta
+    )
     
 try:
-    utc_time = datetime.now(UTC)
+    utc_time = _datetime.now(_UTC)
 except Exception as e:
-    utc_time = datetime.utcnow()
+    utc_time = _datetime.utcnow()
     
-folder = os.getcwd()
+folder = _os.getcwd()
 folder_modified = folder.replace("\\", "/")
 
-def get_psa_ids(gacc_region):
+def _get_psa_ids(gacc_region):
     
     """
     This function returns the Predictive Services Areas IDs for each GACC. 
@@ -361,9 +374,9 @@ def get_single_station_data(station_id,
 
     """
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass
     
@@ -373,7 +386,7 @@ def get_single_station_data(station_id,
 
     if number_of_days == 'Custom' or number_of_days == 'custom':
 
-        df = client.get_csv_data(f"https://fems.fs2c.usda.gov/api/ext-climatology/download-nfdr?"
+        df = _client.get_csv_data(f"https://fems.fs2c.usda.gov/api/ext-climatology/download-nfdr?"
                             f"stationIds={str(station_id)}&endDate={end_date}Z&startDate={start_date}Z&"
                             f"dataFormat=csv&dataset=all&fuelModels={fuel_model}&dateTimeFormat=UTC",
                             path,
@@ -385,13 +398,13 @@ def get_single_station_data(station_id,
     else:
 
         try:
-            now = datetime.now(UTC)
+            now = _datetime.now(_UTC)
         except Exception as e:
-            now = datetime.utcnow()
+            now = _datetime.utcnow()
             
-        start = now - timedelta(days=number_of_days)
+        start = now - _timedelta(days=number_of_days)
 
-        df = client.get_csv_data(f"https://fems.fs2c.usda.gov/api/ext-climatology/download-nfdr?"
+        df = _client.get_csv_data(f"https://fems.fs2c.usda.gov/api/ext-climatology/download-nfdr?"
                                  f"stationIds={str(station_id)}&endDate={now.strftime(f'%Y-%m-%d')}T{now.strftime(f'%H:%M:%S')}Z&"
                                  f"startDate={start.strftime(f'%Y-%m-%d')}T{start.strftime(f'%H:%M:%S')}Z&"
                                  f"dataFormat=csv&dataset=all&fuelModels={fuel_model}&dateTimeFormat=UTC",
@@ -464,29 +477,29 @@ def get_raws_sig_data(gacc_region,
         5) Dates
     """
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass
     
-    raws.check_folders()
-    raws.get_raws_sig_info()
+    _raws.check_folders()
+    _raws.get_raws_sig_info()
 
     gacc_region = gacc_region.upper()
     fuel_model = fuel_model.upper()
 
-    df_station_list = raws.get_sigs(gacc_region)
+    df_station_list = _raws.get_sigs(gacc_region)
 
     try:
-        now = datetime.now(UTC)
+        now = _datetime.now(_UTC)
     except Exception as e:
-        now = datetime.utcnow()
+        now = _datetime.utcnow()
 
     if start_date == None:
         number_of_days = number_of_years_for_averages * 365
             
-        start = now - timedelta(days=number_of_days)
+        start = now - _timedelta(days=number_of_days)
 
     else:
         start_date = start_date
@@ -499,13 +512,13 @@ def get_raws_sig_data(gacc_region,
         month = int(month)
         day = int(day)
 
-        start = datetime(year, month, day, 0, 0, 0)
+        start = _datetime(year, month, day, 0, 0, 0)
 
     for station, psa in zip(df_station_list['RAWSID'], df_station_list['PSA Code']):
         
         fname = f"{station}.csv"
          
-        client.get_csv_data(f"https://fems.fs2c.usda.gov/api/ext-climatology/download-nfdr?"
+        _client.get_csv_data(f"https://fems.fs2c.usda.gov/api/ext-climatology/download-nfdr?"
                                  f"stationIds={station}&endDate={now.strftime('%Y-%m-%dT%H:%M:%S')}Z&"
                                  f"startDate={start.strftime('%Y-%m-%dT%H:%M:%S')}Z&"
                                  f"dataFormat=csv&dataset=observation&fuelModels={fuel_model}&dateTimeFormat=UTC",
@@ -517,11 +530,11 @@ def get_raws_sig_data(gacc_region,
         
         
         
-    raws.get_psa_percentiles(gacc_region)
-    raws.station_stats(gacc_region)
-    raws.get_stats(gacc_region)
-    raws.get_psa_climatology(gacc_region)
-    raws.sort_data_by_psa(gacc_region)
+    _raws.get_psa_percentiles(gacc_region)
+    _raws.station_stats(gacc_region)
+    _raws.get_stats(gacc_region)
+    _raws.get_psa_climatology(gacc_region)
+    _raws.sort_data_by_psa(gacc_region)
 
     data_dir = f"FEMS Data/{gacc_region}/PSA Data"
     percentiles_dir = f"FEMS Data/{gacc_region}/PSA Percentiles"
@@ -529,15 +542,15 @@ def get_raws_sig_data(gacc_region,
     climo_min_dir = f"FEMS Data/{gacc_region}/PSA Climo/MIN"
     climo_max_dir = f"FEMS Data/{gacc_region}/PSA Climo/MAX"
 
-    percentiles = pd.read_csv(f"FEMS Data/{gacc_region}/PSA Percentiles/PSA_Percentiles.csv")
+    percentiles = _pd.read_csv(f"FEMS Data/{gacc_region}/PSA Percentiles/PSA_Percentiles.csv")
 
-    leap = isleap(utc_time.year)
+    leap = _isleap(utc_time.year)
     if start_date == None:
         if leap == False:
             days = number_of_years_for_averages * 365
         else:
             days = number_of_years_for_averages * 366
-        start_date = utc_time - timedelta(days=days)
+        start_date = utc_time - _timedelta(days=days)
         start_year = start_date.year
         xmin = start_date
         xmax = utc_time
@@ -547,25 +560,25 @@ def get_raws_sig_data(gacc_region,
         start_year = f"{start_date[0]}{start_date[1]}{start_date[2]}{start_date[3]}"
         start_month = f"{start_date[5]}{start_date[6]}"
         start_day = f"{start_date[8]}{start_date[9]}"
-        xmin = datetime(int(start_year), int(start_month), int(start_day))
+        xmin = _datetime(int(start_year), int(start_month), int(start_day))
         xmax = utc_time
     
     psa = 1
 
-    if os.path.exists(f"{data_dir}/.ipynb_checkpoints"):
-        shutil.rmtree(f"{data_dir}/.ipynb_checkpoints")
+    if _os.path.exists(f"{data_dir}/.ipynb_checkpoints"):
+        _shutil.rmtree(f"{data_dir}/.ipynb_checkpoints")
     else:
         pass
 
-    if os.path.exists(f"{data_dir}/.ipynb_checkpoints"):
-        shutil.rmtree(f"{data_dir}/.ipynb_checkpoints")
+    if _os.path.exists(f"{data_dir}/.ipynb_checkpoints"):
+        _shutil.rmtree(f"{data_dir}/.ipynb_checkpoints")
     else:
         pass
 
-    files = os.listdir(f"{data_dir}")
+    files = _os.listdir(f"{data_dir}")
     psa = 1
 
-    psa_IDs = get_psa_ids(gacc_region)              
+    psa_IDs = _get_psa_ids(gacc_region)              
             
     data = []
     climo_avg = []
@@ -576,10 +589,10 @@ def get_raws_sig_data(gacc_region,
         fname = f"{psa_IDs[i]}.png"
 
         try:
-            df_data = pd.read_csv(f"{data_dir}/zone_{psa}.csv") 
-            df_climo_avg = pd.read_csv(f"{climo_avg_dir}/zone_{psa}.csv") 
-            df_climo_min = pd.read_csv(f"{climo_min_dir}/zone_{psa}.csv") 
-            df_climo_max = pd.read_csv(f"{climo_max_dir}/zone_{psa}.csv") 
+            df_data = _pd.read_csv(f"{data_dir}/zone_{psa}.csv") 
+            df_climo_avg = _pd.read_csv(f"{climo_avg_dir}/zone_{psa}.csv") 
+            df_climo_min = _pd.read_csv(f"{climo_min_dir}/zone_{psa}.csv") 
+            df_climo_max = _pd.read_csv(f"{climo_max_dir}/zone_{psa}.csv") 
             
             data.append(df_data)
             climo_avg.append(df_climo_avg)
@@ -589,7 +602,7 @@ def get_raws_sig_data(gacc_region,
             pass
 
         try:
-            dates = pd.to_datetime(df_data['dates'])
+            dates = _pd.to_datetime(df_data['dates'])
         except Exception as e:
             pass
             
@@ -636,32 +649,32 @@ def get_nfdrs_forecast_data(gacc_region,
     A list of NFDRS forecast data in the form of a Pandas DataFrames listed by each Predictive Services Area
     """
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass
     
-    raws.check_folders()
-    raws.get_raws_sig_info()
+    _raws.check_folders()
+    _raws.get_raws_sig_info()
 
     gacc_region = gacc_region.upper()
     fuel_model = fuel_model.upper()
     
-    df_station_list = raws.get_sigs(gacc_region)
+    df_station_list = _raws.get_sigs(gacc_region)
     
     try:
-        start = datetime.now(UTC)
+        start = _datetime.now(_UTC)
     except Exception as e:
-        start = datetime.utcnow()
+        start = _datetime.utcnow()
 
-    end = start + timedelta(days=7)
+    end = start + _timedelta(days=7)
 
     psas = []
     for station, psa in zip(df_station_list['RAWSID'], df_station_list['PSA Code']):
 
         fname = f"{station}.csv"
-        client.get_csv_data(f"https://fems.fs2c.usda.gov/api/ext-climatology/download-nfdr-daily-summary/?"
+        _client.get_csv_data(f"https://fems.fs2c.usda.gov/api/ext-climatology/download-nfdr-daily-summary/?"
                             f"dataset=forecast&startDate={start.strftime('%Y-%m-%d')}&endDate={end.strftime('%Y-%m-%d')}&"
                             f"dataFormat=csv&stationIds={station}&fuelModels={fuel_model}",
                                     f"{folder_modified}/FEMS Data/Forecasts/{gacc_region}/{psa}",
@@ -672,15 +685,15 @@ def get_nfdrs_forecast_data(gacc_region,
 
         psas.append(psa)
         
-    raws.station_forecast(gacc_region)
-    raws.sort_forecasts_by_psa(gacc_region)
+    _raws.station_forecast(gacc_region)
+    _raws.sort_forecasts_by_psa(gacc_region)
     
     forecast_dir = f"FEMS Data/{gacc_region}/PSA Forecast"
     
     dfs = []
     for p in range(0, len(psas)):
         try:
-            df = pd.read_csv(f"{forecast_dir}/zone_{p}.csv") 
+            df = _pd.read_csv(f"{forecast_dir}/zone_{p}.csv") 
             dfs.append(df)
         except Exception as e:
             pass

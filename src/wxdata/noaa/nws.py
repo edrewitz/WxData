@@ -5,15 +5,28 @@ This file has the function that downloads NOAA/NWS and NOAA/SPC Forecast Data
 """
 # Import the needed libraries
 
-import wxdata.client.client as client
-import xarray as xr
-import numpy as np
-import sys
-import os
-import warnings
-warnings.filterwarnings('ignore')
+import wxdata.client.client as _client
+import xarray as _xr
+import numpy as _np
+import geopandas as _gpd
+import sys as _sys
+import os as _os
+import warnings as _warnings
+_warnings.filterwarnings('ignore')
 
-from wxdata.utils.recycle_bin import *
+from wxdata.utils.recycle_bin import(
+                                     
+        clear_recycle_bin_windows as _clear_recycle_bin_windows,
+        clear_trash_bin_mac as _clear_trash_bin_mac,
+        clear_trash_bin_linux as _clear_trash_bin_linux
+)
+
+from shapeography import(
+    
+    client as _soclient,
+    unzip as _unzip,
+    geometry as _geometry
+)
 
 
 alaska = '/SL.us008001/ST.opnl/DF.gr2/DC.ndfd/AR.alaska/'
@@ -158,9 +171,9 @@ def _FIX_1D_GRIB_DATA(ds_short,
         lat = ds_short['latitude'].values
         lon = ds_short['longitude'].values
         
-        var2d = np.empty([nrow,ncol])
-        lat2d = np.empty([nrow,ncol])
-        lon2d = np.empty([nrow,ncol])
+        var2d = _np.empty([nrow,ncol])
+        lat2d = _np.empty([nrow,ncol])
+        lon2d = _np.empty([nrow,ncol])
         
         for i in range(0,nrow):
             start = i*ncol
@@ -168,7 +181,7 @@ def _FIX_1D_GRIB_DATA(ds_short,
             if i%2==0:
                 var2d[i,:] = var[start:end]
             else:
-                var2d[i,:] = np.flip(var[start:end],axis=0)
+                var2d[i,:] = _np.flip(var[start:end],axis=0)
             
             lat2d[i,:] = lat[start:end]
             lon2d[i,:] = lon[start:end]
@@ -176,7 +189,7 @@ def _FIX_1D_GRIB_DATA(ds_short,
         lon1d = lon2d[0,:]
         lat1d = lat2d[:,0]
         ds_list_short.append(var2d)
-        ds_short = xr.open_dataset(f"NWS Data/{short_term_fname}", engine='cfgrib')
+        ds_short = _xr.open_dataset(f"NWS Data/{short_term_fname}", engine='cfgrib')
         data_var_names_1 = [var.name for var in ds_short.data_vars.values()]
         ds_short[varKey] = ds_short[data_var_names_1[0]]
         ds_short = ds_short.drop_vars(data_var_names_1[0])
@@ -188,7 +201,7 @@ def _FIX_1D_GRIB_DATA(ds_short,
         "longitude": lon1d,  
     }
     
-    ds_short = xr.DataArray(ds_list_short, coords=short_coords, dims=dims)
+    ds_short = _xr.DataArray(ds_list_short, coords=short_coords, dims=dims)
         
     ds_list_extended = []
     for i in range(0, len(ds_extended['step']), 1):
@@ -198,9 +211,9 @@ def _FIX_1D_GRIB_DATA(ds_short,
         lat = ds_extended['latitude'].values
         lon = ds_extended['longitude'].values
         
-        var2d = np.empty([nrow,ncol])
-        lat2d = np.empty([nrow,ncol])
-        lon2d = np.empty([nrow,ncol])
+        var2d = _np.empty([nrow,ncol])
+        lat2d = _np.empty([nrow,ncol])
+        lon2d = _np.empty([nrow,ncol])
         
         for i in range(0,nrow):
             start = i*ncol
@@ -208,7 +221,7 @@ def _FIX_1D_GRIB_DATA(ds_short,
             if i%2==0:
                 var2d[i,:] = var[start:end]
             else:
-                var2d[i,:] = np.flip(var[start:end],axis=0)
+                var2d[i,:] = _np.flip(var[start:end],axis=0)
             
             lat2d[i,:] = lat[start:end]
             lon2d[i,:] = lon[start:end]
@@ -216,7 +229,7 @@ def _FIX_1D_GRIB_DATA(ds_short,
         lon1d = lon2d[0,:]
         lat1d = lat2d[:,0]
         ds_list_extended.append(var2d)
-        ds_extended = xr.open_dataset(f"NWS Data/{extended_fname}", engine='cfgrib')
+        ds_extended = _xr.open_dataset(f"NWS Data/{extended_fname}", engine='cfgrib')
         data_var_names_1 = [var.name for var in ds_extended.data_vars.values()]
         ds_extended[varKey] = ds_extended[data_var_names_1[0]]
         ds_extended = ds_extended.drop_vars(data_var_names_1[0])
@@ -228,7 +241,7 @@ def _FIX_1D_GRIB_DATA(ds_short,
         "longitude": lon1d,  
     }
     
-    ds_extended = xr.DataArray(ds_list_extended, coords=extended_coords, dims=dims)
+    ds_extended = _xr.DataArray(ds_list_extended, coords=extended_coords, dims=dims)
     
     return ds_short, ds_extended
 
@@ -295,13 +308,188 @@ def _get_parameters(parameter):
     return parameters[parameter]
 
 
+def _cpc_outlook_urls(parameter):
+    
+    """
+    This function returns the URL for a user-specified type of NOAA/NWS/Climate Prediction Center Outlook
+    
+    Required Arguments:
+    
+    1) parameter (String) - The type of outlook.
+    
+    Optional Arguments: None
+    
+    Returns
+    -------
+    
+    The download URL of the shapefiles for the CPC outlook.
+    """
+    parameter = parameter.lower()
+    
+    outlooks = {
+        
+        '6_10_day_precipitation':'https://ftp.cpc.ncep.noaa.gov/GIS/us_tempprcpfcst/610prcp_latest.zip',
+        '6_10_day_temperature':'https://ftp.cpc.ncep.noaa.gov/GIS/us_tempprcpfcst/610temp_latest.zip',
+        '8_14_day_precipitation':'https://ftp.cpc.ncep.noaa.gov/GIS/us_tempprcpfcst/814prcp_latest.zip',
+        '8_14_day_temperature':'https://ftp.cpc.ncep.noaa.gov/GIS/us_tempprcpfcst/814temp_latest.zip',
+        'week_3_4_precipitation':'https://ftp.cpc.ncep.noaa.gov/GIS/us_tempprcpfcst/wk34prcp_latest.zip',
+        'week_3_4_temperature':'https://ftp.cpc.ncep.noaa.gov/GIS/us_tempprcpfcst/wk34temp_latest.zip',
+        'monthly_precipitation':'https://ftp.cpc.ncep.noaa.gov/GIS/us_tempprcpfcst/monthlyupdate/monthupd_prcp_latest.zip',
+        'monthly_temperature':'https://ftp.cpc.ncep.noaa.gov/GIS/us_tempprcpfcst/monthlyupdate/monthupd_temp_latest.zip'
+        
+    }
+    
+    return outlooks[parameter]
+
+
+def _cpc_outlook_basename(parameter):
+    
+    """
+    This function returns the shapefile basename for a user-specified type of NOAA/NWS/Climate Prediction Center Outlook
+    
+    Required Arguments:
+    
+    1) parameter (String) - The type of outlook.
+    
+    Optional Arguments: None
+    
+    Returns
+    -------
+    
+    The shapefile basename for the CPC outlook.
+    """
+    parameter = parameter.lower()
+    
+    outlooks = {
+        
+        '6_10_day_precipitation':'610prcp_latest.shp',
+        '6_10_day_temperature':'610temp_latest.shp',
+        '8_14_day_precipitation':'814prcp_latest.shp',
+        '8_14_day_temperature':'814temp_latest.shp',
+        'week_3_4_precipitation':'wk34prcp_latest.shp',
+        'week_3_4_temperature':'wk34temp_latest.shp',
+        'monthly_precipitation':'monthupd_prcp_latest.shp',
+        'monthly_temperature':'monthupd_temp_latest.shp'
+        
+    }
+    
+    return outlooks[parameter]
+
+
+def get_cpc_outlook(parameter,
+                    path,
+                    filename,
+                    proxies=None,
+                    chunk_size=8192,
+                    notifications='on',
+                    clear_recycle_bin=False,
+                    file_extension='.zip',
+                    crs='EPSG:4326'):
+    
+    """
+    This function wraps the client module from the shapeography package as a private module _soclient
+    
+    This function will download the shapefiles for the latest NOAA Climate Prediction Center Outlook and return a clean geopandas.GeoDataFrame of the data
+    
+    Required Arguments:
+    
+    1) parameter (String) - The type of CPC Outlook.
+    
+        Parameter List
+        --------------
+        
+        1) '6_10_day_precipitation'
+        2) '6_10_day_temperature'
+        3) '8_14_day_precipitation'
+        4) '8_14_day_temperature'
+        5) 'week_3_4_precipitation'
+        6) 'week_3_4_temperature'
+        7) 'monthly_precipitation'
+        8) 'monthly_temperature'
+        
+    2) path (String) - The local directory where the CPC Outlook Shapefiles will download to
+    
+    3) filename (String) - The filename the user wants to save the CPC Outlook as
+    
+    Optional Arguments:
+    
+    1) proxies (dict or None) - Default=None. If the user is using a proxy server, the user must change the following:
+
+        proxies=None ---> proxies={'http':'http://url',
+                            'https':'https://url'
+                            }
+        
+    2) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    
+    3) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    
+    4) clear_recycle_bin (Boolean) - When set to True, the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+          This setting is to help preserve memory on the machine. 
+          
+    5) file_extension (String) - Default='.zip'. - The extension of the zip file. 
+    
+        Supported zip file extentions
+        -----------------------------
+            
+            1) .zip
+            2) .gz
+            3) .tar.gz
+            4) .tar
+    
+    Returns
+    -------
+    
+    A geopandas.GeoDataFrame of the calibrated CPC Probabilistic Forecast Data 
+    """
+    
+    if clear_recycle_bin == True:
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
+    else:
+        pass
+    
+    url = _cpc_outlook_urls(parameter)
+    
+    _soclient.get_shapefiles(f"{url}",
+                             f"{path}",
+                             f"{filename}",
+                             proxies=proxies,
+                             chunk_size=chunk_size,
+                             notifications=notifications)
+    
+    for f in _os.listdir(f"{path}"):
+        extraction_folder = f.split('.', 1)[0]
+        
+    _unzip.extract_files(f"{path}",
+                         file_extension=file_extension)
+    
+    basename = _cpc_outlook_basename(parameter)
+    
+    data = _geometry.geodataframe(f"{path}/{extraction_folder}/{basename}",
+                                  crs=crs)
+    
+    cat_map = {'Below': -1, 'Normal': 0, 'Above': 1}
+
+    data['Cat_Value'] = data['Cat'].map(cat_map)
+    data['Weighted_Values'] = data['Cat_Value'] * data['Prob']
+    
+    gdf = _gpd.GeoDataFrame(geometry=data['geometry'])
+    gdf['CPC Probabilities'] = data['Weighted_Values']
+    
+    gdf = gdf.dropna()
+    
+    return gdf
+    
+
+
 def get_ndfd_grids(parameter, 
                    state,
                    proxies=None,
                    chunk_size=8192,
                    notifications='on',
                    clear_recycle_bin=False,
-                   include_extended_grids=True):
+                   include_extended_grids=True,):
 
     """
 
@@ -428,9 +616,9 @@ def get_ndfd_grids(parameter,
 
     """
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass
     
@@ -445,14 +633,14 @@ def get_ndfd_grids(parameter,
         
     parameter = parameter
 
-    if os.path.exists(f"NWS Data"):
+    if _os.path.exists(f"NWS Data"):
         pass
     else:
-        os.mkdir(f"NWS Data")
+        _os.mkdir(f"NWS Data")
 
-    for file in os.listdir(f"NWS Data"):
+    for file in _os.listdir(f"NWS Data"):
         try:
-            os.remove(f"NWS Data"/{file})
+            _os.remove(f"NWS Data"/{file})
         except Exception as e:
             pass
 
@@ -462,16 +650,16 @@ def get_ndfd_grids(parameter,
     extended_fname = f"ds.{parameter}_extended.bin"
 
 
-    if os.path.exists(short_term_fname):
-        os.remove(short_term_fname)
-        client.get_gridded_data(f"https://tgftp.nws.noaa.gov{directory_name}VP.001-003/{fname}", 
+    if _os.path.exists(short_term_fname):
+        _os.remove(short_term_fname)
+        _client.get_gridded_data(f"https://tgftp.nws.noaa.gov{directory_name}VP.001-003/{fname}", 
                                 f"NWS Data",
                                 f"{short_term_fname}",
                                 proxies=proxies,
                                 chunk_size=chunk_size,
                                 notifications=notifications)
     else:
-        client.get_gridded_data(f"https://tgftp.nws.noaa.gov{directory_name}VP.001-003/{fname}", 
+        _client.get_gridded_data(f"https://tgftp.nws.noaa.gov{directory_name}VP.001-003/{fname}", 
                                 f"NWS Data",
                                 f"{short_term_fname}",
                                 proxies=proxies,
@@ -480,10 +668,10 @@ def get_ndfd_grids(parameter,
         
     if include_extended_grids == True:
     
-        if os.path.exists(extended_fname):
+        if _os.path.exists(extended_fname):
             try:
-                os.remove(extended_fname)
-                client.get_gridded_data(f"https://tgftp.nws.noaa.gov{directory_name}VP.004-007/{fname}", 
+                _os.remove(extended_fname)
+                _client.get_gridded_data(f"https://tgftp.nws.noaa.gov{directory_name}VP.004-007/{fname}", 
                                         f"NWS Data",
                                         f"{extended_fname}",
                                         proxies=proxies,
@@ -494,7 +682,7 @@ def get_ndfd_grids(parameter,
                 extended = False
         else:
             try:
-                client.get_gridded_data(f"https://tgftp.nws.noaa.gov{directory_name}VP.004-007/{fname}", 
+                _client.get_gridded_data(f"https://tgftp.nws.noaa.gov{directory_name}VP.004-007/{fname}", 
                                         f"NWS Data",
                                         f"{extended_fname}",
                                         proxies=proxies,
@@ -505,18 +693,18 @@ def get_ndfd_grids(parameter,
                 extended = False
 
     try:
-        os.remove(parameter)
+        _os.remove(parameter)
     except Exception as e:
         pass
     
     try:
         if state != 'AK' or state != 'ak' or state == None:
-            ds1 = xr.open_dataset(f"NWS Data/{short_term_fname}", engine='cfgrib', decode_timedelta=False)
+            ds1 = _xr.open_dataset(f"NWS Data/{short_term_fname}", engine='cfgrib', decode_timedelta=False)
         else:
-            ds1 = xr.open_dataset(f"NWS Data/{short_term_fname}", engine='cfgrib', decode_timedelta=False).sel(x=slice(20, 1400, 2), y=slice(100, 1400, 2)) 
+            ds1 = _xr.open_dataset(f"NWS Data/{short_term_fname}", engine='cfgrib', decode_timedelta=False).sel(x=slice(20, 1400, 2), y=slice(100, 1400, 2)) 
     except Exception as e:
         _eccodes_error_intructions()
-        sys.exit(1)
+        _sys.exit(1)
     try:
         if ds1['time'][1] == True:
             ds1 = ds1.isel(time=1)
@@ -532,9 +720,9 @@ def get_ndfd_grids(parameter,
         try:
 
             if state != 'AK' or state != 'ak' or state == None:
-                ds2 = xr.open_dataset(f"NWS Data/{extended_fname}", engine='cfgrib', decode_timedelta=False)
+                ds2 = _xr.open_dataset(f"NWS Data/{extended_fname}", engine='cfgrib', decode_timedelta=False)
             else:
-                ds2 = xr.open_dataset(f"NWS Data/{extended_fname}", engine='cfgrib', decode_timedelta=False).sel(x=slice(20, 1400, 2), y=slice(100, 1400, 2)) 
+                ds2 = _xr.open_dataset(f"NWS Data/{extended_fname}", engine='cfgrib', decode_timedelta=False).sel(x=slice(20, 1400, 2), y=slice(100, 1400, 2)) 
     
             try:
                 if ds2['time'][1] == True:
@@ -561,9 +749,9 @@ def get_ndfd_grids(parameter,
     else:
         pass
 
-    for item in os.listdir(f"NWS Data"):
+    for item in _os.listdir(f"NWS Data"):
         if item.endswith(".idx"):
-            os.remove(f"NWS Data/{item}")
+            _os.remove(f"NWS Data/{item}")
         
     print(f"Retrieved {parameter} NDFD grids.")
     

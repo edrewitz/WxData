@@ -4,42 +4,46 @@ This file hosts functions that download various types of GEFS Data
 (C) Eric J. Drewitz 2025-2026
 """
 
-import wxdata.client.client as client
-import os
-import warnings
-import wxdata.post_processors.gefs_post_processing as gefs_post_processing
-warnings.filterwarnings('ignore')
+import wxdata.client.client as _client
+import os as _os
+import warnings as _warnings
+import wxdata.post_processors.gefs_post_processing as _gefs_post_processing
+_warnings.filterwarnings('ignore')
 
 from wxdata.gefs.file_funcs import(
     
-    build_directory,
-    clear_idx_files,
-    clear_empty_files
+    build_directory as _build_directory,
+    clear_idx_files as _clear_idx_files,
+    clear_empty_files as _clear_empty_files
     
 )
 from wxdata.gefs.url_scanners import(
     
-    gefs_0p50_url_scanner,
-    gefs_0p50_secondary_parameters_url_scanner,
-    gefs_0p25_url_scanner
+    gefs_0p50_url_scanner as _gefs_0p50_url_scanner,
+    gefs_0p50_secondary_parameters_url_scanner as _gefs_0p50_secondary_parameters_url_scanner,
+    gefs_0p25_url_scanner as _gefs_0p25_url_scanner
 )
 
 from wxdata.gefs.process import(
     
-    process_gefs_data,
-    process_gefs_secondary_parameters_data
+    process_gefs_data as _process_gefs_data,
+    process_gefs_secondary_parameters_data as _process_gefs_secondary_parameters_data
     
 )
 
 from wxdata.utils.file_funcs import(
-     custom_branch,
-     custom_branches,
-     clear_gefs_idx_files
+     custom_branch as _custom_branch,
+     custom_branches as _custom_branches,
+     clear_gefs_idx_files as _clear_gefs_idx_files
 )
 
-from wxdata.calc.unit_conversion import convert_temperature_units
-from wxdata.utils.file_scanner import local_file_scanner
-from wxdata.utils.recycle_bin import *
+from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
+from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
+from wxdata.utils.recycle_bin import(
+    clear_recycle_bin_windows as _clear_recycle_bin_windows,
+    clear_trash_bin_mac as _clear_trash_bin_mac,
+    clear_trash_bin_linux as _clear_trash_bin_linux
+)
 
 def gefs_0p50(cat='mean', 
              final_forecast_hour=384, 
@@ -252,9 +256,9 @@ def gefs_0p50(cat='mean',
     
     """
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass    
     
@@ -262,24 +266,24 @@ def gefs_0p50(cat='mean',
     cat = cat.lower()
     if custom_directory == None:
         
-        paths = build_directory('gefs0p50', 
+        paths = _build_directory('gefs0p50', 
                                 cat, 
                                 members)
 
-        clear_idx_files('gefs0p50', 
+        _clear_idx_files('gefs0p50', 
                         cat, 
                         members)
     
     else:
         if cat == 'members':
-            paths = custom_branches(custom_directory)
+            paths = _custom_branches(custom_directory)
             
         else:
-            paths = custom_branch(custom_directory)
+            paths = _custom_branch(custom_directory)
         
-        clear_gefs_idx_files(paths)
+        _clear_gefs_idx_files(paths)
     
-    urls, filenames, run = gefs_0p50_url_scanner(cat, 
+    urls, filenames, run = _gefs_0p50_url_scanner(cat, 
                                             final_forecast_hour,
                                             western_bound, 
                                             eastern_bound, 
@@ -291,12 +295,12 @@ def gefs_0p50(cat='mean',
                                             variables)
     
     try:
-        download = local_file_scanner(paths[-1], 
+        download = _local_file_scanner(paths[-1], 
                                         filenames[-1],
                                         'nomads',
                                         run)
     except Exception as e:
-        download = local_file_scanner(paths, 
+        download = _local_file_scanner(paths, 
                                         filenames,
                                         'nomads',
                                         run)       
@@ -306,15 +310,15 @@ def gefs_0p50(cat='mean',
         
         try:
             for path in paths:
-                for file in os.listdir(f"{path}"):
-                    os.remove(f"{path}/{file}")
+                for file in _os.listdir(f"{path}"):
+                    _os.remove(f"{path}/{file}")
         except Exception as e:
             pass
         
         if cat != 'members':
             for path in paths:
                 for url, filename in zip(urls, filenames):
-                    client.get_gridded_data(f"{url}",
+                    _client.get_gridded_data(f"{url}",
                                 path,
                                 f"{filename}.grib2",
                                 proxies=proxies,
@@ -327,7 +331,7 @@ def gefs_0p50(cat='mean',
             stop = increment
             for path in paths:
                 for u, f in zip(range(start, stop, 1), range(start, stop, 1)):
-                    client.get_gridded_data(f"{urls[u]}",
+                    _client.get_gridded_data(f"{urls[u]}",
                                 path,
                                 f"{filenames[f]}.grib2",
                                 proxies=proxies,
@@ -343,24 +347,24 @@ def gefs_0p50(cat='mean',
         
     if process_data == True:
         print(f"GEFS0P50 {cat.upper()} Data Processing...")
-        clear_empty_files(paths)
+        _clear_empty_files(paths)
         
         if custom_directory == None:
-            ds = process_gefs_data('gefs0p50', 
+            ds = _process_gefs_data('gefs0p50', 
                                         cat,
                                         members)
                     
-            clear_idx_files('gefs0p50', 
+            _clear_idx_files('gefs0p50', 
                         cat, 
                         members)
             
         else:
-            ds = gefs_post_processing.primary_gefs_post_processing(paths)
+            ds = _gefs_post_processing.primary_gefs_post_processing(paths)
             
-            gefs_post_processing.clear_gefs_idx_files(paths)
+            _gefs_post_processing.clear_gefs_idx_files(paths)
             
         if convert_temperature == True:
-            ds = convert_temperature_units(ds, 
+            ds = _convert_temperature_units(ds, 
                                             convert_to,
                                             cat=cat)
                 
@@ -730,33 +734,33 @@ def gefs_0p50_secondary_parameters(cat='mean',
        
     """
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass
     
     cat = cat.lower()
     
     if custom_directory == None:
-        paths = build_directory('gefs0p50 secondary parameters', 
+        paths = _build_directory('gefs0p50 secondary parameters', 
                                 cat, 
                                 members)
 
-        clear_idx_files('gefs0p50 secondary parameters', 
+        _clear_idx_files('gefs0p50 secondary parameters', 
                         cat, 
                         members)
         
     else:
         if cat == 'members':
-            paths = custom_branches(custom_directory)
+            paths = _custom_branches(custom_directory)
             
         else:
-            paths = custom_branch(custom_directory)
+            paths = _custom_branch(custom_directory)
         
-        clear_gefs_idx_files(paths)
+        _clear_gefs_idx_files(paths)
     
-    urls, filenames, run = gefs_0p50_secondary_parameters_url_scanner(cat, 
+    urls, filenames, run = _gefs_0p50_secondary_parameters_url_scanner(cat, 
                                             final_forecast_hour,
                                             western_bound, 
                                             eastern_bound, 
@@ -768,12 +772,12 @@ def gefs_0p50_secondary_parameters(cat='mean',
                                             variables)
     
     try:
-        download = local_file_scanner(paths[-1], 
+        download = _local_file_scanner(paths[-1], 
                                         filenames[-1],
                                         'nomads',
                                         run)
     except Exception as e:
-        download = local_file_scanner(paths, 
+        download = _local_file_scanner(paths, 
                                         filenames,
                                         'nomads',
                                         run)       
@@ -783,15 +787,15 @@ def gefs_0p50_secondary_parameters(cat='mean',
 
         try:
             for path in paths:
-                for file in os.listdir(f"{path}"):
-                    os.remove(f"{path}/{file}")
+                for file in _os.listdir(f"{path}"):
+                    _os.remove(f"{path}/{file}")
         except Exception as e:
             pass        
                     
         if cat != 'members' and cat != 'mean' and cat != 'spread':
             for path in paths:
                 for url, filename in zip(urls, filenames):
-                    client.get_gridded_data(f"{url}",
+                    _client.get_gridded_data(f"{url}",
                                 path,
                                 f"{filename}.grib2",
                                 proxies=proxies,
@@ -803,7 +807,7 @@ def gefs_0p50_secondary_parameters(cat='mean',
             stop = increment
             for path in paths:
                 for u, f in zip(range(start, stop, 1), range(start, stop, 1)):
-                    client.get_gridded_data(f"{urls[u]}",
+                    _client.get_gridded_data(f"{urls[u]}",
                                 path,
                                 f"{filenames[f]}.grib2",
                                 proxies=proxies,
@@ -821,21 +825,21 @@ def gefs_0p50_secondary_parameters(cat='mean',
         
         if custom_directory == None:
         
-            ds = process_gefs_secondary_parameters_data('gefs0p50 secondary parameters', 
+            ds = _process_gefs_secondary_parameters_data('gefs0p50 secondary parameters', 
                                         cat,
                                         members)
             
-            clear_idx_files('gefs0p50 secondary parameters', 
+            _clear_idx_files('gefs0p50 secondary parameters', 
                         cat, 
                         members)
             
         else:
-            ds = gefs_post_processing.secondary_gefs_post_processing(paths)
+            ds = _gefs_post_processing.secondary_gefs_post_processing(paths)
             
-            gefs_post_processing.clear_gefs_idx_files(paths)
+            _gefs_post_processing.clear_gefs_idx_files(paths)
         
         if convert_temperature == True:
-            ds = convert_temperature_units(ds, 
+            ds = _convert_temperature_units(ds, 
                                            convert_to, 
                                            cat=cat)
                 
@@ -1055,33 +1059,33 @@ def gefs_0p25(cat='mean',
     
     """
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass    
     
     cat = cat.lower()
     
     if custom_directory == None:
-        paths = build_directory('gefs0p25', 
+        paths = _build_directory('gefs0p25', 
                                 cat, 
                                 members)
 
-        clear_idx_files('gefs0p25', 
+        _clear_idx_files('gefs0p25', 
                         cat, 
                         members)
         
     else:
         if cat == 'members':
-            paths = custom_branches(custom_directory)
+            paths = _custom_branches(custom_directory)
             
         else:
-            paths = custom_branch(custom_directory)
+            paths = _custom_branch(custom_directory)
         
-        clear_gefs_idx_files(paths)
+        _clear_gefs_idx_files(paths)
     
-    urls, filenames, run = gefs_0p25_url_scanner(cat, 
+    urls, filenames, run = _gefs_0p25_url_scanner(cat, 
                                             final_forecast_hour,
                                             western_bound, 
                                             eastern_bound, 
@@ -1093,12 +1097,12 @@ def gefs_0p25(cat='mean',
                                             variables)
     
     try:
-        download = local_file_scanner(paths[-1], 
+        download = _local_file_scanner(paths[-1], 
                                         filenames[-1],
                                         'nomads',
                                         run)
     except Exception as e:
-        download = local_file_scanner(paths, 
+        download = _local_file_scanner(paths, 
                                         filenames,
                                         'nomads',
                                         run)       
@@ -1108,15 +1112,15 @@ def gefs_0p25(cat='mean',
 
         try:
             for path in paths:
-                for file in os.listdir(f"{path}"):
-                    os.remove(f"{path}/{file}")
+                for file in _os.listdir(f"{path}"):
+                    _os.remove(f"{path}/{file}")
         except Exception as e:
             pass
         
         if cat != 'members':
             for path in paths:
                 for url, filename in zip(urls, filenames):
-                    client.get_gridded_data(f"{url}",
+                    _client.get_gridded_data(f"{url}",
                                 path,
                                 f"{filename}.grib2",
                                 proxies=proxies,
@@ -1128,7 +1132,7 @@ def gefs_0p25(cat='mean',
             stop = increment
             for path in paths:
                 for u, f in zip(range(start, stop, 1), range(start, stop, 1)):
-                    client.get_gridded_data(f"{urls[u]}",
+                    _client.get_gridded_data(f"{urls[u]}",
                                 path,
                                 f"{filenames[f]}.grib2",
                                 proxies=proxies,
@@ -1144,25 +1148,25 @@ def gefs_0p25(cat='mean',
     if process_data == True:
         print(f"GEFS0P25 {cat.upper()} Data Processing...")
         
-        clear_empty_files(paths)
+        _clear_empty_files(paths)
         
         if custom_directory == None:
         
-            ds = process_gefs_data('gefs0p25', 
+            ds = _process_gefs_data('gefs0p25', 
                                         cat,
                                         members)
             
-            clear_idx_files('gefs0p25', 
+            _clear_idx_files('gefs0p25', 
                         cat, 
                         members)
             
         else:
-            ds = gefs_post_processing.primary_gefs_post_processing(paths)
+            ds = _gefs_post_processing.primary_gefs_post_processing(paths)
             
-            gefs_post_processing.clear_gefs_idx_files(paths)
+            _gefs_post_processing.clear_gefs_idx_files(paths)
         
         if convert_temperature == True:
-            ds = convert_temperature_units(ds, 
+            ds = _convert_temperature_units(ds, 
                                            convert_to,
                                            cat=cat)
             

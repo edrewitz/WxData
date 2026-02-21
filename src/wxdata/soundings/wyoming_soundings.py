@@ -6,32 +6,43 @@ This data is for observed soundings.
 (C) Eric J. Drewitz 2025-2026
 """
 # Imports the needed libraries
-import requests
-import pandas as pd
-import metpy.calc as mpcalc
-import sys
+import requests as _requests
+import pandas as _pd
+import metpy.calc as _mpcalc
+import sys as _sys
 import wxdata.soundings._exceptions as _exceptions
 
-from wxdata.calc.thermodynamics import relative_humidity
-from wxdata.calc.kinematics import get_u_and_v
-from metpy.units import units
-from bs4 import BeautifulSoup
-from io import StringIO
+from wxdata.calc.thermodynamics import relative_humidity as _relative_humidity
+from wxdata.calc.kinematics import get_u_and_v as _get_u_and_v
+from metpy.units import units as _units
+from bs4 import BeautifulSoup as _BeautifulSoup
+from io import StringIO as _StringIO
 
-from wxdata.utils.recycle_bin import *
+from wxdata.utils.recycle_bin import(
+    clear_recycle_bin_windows as _clear_recycle_bin_windows,
+    clear_trash_bin_mac as _clear_trash_bin_mac,
+    clear_trash_bin_linux as _clear_trash_bin_linux
+)
 
 try:
-    from datetime import datetime, timedelta, UTC
+    from datetime import(
+        datetime as _datetime, 
+        timedelta as _timedelta, 
+        UTC as _UTC
+    )
 except Exception as e:
-    from datetime import datetime, timedelta
+    from datetime import(
+        datetime as _datetime, 
+        timedelta as _timedelta
+    )
 
 try:
-    now = datetime.now(UTC)
+    now = _datetime.now(_UTC)
 except Exception as e:
-    now = datetime.utcnow()
+    now = _datetime.utcnow()
 
 
-def station_ids(station_id):
+def _station_ids(station_id):
 
     """
     This function returns the station number for a station ID
@@ -374,16 +385,16 @@ def get_observed_sounding_data(station_id,
         A Pandas DataFrame of the University of Wyoming Sounding Data from 24-hours prior to the current DataFrame. 
     """
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass
 
     if type(station_id) == type(0):
         station_number = station_id
     else:
-        station_number = station_ids(station_id)
+        station_number = _station_ids(station_id)
 
     if comparison_24 == False:
 
@@ -397,7 +408,7 @@ def get_observed_sounding_data(station_id,
             y = date.year
             m = date.month
             d = date.day
-            date = datetime(y, m, d, hour)
+            date = _datetime(y, m, d, hour)
         else:
             year = int(f"{custom_time[0]}{custom_time[1]}{custom_time[2]}{custom_time[3]}")
             month = int(f"{custom_time[5]}{custom_time[6]}")
@@ -405,7 +416,7 @@ def get_observed_sounding_data(station_id,
             hour = int(f"{custom_time[11]}{custom_time[12]}")
 
             try:
-                date = datetime(year, month, day, hour)
+                date = _datetime(year, month, day, hour)
             except Exception as e:
                 _exceptions.date_format_exception(date)
     
@@ -422,33 +433,33 @@ def get_observed_sounding_data(station_id,
         max_retries = 5
         retry = 0
         if proxies == None:
-            response = requests.get(url)
+            response = _requests.get(url)
             response.close()
             while response.status_code != 200:
-                response = requests.get(url)
+                response = _requests.get(url)
                 response.close()
                 retry = retry + 1
                 if retry > max_retries:
                     break
         else:
-            response = requests.get(url, proxies=proxies)
+            response = _requests.get(url, proxies=proxies)
             response.close()
             while response.status_code != 200:
-                response = requests.get(url, proxies=proxies)
+                response = _requests.get(url, proxies=proxies)
                 response.close()
                 retry = retry + 1
                 if retry > max_retries:
                     break    
         try:
-            soup = BeautifulSoup(response.content, "html.parser")
-            data = StringIO(soup.find_all('pre')[0].contents[0])
+            soup = _BeautifulSoup(response.content, "html.parser")
+            data = _StringIO(soup.find_all('pre')[0].contents[0])
             success = True
         except Exception as e:
             success = False
     
         if success == False and current == True:
     
-            date = date - timedelta(hours=12)
+            date = date - _timedelta(hours=12)
             hour = date.hour
     
             if hour == 0:  
@@ -463,31 +474,31 @@ def get_observed_sounding_data(station_id,
             max_retries = 5
             retry = 0
             if proxies == None:
-                response = requests.get(url)
+                response = _requests.get(url)
                 response.close()
                 while response.status_code != 200:
-                    response = requests.get(url)
+                    response = _requests.get(url)
                     response.close()
                     retry = retry + 1
                     if retry > max_retries:
                         break
             else:
-                response = requests.get(url, proxies=proxies)
+                response = _requests.get(url, proxies=proxies)
                 response.close()
                 while response.status_code != 200:
-                    response = requests.get(url, proxies=proxies)
+                    response = _requests.get(url, proxies=proxies)
                     response.close()
                     retry = retry + 1
                     if retry > max_retries:
                         break    
     
             try:
-                soup = BeautifulSoup(response.content, "html.parser")
-                data = StringIO(soup.find_all('pre')[0].contents[0])
+                soup = _BeautifulSoup(response.content, "html.parser")
+                data = _StringIO(soup.find_all('pre')[0].contents[0])
                 success = True
             except Exception as e:
                 print(f"No Recent Sounding Data for {station_id}.\nQuitting Now")
-                sys.exit()
+                _sys.exit()
         else:
             pass
             
@@ -495,21 +506,21 @@ def get_observed_sounding_data(station_id,
         col_names = ['PRES', 'HGHT', 'TEMP', 'DWPT', 'RELH', 'MIXR', 'DRCT', 'SKNT', 'THTA', 'THTE', 'THTV']
         
         try:
-            df = pd.read_fwf(data, widths=[7] * 8, skiprows=5,
+            df = _pd.read_fwf(data, widths=[7] * 8, skiprows=5,
                                 usecols=[0, 1, 2, 3, 6, 7], names=col_names)
         except Exception as e:
             _exceptions.station_id_exception(station_id)
             
-        df['U-WIND'], df['V-WIND'] = get_u_and_v(df['SKNT'], df['DRCT'])
-        df['RH'] = relative_humidity(df['TEMP'], df['DWPT'])
-        pressure = df['PRES'].values * units('hPa')
-        temperature = df['TEMP'].values * units('degC')
-        dewpoint = df['DWPT'].values * units('degC')
-        df['THETA'] = mpcalc.potential_temperature(pressure, temperature)
-        height = df['HGHT'].values * units('meters')
-        theta = df['THETA'].values * units('degK')
-        df['BVF'] = mpcalc.brunt_vaisala_frequency(height, theta, vertical_dim=0) 
-        df['WET-BULB'] = mpcalc.wet_bulb_temperature(pressure, temperature, dewpoint)
+        df['U-WIND'], df['V-WIND'] = _get_u_and_v(df['SKNT'], df['DRCT'])
+        df['RH'] = _relative_humidity(df['TEMP'], df['DWPT'])
+        pressure = df['PRES'].values * _units('hPa')
+        temperature = df['TEMP'].values * _units('degC')
+        dewpoint = df['DWPT'].values * _units('degC')
+        df['THETA'] = _mpcalc.potential_temperature(pressure, temperature)
+        height = df['HGHT'].values * _units('meters')
+        theta = df['THETA'].values * _units('degK')
+        df['BVF'] = _mpcalc.brunt_vaisala_frequency(height, theta, vertical_dim=0) 
+        df['WET-BULB'] = _mpcalc.wet_bulb_temperature(pressure, temperature, dewpoint)
         
         df.drop_duplicates(inplace=True,subset='PRES',ignore_index=True)
         df.dropna(axis=0, inplace=True)
@@ -527,7 +538,7 @@ def get_observed_sounding_data(station_id,
             y = date.year
             m = date.month
             d = date.day
-            date = datetime(y, m, d, hour)
+            date = _datetime(y, m, d, hour)
         else:
             year = int(f"{custom_time[0]}{custom_time[1]}{custom_time[2]}{custom_time[3]}")
             month = int(f"{custom_time[5]}{custom_time[6]}")
@@ -535,11 +546,11 @@ def get_observed_sounding_data(station_id,
             hour = int(f"{custom_time[11]}{custom_time[12]}")
     
             try:
-                date = datetime(year, month, day, hour)
+                date = _datetime(year, month, day, hour)
             except Exception as e:
                 _exceptions.date_format_exception(date)
             
-        date_24 = date - timedelta(hours=24)
+        date_24 = date - _timedelta(hours=24)
     
         if hour == 0:  
             url = (f"http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&TYPE=TEXT%3ALIST"
@@ -562,45 +573,45 @@ def get_observed_sounding_data(station_id,
         max_retries = 5
         retry = 0
         if proxies == None:
-            response = requests.get(url)
+            response = _requests.get(url)
             response.close()
-            response_24 = requests.get(url_24)
+            response_24 = _requests.get(url_24)
             response_24.close()
             while response.status_code != 200 and response_24.status_code != 200:
-                response = requests.get(url)
+                response = _requests.get(url)
                 response.close()
-                response_24 = requests.get(url_24)
+                response_24 = _requests.get(url_24)
                 response_24.close()
                 retry = retry + 1
                 if retry > max_retries:
                     break
         else:
-            response = requests.get(url, proxies=proxies)
+            response = _requests.get(url, proxies=proxies)
             response.close()
-            response_24 = requests.get(url_24, proxies=proxies)
+            response_24 = _requests.get(url_24, proxies=proxies)
             response_24.close()
             while response.status_code != 200 and response_24.status_code != 200:
-                response = requests.get(url, proxies=proxies)
+                response = _requests.get(url, proxies=proxies)
                 response.close()
-                response_24 = requests.get(url_24, proxies=proxies)
+                response_24 = _requests.get(url_24, proxies=proxies)
                 response_24.close()
                 retry = retry + 1
                 if retry > max_retries:
                     break
     
         try:
-            soup = BeautifulSoup(response.content, "html.parser")
-            soup_24 = BeautifulSoup(response_24.content, "html.parser")
-            data = StringIO(soup.find_all('pre')[0].contents[0])
-            data_24 = StringIO(soup_24.find_all('pre')[0].contents[0])
+            soup = _BeautifulSoup(response.content, "html.parser")
+            soup_24 = _BeautifulSoup(response_24.content, "html.parser")
+            data = _StringIO(soup.find_all('pre')[0].contents[0])
+            data_24 = _StringIO(soup_24.find_all('pre')[0].contents[0])
             success = True
         except Exception as e:
             success = False
     
         if success == False and current == True:
     
-            date = date - timedelta(hours=12)
-            date_24 = date - timedelta(hours=24)
+            date = date - _timedelta(hours=12)
+            date_24 = date - _timedelta(hours=24)
             hour = date.hour
     
             if hour == 0:  
@@ -624,41 +635,41 @@ def get_observed_sounding_data(station_id,
             max_retries = 5
             retry = 0
             if proxies == None:
-                response = requests.get(url)
+                response = _requests.get(url)
                 response.close()
-                response_24 = requests.get(url_24)
+                response_24 = _requests.get(url_24)
                 response_24.close()
                 while response.status_code != 200 and response_24.status_code != 200:
-                    response = requests.get(url)
+                    response = _requests.get(url)
                     response.close()
-                    response_24 = requests.get(url_24)
+                    response_24 = _requests.get(url_24)
                     response_24.close()
                     retry = retry + 1
                     if retry > max_retries:
                         break
             else:
-                response = requests.get(url, proxies=proxies)
+                response = _requests.get(url, proxies=proxies)
                 response.close()
-                response_24 = requests.get(url_24, proxies=proxies)
+                response_24 = _requests.get(url_24, proxies=proxies)
                 response_24.close()
                 while response.status_code != 200 and response_24.status_code != 200:
-                    response = requests.get(url, proxies=proxies)
+                    response = _requests.get(url, proxies=proxies)
                     response.close()
-                    response_24 = requests.get(url_24, proxies=proxies)
+                    response_24 = _requests.get(url_24, proxies=proxies)
                     response_24.close()
                     retry = retry + 1
                     if retry > max_retries:
                         break
     
             try:
-                soup = BeautifulSoup(response.content, "html.parser")
-                soup_24 = BeautifulSoup(response_24.content, "html.parser")
-                data = StringIO(soup.find_all('pre')[0].contents[0])
-                data_24 = StringIO(soup_24.find_all('pre')[0].contents[0])
+                soup = _BeautifulSoup(response.content, "html.parser")
+                soup_24 = _BeautifulSoup(response_24.content, "html.parser")
+                data = _StringIO(soup.find_all('pre')[0].contents[0])
+                data_24 = _StringIO(soup_24.find_all('pre')[0].contents[0])
                 success = True
             except Exception as e:
                 print(f"No Recent Sounding Data for {station_id}.\nQuitting Now")
-                sys.exit()
+                _sys.exit()
         else:
             pass
             
@@ -666,38 +677,38 @@ def get_observed_sounding_data(station_id,
         col_names = ['PRES', 'HGHT', 'TEMP', 'DWPT', 'RELH', 'MIXR', 'DRCT', 'SKNT', 'THTA', 'THTE', 'THTV']
         
         try:
-            df = pd.read_fwf(data, widths=[7] * 8, skiprows=5,
+            df = _pd.read_fwf(data, widths=[7] * 8, skiprows=5,
                                 usecols=[0, 1, 2, 3, 6, 7], names=col_names)
         except Exception as e:
             _exceptions.station_id_exception(station_id)
         
-        df['U-WIND'], df['V-WIND'] = get_u_and_v(df['SKNT'], df['DRCT'])
-        df['RH'] = relative_humidity(df['TEMP'], df['DWPT'])
-        pressure = df['PRES'].values * units('hPa')
-        temperature = df['TEMP'].values * units('degC')
-        dewpoint = df['DWPT'].values * units('degC')
-        df['THETA'] = mpcalc.potential_temperature(pressure, temperature)
-        height = df['HGHT'].values * units('meters')
-        theta = df['THETA'].values * units('degK')
-        df['BVF'] = mpcalc.brunt_vaisala_frequency(height, theta, vertical_dim=0) 
-        df['WET-BULB'] = mpcalc.wet_bulb_temperature(pressure, temperature, dewpoint)
+        df['U-WIND'], df['V-WIND'] = _get_u_and_v(df['SKNT'], df['DRCT'])
+        df['RH'] = _relative_humidity(df['TEMP'], df['DWPT'])
+        pressure = df['PRES'].values * _units('hPa')
+        temperature = df['TEMP'].values * _units('degC')
+        dewpoint = df['DWPT'].values * _units('degC')
+        df['THETA'] = _mpcalc.potential_temperature(pressure, temperature)
+        height = df['HGHT'].values * _units('meters')
+        theta = df['THETA'].values * _units('degK')
+        df['BVF'] = _mpcalc.brunt_vaisala_frequency(height, theta, vertical_dim=0) 
+        df['WET-BULB'] = _mpcalc.wet_bulb_temperature(pressure, temperature, dewpoint)
 
         try:
-            df_24 = pd.read_fwf(data_24, widths=[7] * 8, skiprows=5,
+            df_24 = _pd.read_fwf(data_24, widths=[7] * 8, skiprows=5,
                                 usecols=[0, 1, 2, 3, 6, 7], names=col_names)
         except Exception as e:
             _exceptions.station_id_exception(station_id)
         
-        df_24['U-WIND'], df_24['V-WIND'] = get_u_and_v(df_24['SKNT'], df_24['DRCT'])
-        df_24['RH'] = relative_humidity(df_24['TEMP'], df_24['DWPT'])
-        pressure_24 = df_24['PRES'].values * units('hPa')
-        temperature_24 = df_24['TEMP'].values * units('degC')
-        dewpoint_24 = df_24['DWPT'].values * units('degC')
-        df_24['THETA'] = mpcalc.potential_temperature(pressure_24, temperature_24)
-        height_24 = df_24['HGHT'].values * units('meters')
-        theta_24 = df_24['THETA'].values * units('degK')
-        df_24['BVF'] = mpcalc.brunt_vaisala_frequency(height_24, theta_24, vertical_dim=0)
-        df_24['WET-BULB'] = mpcalc.wet_bulb_temperature(pressure_24, temperature_24, dewpoint_24)
+        df_24['U-WIND'], df_24['V-WIND'] = _get_u_and_v(df_24['SKNT'], df_24['DRCT'])
+        df_24['RH'] = _relative_humidity(df_24['TEMP'], df_24['DWPT'])
+        pressure_24 = df_24['PRES'].values * _units('hPa')
+        temperature_24 = df_24['TEMP'].values * _units('degC')
+        dewpoint_24 = df_24['DWPT'].values * _units('degC')
+        df_24['THETA'] = _mpcalc.potential_temperature(pressure_24, temperature_24)
+        height_24 = df_24['HGHT'].values * _units('meters')
+        theta_24 = df_24['THETA'].values * _units('degK')
+        df_24['BVF'] = _mpcalc.brunt_vaisala_frequency(height_24, theta_24, vertical_dim=0)
+        df_24['WET-BULB'] = _mpcalc.wet_bulb_temperature(pressure_24, temperature_24, dewpoint_24)
         
         df.drop_duplicates(inplace=True,subset='PRES',ignore_index=True)
         df.dropna(axis=0, inplace=True)

@@ -4,23 +4,27 @@ This file hosts the functions the user interacts with to download GFS data.
 (C) Eric J. Drewitz 2025-2026
 """
 
-import wxdata.client.client as client
-import os
-import warnings
-import wxdata.post_processors.gfs_post_processing as gfs_post_processing
-warnings.filterwarnings('ignore')
+import wxdata.client.client as _client
+import os as _os
+import warnings as _warnings
+import wxdata.post_processors.gfs_post_processing as _gfs_post_processing
+_warnings.filterwarnings('ignore')
 
-from wxdata.gfs.paths import build_directory
+from wxdata.gfs.paths import build_directory as _build_directory
 from wxdata.gfs.url_scanners import(
     
-    gfs_0p50_url_scanner,
-    gfs_0p25_url_scanner,
-    gfs_0p25_secondary_parameters_url_scanner
+    gfs_0p50_url_scanner as _gfs_0p50_url_scanner,
+    gfs_0p25_url_scanner as _gfs_0p25_url_scanner,
+    gfs_0p25_secondary_parameters_url_scanner as _gfs_0p25_secondary_parameters_url_scanner
 )
 
-from wxdata.calc.unit_conversion import convert_temperature_units
-from wxdata.utils.file_scanner import local_file_scanner
-from wxdata.utils.recycle_bin import *
+from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
+from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
+from wxdata.utils.recycle_bin import(
+    clear_recycle_bin_windows as _clear_recycle_bin_windows,
+    clear_trash_bin_mac as _clear_trash_bin_mac,
+    clear_trash_bin_linux as _clear_trash_bin_linux
+)
 
 
 def gfs_0p25(final_forecast_hour=384, 
@@ -376,25 +380,25 @@ def gfs_0p25(final_forecast_hour=384,
     """
     
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass
     
     if custom_directory==None:
-        path = build_directory('gfs0p25',
+        path = _build_directory('gfs0p25',
                                'atmospheric')
         
     else:
         try:
-            os.makedirs(f"{custom_directory}")
+            _os.makedirs(f"{custom_directory}")
         except Exception as e:
             pass
         
         path = custom_directory
         
-    urls, filenames, run = gfs_0p25_url_scanner(final_forecast_hour,
+    urls, filenames, run = _gfs_0p25_url_scanner(final_forecast_hour,
                                             western_bound, 
                                             eastern_bound, 
                                             northern_bound, 
@@ -403,7 +407,7 @@ def gfs_0p25(final_forecast_hour=384,
                                             step, 
                                             variables)
     
-    download = local_file_scanner(path, 
+    download = _local_file_scanner(path, 
                                     filenames[-1],
                                     'nomads',
                                     run)   
@@ -412,13 +416,13 @@ def gfs_0p25(final_forecast_hour=384,
         print(f"Downloading GFS0P25...")
         
         try:
-            for file in os.listdir(f"{path}"):
-                os.remove(f"{path}/{file}")
+            for file in _os.listdir(f"{path}"):
+                _os.remove(f"{path}/{file}")
         except Exception as e:
             pass
         
         for url, filename in zip(urls, filenames):
-            client.get_gridded_data(f"{url}",
+            _client.get_gridded_data(f"{url}",
                         path,
                         f"{filename}.grib2",
                         proxies=proxies,
@@ -433,10 +437,10 @@ def gfs_0p25(final_forecast_hour=384,
     if process_data == True:
         print(f"GFS0P25 Data Processing...")
         
-        ds = gfs_post_processing.primary_gfs_post_processing(path)
+        ds = _gfs_post_processing.primary_gfs_post_processing(path)
         
         if convert_temperature == True:
-                ds = convert_temperature_units(ds, 
+                ds = _convert_temperature_units(ds, 
                                             convert_to)
                 
         else:
@@ -613,25 +617,25 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
     """
     
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass
     
     if custom_directory==None:
-        path = build_directory('gfs0p25 secondary parameters',
+        path = _build_directory('gfs0p25 secondary parameters',
                                'atmospheric')
         
     else:
         try:
-            os.makedirs(f"{custom_directory}")
+            _os.makedirs(f"{custom_directory}")
         except Exception as e:
             pass
         
         path = custom_directory
         
-    urls, filenames, run = gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
+    urls, filenames, run = _gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
                                             western_bound, 
                                             eastern_bound, 
                                             northern_bound, 
@@ -640,7 +644,7 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
                                             step, 
                                             variables)
     
-    download = local_file_scanner(path, 
+    download = _local_file_scanner(path, 
                                     filenames[-1],
                                     'nomads',
                                     run)   
@@ -649,13 +653,13 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
         print(f"Downloading GFS0P25 Secondary Parameters...")
         
         try:
-            for file in os.listdir(f"{path}"):
-                os.remove(f"{path}/{file}")
+            for file in _os.listdir(f"{path}"):
+                _os.remove(f"{path}/{file}")
         except Exception as e:
             pass
         
         for url, filename in zip(urls, filenames):
-            client.get_gridded_data(f"{url}",
+            _client.get_gridded_data(f"{url}",
                         path,
                         f"{filename}.grib2",
                         proxies=proxies,
@@ -670,10 +674,10 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
     if process_data == True:
         print(f"GFS0P25 Secondary Parameters Data Processing...")
         
-        ds = gfs_post_processing.secondary_gfs_post_processing(path)
+        ds = _gfs_post_processing.secondary_gfs_post_processing(path)
         
         if convert_temperature == True:
-                ds = convert_temperature_units(ds, 
+                ds = _convert_temperature_units(ds, 
                                             convert_to)
                 
         else:
@@ -1042,25 +1046,25 @@ def gfs_0p50(final_forecast_hour=384,
     
     """
     if clear_recycle_bin == True:
-        clear_recycle_bin_windows()
-        clear_trash_bin_mac()
-        clear_trash_bin_linux()
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
     else:
         pass
     
     if custom_directory==None:
-        path = build_directory('gfs0p50',
+        path = _build_directory('gfs0p50',
                                'atmospheric')
         
     else:
         try:
-            os.makedirs(f"{custom_directory}")
+            _os.makedirs(f"{custom_directory}")
         except Exception as e:
             pass
         
         path = custom_directory
         
-    urls, filenames, run = gfs_0p50_url_scanner(final_forecast_hour,
+    urls, filenames, run = _gfs_0p50_url_scanner(final_forecast_hour,
                                             western_bound, 
                                             eastern_bound, 
                                             northern_bound, 
@@ -1069,7 +1073,7 @@ def gfs_0p50(final_forecast_hour=384,
                                             step, 
                                             variables)
     
-    download = local_file_scanner(path, 
+    download = _local_file_scanner(path, 
                                     filenames[-1],
                                     'nomads',
                                     run)   
@@ -1078,13 +1082,13 @@ def gfs_0p50(final_forecast_hour=384,
         print(f"Downloading GFS0P50...")
         
         try:
-            for file in os.listdir(f"{path}"):
-                os.remove(f"{path}/{file}")
+            for file in _os.listdir(f"{path}"):
+                _os.remove(f"{path}/{file}")
         except Exception as e:
             pass
         
         for url, filename in zip(urls, filenames):
-            client.get_gridded_data(f"{url}",
+            _client.get_gridded_data(f"{url}",
                         path,
                         f"{filename}.grib2",
                         proxies=proxies,
@@ -1099,10 +1103,10 @@ def gfs_0p50(final_forecast_hour=384,
     if process_data == True:
         print(f"GFS0P50 Data Processing...")
         
-        ds = gfs_post_processing.primary_gfs_post_processing(path)
+        ds = _gfs_post_processing.primary_gfs_post_processing(path)
         
         if convert_temperature == True:
-                ds = convert_temperature_units(ds, 
+                ds = _convert_temperature_units(ds, 
                                             convert_to)
                 
         else:

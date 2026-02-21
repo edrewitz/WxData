@@ -25,7 +25,7 @@
     
     1) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The AIGEFS
     goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    384 by the nereast increment of 3 hours. 
+    384 by the nereast increment of 6 hours. 
     
     2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 

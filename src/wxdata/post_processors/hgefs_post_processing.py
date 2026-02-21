@@ -1,3 +1,10 @@
+"""
+This file hosts the post-processors for the HGEFS data.
+
+(C) Eric J. Drewitz 2025-2026
+"""
+
+
 import xarray as _xr
 import sys as _sys
 import logging as _logging

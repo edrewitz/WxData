@@ -1,5 +1,5 @@
 """
-This file hosts the clients that download, pre-process and post-process AIGEFS Data.
+This file hosts the clients that download, pre-process and post-process HGEFS Data.
 
 (C) Eric J. Drewitz 2025-2026
 """

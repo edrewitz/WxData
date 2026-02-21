@@ -138,6 +138,7 @@ Then pip install wxdata after the new Python environment is set up.
 10) [Downloading various datasets from the Applied Climate Information System (ACIS)](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/xmacis2.ipynb)
 11) [Downloading AIGFS Data](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/aigfs.ipynb)
 12) [Downloading AIGEFS Data](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/aigefs.ipynb)
+13) [Downloading and plotting the Climate Prediction Center 6-10 Day Precipitation Outlook](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/cpc_precip_outlook.ipynb)
 
 *Advanced Users*
 1) [Using the `client` module to download the latest HadCRUT5 Analysis netCDF file and open this dataset in xarray](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/hadcrut5.ipynb)

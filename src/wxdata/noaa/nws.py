@@ -435,6 +435,8 @@ def get_cpc_outlook(parameter,
             2) .gz
             3) .tar.gz
             4) .tar
+            
+    6) crs (String) - Default='EPSG:4326' (ccrs.PlateCarree()) - The coordinate reference system the user wants the geometry coordinates in.  
     
     Returns
     -------

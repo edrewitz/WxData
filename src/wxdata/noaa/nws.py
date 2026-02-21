@@ -1,5 +1,5 @@
 """
-This file has the function that downloads NOAA/NWS and NOAA/SPC Forecast Data
+This file has the functions that downloads NOAA/NWS, NOAA/SPC and NOAA/CPC Forecast Data
 
 (c) Eric J. Drewitz 2025-2026
 """

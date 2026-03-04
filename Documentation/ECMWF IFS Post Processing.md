@@ -1,4 +1,4 @@
-# ECMWF IFS Post-Processing
+# ECMWF IFS and IFS Ensemble Post-Processing
 
 ***def ecmwf_ifs_post_processing(path,
                             western_bound, 
@@ -83,3 +83,6 @@
     '2m_dew_point'
     '2m_relative_humidity'
     '2m_dew_point_depression'
+    'time_maximum_10m_wind_gust'
+    '3_hr_maximum_2m_temperature'
+    '3_hr_minimum_2m_temperature'

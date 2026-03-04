@@ -77,8 +77,9 @@ def _station_coords(station_id,
     
     1) station_id (String) - The 4 letter ASOS station ID.
     
-    2) proxies (String or None) - If the user is using a VPN/PROXY server connection, the user must pass a value for
-        proxies in the form of a string. Here is an example: proxies='http://address:port'
+    2) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = _station_coords(proxies=proxies)
     
     Optional Arguments: None
     
@@ -156,8 +157,11 @@ def pixel_query(ds,
     
     4) coord_names (String List) - Default=['latitude', 'longitude'] A list of the coordinate names (i.e. 'longitude/latitude', 'lon'/'lat', 'easting'/'northing')
     
-    5) proxies (String or None) - Default=None. If the user is using a VPN/PROXY server connection, the user must pass a value for
-        proxies in the form of a string. Here is an example: proxies='http://address:port'
+    5) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = pixel_query(proxies=proxies)
+       
+       This is in the event the user needs to download the list of airports when the mode is set to station coordinates.
     
     Returns
     -------

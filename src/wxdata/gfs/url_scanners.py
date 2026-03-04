@@ -110,9 +110,9 @@ def gfs_0p50_url_scanner(final_forecast_hour,
     7) proxies (dict or None) - If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
-                           'http':'http://url',
-                           'https':'https://url'
-                        }
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
                         
     8) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
     
@@ -630,9 +630,9 @@ def gfs_0p25_url_scanner(final_forecast_hour,
     7) proxies (dict or None) - If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
-                           'http':'http://url',
-                           'https':'https://url'
-                        }
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
                         
     8) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
     
@@ -1149,9 +1149,9 @@ def gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
     7) proxies (dict or None) - If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
-                           'http':'http://url',
-                           'https':'https://url'
-                        }
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
                         
     8) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
     

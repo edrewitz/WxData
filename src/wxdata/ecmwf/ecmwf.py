@@ -241,9 +241,18 @@ def ecmwf_ifs(final_forecast_hour=144,
     This function scans for the latest ECMWF IFS dataset. If the dataset on the computer is old, the old data will be deleted
     and the new data will be downloaded. 
     
-    1) final_forecast_hour (Integer) - Default = 360. The final forecast hour the user wishes to download. The ECMWF IFS
-    goes out to 360 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    360 by the nereast increment of 3 hours. 
+    1) final_forecast_hour (Integer) - Default = 144.
+
+        00z and 12z ECMWF IFS Runs
+        --------------------------
+        
+        3-Hourly Increments from hour 0 to hour 144.
+        6-Hourly Increments from hour 144 to hour 360
+        
+        06z and 18z ECMWF IFS Runs
+        --------------------------
+        
+        3-Hourly Increments from hour 0 to hour 144. 
     
     2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
@@ -272,8 +281,8 @@ def ecmwf_ifs(final_forecast_hour=144,
     11) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    12) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
-        Default = f:ECMWF/IFS/WAVE
+    12) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS files will be saved to. 
+        When set to None, the path will be: "ECMWF/IFS/OPERATIONAL/"
     
     13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
@@ -829,9 +838,18 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
     This function scans for the latest ECMWF IFS dataset. If the dataset on the computer is old, the old data will be deleted
     and the new data will be downloaded. 
     
-    1) final_forecast_hour (Integer) - Default = 360. The final forecast hour the user wishes to download. The ECMWF IFS
-    goes out to 360 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    360 by the nereast increment of 3 hours. 
+    1) final_forecast_hour (Integer) - Default = 144.
+
+        00z and 12z ECMWF IFS Ensemble Runs
+        -----------------------------------
+        
+        3-Hourly Increments from hour 0 to hour 144.
+        6-Hourly Increments from hour 144 to hour 360
+        
+        06z and 18z ECMWF IFS Ensemble Runs
+        -----------------------------------
+        
+        3-Hourly Increments from hour 0 to hour 144.
     
     2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
@@ -845,7 +863,7 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
 
     7) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-       proxies=None ---> proxies="http://your-proxy-address:port"
+       proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_ifs_ens(proxies=proxies)
     
     8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
@@ -860,8 +878,8 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
     11) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    12) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
-        Default = f:ECMWF/IFS/WAVE
+    12) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Ensemble files will be saved to. 
+        When set to None, the path will be: "ECMWF/IFS/ENSEMBLE/"
     
     13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
@@ -1412,9 +1430,13 @@ def ecmwf_aifs(final_forecast_hour=360,
     This function scans for the latest ECMWF IFS dataset. If the dataset on the computer is old, the old data will be deleted
     and the new data will be downloaded. 
     
-    1) final_forecast_hour (Integer) - Default = 360. The final forecast hour the user wishes to download. The ECMWF IFS
-    goes out to 360 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    360 by the nereast increment of 3 hours. 
+    1) final_forecast_hour (Integer) - Default = 360.
+
+        00z/06z/12z/18z ECMWF AIFS Runs
+        -------------------------------
+        
+        6-hourly increments from hour 0 to hour 360.
+        
     
     2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
@@ -1426,12 +1448,9 @@ def ecmwf_aifs(final_forecast_hour=360,
     
     6) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
 
-    7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    7) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-       proxies=None ---> proxies={
-                           'http':'http://url',
-                           'https':'https://url'
-                        } 
+       proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_aifs(proxies=proxies)
     
     8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
@@ -1446,10 +1465,30 @@ def ecmwf_aifs(final_forecast_hour=360,
     11) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    12) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
-        Default = f:ECMWF/IFS/WAVE
+    12) custom_directory (String or None) - Default=None. The directory path where the ECMWF AIFS files will be saved to. 
+        When set to None, the path will be: "ECMWF/AIFS/OPERATIONAL/"
     
     13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    
+    14) source (String) - Default='ecmwf'. The data server choice. When set to 'ecmwf' data is pulled from ecmwf-opendata.
+        To switch to Amazon AWS, switch source='aws'. 
+        
+    15) level_type (String) - Default='surface'. The level of the parameters being queried. 
+    
+        level_types
+        -----------
+        
+        1) 'surface'
+        2) 'pressure'
+        3) 'soil
+    
+    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+        
+    17) variables (String List) - Default is all variables. The list of variable names in plain-language. 
+    
+        variables
+        ---------
         
     Returns
     -------

@@ -71,9 +71,10 @@ def rtma_url_scanner(model,
     
     7) proxies (dict or None) - If the user is using a proxy server, the user must change the following:
 
-    proxies=None ---> proxies={'http':'http://url',
-                            'https':'https://url'
-                        }
+    proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
     Returns
     -------
@@ -317,9 +318,10 @@ def rtma_comparison_url_scanner(model,
     
     7) proxies (dict or None) - If the user is using a proxy server, the user must change the following:
 
-    proxies=None ---> proxies={'http':'http://url',
-                            'https':'https://url'
-                        }
+    proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
                         
     8) hours (Integer) - Default=24. The amount of hours previous to the current dataset for the comparison dataset. 
     

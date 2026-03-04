@@ -54,8 +54,9 @@ def download_metar_data(clear_recycle_bin=False,
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
         This setting is to help preserve memory on the machine. 
         
-    2) proxies (String or None) - Default=None. If the user is using a VPN/PROXY server connection, the user must pass a value for
-        proxies in the form of a string. Here is an example: proxies='http://address:port'
+    2) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = download_metar_data(proxies=proxies)
         
 
     Returns:        

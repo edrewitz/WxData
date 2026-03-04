@@ -129,9 +129,9 @@ def gefs_0p50(cat='mean',
     8) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
-                           'http':'http://url',
-                           'https':'https://url'
-                        }
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
     9) members (List) - Default=All 30 ensemble members. The individual ensemble members. There are 30 members in this ensemble.  
     
@@ -506,9 +506,9 @@ def gefs_0p50_secondary_parameters(cat='mean',
     8) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
-                           'http':'http://url',
-                           'https':'https://url'
-                        }
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
     9) members (List) - Default=All 30 ensemble members. The individual ensemble members. There are 30 members in this ensemble.  
     
@@ -943,9 +943,9 @@ def gefs_0p25(cat='mean',
     7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
-                           'http':'http://url',
-                           'https':'https://url'
-                        }
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
     8) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
     

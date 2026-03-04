@@ -361,9 +361,9 @@ def get_single_station_data(station_id,
     6) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
-                           'http':'http://url',
-                           'https':'https://url'
-                        }
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
 
     7) path (String) - Default='FEMS Data". The parent directory to the FEMS data files.
     
@@ -460,9 +460,9 @@ def get_raws_sig_data(gacc_region,
     5) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
-                           'http':'http://url',
-                           'https':'https://url'
-                        }
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
 
     Returns
     ------- 
@@ -639,9 +639,9 @@ def get_nfdrs_forecast_data(gacc_region,
     3) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
-                           'http':'http://url',
-                           'https':'https://url'
-                        }
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
 
     Returns
     -------

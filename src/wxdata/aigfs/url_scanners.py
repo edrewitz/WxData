@@ -43,9 +43,9 @@ def aigfs_url_scanner(final_forecast_hour,
     2) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
-                           'http':'http://url',
-                           'https':'https://url'
-                        } 
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
                         
     3) type_of_level (String) - The type of level the data is in.
     

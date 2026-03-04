@@ -13,7 +13,8 @@
             custom_directory=None,
             chunk_size=8192,
             notifications='off',
-            type_of_level='pressure'):***
+            type_of_level='pressure',
+            clear_data=False):***
 
     This function downloads, pre-processes and post-processes the latest AIGFS Data. 
     Users can also enter a list of paths for custom_directory if they do not wish to use the default directory.
@@ -76,7 +77,9 @@
         
         1) pressure
         2) surface
-    
+
+    17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
     Returns
     -------

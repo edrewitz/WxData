@@ -1,6 +1,6 @@
 # ECMWF IFS
 
-***def ecmwf_ifs(final_forecast_hour=360,
+***def ecmwf_ifs(final_forecast_hour=144,
               western_bound=-180,
               eastern_bound=180,
               northern_bound=90,
@@ -12,15 +12,94 @@
               convert_temperature=True,
               convert_to='celsius',
               custom_directory=None,
-              chunk_size=8192,
-              notifications='off'):***
+              notifications='off',
+              source='ecmwf',
+              level_type='surface',
+              clear_data=False,
+              variables=['Geopotential (step 0)',
+                        'Standard deviation of sub-gridscale orography (step 0)',
+                        '10-meter u-wind component',
+                        '10-meter v-wind component',
+                        '100-meter u-wind component',
+                        '100-meter v-wind component',
+                        'maximum 10-meter wind gust step 0',
+                        'maximum 10-meter wind gust steps 3-144',
+                        '2-meter temperature',
+                        '2-meter dewpoint temperature',
+                        'mean sea level pressure',
+                        'mean zero-crossing wave period',
+                        'mean wave direction',
+                        'mean wave period',
+                        'peak wave period',
+                        'significant wave height',
+                        'runoff',
+                        'total precipitation',
+                        'surface pressure',
+                        'total column vertically integrated water vapor',
+                        'total cloud cover',
+                        'snow depth water equivalent',
+                        'snowfall water equivalent',
+                        'land sea mask',
+                        'volumetric soil moisture content',
+                        'soil temperature',
+                        'most unstable cape',
+                        'snow albedo',
+                        '3-hour minimum 2-meter temperature',
+                        '3-hour maximum 2-meter temperature',
+                        '6-hour minimum 2-meter temperature',
+                        '6-hour maximum 2-meter temperature',
+                        'total precipitation rate',
+                        'precipitation type',
+                        'top net longwave thermal radiation',
+                        'snow density',
+                        'surface net longwave thermal radiation',
+                        'surface net shortwave solar radiation',
+                        'surface shortwave radiation downward',
+                        'surface longwave radiation downward',
+                        'northward turbulent surface stress',
+                        'eastward turbulent surface stress',
+                        'eastward surface sea water velocity',
+                        'northward surface sea water velocity',
+                        'sea ice thickness',
+                        'sea surface height',
+                        'divergence',
+                        'geopotential height',
+                        'specific humidity',
+                        'relative humidity',
+                        'temperature',
+                        'u-wind component',
+                        'v-wind component',
+                        'vertical velocity',
+                        'relative vorticity'],
+              levels=[1000, 
+                      925, 
+                      850, 
+                      700, 
+                      600, 
+                      500, 
+                      400, 
+                      300, 
+                      250, 
+                      200, 
+                      150, 
+                      100, 
+                      50]):***
 
     This function scans for the latest ECMWF IFS dataset. If the dataset on the computer is old, the old data will be deleted
     and the new data will be downloaded. 
     
-    1) final_forecast_hour (Integer) - Default = 360. The final forecast hour the user wishes to download. The ECMWF IFS
-    goes out to 360 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    360 by the nereast increment of 3 hours. 
+    1) final_forecast_hour (Integer) - Default = 144.
+
+        00z and 12z ECMWF IFS Runs
+        --------------------------
+        
+        3-Hourly Increments from hour 0 to hour 144.
+        6-Hourly Increments from hour 144 to hour 360
+        
+        06z and 18z ECMWF IFS Runs
+        --------------------------
+        
+        3-Hourly Increments from hour 0 to hour 144. 
     
     2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
@@ -32,12 +111,9 @@
     
     6) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
 
-    7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    7) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-       proxies=None ---> proxies={
-                           'http':'http://url',
-                           'https':'https://url'
-                        } 
+       proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_ifs(proxies=proxies)
     
     8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
@@ -52,17 +128,96 @@
     11) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    12) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
-        Default = f:ECMWF/IFS/WAVE
-        
-    13) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    12) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS files will be saved to. 
+        When set to None, the path will be: "ECMWF/IFS/OPERATIONAL/"
     
-    14) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    
+    14) source (String) - Default='ecmwf'. The data server choice. When set to 'ecmwf' data is pulled from ecmwf-opendata.
+        To switch to Amazon AWS, switch source='aws'. 
+        
+    15) level_type (String) - Default='surface'. The level of the parameters being queried. 
+    
+        level_types
+        -----------
+        
+        1) 'surface'
+        2) 'pressure'
+        3) 'soil
+    
+    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+        
+    17) variables (String List) - Default is all variables. The list of variable names in plain-language. 
+    
+        variables
+        ---------
+        
+        'Geopotential (step 0)'
+        'Standard deviation of sub-gridscale orography (step 0)'
+        '10-meter u-wind component'
+        '10-meter v-wind component'
+        '100-meter u-wind component'
+        '100-meter v-wind component'
+        'maximum 10-meter wind gust step 0'
+        'maximum 10-meter wind gust steps 3-144'
+        '2-meter temperature'
+        '2-meter dewpoint temperature'
+        'mean sea level pressure'
+        'mean zero-crossing wave period'
+        'mean wave direction'
+        'mean wave period'
+        'peak wave period'
+        'significant wave height'
+        'runoff'
+        'total precipitation'
+        'surface pressure'
+        'total column vertically integrated water vapor'
+        'total cloud cover'
+        'snow depth water equivalent'
+        'snowfall water equivalent'
+        'land sea mask'
+        'volumetric soil moisture content'
+        'soil temperature'
+        'most unstable cape'
+        'snow albedo'
+        '3-hour minimum 2-meter temperature'
+        '3-hour maximum 2-meter temperature'
+        '6-hour minimum 2-meter temperature'
+        '6-hour maximum 2-meter temperature'
+        'total precipitation rate'
+        'precipitation type'
+        'top net longwave thermal radiation'
+        'snow density'
+        'surface net longwave thermal radiation'
+        'surface net shortwave solar radiation'
+        'surface shortwave radiation downward'
+        'surface longwave radiation downward'
+        'northward turbulent surface stress'
+        'eastward turbulent surface stress'
+        'eastward surface sea water velocity'
+        'northward surface sea water velocity'
+        'sea ice thickness'
+        'sea surface height'
+        'divergence'
+        'geopotential height'
+        'specific humidity'
+        'relative humidity'
+        'temperature'
+        'u-wind component'
+        'v-wind component'
+        'vertical velocity'
+        'relative vorticity'
+        
+    18) levels (Integer List) - Default=[1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50]. 
+        When level_type='pressure', this is the list of the pressure levels. 
+        
+        Example: User wants only the 500 mb level: levels=[500]
         
     Returns
     -------
     
-    An xarray data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
+    An xarray.data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
     
     Plain Language ECMWF IFS Variable Keys (After Post-Processing)
     --------------------------------------------------------------

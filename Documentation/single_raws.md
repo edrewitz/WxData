@@ -44,9 +44,9 @@
     6) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
-                           'http':'http://url',
-                           'https':'https://url'
-                        }
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
 
     7) path (String) - Default='FEMS Data". The parent directory to the FEMS data files.
     

@@ -130,9 +130,9 @@
     8) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
-                           'http':'http://url',
-                           'https':'https://url'
-                        } 
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
        
     9) variables (String List) - The variables the user wishes to query.
     

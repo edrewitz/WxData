@@ -15,7 +15,8 @@
             convert_to='celsius',
             custom_directory=None,
             chunk_size=8192,
-            notifications='off'):***
+            notifications='off',
+            clear_data=False):***
 
     This function downloads, pre-processes and post-processes the latest pressure parameter dataset of the AIGEFS and bins the files to specific folders based on ensemble number.
     Users can also enter a list of paths for custom_directory if they do not wish to use the default directory.
@@ -39,9 +40,9 @@
     6) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
-                           'http':'http://url',
-                           'https':'https://url'
-                        }
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
     7) members (List) - Default=All 30 ensemble members + control. The individual ensemble members. There are 30 members in this ensemble.  
     
@@ -71,7 +72,9 @@
     15) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
     16) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
-    
+
+    17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
     Returns
     -------

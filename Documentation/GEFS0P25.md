@@ -85,9 +85,9 @@
     7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
-                           'http':'http://url',
-                           'https':'https://url'
-                        }
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
     8) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
     

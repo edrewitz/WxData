@@ -47,9 +47,10 @@
     
     4) proxies (dict or None) - If the user is using a proxy server, the user must change the following:
 
-    proxies=None ---> proxies={'http':'http://url',
-                            'https':'https://url'
-                        }
+    proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
                         
     5) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 

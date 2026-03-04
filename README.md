@@ -163,8 +163,8 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 3. [GEFS0P25](https://github.com/edrewitz/wxdata/blob/main/Documentation/GEFS0P25.md#global-ensemble-forecast-system-025-x-025-degree-gefs0p25)
 
 ***AI Global Ensemble Forecast System (AIGEFS)***
-1. [AIGEFS Members (Pressure Parameters](https://github.com/edrewitz/WxData/blob/main/Documentation/aigefs_pressure_members.md)
-2. [AIGEFS Members (Surface Parameters](https://github.com/edrewitz/WxData/blob/main/Documentation/aigefs_surface_members.md)
+1. [AIGEFS Members (Pressure Parameters)](https://github.com/edrewitz/WxData/blob/main/Documentation/aigefs_pressure_members.md)
+2. [AIGEFS Members (Surface Parameters)](https://github.com/edrewitz/WxData/blob/main/Documentation/aigefs_surface_members.md)
 3. [AIGEFS Ensemble Mean & Ensemble Spread](https://github.com/edrewitz/WxData/blob/main/Documentation/aigefs_single.md)
 
 ***ECMWF Open Data***

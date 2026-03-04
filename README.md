@@ -67,7 +67,8 @@ i) Install wxdata via Anaconda/Miniconda3 --> `conda install wxdata`
 
 ii) Set up a new environment with an earlier version of Python (must be Python >= 3.10) and then `pip install wxdata`
 
-**Friendly for users working on VPN/PROXY connections**
+***Friendly for users working on VPN/PROXY connections***
+
    Depending on which client, the proxy-address:port must be entered as either a dictionary or a string.
 
    The clients that use a string for proxies are:

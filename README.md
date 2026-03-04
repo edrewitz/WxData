@@ -170,7 +170,6 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 ***ECMWF Open Data***
 1. [ECMWF IFS](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF_IFS.md)
 2. [ECMWF AIFS](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF_AIFS.md)
-3. [ECMWF High Resolution IFS](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF_High_Res_IFS.md)
 4. [ECMWF IFS Wave](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF_IFS_Wave.md)
    
 ***Real-Time Mesoscale Analysis (RTMA)***

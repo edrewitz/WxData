@@ -835,7 +835,7 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
                       41, 42, 43, 44, 45, 46, 47, 48, 49, 50]):
     
     """
-    This function scans for the latest ECMWF IFS dataset. If the dataset on the computer is old, the old data will be deleted
+    This function scans for the latest ECMWF IFS Ensemble dataset. If the dataset on the computer is old, the old data will be deleted
     and the new data will be downloaded. 
     
     1) final_forecast_hour (Integer) - Default = 144.
@@ -979,7 +979,7 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
     
     An xarray.data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
     
-    Plain Language ECMWF IFS Variable Keys (After Post-Processing)
+    Plain Language ECMWF IFS Ensemble Variable Keys (After Post-Processing)
     --------------------------------------------------------------
     
     'total_column_water'

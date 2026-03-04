@@ -83,9 +83,9 @@
     8) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
-                           'http':'http://url',
-                           'https':'https://url'
-                        }
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
     9) members (List) - Default=All 30 ensemble members. The individual ensemble members. There are 30 members in this ensemble.  
     

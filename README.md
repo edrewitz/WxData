@@ -98,16 +98,6 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 
    For more information on configuring proxies: https://requests.readthedocs.io/en/latest/user/advanced/#proxies
-
-   - Some data access functions work on VPN/PROXY connections without needing to define VPN/PROXY settings:
-      - METARs
-      - NOAA Storm Prediction Center/National Weather Service Products
-      - FEMS
-
-   - Data access methods that users need to define VPN/PROXY IP addresses if using a VPN/PROXY connection:
-      - Various Forecast Models
-      - Observed Sounding Data from University of Wyoming
-      - Real-Time Mesoscale Analysis 
        
 1) Converts GRIB variable keys into variable keys that are in plain language.
     - (e.g. 'r2' ---> '2m_relative_humidity')

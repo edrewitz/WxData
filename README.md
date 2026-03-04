@@ -239,6 +239,9 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 ***Line Query***
 1. [line_query](https://github.com/edrewitz/WxData/blob/main/Documentation/line_query.md)
 
+***Linear Anti-Aliasing Between Two Points***
+1. [linear_anti_aliasing](https://github.com/edrewitz/WxData/blob/main/Documentation/linear_anti_aliasing.md#linear-anti-aliasing-between-points)
+
 ***Running External Python Scripts In Your Workflow***
 
 1 [run_external_scripts](https://github.com/edrewitz/WxData/blob/main/Documentation/run_external_scripts.md)

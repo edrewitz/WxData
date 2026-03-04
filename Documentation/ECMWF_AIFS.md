@@ -61,7 +61,8 @@
                             100, 
                             50]):***
 
-    This function scans for the latest ECMWF AIFS dataset. If the dataset on the computer is old, the old data will be deleted and the new data will be downloaded. 
+    This function scans for the latest ECMWF AIFS dataset. If the dataset on the computer is old, 
+    the old data will be deleted and the new data will be downloaded. 
     
     1) final_forecast_hour (Integer) - Default = 360.
 

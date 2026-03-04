@@ -5,7 +5,8 @@
                 longitude=None,
                 station_id=None,
                 coord_names=['latitude',
-                            'longitude']):***
+                            'longitude'],
+                proxies=None):***
 
     This function queries for the nearest pixel to a user specified point of (latitude/longitude). 
     
@@ -34,7 +35,13 @@
     
     4) coord_names (String List) - Default=['latitude', 'longitude'] A list of the coordinate names (i.e. 'longitude/latitude', 'lon'/'lat', 'easting'/'northing')
     
+    5) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = pixel_query(proxies=proxies)
+       
+       This is in the event the user needs to download the list of airports when the mode is set to station coordinates.
+    
     Returns
     -------
     
-    An xarray.array for the pixel closest to the user specified coordinates or ASOS station.   
+    An xarray.array for the pixel closest to the user specified coordinates or ASOS station.    

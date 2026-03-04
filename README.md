@@ -118,9 +118,10 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 3) Preserves system memory via the following methods:
    - Clears out old data files before each new data download.
-   - Optional setting `clear_recycle_bin=True` in all functions.
+   - Optional setting `clear_recycle_bin` in all functions.
         - When `clear_recycle_bin=True` the computer's recycle/trash bin is cleared with each run of the script using any WxData function.
         - If a user wishes to not clear out their recycle bin `set clear_recycle_bin=False`.
+        - Default: `clear_recycle_bin=False`.
     
 ## WxData Examples
 

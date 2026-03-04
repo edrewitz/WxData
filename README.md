@@ -141,6 +141,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 13) [Downloading and plotting the Climate Prediction Center 6-10 Day Precipitation Outlook](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/cpc_precip_outlook.ipynb)
 14) [Downloading OUN Sounding Data and Using The WxData Linear Anti Aliasing Tool To Interpolate 100 Points Between Each Observed Data Point And Visualize Both Data Sets](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/linear_anti_aliasing.ipynb)
 15) [Downloading Subsets Of ECMWF IFS Ensemble and AIFS Ensemble Data](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/ecmwf_ens.ipynb)
+16) [Downloading the ECMWF IFS 500 mb Geopotential Height Initial Analysis And Plot As A North Pole Stereographic Resolving The Meridian With The WxData Cyclic Point Tool](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/cyclic.ipynb)
 
 *Advanced Users*
 1) [Using the `client` module to download the latest HadCRUT5 Analysis netCDF file and open this dataset in xarray](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/hadcrut5.ipynb)

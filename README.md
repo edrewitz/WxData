@@ -63,22 +63,37 @@ This issue arises when the user is post-processing GRIB data.
 
 There are two options to resolve this issue:
 
-1) Install wxdata via Anaconda/Miniconda3 --> `conda install wxdata`
+i) Install wxdata via Anaconda/Miniconda3 --> `conda install wxdata`
 
-2) Set up a new environment with an earlier version of Python (must be Python >= 3.10) and then `pip install wxdata`
+ii) Set up a new environment with an earlier version of Python (must be Python >= 3.10) and then `pip install wxdata`
 
-1) Friendly for users working on VPN/PROXY connections.
-   - Users input their PROXY IP address as a dictionary and pass it into the function to avoid SSL errors
-     - If the user is on a VPN/PROXY Connection the following is needed:
-       
-                         proxies=None ---> proxies={
-                                           'http':'http://url',
-                                           'https':'https://url'
-                                           }
+**Friendly for users working on VPN/PROXY connections**
+   Depending on which client, the proxy-address:port must be entered as either a dictionary or a string.
 
-                        [e.g. get_observed_sounding_data('nkx', proxies=proxies)]
+   The clients that use a string for proxies are:
 
-          <img src="https://github.com/edrewitz/WxData/blob/main/diagrams/proxy.png?raw=true" width="500" alt="Alt text" /> 
+   1) All ECMWF clients
+
+   2) METAR Observations Client
+      
+   3) `pixel_query()` tool if the user needs to download the airport station codes list. 
+
+      All other clients use proxies as a dictionary
+
+         Example: We want to download the latest Observed Sounding Data for San Diego, CA (NKX)
+
+         proxies=None ---> proxies={
+                                'http':'http://your-proxy-address:port',
+                                'https':'http://your-proxy-address:port'
+                                }
+
+         sounding_data = get_observed_sounding_data('nkx', proxies=proxies)
+
+         Example: We want to download the ECMWF IFS Data:
+
+         proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_ifs(proxies=proxies)
+
+<img src="https://github.com/edrewitz/WxData/blob/main/diagrams/proxy.png?raw=true" width="500" alt="Alt text" /> 
 
 
    For more information on configuring proxies: https://requests.readthedocs.io/en/latest/user/advanced/#proxies

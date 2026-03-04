@@ -57,32 +57,15 @@ Copy and paste either command into your terminal or anaconda prompt:
 
 ***Important Compatibility Information***
 
-*Python 3.14 is not compatible with the pip version of the eccodes library*
+When a new version of Python comes out, it might not be compatible with the C++ eccodes library immediately (especially on pip/pypi versions).
 
-Methods to fix eccodes compatibility with Python 3.14:
+This issue arises when the user is post-processing GRIB data.
 
-1) Uninstall the pip version of WxData and install WxData via Anaconda
- 
-    *Steps For Method 1*
-    1) pip uninstall wxdata
-    2) conda install wxdata
+There are two options to resolve this issue:
 
+1) Install wxdata via Anaconda/Miniconda3 --> `conda install wxdata`
 
-2) If the user is unable to use Anaconda as a package manager, the user must set up a new Python environment with the following specifications:
-
-*Specifications*
-
-Python >= 3.10 and Python <= 3.13
-
-Python 3.10 is compatible.
-
-Python 3.11 is compatible.
-
-Python 3.12 is compatible.
-
-Python 3.13 is compatible
-
-Then pip install wxdata after the new Python environment is set up. 
+2) Set up a new environment with an earlier version of Python (must be Python >= 3.10) and then `pip install wxdata`
 
 1) Friendly for users working on VPN/PROXY connections.
    - Users input their PROXY IP address as a dictionary and pass it into the function to avoid SSL errors

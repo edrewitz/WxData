@@ -287,6 +287,9 @@ Then pip install wxdata after the new Python environment is set up.
          """
          
          # Global Forecast System (GFS)
+         # - GFS 0.25x0.25 Degree Primary Parameters
+         # - GFS 0.25x0.25 Degree Secondary Parameters
+         # - GFS 0.5x0.5 Degree
          from wxdata.gfs.gfs import(
              gfs_0p25,
              gfs_0p25_secondary_parameters,
@@ -300,6 +303,9 @@ Then pip install wxdata after the new Python environment is set up.
          from wxdata.hgefs.hgefs import hgefs_mean_spread
          
          # Global Ensemble Forecast System (GEFS)
+         # - GEFS 0.5x0.5 Degree Primary Parameters
+         # - GEFS 0.5x0.5 Degree Secondary Parameters
+         # - GEFS 0.25x0.25 Degree
          from wxdata.gefs.gefs import(
              gefs_0p50,
              gefs_0p50_secondary_parameters,
@@ -307,6 +313,9 @@ Then pip install wxdata after the new Python environment is set up.
          )
          
          # AI Global Ensemble Forecast System (AIGEFS)
+         # - AIGEFS Pressure Members (Pressure Level Variables)
+         # - AIGEFS Surface Members (Surface Level Variables)
+         # - AIGEFS Single (AIGEFS Ensemble Mean & AIGEFS Ensemble Spread)
          from wxdata.aigefs.aigefs import(
              aigefs_pressure_members,
              aigefs_surface_members,
@@ -314,14 +323,25 @@ Then pip install wxdata after the new Python environment is set up.
          )
          
          # European Centre for Medium-Range Weather Forecasts (ECMWF)
+         # - ECMWF IFS
+         # - ECMWF IFS Ensemble
+         # - ECMWF AIFS
+         # - ECMWF AIFS Ensemble
+         # - ECMWF IFS Wave
+         # - ECMWF IFS Wave Ensemble
          from wxdata.ecmwf.ecmwf import(
              ecmwf_ifs,
+             ecmwf_ifs_ens,
              ecmwf_aifs,
-             ecmwf_ifs_high_res,
-             ecmwf_ifs_wave
+             ecmwf_aifs_ens,
+             ecmwf_ifs_wave,
+             ecmwf_ifs_wave_ens
          )
          
          # FEMS RAWS Network
+         # - Single RAWS Station Data
+         # - A SIG Group of RAWS Data by GACC
+         # - NFDRS Forecast Data For a RAWS Station
          from wxdata.fems.fems import(
              get_single_station_data,
              get_raws_sig_data,
@@ -329,15 +349,17 @@ Then pip install wxdata after the new Python environment is set up.
          )
          
          # Real-Time Mesoscale Analysis (RTMA)
+         # - RTMA Latest
+         # - RTMA Comparison Between Two Times
          from wxdata.rtma.rtma import(
              rtma, 
              rtma_comparison
          )
          
          # NOAA 
-         # Storm Prediction Center Outlooks
-         # Climate Prediction Center Outlooks
-         # National Weather Service Forecasts
+         # - Storm Prediction Center Outlooks
+         # - Climate Prediction Center Outlooks
+         # - National Weather Service Forecasts
          from wxdata.noaa.nws import(
              get_ndfd_grids,
              get_cpc_outlook
@@ -428,6 +450,7 @@ Then pip install wxdata after the new Python environment is set up.
          
          # This function executes a list of Python scripts in the order the user lists them
          from wxdata.utils.scripts import run_external_scripts
+
 
 
    

@@ -1,6 +1,6 @@
-# ECMWF IFS Wave
+# ECMWF IFS Wave Ensemble
 
-***def ecmwf_ifs_wave(final_forecast_hour=144,
+***def ecmwf_ifs_wave_ens(final_forecast_hour=144,
                     western_bound=-180,
                     eastern_bound=180,
                     northern_bound=90,
@@ -16,21 +16,26 @@
                     variables=['mean zero-crossing wave period',
                                 'mean wave direction',
                                 'mean wave period',
-                                'peak wave period']):***
+                                'peak wave period'],
+                    members=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                      11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+                      21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+                      31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 
+                      41, 42, 43, 44, 45, 46, 47, 48, 49, 50]):***
 
-    This function scans for the latest ECMWF IFS Wave dataset. If the dataset on the computer is old, the old data will be deleted
+    This function scans for the latest ECMWF IFS Wave Ensemble dataset. If the dataset on the computer is old, the old data will be deleted
     and the new data will be downloaded. 
     
     1) final_forecast_hour (Integer) - Default = 144.
 
-        00z and 12z ECMWF IFS Wave Runs
-        -------------------------------
+        00z and 12z ECMWF IFS Wave Ensemble Runs
+        ----------------------------------------
         
         3-Hourly Increments from hour 0 to hour 144.
         6-Hourly Increments from hour 144 to hour 360
         
-        06z and 18z ECMWF IFS Wave Runs
-        -------------------------------
+        06z and 18z ECMWF IFS Ensemble Wave Runs
+        ----------------------------------------
         
         3-Hourly Increments from hour 0 to hour 144.  
     
@@ -61,8 +66,8 @@
     11) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    12) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
-        Default = "ECMWF/IFS/WAVE"
+    12) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave Ensemble files will be saved to.
+        Default = "ECMWF/IFS/WAVE ENSEMBLE"
     
     13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
@@ -87,8 +92,8 @@
     
     An xarray.data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
     
-    Plain Language ECMWF IFS Wave Variable Keys (After Post-Processing)
-    -------------------------------------------------------------------
+    Plain Language ECMWF IFS Wave Ensemble Variable Keys (After Post-Processing)
+    ----------------------------------------------------------------------------
     
     'mean_zero_crossing_wave_period'
     'significant_height_of_combined_waves_and_swell'

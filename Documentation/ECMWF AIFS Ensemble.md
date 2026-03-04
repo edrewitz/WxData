@@ -1,6 +1,6 @@
-# ECMWF AIFS
+# ECMWF AIFS Ensemble
 
-***def ecmwf_aifs(final_forecast_hour=360,
+***ecmwf_aifs_ens(final_forecast_hour=360,
                     western_bound=-180,
                     eastern_bound=180,
                     northern_bound=90,
@@ -14,6 +14,7 @@
                     notifications='off',
                     source='ecmwf',
                     level_type='surface',
+                    cat='control',
                     clear_data=False,
                     variables=['geopotential',
                                 'total column water',
@@ -59,18 +60,19 @@
                             200, 
                             150, 
                             100, 
-                            50]):***
+                            50],
+                    members=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                      11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+                      21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+                      31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 
+                      41, 42, 43, 44, 45, 46, 47, 48, 49, 50]):***
 
-    This function scans for the latest ECMWF AIFS dataset. If the dataset on the computer is old, 
-    the old data will be deleted and the new data will be downloaded. 
+    This function scans for the latest ECMWF IFS dataset. If the dataset on the computer is old, the old data will be deleted
+    and the new data will be downloaded. 
     
-    1) final_forecast_hour (Integer) - Default = 360.
-
-        00z/06z/12z/18z ECMWF AIFS Runs
-        -------------------------------
-        
-        6-hourly increments from hour 0 to hour 360.
-        
+    1) final_forecast_hour (Integer) - Default = 360. The final forecast hour the user wishes to download. The ECMWF IFS
+    goes out to 360 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
+    360 by the nereast increment of 3 hours. 
     
     2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
@@ -82,9 +84,12 @@
     
     6) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
 
-    7) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-       proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_aifs(proxies=proxies)
+       proxies=None ---> proxies={
+                           'http':'http://url',
+                           'https':'https://url'
+                        } 
     
     8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
@@ -99,8 +104,8 @@
     11) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    12) custom_directory (String or None) - Default=None. The directory path where the ECMWF AIFS files will be saved to. 
-        When set to None, the path will be: "ECMWF/AIFS/OPERATIONAL/"
+    12) custom_directory (String or None) - Default=None. The directory path where the ECMWF AIFS Ensemble files will be saved to. 
+        When set to None, the path will be: "ECMWF/AIFS/ENSEMBLE {cat}/"
     
     13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
@@ -116,10 +121,16 @@
         2) 'pressure'
         3) 'soil
     
-    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+    17) cat (String) - Default='control'. The type of ensemble run. 
+    
+        Control Run - cat='control'
+        
+        Ensemble Members - cat='members'
+    
+    18) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
         
-    17) variables (String List) - Default is all variables. The list of variable names in plain-language. 
+    19) variables (String List) - Default is all variables. The list of variable names in plain-language. 
     
         variables
         ---------
@@ -157,17 +168,27 @@
         'volumetric soil moisture content'
         'soil temperature'
         
-    18) levels (Integer List) - Default=[1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50]. 
+    20) levels (Integer List) - Default=[1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50]. 
         When level_type='pressure', this is the list of the pressure levels. 
         
         Example: User wants only the 500 mb level: levels=[500]
+        
+    21) members (Integer List) - Default=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                                          11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+                                          21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+                                          31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 
+                                          41, 42, 43, 44, 45, 46, 47, 48, 49, 50]
+                                          
+        The ECMWF IFS Ensemble consists of 50 members. 
+        
+        Example: User wants only the first 5 members: members=[1,2,3,4,5]
         
     Returns
     -------
     
     An xarray data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
     
-    Plain Language ECMWF AIFS Variable Keys (After Post-Processing)
+    Plain Language ECMWF AIFS Ensemble Variable Keys (After Post-Processing)
     --------------------------------------------------------------
     
     'volumetric_soil_moisture_content'

@@ -61,8 +61,7 @@
                             100, 
                             50]):***
 
-    This function scans for the latest ECMWF AIFS dataset. If the dataset on the computer is old, the old data will be deleted
-    and the new data will be downloaded. 
+    This function scans for the latest ECMWF AIFS dataset. If the dataset on the computer is old, the old data will be deleted and the new data will be downloaded. 
     
     1) final_forecast_hour (Integer) - Default = 360.
 
@@ -167,51 +166,40 @@
     
     An xarray data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
     
-    Plain Language ECMWF IFS Variable Keys (After Post-Processing)
+    Plain Language ECMWF AIFS Variable Keys (After Post-Processing)
     --------------------------------------------------------------
     
-    'total_column_water'
-    'total_column_vertically_integrated_water_vapor'
-    'snow_albedo'
-    'land_sea_mask'
-    'specific_humidity'
     'volumetric_soil_moisture_content'
-    'sea_ice_thickness'
     'soil_temperature'
-    'surface_longwave_radiation_downward'
-    'surface_net_shortwave_solar_radiation'
-    'surface_net_longwave_thermal_radiation'
-    'top_net_longwave_thermal_radiation'
-    '10m_max_wind_gust'
-    'vertical_velocity'
-    'relative_vorticity'
-    'relative_humidity'
-    'geopotential_height'
-    'eastward_turbulent_surface_stress'
+    'geopotential'
+    'specific_humidity'
     'u_wind_component'
-    'divergence'
-    'northward_turbulent_surface_stress'
     'v_wind_component'
     'air_temperature'
-    'water_runoff'
-    'total_precipitation'
-    'mslp'
-    'eastward_surface_sea_water_velocity'
-    'most_unstable_cape'
-    'northward_surface_sea_water_velocity'
-    'sea_surface_height'
-    'standard_deviation_of_sub_gridscale_orography'
-    'skin_temperature'
-    'slope_of_sub_gridscale_orography'
-    '10m_u_wind_component'
-    'precipitation_type'
-    '10m_v_wind_component'
-    'total_precipitation_rate'
-    'surface_shortwave_radiation_downward'
-    'geopotential'
-    'surface_pressure'
-    '2m_temperature'
+    'vertical velocity'
     '100m_u_wind_component'
     '100m_v_wind_component'
+    '10m_u_wind_component'
+    '10m_v_wind_component'
+    '2m_temperature'
     '2m_dew_point'
     '2m_relative_humidity'
+    '2m_dew_point_depression'
+    'water_runoff' 
+    'surface_geopotential_height'
+    'skin_temperature'
+    'surface_pressure'
+    'standard_deviation_of_sub_gridscale_orography'
+    'slope_of_sub_gridscale_orography'
+    'surface_shortwave_radiation_downward'
+    'land_sea_mask'
+    'surface_longwave_radiation_downward'
+    'convective_precipitation'
+    'snowfall_water_equivalent'
+    'total_precipitation'
+    'low_cloud_cover'
+    'middle_cloud_cover'
+    'high_cloud_cover'
+    'total_column_water'
+    'total_cloud_cover'
+    'mslp'

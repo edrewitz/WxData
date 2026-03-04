@@ -1,4 +1,4 @@
-# ECMWF IFS Wave Post-Processing
+# ECMWF IFS Wave and IFS Wave Ensemble Post-Processing
 
 ***def ecmwf_ifs_wave_post_processing(path,
                             western_bound, 

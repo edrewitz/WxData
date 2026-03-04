@@ -36,9 +36,10 @@
     
     1) proxies (dict or None) - Default=None. If the user is using a proxy server, the user must change the following:
 
-        proxies=None ---> proxies={'http':'http://url',
-                            'https':'https://url'
-                            }
+        proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
         
     2) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     

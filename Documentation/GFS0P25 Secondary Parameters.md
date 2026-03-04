@@ -36,7 +36,8 @@
             convert_temperature=True,
             convert_to='celsius',
             chunk_size=8192,
-            notifications='off'):***
+            notifications='off',
+            clear_data=False):***
 
     This function downloads GFS0P25 SECONDARY PARAMETERS data and saves it to a folder. 
     
@@ -117,6 +118,9 @@
     15) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
     16) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+
+    17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
     Returns
     -------

@@ -51,7 +51,8 @@
              convert_to='celsius',
              custom_directory=None,
              chunk_size=8192,
-             notifications='off'):***
+             notifications='off',
+             clear_data=False):***
 
     This function downloads the latest GEFS0P25 data for a region specified by the user
     
@@ -158,7 +159,9 @@
     18) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
     19) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
-    
+
+    20) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
     Returns
     -------

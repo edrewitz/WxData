@@ -57,45 +57,44 @@ Copy and paste either command into your terminal or anaconda prompt:
 
 ***Important Compatibility Information***
 
-*Python 3.14 is not compatible with the pip version of the eccodes library*
+When a new version of Python comes out, it might not be compatible with the C++ eccodes library immediately (especially on pip/pypi versions).
 
-Methods to fix eccodes compatibility with Python 3.14:
+This issue arises when the user is post-processing GRIB data.
 
-1) Uninstall the pip version of WxData and install WxData via Anaconda
- 
-    *Steps For Method 1*
-    1) pip uninstall wxdata
-    2) conda install wxdata
+There are two options to resolve this issue:
 
+i) Install wxdata via Anaconda/Miniconda3 --> `conda install wxdata`
 
-2) If the user is unable to use Anaconda as a package manager, the user must set up a new Python environment with the following specifications:
+ii) Set up a new environment with an earlier version of Python (must be Python >= 3.10) and then `pip install wxdata`
 
-*Specifications*
+***Friendly for users working on VPN/PROXY connections***
 
-Python >= 3.10 and Python <= 3.13
+   Depending on which client, the proxy-address:port must be entered as either a dictionary or a string.
 
-Python 3.10 is compatible.
+   The clients that use a string for proxies are:
 
-Python 3.11 is compatible.
+   1) All ECMWF clients
 
-Python 3.12 is compatible.
+   2) METAR Observations Client
+      
+   3) `pixel_query()` tool if the user needs to download the airport station codes list. 
 
-Python 3.13 is compatible
+      All other clients use proxies as a dictionary
 
-Then pip install wxdata after the new Python environment is set up. 
+                  Example: We want to download the latest Observed Sounding Data for San Diego, CA (NKX)
+         
+                  proxies=None ---> proxies={
+                                         'http':'http://your-proxy-address:port',
+                                         'https':'http://your-proxy-address:port'
+                                         }
+         
+                  sounding_data = get_observed_sounding_data('nkx', proxies=proxies)
+         
+                  Example: We want to download the ECMWF IFS Data:
+         
+                  proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_ifs(proxies=proxies)
 
-1) Friendly for users working on VPN/PROXY connections.
-   - Users input their PROXY IP address as a dictionary and pass it into the function to avoid SSL errors
-     - If the user is on a VPN/PROXY Connection the following is needed:
-       
-                         proxies=None ---> proxies={
-                                           'http':'http://url',
-                                           'https':'https://url'
-                                           }
-
-                        [e.g. get_observed_sounding_data('nkx', proxies=proxies)]
-
-          <img src="https://github.com/edrewitz/WxData/blob/main/diagrams/proxy.png?raw=true" width="500" alt="Alt text" /> 
+<img src="https://github.com/edrewitz/WxData/blob/main/diagrams/proxy.png?raw=true" width="500" alt="Alt text" /> 
 
 
    For more information on configuring proxies: https://requests.readthedocs.io/en/latest/user/advanced/#proxies
@@ -119,9 +118,10 @@ Then pip install wxdata after the new Python environment is set up.
 
 3) Preserves system memory via the following methods:
    - Clears out old data files before each new data download.
-   - Optional setting `clear_recycle_bin=True` in all functions.
+   - Optional setting `clear_recycle_bin` in all functions.
         - When `clear_recycle_bin=True` the computer's recycle/trash bin is cleared with each run of the script using any WxData function.
         - If a user wishes to not clear out their recycle bin `set clear_recycle_bin=False`.
+        - Default: `clear_recycle_bin=False`.
     
 ## WxData Examples
 
@@ -287,6 +287,9 @@ Then pip install wxdata after the new Python environment is set up.
          """
          
          # Global Forecast System (GFS)
+         # - GFS 0.25x0.25 Degree Primary Parameters
+         # - GFS 0.25x0.25 Degree Secondary Parameters
+         # - GFS 0.5x0.5 Degree
          from wxdata.gfs.gfs import(
              gfs_0p25,
              gfs_0p25_secondary_parameters,
@@ -300,6 +303,9 @@ Then pip install wxdata after the new Python environment is set up.
          from wxdata.hgefs.hgefs import hgefs_mean_spread
          
          # Global Ensemble Forecast System (GEFS)
+         # - GEFS 0.5x0.5 Degree Primary Parameters
+         # - GEFS 0.5x0.5 Degree Secondary Parameters
+         # - GEFS 0.25x0.25 Degree
          from wxdata.gefs.gefs import(
              gefs_0p50,
              gefs_0p50_secondary_parameters,
@@ -307,6 +313,9 @@ Then pip install wxdata after the new Python environment is set up.
          )
          
          # AI Global Ensemble Forecast System (AIGEFS)
+         # - AIGEFS Pressure Members (Pressure Level Variables)
+         # - AIGEFS Surface Members (Surface Level Variables)
+         # - AIGEFS Single (AIGEFS Ensemble Mean & AIGEFS Ensemble Spread)
          from wxdata.aigefs.aigefs import(
              aigefs_pressure_members,
              aigefs_surface_members,
@@ -314,14 +323,25 @@ Then pip install wxdata after the new Python environment is set up.
          )
          
          # European Centre for Medium-Range Weather Forecasts (ECMWF)
+         # - ECMWF IFS
+         # - ECMWF IFS Ensemble
+         # - ECMWF AIFS
+         # - ECMWF AIFS Ensemble
+         # - ECMWF IFS Wave
+         # - ECMWF IFS Wave Ensemble
          from wxdata.ecmwf.ecmwf import(
              ecmwf_ifs,
+             ecmwf_ifs_ens,
              ecmwf_aifs,
-             ecmwf_ifs_high_res,
-             ecmwf_ifs_wave
+             ecmwf_aifs_ens,
+             ecmwf_ifs_wave,
+             ecmwf_ifs_wave_ens
          )
          
          # FEMS RAWS Network
+         # - Single RAWS Station Data
+         # - A SIG Group of RAWS Data by GACC
+         # - NFDRS Forecast Data For a RAWS Station
          from wxdata.fems.fems import(
              get_single_station_data,
              get_raws_sig_data,
@@ -329,15 +349,17 @@ Then pip install wxdata after the new Python environment is set up.
          )
          
          # Real-Time Mesoscale Analysis (RTMA)
+         # - RTMA Latest
+         # - RTMA Comparison Between Two Times
          from wxdata.rtma.rtma import(
              rtma, 
              rtma_comparison
          )
          
          # NOAA 
-         # Storm Prediction Center Outlooks
-         # Climate Prediction Center Outlooks
-         # National Weather Service Forecasts
+         # - Storm Prediction Center Outlooks
+         # - Climate Prediction Center Outlooks
+         # - National Weather Service Forecasts
          from wxdata.noaa.nws import(
              get_ndfd_grids,
              get_cpc_outlook
@@ -430,6 +452,7 @@ Then pip install wxdata after the new Python environment is set up.
          from wxdata.utils.scripts import run_external_scripts
 
 
+
    
    
 
@@ -460,6 +483,8 @@ Then pip install wxdata after the new Python environment is set up.
 **geopandas**: Kelsey Jordahl, Joris Van den Bossche, Martin Fleischmann, Jacob Wasserman, James McBride, Jeffrey Gerard, … François Leblanc. (2020, July 15). geopandas/geopandas: v0.8.1 (Version v0.8.1). Zenodo. http://doi.org/10.5281/zenodo.3946761
 
 **tqdm**: da Costa-Luis, (2019). tqdm: A Fast, Extensible Progress Meter for Python and CLI. Journal of Open Source Software, 4(37), 1277, https://doi.org/10.21105/joss.01277
+
+**ecmwf-opendata**: European Centre for Medium-Range Weather Forecasts (2026). ecmwf-opendata[Computer software]. GitHub. https://github.com/ecmwf/ecmwf-opendata
 
 ## Data Sources
 

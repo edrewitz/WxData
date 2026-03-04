@@ -47,7 +47,8 @@
             convert_to='celsius',
             custom_directory=None,
             chunk_size=8192,
-            notifications='off'):***
+            notifications='off',
+            clear_data=False):***
 
     This function downloads the latest GEFS0P50 data for a region specified by the user
     
@@ -93,7 +94,7 @@
        
     11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine.  
+        This setting is to help preserve memory on the machine. 
         
     12) variables (List) - A list of variable names the user wants to download in plain language. 
     
@@ -135,9 +136,8 @@
         the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
         be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
     
-    14) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
+    14) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
+        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
         
     15) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
@@ -151,6 +151,9 @@
     18) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
     19) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    
+    20) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
     
     Returns
@@ -208,3 +211,4 @@
     'potential_temperature'
     'mixing_ratio'
     'dry_lapse_rate'
+    

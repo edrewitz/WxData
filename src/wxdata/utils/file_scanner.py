@@ -143,17 +143,11 @@ def local_file_scanner(path,
                     download = True
                 
                 tdiff = local.hour - update_hour
-                if model == 'operational ifs':
-                  if tdiff <= 12:
-                      pass
-                  else:
-                      download = True
-                    
+
+                if tdiff <= 6:
+                    pass
                 else:
-                    if tdiff <= 6:
-                        pass
-                    else:
-                        download = True
+                    download = True
         else:
             download = True        
         

@@ -18,6 +18,7 @@ from wxdata.gfs.url_scanners import(
     gfs_0p25_secondary_parameters_url_scanner as _gfs_0p25_secondary_parameters_url_scanner
 )
 
+from wxdata.utils.file_funcs import clear_old_data as _clear_old_data
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
 from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
 from wxdata.utils.recycle_bin import(
@@ -128,7 +129,8 @@ def gfs_0p25(final_forecast_hour=384,
             convert_temperature=True,
             convert_to='celsius',
             chunk_size=8192,
-            notifications='off'):
+            notifications='off',
+            clear_data=False):
     
     """
     This function downloads GFS0P25 data and saves it to a folder. 
@@ -398,6 +400,11 @@ def gfs_0p25(final_forecast_hour=384,
         
         path = custom_directory
         
+    if clear_data == True:
+        _clear_old_data(path)
+    else:
+        pass
+        
     urls, filenames, run = _gfs_0p25_url_scanner(final_forecast_hour,
                                             western_bound, 
                                             eastern_bound, 
@@ -415,11 +422,7 @@ def gfs_0p25(final_forecast_hour=384,
     if download == True:
         print(f"Downloading GFS0P25...")
         
-        try:
-            for file in _os.listdir(f"{path}"):
-                _os.remove(f"{path}/{file}")
-        except Exception as e:
-            pass
+        _clear_old_data(path)
         
         for url, filename in zip(urls, filenames):
             _client.get_gridded_data(f"{url}",
@@ -490,7 +493,8 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
             convert_temperature=True,
             convert_to='celsius',
             chunk_size=8192,
-            notifications='off'):
+            notifications='off',
+            clear_data=False):
     
     """
     This function downloads GFS0P25 SECONDARY PARAMETERS data and saves it to a folder. 
@@ -635,6 +639,11 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
         
         path = custom_directory
         
+    if clear_data == True:
+        _clear_old_data(path)
+    else:
+        pass
+        
     urls, filenames, run = _gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
                                             western_bound, 
                                             eastern_bound, 
@@ -652,11 +661,7 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
     if download == True:
         print(f"Downloading GFS0P25 Secondary Parameters...")
         
-        try:
-            for file in _os.listdir(f"{path}"):
-                _os.remove(f"{path}/{file}")
-        except Exception as e:
-            pass
+        _clear_old_data(path)
         
         for url, filename in zip(urls, filenames):
             _client.get_gridded_data(f"{url}",
@@ -794,7 +799,8 @@ def gfs_0p50(final_forecast_hour=384,
             convert_temperature=True,
             convert_to='celsius',
             chunk_size=8192,
-            notifications='off'):
+            notifications='off',
+            clear_data=False):
     
     """
     This function downloads GFS0P50 data and saves it to a folder. 
@@ -1064,6 +1070,11 @@ def gfs_0p50(final_forecast_hour=384,
         
         path = custom_directory
         
+    if clear_data == True:
+        _clear_old_data(path)
+    else:
+        pass
+        
     urls, filenames, run = _gfs_0p50_url_scanner(final_forecast_hour,
                                             western_bound, 
                                             eastern_bound, 
@@ -1081,11 +1092,7 @@ def gfs_0p50(final_forecast_hour=384,
     if download == True:
         print(f"Downloading GFS0P50...")
         
-        try:
-            for file in _os.listdir(f"{path}"):
-                _os.remove(f"{path}/{file}")
-        except Exception as e:
-            pass
+        _clear_old_data(path)
         
         for url, filename in zip(urls, filenames):
             _client.get_gridded_data(f"{url}",

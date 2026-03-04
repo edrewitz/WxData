@@ -11,6 +11,7 @@ import logging as _logging
 import warnings as _warnings
 _warnings.filterwarnings('ignore')
 
+from wxdata.utils.exceptions import eccodes_error_message as _eccodes_error_message
 from wxdata.calc.thermodynamics import relative_humidity as _relative_humidity
 from wxdata.utils.file_funcs import(
     clear_idx_files_in_path as _clear_idx_files_in_path,
@@ -20,56 +21,6 @@ from wxdata.utils.file_funcs import(
 _sys.tracebacklimit = 0
 _logging.disable()
 
-def _eccodes_error_intructions():
-    
-    """
-    This function will print instructions if the user is using an incompatible Python environment with the eccodes C++ library.
-    
-    Known Errors:
-    
-    1) Using the pip version of eccodes with Python 3.14
-    
-    Fixes:
-    
-    1) Either downgrade the Python environment to be Python >= 3.10 and Python <= 3.13
-    
-    2) Install WxData via Anaconda rather than pip if the user must use Python >= 3.14
-    
-    Returns
-    -------
-    
-    Instructions on how to resolve compatibility issues with the Python environment and eccodes.    
-    """
-    
-    print("""
-          Error: Incompatible Python version with the eccodes library.
-          
-          This is likely due to issues between Python >= 3.14 and eccodes
-          
-          Methods to fix:
-          
-          1) Uninstall the pip version of WxData and install WxData via Anaconda
-             
-             ***Steps For Method 1***
-             1) pip uninstall wxdata
-             2) conda install wxdata
-             
-          2) If the user is unable to use Anaconda as a package manager, the user must set up a new Python environment with the following specifications:
-          
-            ***Specifications***
-            
-            Python >= 3.10 and Python <= 3.13
-            
-            Python 3.10 is compatible.
-            Python 3.11 is compatible.
-            Python 3.12 is compatible.
-            Python 3.13 is compatible
-            
-            Then pip install wxdata after the new Python environment is set up. 
-            
-          System Exiting...
-          
-          """)
 
 def ecmwf_ifs_post_processing(path,
                             western_bound, 
@@ -80,13 +31,13 @@ def ecmwf_ifs_post_processing(path,
     """
     This function does the following:
     
-    1) Subsets the ECMWF IFS and High Resolution IFS model data. 
+    1) Subsets the ECMWF IFS and IFS Ensemble model data. 
     
     2) Post-processes the GRIB variable keys into Plain Language variable keys.
     
     Required Arguments:
     
-    1) path (String) - The path to the folder containing the ECMWF IFS or High Resolution IFS files. 
+    1) path (String) - The path to the folder containing the ECMWF IFS or ECMWF IFS Ensemble files. 
     
     2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
@@ -103,7 +54,7 @@ def ecmwf_ifs_post_processing(path,
     
     An xarray data array of ECMWF data.    
     
-    Plain Language ECMWF IFS/ECMWF High Resolution Variable Keys 
+    Plain Language ECMWF IFS/ECMWF IFS Ensemble Variable Keys 
     -------------------------------------------------------------
     
     'total_column_water'
@@ -156,14 +107,22 @@ def ecmwf_ifs_post_processing(path,
     '2m_relative_humidity'
     '2m_dew_point_depression'
     'time_maximum_10m_wind_gust'
+    '3_hr_maximum_2m_temperature'
+    '3_hr_minimum_2m_temperature'
 
     """
     _clear_idx_files_in_path(path)
     
     files = _sorted_paths(path)
     
+    ds0 = None
+    ds1 = None
+    ds2 = None
+    ds3 = None
+    ds4 = None
+    
     try:
-        ds = _xr.open_mfdataset(files, 
+        ds0 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -182,7 +141,7 @@ def ecmwf_ifs_post_processing(path,
                             engine='cfgrib', 
                             compat='override', 
                             decode_timedelta=False, 
-                            filter_by_keys={'typeOfLevel': 'heightAboveGround', 'paramId':238167}).sel(longitude=slice(western_bound, eastern_bound, 1), 
+                            filter_by_keys={'typeOfLevel': 'heightAboveGround', 'paramId':49}).sel(longitude=slice(western_bound, eastern_bound, 1), 
                                                                                                         latitude=slice(northern_bound, southern_bound, 1))
     
     except Exception as e:
@@ -230,6 +189,19 @@ def ecmwf_ifs_post_processing(path,
         pass
     
     try:
+        ds5 = _xr.open_mfdataset(files, 
+                            concat_dim='step', 
+                            combine='nested', 
+                            coords='minimal', 
+                            engine='cfgrib', 
+                            compat='override', 
+                            decode_timedelta=False,
+                            filter_by_keys={'typeOfLevel': 'heightAboveGround', 'paramId':167}).sel(longitude=slice(western_bound, eastern_bound, 1), 
+                                                                                                    latitude=slice(northern_bound, southern_bound, 1))
+    except Exception as e:
+        pass
+    
+    try:
         ds = ds.drop_duplicates(dim="step", keep="first")
     except Exception as e:
         pass
@@ -254,334 +226,615 @@ def ecmwf_ifs_post_processing(path,
     except Exception as e:
         pass
     
+    ds0_list = []
+    
     try:
-        ds['time_maximum_10m_wind_gust'] = ds['fg10_3']
-        ds = ds.drop_vars('fg10_3')
+        ds0['snow_density'] = ds0['rsn']
+        ds0 = ds0.drop_vars('rsn')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['total_column_water'] = ds['tcw']
-        ds = ds.drop_vars('tcw')
+        ds0['total_column_water'] = ds0['tcw']
+        ds0 = ds0.drop_vars('tcw')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['total_cloud_cover'] = ds['tcc']
-        ds = ds.drop_vars('tcc')
+        ds0['total_cloud_cover'] = ds0['tcc']
+        ds0 = ds0.drop_vars('tcc')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['snowfall'] = ds['sf']
-        ds = ds.drop_vars('sf')
+        ds0['snowfall'] = ds0['sf']
+        ds0 = ds0.drop_vars('sf')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['snow_depth'] = ds['sd']
-        ds = ds.drop_vars('sd')
+        ds0['snow_depth'] = ds0['sd']
+        ds0 = ds0.drop_vars('sd')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['total_column_vertically_integrated_water_vapor'] = ds['tcwv']
-        ds = ds.drop_vars('tcwv')
+        ds0['total_column_vertically_integrated_water_vapor'] = ds0['tcwv']
+        ds0 = ds0.drop_vars('tcwv')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['snow_albedo'] = ds['asn']
-        ds = ds.drop_vars('asn')
+        ds0['snow_albedo'] = ds0['asn']
+        ds0 = ds0.drop_vars('asn')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['land_sea_mask'] = ds['lsm']
-        ds = ds.drop_vars('lsm')
+        ds0['land_sea_mask'] = ds0['lsm']
+        ds0 = ds0.drop_vars('lsm')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['specific_humidity'] = ds['q']
-        ds = ds.drop_vars('q')
+        ds0['specific_humidity'] = ds0['q']
+        ds0 = ds0.drop_vars('q')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['volumetric_soil_moisture_content'] = ds['vsw']
-        ds = ds.drop_vars('vsw')
+        ds0['volumetric_soil_moisture_content'] = ds0['vsw']
+        ds0 = ds0.drop_vars('vsw')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['precipitable_water'] = ds['tcvw']
-        ds = ds.drop_vars('tcvw')
+        ds0['precipitable_water'] = ds0['tcvw']
+        ds0 = ds0.drop_vars('tcvw')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:     
-        ds['sea_ice_thickness'] = ds['sithick']
-        ds = ds.drop_vars('sithick')
+        ds0['sea_ice_thickness'] = ds0['sithick']
+        ds0 = ds0.drop_vars('sithick')
+        ds0_list.append(ds0)
     except Exception as e:
         pass     
     
     try:
-        ds['soil_temperature'] = ds['sot']
-        ds = ds.drop_vars('sot')
+        ds0['soil_temperature'] = ds0['sot']
+        ds0 = ds0.drop_vars('sot')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['surface_longwave_radiation_downward'] = ds['strd']
-        ds = ds.drop_vars('strd')
+        ds0['surface_longwave_radiation_downward'] = ds0['strd']
+        ds0 = ds0.drop_vars('strd')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['time_maximum_10m_wind_gust'] = ds['fg10']
-        ds = ds.drop_vars('fg10')
+        ds0['time_maximum_10m_wind_gust'] = ds0['fg10']
+        ds0 = ds0.drop_vars('fg10')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['surface_net_shortwave_solar_radiation'] = ds['ssr']
-        ds = ds.drop_vars('ssr')
+        ds0['surface_net_shortwave_solar_radiation'] = ds0['ssr']
+        ds0 = ds0.drop_vars('ssr')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['surface_net_longwave_thermal_radiation'] = ds['str']
-        ds = ds.drop_vars('str')
+        ds0['surface_net_longwave_thermal_radiation'] = ds0['str']
+        ds0 = ds0.drop_vars('str')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['top_net_longwave_thermal_radiation'] = ds['ttr']
-        ds = ds.drop_vars('ttr')
+        ds0['top_net_longwave_thermal_radiation'] = ds0['ttr']
+        ds0 = ds0.drop_vars('ttr')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['10m_max_wind_gust'] = ds['max_i10fg']
-        ds = ds.drop_vars('max_i10fg')
+        ds0['10m_max_wind_gust'] = ds0['max_i10fg']
+        ds0 = ds0.drop_vars('max_i10fg')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['vertical_velocity'] = ds['w']
-        ds = ds.drop_vars('w')
+        ds0['vertical_velocity'] = ds0['w']
+        ds0 = ds0.drop_vars('w')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['relative_vorticity'] = ds['vo']
-        ds = ds.drop_vars('vo')
+        ds0['relative_vorticity'] = ds0['vo']
+        ds0 = ds0.drop_vars('vo')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['relative_humidity'] = ds['r']
-        ds = ds.drop_vars('r')
+        ds0['relative_humidity'] = ds0['r']
+        ds0 = ds0.drop_vars('r')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['geopotential_height'] = ds['gh']
-        ds = ds.drop_vars('gh')
+        ds0['geopotential_height'] = ds0['gh']
+        ds0 = ds0.drop_vars('gh')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['eastward_turbulent_surface_stress'] = ds['ewss']
-        ds = ds.drop_vars('ewss')
+        ds0['eastward_turbulent_surface_stress'] = ds0['ewss']
+        ds0 = ds0.drop_vars('ewss')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['u_wind_component'] = ds['u']
-        ds = ds.drop('u')
+        ds0['u_wind_component'] = ds0['u']
+        ds0 = ds0.drop('u')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['divergence'] = ds['d']
-        ds = ds.drop_vars('d')
+        ds0['divergence'] = ds0['d']
+        ds0 = ds0.drop_vars('d')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['northward_turbulent_surface_stress'] = ds['nsss']
-        ds = ds.drop_vars('nsss')
+        ds0['northward_turbulent_surface_stress'] = ds0['nsss']
+        ds0 = ds0.drop_vars('nsss')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['v_wind_component'] = ds['v']
-        ds = ds.drop_vars('v')
+        ds0['v_wind_component'] = ds0['v']
+        ds0 = ds0.drop_vars('v')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['air_temperature'] = ds['t']
-        ds = ds.drop_vars('t')
+        ds0['air_temperature'] = ds0['t']
+        ds0 = ds0.drop_vars('t')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['water_runoff'] = ds['ro']
-        ds = ds.drop_vars('ro')
+        ds0['water_runoff'] = ds0['ro']
+        ds0 = ds0.drop_vars('ro')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['total_precipitation'] = ds['tp']
-        ds = ds.drop_vars('tp')
+        ds0['3_hr_maximum_2m_temperature'] = ds0['mx2t3']
+        ds0 = ds0.drop_vars('mx2t3')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['mslp'] = ds['msl']
-        ds = ds.drop_vars('msl')
+        ds0['3_hr_minimum_2m_temperature'] = ds0['mn2t3']
+        ds0 = ds0.drop_vars('mn2t3')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['eastward_surface_sea_water_velocity'] = ds['sve']
-        ds = ds.drop_vars('sve')
+        ds0['total_precipitation'] = ds0['tp']
+        ds0 = ds0.drop_vars('tp')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['most_unstable_cape'] = ds['mucape']
-        ds = ds.drop_vars('mucape')
+        ds0['mslp'] = ds0['msl']
+        ds0 = ds0.drop_vars('msl')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['northward_surface_sea_water_velocity'] = ds['svn']
-        ds = ds.drop_vars('svn')
+        ds0['eastward_surface_sea_water_velocity'] = ds0['sve']
+        ds0 = ds0.drop_vars('sve')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['sea_surface_height'] = ds['zos']
-        ds = ds.drop_vars('zos')
+        ds0['most_unstable_cape'] = ds0['mucape']
+        ds0 = ds0.drop_vars('mucape')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['standard_deviation_of_sub_gridscale_orography'] = ds['sdor']
-        ds = ds.drop_vars('sdor')
+        ds0['northward_surface_sea_water_velocity'] = ds0['svn']
+        ds0 = ds0.drop_vars('svn')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['skin_temperature'] = ds['skt']
-        ds = ds.drop_vars('skt')
+        ds0['sea_surface_height'] = ds0['zos']
+        ds0 = ds0.drop_vars('zos')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['slope_of_sub_gridscale_orography'] = ds['slor']
-        ds = ds.drop_vars('slor')
+        ds0['standard_deviation_of_sub_gridscale_orography'] = ds0['sdor']
+        ds0 = ds0.drop_vars('sdor')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['10m_u_wind_component'] = ds['u10']
-        ds = ds.drop_vars('u10')
+        ds0['skin_temperature'] = ds0['skt']
+        ds0 = ds0.drop_vars('skt')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['precipitation_type'] = ds['ptype']
-        ds = ds.drop_vars('ptype')
+        ds0['slope_of_sub_gridscale_orography'] = ds0['slor']
+        ds0 = ds0.drop_vars('slor')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['10m_v_wind_component'] = ds['v10']
-        ds = ds.drop_vars('v10')
+        ds0['10m_u_wind_component'] = ds0['u10']
+        ds0 = ds0.drop_vars('u10')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['total_precipitation_rate'] = ds['tprate']
-        ds = ds.drop_vars('tprate')
+        ds0['precipitation_type'] = ds0['ptype']
+        ds0 = ds0.drop_vars('ptype')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['surface_shortwave_radiation_downward'] = ds['ssrd']
-        ds = ds.drop_vars('ssrd')
+        ds0['10m_v_wind_component'] = ds0['v10']
+        ds0 = ds0.drop_vars('v10')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['surface_geopotential_height'] = ds['z']
-        ds = ds.drop_vars('z')
+        ds0['total_precipitation_rate'] = ds0['tprate']
+        ds0 = ds0.drop_vars('tprate')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['surface_pressure'] = ds['sp']
-        ds = ds.drop_vars('sp')
+        ds0['surface_shortwave_radiation_downward'] = ds0['ssrd']
+        ds0 = ds0.drop_vars('ssrd')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['2m_temperature'] = ds1['t2m']
+        ds0['surface_geopotential_height'] = ds0['z']
+        ds0 = ds0.drop_vars('z')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['100m_u_wind_component'] = ds2['u100']
-        ds = ds.drop_vars('u100')
+        ds0['surface_pressure'] = ds0['sp']
+        ds0 = ds0.drop_vars('sp')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['100m_v_wind_component'] = ds3['v100']
-        ds = ds.drop_vars('v100')
+        ds0['2m_temperature'] = ds0['t2m']
+        ds0 = ds0.drop_vars('t2m')
+        ds0 = _xr.concat(ds0, ds5, dim='step')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['2m_dew_point'] = ds4['d2m']
+        ds1['time_maximum_10m_wind_gust'] = ds1['fg10']
+        ds1 = ds1.drop_vars('fg10')
     except Exception as e:
         pass
     
     try:
-        ds['2m_relative_humidity'] = _relative_humidity(ds['2m_temperature'],
-                                                       ds['2m_dew_point'])
+        ds2['100m_u_wind_component'] = ds2['u100']
+        ds2 = ds2.drop_vars('u100')
     except Exception as e:
         pass
     
     try:
-        ds['2m_dew_point_depression'] = ds['2m_temperature'] - ds['2m_dew_point']
+        ds3['100m_v_wind_component'] = ds3['v100']
+        ds3 = ds3.drop_vars('v100')
     except Exception as e:
         pass
     
     try:
-        ds = ds.drop_vars('d2m')
+        ds4['2m_dew_point'] = ds4['d2m']
+        ds4 = ds4.drop_vars('d2m')
     except Exception as e:
         pass
     
     try:
-        ds = ds.drop_vars('t2m')
+        ds0 = _xr.concat(ds0_list, dim="time")
+        ds0 = ds0.isel(time=0)
     except Exception as e:
         pass
     
-    _clear_idx_files_in_path(path)
+    try:
+    
+        surface_ds_list = [ds0, ds1, ds2, ds3, ds4]
         
+        surface_ds = []
+        for d in surface_ds_list:
+            if d is not None:
+                try:
+                    d = d.isel(time=0)
+                except Exception as e:
+                    pass
+                surface_ds.append(d)
+            else:
+                pass
+            
+            
+        
+        ds = _xr.concat(surface_ds, 
+                        dim='time', 
+                        coords='minimal',
+                        compat='override')
+    
+        try:
+            ds = ds.drop_vars('d2m')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('ssrd')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('tcwv')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('ptype')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('lsm')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('tprate')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('asn')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('sithick')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('strd')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('ssr')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('str')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('ttr')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('ewss')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('nsss')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('ro')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('tp')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('sd')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('sf')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('msl')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('sve')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('mucape')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('svn')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('zos')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('sdor')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('tcc')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('t2m')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('z')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('sp')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('fg10')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('u10')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('v10')    
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('vo')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('r')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('w')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('gh')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('u')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('d')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('v')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('t')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('sot')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('vsw')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('u100')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('v100')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('mx2t3')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('mn2t3')
+        except Exception as e:
+            pass
+        try:
+            ds['2m_relative_humidity'] = _relative_humidity(ds['2m_temperature'],
+                                                        ds['2m_dew_point'])
+        except Exception as e:
+            pass
+        
+        try:
+            ds['2m_dew_point_depression'] = ds['2m_temperature'] - ds['2m_dew_point']
+        except Exception as e:
+            pass
+        
+        ds = ds.isel(time=0)
+        
+        try:
+            ds = ds.transpose("number", "step", "latitude", "longitude")
+        except Exception as e:
+            pass
+        
+    except Exception as e:
+        pass
+        
+    _clear_idx_files_in_path(path)
+    
     try:    
         ds = ds.sortby('step')
+        return ds
     except Exception as e:
-        _eccodes_error_intructions()
-        _sys.exit(1)
-    return ds
-
+       _eccodes_error_message()
+       _sys.exit(1)
+   
+    
 
 def ecmwf_aifs_post_processing(path,
                             western_bound, 
@@ -620,7 +873,7 @@ def ecmwf_aifs_post_processing(path,
     
     'volumetric_soil_moisture_content'
     'soil_temperature'
-    'geopotential_height'
+    'geopotential'
     'specific_humidity'
     'u_wind_component'
     'v_wind_component'
@@ -658,8 +911,22 @@ def ecmwf_aifs_post_processing(path,
     
     files = _sorted_paths(path)
     
+    ds0 = None
+    ds1 = None
+    ds2 = None
+    ds3 = None
+    ds4 = None
+    ds5 = None
+    ds6 = None
+    ds7 = None
+    ds8 = None
+    ds9 = None
+    ds10 = None
+    ds11 = None
+    ds12 = None
+    
     try:
-        ds = _xr.open_mfdataset(files, 
+        ds0 = _xr.open_mfdataset(files, 
                             concat_dim='step', 
                             combine='nested', 
                             coords='minimal', 
@@ -842,188 +1109,483 @@ def ecmwf_aifs_post_processing(path,
         pass
     
     
+    ###############
+    # Soil Levels #
+    ###############
+    
+    ds0_list = []
+    
     try:
-        ds['volumetric_soil_moisture_content'] = ds['vsw']
-        ds = ds.drop_vars('vsw')
+        ds0['volumetric_soil_moisture_content'] = ds0['vsw']
+        ds0 = ds0.drop_vars('vsw')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['soil_temperature'] = ds['sot']
-        ds = ds.drop_vars('sot')
+        ds0['soil_temperature'] = ds0['sot']
+        ds0 = ds0.drop_vars('sot')
+        ds0_list.append(ds0)
     except Exception as e:
         pass
     
     try:
-        ds['geopotential_height'] = ds1['z']
+        ds0 = _xr.concat(ds0_list, dim="time")
+        ds0 = ds0.isel(time=0)
+    except Exception as e:
+        pass
+    
+    ###################
+    # Pressure Levels #
+    ###################
+    
+    ds1_list = []
+    
+    try:
+        ds1['geopotential'] = ds1['z']
+        ds1 = ds1.drop_vars('z')
+        ds1_list.append(ds1)
     except Exception as e:
         pass
     
     try:
-        ds['specific_humidity'] = ds1['q']
+        ds1['specific_humidity'] = ds1['q']
+        ds1 = ds1.drop_vars('q')
+        ds1_list.append(ds1)
     except Exception as e:
         pass
     
     try:
-        ds['u_wind_component'] = ds1['u']
-    except Exception as e:
-        pass
-
-    try:
-        ds['v_wind_component'] = ds1['v']
-    except Exception as e:
-        pass
-    
-    try:
-        ds['air_temperature'] = ds1['t']
-    except Exception as e:
-        pass
-    
-    try:
-        ds['vertical velocity'] = ds1['w']
-    except Exception as e:
-        pass
-    
-    try:
-        ds['100m_u_wind_component'] = ds2['u100']
-    except Exception as e:
-        pass
-    
-    try:
-        ds['100m_v_wind_component'] = ds2['v100']
-    except Exception as e:
-        pass
-    
-    try:
-        ds['10m_u_wind_component'] = ds3['u10']
-    except Exception as e:
-        pass
-    
-    try:
-        ds['10m_v_wind_component'] = ds4['v10']
+        ds1['u_wind_component'] = ds1['u']
+        ds1 = ds1.drop_vars('u')
+        ds1_list.append(ds1)
     except Exception as e:
         pass
         
     try:
-        ds['2m_temperature'] = ds5['t2m']
+        ds1['v_wind_component'] = ds1['v']
+        ds1 = ds1.drop_vars('v')
+        ds1_list.append(ds1)
     except Exception as e:
         pass
     
     try:
-        ds['2m_dew_point'] = ds6['d2m']
+        ds1['air_temperature'] = ds1['t']
+        ds1 = ds1.drop_vars('t')
+        ds1_list.append(ds1)
+    except Exception as e:
+        pass
+    
+
+    try:
+        ds1['vertical_velocity'] = ds1['w']
+        ds1 = ds1.drop_vars('w')
+        ds1_list.append(ds1)
     except Exception as e:
         pass
     
     try:
-        ds['2m_relative_humidity'] = _relative_humidity(ds['2m_temperature'],
-                                                       ds['2m_dew_point'])
+        ds1 = _xr.concat(ds11_list, dim="time")
+        ds1 = ds1.isel(time=0)
+    except Exception as e:
+        pass
+        
+    #################
+    # Surface Level #
+    #################
+    
+    ds2_list = []
+    
+    try:
+        ds2['100m_u_wind_component'] = ds2['u100']
+        ds2 = ds2.drop_vars('u100')
+        ds2_list.append(ds2)
+    except Exception as e:
+        pass
+    
+
+    try:
+        ds2['100m_v_wind_component'] = ds2['v100']
+        ds2 = ds2.drop_vars('v100')
+        ds2_list.append(ds2)
     except Exception as e:
         pass
     
     try:
-        ds['2m_dew_point_depression'] = ds['2m_temperature'] - ds['2m_dew_point']
+        ds2 = _xr.concat(ds2_list, dim='time')
+        ds2 = ds2.isel(time=0)
     except Exception as e:
         pass
     
     try:
-        ds['water_runoff'] = ds7['rowe']
+        ds3['10m_u_wind_component'] = ds3['u10']
+        ds3 = ds3.drop_vars('u10')
+    except Exception as e:
+        pass
+    
+
+    try:
+        ds4['10m_v_wind_component'] = ds4['v10']
+        ds4 = ds4.drop_vars('v10')
+    except Exception as e:
+        pass
+        
+
+    try:
+        ds5['2m_temperature'] = ds5['t2m']
+        ds5 = ds5.drop_vars('t2m')
+    except Exception as e:
+        pass
+    
+
+    try:
+        ds6['2m_dew_point'] = ds6['d2m']
+        ds6 = ds6.drop_vars('d2m')
+    except Exception as e:
+        pass
+    
+    
+    ds7_list = []
+    
+    try:
+        ds7['water_runoff'] = ds7['rowe']
+        ds7 = ds7.drop_vars('rowe')
+        ds7_list.append(ds7)
+    except Exception as e:
+        pass
+    
+
+    try:
+        ds7['surface_geopotential_height'] = ds7['z']
+        ds7 = ds7.drop_vars('z')
+        ds7_list.append(ds7)
+    except Exception as e:
+        pass
+    
+
+    try:
+        ds7['skin_temperature'] = ds7['skt']
+        ds7 = ds7.drop_vars('skt')
+        ds7_list.append(ds7)
+    except Exception as e:
+        pass
+    
+
+    try:
+        ds7['surface_pressure'] = ds7['sp']
+        ds7 = ds7.drop_vars('sp')
+        ds7_list.append(ds7)
+    except Exception as e:
+        pass
+    
+
+    try:
+        ds7['standard_deviation_of_sub_gridscale_orography'] = ds7['sdor']
+        ds7 = ds7.drop_vars('sdor')
+        ds7_list.append(ds7)
+    except Exception as e:
+        pass
+    
+
+    try:
+        ds7['slope_of_sub_gridscale_orography'] = ds7['slor']
+        ds7 = ds7.drop_vars('slor')
+        ds7_list.append(ds7)
+    except Exception as e:
+        pass
+    
+
+    try:
+        ds7['surface_shortwave_radiation_downward'] = ds7['ssrd']
+        ds7 = ds7.drop_vars('ssrd')
+        ds7_list.append(ds7)
+    except Exception as e:
+        pass
+    
+
+    try:
+        ds7['land_sea_mask'] = ds7['lsm']
+        ds7 = ds7.drop_vars('lsm')
+        ds7_list.append(ds7)
+    except Exception as e:
+        pass
+    
+
+    try:
+        ds7['surface_longwave_radiation_downward'] = ds7['strd']
+        ds7 = ds7.drop_vars('strd')
+        ds7_list.append(ds7)
+    except Exception as e:
+        pass
+    
+
+    try:
+        ds7['convective_precipitation'] = ds7['cp']
+        ds7 = ds7.drop_vars('cp')
+        ds7_list.append(ds7)
+    except Exception as e:
+        pass
+    
+
+    try:
+        ds7['snowfall_water_equivalent'] = ds7['sf']
+        ds7 = ds7.drop_vars('sf')
+        ds7_list.append(ds7)
+    except Exception as e:
+        pass
+    
+
+    try:
+        ds7['total_precipitation'] = ds7['tp']
+        ds7 = ds7.drop_vars('tp')
+        ds7_list.append(ds7)
     except Exception as e:
         pass
     
     try:
-        ds['surface_geopotential_height'] = ds7['z']
+        ds7 = _xr.concat(ds7_list, dim="time")
+        ds7 = ds7.isel(time=0)
     except Exception as e:
         pass
     
+
     try:
-        ds['skin_temperature'] = ds7['skt']
+        ds8['low_cloud_cover'] = ds8['lcc']
+        ds8 = ds8.drop_vars('lcc')
     except Exception as e:
         pass
     
+
     try:
-        ds['surface_pressure'] = ds7['sp']
+        ds9['middle_cloud_cover'] = ds9['mcc']
+        ds9 = ds9.drop_vars('mcc')
     except Exception as e:
         pass
     
+
     try:
-        ds['standard_deviation_of_sub_gridscale_orography'] = ds7['sdor']
+        ds10['high_cloud_cover'] = ds10['hcc']
+        ds10 = ds10.drop_vars('hcc')
+        
     except Exception as e:
         pass
     
+    ds11_list = []
+    
+
     try:
-        ds['slope_of_sub_gridscale_orography'] = ds7['slor']
+        ds11['total_column_water'] = ds11['tcw']
+        ds11 = ds11.drop_vars('tcw')
+        ds11_list.append(ds11)
     except Exception as e:
         pass
     
+
     try:
-        ds['surface_shortwave_radiation_downward'] = ds7['ssrd']
+        ds11['total_cloud_cover'] = ds11['tcc']
+        ds11 = ds11.drop_vars('tcc')
+        ds11_list.append(ds11)
+    except Exception as e:
+        pass
+        
+    try:
+        ds11 = _xr.concat(ds11_list, dim="time")
+        ds11 = ds11.isel(time=0)
     except Exception as e:
         pass
     
+
     try:
-        ds['land_sea_mask'] = ds7['lsm']
-    except Exception as e:
-        pass
-    
-    try:
-        ds['surface_longwave_radiation_downward'] = ds7['strd']
-    except Exception as e:
-        pass
-    
-    try:
-        ds['convective_precipitation'] = ds7['cp']
-    except Exception as e:
-        pass
-    
-    try:
-        ds['snowfall_water_equivalent'] = ds7['sf']
-    except Exception as e:
-        pass
-    
-    try:
-        ds['total_precipitation'] = ds7['tp']
-    except Exception as e:
-        pass
-    
-    try:
-        ds['low_cloud_cover'] = ds8['lcc']
-    except Exception as e:
-        pass
-    
-    try:
-        ds['middle_cloud_cover'] = ds9['mcc']
-    except Exception as e:
-        pass
-    
-    try:
-        ds['high_cloud_cover'] = ds10['hcc']
-    except Exception as e:
-        pass
-    
-    try:
-        ds['total_column_water'] = ds11['tcw']
-    except Exception as e:
-        pass
-    
-    try:
-        ds['total_cloud_cover'] = ds11['tcc']
-    except Exception as e:
-        pass
-    
-    try:
-        ds['mslp'] = ds12['msl']
+        ds12['mslp'] = ds12['msl']
+        ds12 = ds12.drop_vars('msl')
     except Exception as e:
         pass
     
     
     _clear_idx_files_in_path(path)
     
+    try:
+    
+        surface_ds_list = [ds0, ds1, ds2, ds3, ds4, ds5, ds6, ds7, ds8, ds9, ds10, ds11, ds12]
+        
+        surface_ds = []
+        for d in surface_ds_list:
+            if d is not None:
+                try:
+                    d = d.isel(time=0)
+                except Exception as e:
+                    pass
+                surface_ds.append(d)
+            else:
+                pass
+        
+        ds = _xr.concat(surface_ds, 
+                        dim='time', 
+                        coords='minimal',
+                        compat='override')
+        
+        try:
+            ds = ds.drop_vars('sot')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('vsw')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('z')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('q')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('u')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('v')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('t')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('w')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('u100')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('v100')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('t2m')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('u10')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('v10')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('strd')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('d2m')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('rowe')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('z')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('skt')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('sp')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('sdor')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('slor')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('ssrd')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('lsm')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('strd')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('cp')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('sf')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('tp')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('lcc')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('mcc')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('hcc')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('tcw')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('tcc')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('msl')
+        except Exception as e:
+            pass
+        
+        try:
+            ds['2m_relative_humidity'] = _relative_humidity(ds['2m_temperature'],
+                                                        ds['2m_dew_point'])
+        except Exception as e:
+            pass
+        
+        try:
+            ds['2m_dew_point_depression'] = ds['2m_temperature'] - ds['2m_dew_point']
+        except Exception as e:
+            pass
+        
+        ds = ds.isel(time=0)
+        
+        try:
+            ds = ds.transpose("number", "step", "latitude", "longitude")
+        except Exception as e:
+            pass
+        
+    except Exception as e:
+        pass
+        
     try:    
         ds = ds.sortby('step')
+        return ds
     except Exception as e:
-        _eccodes_error_intructions()
-        _sys.exit(1)
-    return ds
+       _eccodes_error_message()
+       _sys.exit(1)
+    
+
 
 def ecmwf_ifs_wave_post_processing(path,
                             western_bound, 
@@ -1118,6 +1680,6 @@ def ecmwf_ifs_wave_post_processing(path,
     try:    
         ds = ds.sortby('step')
     except Exception as e:
-        _eccodes_error_intructions()
+        _eccodes_error_message()
         _sys.exit(1)
     return ds

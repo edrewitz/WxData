@@ -6,13 +6,15 @@ This file hosts the clients that download, pre-process and post-process AIGFS Da
 
 import wxdata.client.client as _client
 import wxdata.post_processors.aigfs_post_processing as _aigfs_post_processing
-import os as _os
 import warnings as _warnings
 _warnings.filterwarnings('ignore')
 
 from wxdata.aigfs.url_scanners import aigfs_url_scanner as _aigfs_url_scanner
 from wxdata.aigfs.paths import build_aigfs_directory as _build_aigfs_directory
-from wxdata.utils.file_funcs import custom_branch as _custom_branch
+from wxdata.utils.file_funcs import(
+    custom_branch as _custom_branch,
+    clear_old_data as _clear_old_data
+)
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
 from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
 from wxdata.utils.recycle_bin import(
@@ -36,7 +38,8 @@ def aigfs(final_forecast_hour=384,
              custom_directory=None,
              chunk_size=8192,
              notifications='off',
-             type_of_level='pressure'):
+             type_of_level='pressure',
+             clear_data=False):
     
     """
     This function downloads, pre-processes and post-processes the latest AIGFS Data. 
@@ -144,6 +147,11 @@ def aigfs(final_forecast_hour=384,
     else:
         path = _custom_branch(custom_directory)
         
+    if clear_data == True:
+        _clear_old_data(path)
+    else:
+        pass
+        
     url, file, run = _aigfs_url_scanner(final_forecast_hour,
                                                         proxies,
                                                         type_of_level)
@@ -158,11 +166,7 @@ def aigfs(final_forecast_hour=384,
     if download == True:
         print(f"Downloading AIGFS {type_of_level.upper()} Files...")
         
-        try:
-            for file in _os.listdir(f"{path}"):
-                _os.remove(f"{path}/{file}")
-        except Exception as e:
-            pass
+        _clear_old_data(path)
         
         if run < 10:
             run = f"0{run}"

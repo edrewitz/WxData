@@ -6,7 +6,6 @@ This file hosts the clients that download, pre-process and post-process AIGEFS D
 
 import wxdata.client.client as _client
 import wxdata.post_processors.aigefs_post_processing as _aigefs_post_processing
-import os as _os
 import warnings as _warnings
 _warnings.filterwarnings('ignore')
 
@@ -23,7 +22,9 @@ from wxdata.aigefs.paths import(
 
 from wxdata.utils.file_funcs import(
     custom_branches as _custom_branches,
-    custom_branch as _custom_branch
+    custom_branch as _custom_branch,
+    clear_old_data as _clear_old_data,
+    clear_old_ensemble_data as _clear_old_ensemble_data
 )
 
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
@@ -50,7 +51,8 @@ def aigefs_pressure_members(final_forecast_hour=384,
             convert_to='celsius',
             custom_directory=None,
             chunk_size=8192,
-            notifications='off'):
+            notifications='off',
+            clear_data=False):
     
     """
     This function downloads, pre-processes and post-processes the latest pressure parameter dataset of the AIGEFS and bins the files to specific folders based on ensemble number.
@@ -137,6 +139,11 @@ def aigefs_pressure_members(final_forecast_hour=384,
     else:
         paths = _custom_branches(custom_directory)
         
+    if clear_data == True:
+        _clear_old_ensemble_data(paths)
+    else:
+        pass
+        
     urls, file, run = _aigefs_pres_members_url_scanner(final_forecast_hour,
                             proxies,
                             members)
@@ -150,12 +157,7 @@ def aigefs_pressure_members(final_forecast_hour=384,
     if download == True:
         print(f"Downloading AIGEFS Pressure Parameter Files...")
         
-        try:
-            for path in paths:
-                for file in _os.listdir(f"{path}"):
-                    _os.remove(f"{path}/{file}")
-        except Exception as e:
-            pass
+        _clear_old_ensemble_data(paths)
          
         if run < 10:
             run = f"0{run}"
@@ -225,7 +227,8 @@ def aigefs_surface_members(final_forecast_hour=384,
             convert_to='celsius',
             custom_directory=None,
             chunk_size=8192,
-            notifications='off'):
+            notifications='off',
+            clear_data=False):
     
     """
     This function downloads, pre-processes and post-processes the latest surface parameter dataset of the AIGEFS and bins the files to specific folders based on ensemble number.
@@ -310,6 +313,11 @@ def aigefs_surface_members(final_forecast_hour=384,
     else:
         paths = _custom_branches(custom_directory)
         
+    if clear_data == True:
+        _clear_old_ensemble_data(paths)
+    else:
+        pass
+    
     urls, file, run = _aigefs_sfc_members_url_scanner(final_forecast_hour,
                             proxies,
                             members)
@@ -323,12 +331,7 @@ def aigefs_surface_members(final_forecast_hour=384,
     if download == True:
         print(f"Downloading AIGEFS Surface Parameter Files...")
         
-        try:
-            for path in paths:
-                for file in _os.listdir(f"{path}"):
-                    _os.remove(f"{path}/{file}")
-        except Exception as e:
-            pass
+        _clear_old_ensemble_data(paths)
          
         if run < 10:
             run = f"0{run}"
@@ -397,7 +400,8 @@ def aigefs_single(final_forecast_hour=384,
                     chunk_size=8192,
                     notifications='off',
                     cat='mean',
-                    type_of_level='pressure'):                   
+                    type_of_level='pressure',
+                    clear_data=False):                   
     
     """
     This function downloads, pre-processes and post-processes the latest AIGEFS Ensemble Mean or Ensemble Spread for either the Pressure or Surface Parameters. 
@@ -519,6 +523,11 @@ def aigefs_single(final_forecast_hour=384,
     else:
         path = _custom_branch(custom_directory)
         
+    if clear_data == True:
+        _clear_old_data(path)
+    else:
+        pass
+        
     url, file, run = _aigefs_single_url_scanner(final_forecast_hour,
                                                         proxies,
                                                         cat,
@@ -533,11 +542,7 @@ def aigefs_single(final_forecast_hour=384,
     if download == True:
         print(f"Downloading AIGEFS {type_of_level.upper()} {cat.upper()} Files...")
         
-        try:
-            for file in _os.listdir(f"{path}"):
-                _os.remove(f"{path}/{file}")
-        except Exception as e:
-            pass
+        _clear_old_data(path)
         
         if run < 10:
             run = f"0{run}"

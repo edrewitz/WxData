@@ -40,7 +40,8 @@ def _get_csv_column_names_csv_module(file_path):
         header = next(reader) 
         return header
 
-def download_metar_data(clear_recycle_bin=False):
+def download_metar_data(clear_recycle_bin=False,
+                        proxies=None):
     
     """
     Downloads the latest METAR Data from NOAA/AWC and returns a Pandas DataFrame.
@@ -53,6 +54,9 @@ def download_metar_data(clear_recycle_bin=False):
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
         This setting is to help preserve memory on the machine. 
         
+    2) proxies (String or None) - Default=None. If the user is using a VPN/PROXY server connection, the user must pass a value for
+        proxies in the form of a string. Here is an example: proxies='http://address:port'
+        
 
     Returns:        
     pd.DataFrame: A DataFrame containing the METAR data.
@@ -63,6 +67,12 @@ def download_metar_data(clear_recycle_bin=False):
         _clear_trash_bin_linux()
     else:
         pass
+    
+    if proxies == None:
+        pass
+    else:
+        _os.environ['http_proxy'] = proxies
+        _os.environ['https_proxy'] = proxies
     
     try:
         _request.urlretrieve(f"https://aviationweather.gov/data/cache/metars.cache.csv.gz", f"metars.cache.csv.gz")

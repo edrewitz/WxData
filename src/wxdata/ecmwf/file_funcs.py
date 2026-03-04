@@ -39,20 +39,10 @@ def build_directory(model, cat):
     model = model.upper()
     cat = cat.upper()
     
-    if os.path.exists(f"ECMWF"):
+    try:
+        os.makedirs(f"ECMWF/{model.upper()}/{cat.upper()}")
+    except Exception as e:
         pass
-    else:
-        os.mkdir(f"ECMWF")
-    
-    if os.path.exists(f"ECMWF/{model}"):
-        pass
-    else:
-        os.mkdir(f"ECMWF/{model}")
-        
-    if os.path.exists(f"ECMWF/{model}/{cat}"):
-        pass
-    else:
-        os.mkdir(f"ECMWF/{model}/{cat}")
         
 
 def clear_idx_files(path):
@@ -67,18 +57,6 @@ def clear_idx_files(path):
                 os.remove(f"{path}/{file}")
             else:
                 pass
-    except Exception as e:
-        pass
-    
-def clear_old_data(path):
-    
-    """
-    This function clears old data in a specified path.     
-    """
-    
-    try:
-        for file in os.listdir(f"{path}"):
-            os.remove(f"{path}/{file}")
     except Exception as e:
         pass
     

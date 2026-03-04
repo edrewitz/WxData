@@ -67,7 +67,8 @@ def linear_anti_aliasing(x,
     
     return x_point_arr, y_point_arr
 
-def _station_coords(station_id):
+def _station_coords(station_id,
+                    proxies):
     
     """
     This function will retrieve the latitude/longitude point for an ASOS Station ID.
@@ -75,6 +76,9 @@ def _station_coords(station_id):
     Required Arguments: 
     
     1) station_id (String) - The 4 letter ASOS station ID.
+    
+    2) proxies (String or None) - If the user is using a VPN/PROXY server connection, the user must pass a value for
+        proxies in the form of a string. Here is an example: proxies='http://address:port'
     
     Optional Arguments: None
     
@@ -94,6 +98,11 @@ def _station_coords(station_id):
     if _os.path.exists(f"Airport Codes/airport-codes.csv"):
         pass
     else:
+        if proxies == None:
+            pass
+        else:
+            _os.environ['http_proxy'] = proxies
+            _os.environ['https_proxy'] = proxies
         _request.urlretrieve(f"https://raw.githubusercontent.com/Unidata/MetPy/refs/heads/main/staticdata/airport-codes.csv", f"Airport Codes/airport-codes.csv")
         
     df = _pd.read_csv(f"Airport Codes/airport-codes.csv")
@@ -116,7 +125,8 @@ def pixel_query(ds,
                 longitude=None,
                 station_id=None,
                 coord_names=['latitude',
-                            'longitude']):
+                            'longitude'],
+                proxies=None):
     
     """
     This function queries for the nearest pixel to a user specified point of (latitude/longitude). 
@@ -146,6 +156,9 @@ def pixel_query(ds,
     
     4) coord_names (String List) - Default=['latitude', 'longitude'] A list of the coordinate names (i.e. 'longitude/latitude', 'lon'/'lat', 'easting'/'northing')
     
+    5) proxies (String or None) - Default=None. If the user is using a VPN/PROXY server connection, the user must pass a value for
+        proxies in the form of a string. Here is an example: proxies='http://address:port'
+    
     Returns
     -------
     
@@ -165,7 +178,8 @@ def pixel_query(ds,
 
     else:
         
-        longitude, latitude = _station_coords(station_id)
+        longitude, latitude = _station_coords(station_id,
+                                              proxies)
         
         if coord_names[0] == 'latitude' and coord_names[1] == 'longitude':
             ds = ds.sel(longitude=longitude, latitude=latitude, method='nearest')
@@ -184,7 +198,8 @@ def line_query(ds,
                             'longitude'],
                surface_pressure_key='surface_pressure',
                north_to_south=False,
-               pressure_level_key='isobaricInhPa'):
+               pressure_level_key='isobaricInhPa',
+               proxies=None):
     
     """
     This function is to query for a line that connects a starting_point (A) with an ending_point (B)
@@ -217,6 +232,9 @@ def line_query(ds,
        
     4) pressure_level_key (String) - Default='isobaricInhPa'. The key for the pressure level. 
     
+    5) proxies (String or None) - Default=None. If the user is using a VPN/PROXY server connection, the user must pass a value for
+            proxies in the form of a string. Here is an example: proxies='http://address:port'
+    
     
     Returns
     -------
@@ -244,8 +262,10 @@ def line_query(ds,
     
     if type(starting_point) == str and type(ending_point) == str:
         
-        longitude_1, latitude_1 = _station_coords(starting_point)
-        longitude_2, latitude_2 = _station_coords(ending_point)
+        longitude_1, latitude_1 = _station_coords(starting_point,
+                                                  proxies)
+        longitude_2, latitude_2 = _station_coords(ending_point,
+                                                  proxies)
         
         coords_1 = (latitude_1, longitude_1)
         coords_2 = (latitude_2, longitude_2)

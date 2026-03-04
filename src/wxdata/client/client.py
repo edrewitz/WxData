@@ -19,6 +19,7 @@ from datetime import(
     datetime as _datetime, 
     timedelta as _timedelta
 )
+from wxdata.utils.progress_bar import progress_bar as _progress_bar
 from wxdata.utils.xmacis2_cleanup import clean_pandas_dataframe as _clean_pandas_dataframe
 from wxdata.utils.recycle_bin import(
     
@@ -106,9 +107,10 @@ def get_gridded_data(url,
         try:
             with _requests.get(url, stream=True) as r:
                 r.raise_for_status() 
-                with open(f"{path}/{filename}", 'wb') as f:
-                    for chunk in r.iter_content(chunk_size=chunk_size):
-                        f.write(chunk)
+                _progress_bar(r,
+                                path,
+                                filename,
+                                blocksize=chunk_size)
             if notifications == 'on':
                 print(f"Successfully saved {filename} to f:{path}")
             else:
@@ -125,9 +127,10 @@ def get_gridded_data(url,
                 try:
                     with _requests.get(url, stream=True) as r:
                         r.raise_for_status() 
-                        with open(f"{path}/{filename}", 'wb') as f:
-                            for chunk in r.iter_content(chunk_size=chunk_size):
-                                f.write(chunk)
+                        _progress_bar(r,
+                                        path,
+                                        filename,
+                                        blocksize=chunk_size)
                     if notifications == 'on':
                         print(f"Successfully saved {filename} to f:{path}")  
                     break
@@ -145,9 +148,10 @@ def get_gridded_data(url,
         try:
             with _requests.get(url, stream=True, proxies=proxies) as r:
                 r.raise_for_status() 
-                with open(f"{path}/{filename}", 'wb') as f:
-                    for chunk in r.iter_content(chunk_size=chunk_size):
-                        f.write(chunk)
+                _progress_bar(r,
+                                path,
+                                filename,
+                                blocksize=chunk_size)
             if notifications == 'on':
                 print(f"Successfully saved {filename} to f:{path}")
             else:
@@ -164,9 +168,10 @@ def get_gridded_data(url,
                 try:
                     with _requests.get(url, stream=True, proxies=proxies) as r:
                         r.raise_for_status() 
-                        with open(f"{path}/{filename}", 'wb') as f:
-                            for chunk in r.iter_content(chunk_size=chunk_size):
-                                f.write(chunk)
+                        _progress_bar(r,
+                                        path,
+                                        filename,
+                                        blocksize=chunk_size)
                     if notifications == 'on':
                         print(f"Successfully saved {filename} to f:{path}")  
                     break

@@ -14,6 +14,52 @@ This file hosts the functions that do the following:
 import os
 import gzip
 
+def clear_old_ensemble_data(paths):
+    
+    """
+    This function clears old data for specific paths - usually used for most ensemble data.
+    
+    Required Arguments:
+    
+    1) paths (String List) - A list of file paths.
+    
+    Optional Arguments: None
+    
+    Returns
+    -------
+    
+    Clears out old data.     
+    """
+    try:
+        for path in paths:
+            for file in os.listdir(f"{path}"):
+                os.remove(f"{path}/{file}")
+    except Exception as e:
+        pass
+
+def clear_old_data(path):
+    
+    """
+    This function clears old data in a specified path.    
+    
+    Required Arguments:
+    
+    1) path (String) - The file path. 
+    
+    Optional Arguments: None
+    
+    Returns
+    -------
+    
+    Clears out old data.  
+    """
+    
+    try:
+        for file in os.listdir(f"{path}"):
+            os.remove(f"{path}/{file}")
+    except Exception as e:
+        pass
+
 def extract_gzipped_file(compressed_file, 
                          decompressed_file):
     

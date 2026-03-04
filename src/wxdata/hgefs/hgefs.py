@@ -6,7 +6,6 @@ This file hosts the clients that download, pre-process and post-process HGEFS Da
 
 import wxdata.client.client as _client
 import wxdata.post_processors.hgefs_post_processing as _hgefs_post_processing
-import os as _os
 import warnings as _warnings
 _warnings.filterwarnings('ignore')
 
@@ -14,7 +13,10 @@ from wxdata.hgefs.url_scanner import hgefs_url_scanner as _hgefs_url_scanner
 
 from wxdata.hgefs.paths import build_directory as _build_directory
 
-from wxdata.utils.file_funcs import custom_branch as _custom_branch
+from wxdata.utils.file_funcs import(
+    custom_branch as _custom_branch,
+    clear_old_data as _clear_old_data
+)
 
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
 from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
@@ -39,7 +41,8 @@ def hgefs_mean_spread(final_forecast_hour=240,
                     chunk_size=8192,
                     notifications='off',
                     cat='mean',
-                    type_of_level='pressure'):                   
+                    type_of_level='pressure',
+                    clear_data=False):                   
     
     """
     This function downloads, pre-processes and post-processes the latest HGEFS Ensemble Mean or Ensemble Spread for either the Pressure or Surface Parameters. 
@@ -161,6 +164,11 @@ def hgefs_mean_spread(final_forecast_hour=240,
     else:
         path = _custom_branch(custom_directory)
         
+    if clear_data == True:
+        _clear_old_data(path)
+    else:
+        pass
+        
     url, file, run = _hgefs_url_scanner(final_forecast_hour,
                                                         proxies,
                                                         cat,
@@ -175,11 +183,7 @@ def hgefs_mean_spread(final_forecast_hour=240,
     if download == True:
         print(f"Downloading HGEFS {type_of_level.upper()} {cat.upper()} Files...")
         
-        try:
-            for file in _os.listdir(f"{path}"):
-                _os.remove(f"{path}/{file}")
-        except Exception as e:
-            pass
+        _clear_old_data(path)
         
         if run < 10:
             run = f"0{run}"

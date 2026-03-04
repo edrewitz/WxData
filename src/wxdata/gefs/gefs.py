@@ -5,7 +5,6 @@ This file hosts functions that download various types of GEFS Data
 """
 
 import wxdata.client.client as _client
-import os as _os
 import warnings as _warnings
 import wxdata.post_processors.gefs_post_processing as _gefs_post_processing
 _warnings.filterwarnings('ignore')
@@ -34,7 +33,8 @@ from wxdata.gefs.process import(
 from wxdata.utils.file_funcs import(
      custom_branch as _custom_branch,
      custom_branches as _custom_branches,
-     clear_gefs_idx_files as _clear_gefs_idx_files
+     clear_gefs_idx_files as _clear_gefs_idx_files,
+     clear_old_ensemble_data as _clear_old_ensemble_data
 )
 
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
@@ -92,7 +92,8 @@ def gefs_0p50(cat='mean',
             convert_to='celsius',
             custom_directory=None,
             chunk_size=8192,
-            notifications='off'):
+            notifications='off',
+            clear_data=False):
     
     """
     This function downloads the latest GEFS0P50 data for a region specified by the user
@@ -282,6 +283,11 @@ def gefs_0p50(cat='mean',
             paths = _custom_branch(custom_directory)
         
         _clear_gefs_idx_files(paths)
+        
+    if clear_data == True:
+        _clear_old_ensemble_data(paths)
+    else:
+        pass
     
     urls, filenames, run = _gefs_0p50_url_scanner(cat, 
                                             final_forecast_hour,
@@ -308,12 +314,7 @@ def gefs_0p50(cat='mean',
     if download == True:
         print(f"Downloading GEFS0P50 {cat.upper()}...")
         
-        try:
-            for path in paths:
-                for file in _os.listdir(f"{path}"):
-                    _os.remove(f"{path}/{file}")
-        except Exception as e:
-            pass
+        _clear_old_ensemble_data(paths)
         
         if cat != 'members':
             for path in paths:
@@ -464,7 +465,8 @@ def gefs_0p50_secondary_parameters(cat='mean',
              convert_to='celsius',
             custom_directory=None,
             chunk_size=8192,
-            notifications='off'):
+            notifications='off',
+            clear_data=False):
                         
     
     """
@@ -759,6 +761,11 @@ def gefs_0p50_secondary_parameters(cat='mean',
             paths = _custom_branch(custom_directory)
         
         _clear_gefs_idx_files(paths)
+        
+    if clear_data == True:
+        _clear_old_ensemble_data(paths)
+    else:
+        pass
     
     urls, filenames, run = _gefs_0p50_secondary_parameters_url_scanner(cat, 
                                             final_forecast_hour,
@@ -785,12 +792,7 @@ def gefs_0p50_secondary_parameters(cat='mean',
     if download == True:
         print(f"Downloading GEFS0P50 {cat.upper()} Secondary Parameters...")
 
-        try:
-            for path in paths:
-                for file in _os.listdir(f"{path}"):
-                    _os.remove(f"{path}/{file}")
-        except Exception as e:
-            pass        
+        _clear_old_ensemble_data(paths)       
                     
         if cat != 'members' and cat != 'mean' and cat != 'spread':
             for path in paths:
@@ -900,7 +902,8 @@ def gefs_0p25(cat='mean',
              convert_to='celsius',
              custom_directory=None,
              chunk_size=8192,
-             notifications='off'):
+             notifications='off',
+             clear_data=False):
     
     """
     This function downloads the latest GEFS0P25 data for a region specified by the user
@@ -1084,6 +1087,11 @@ def gefs_0p25(cat='mean',
             paths = _custom_branch(custom_directory)
         
         _clear_gefs_idx_files(paths)
+        
+    if clear_data == True:
+        _clear_old_ensemble_data(paths)
+    else:
+        pass
     
     urls, filenames, run = _gefs_0p25_url_scanner(cat, 
                                             final_forecast_hour,
@@ -1110,12 +1118,7 @@ def gefs_0p25(cat='mean',
     if download == True:
         print(f"Downloading GEFS0P25 {cat.upper()}...")
 
-        try:
-            for path in paths:
-                for file in _os.listdir(f"{path}"):
-                    _os.remove(f"{path}/{file}")
-        except Exception as e:
-            pass
+        _clear_old_ensemble_data(paths)
         
         if cat != 'members':
             for path in paths:

@@ -257,7 +257,7 @@ def ecmwf_ifs(final_forecast_hour=144,
 
     7) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-       proxies=None ---> proxies="http://your-proxy-address:port"
+       proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_ifs(proxies=proxies)
     
     8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
@@ -277,12 +277,86 @@ def ecmwf_ifs(final_forecast_hour=144,
     
     13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    14) source (String) - The data server choice. Default='ecmwf'. When set to 'ecmwf' data is pulled from ecmwf-opendata.
+    14) source (String) - Default='ecmwf'. The data server choice. When set to 'ecmwf' data is pulled from ecmwf-opendata.
         To switch to Amazon AWS, switch source='aws'. 
         
-    15) 
+    15) level_type (String) - Default='surface'. The level of the parameters being queried. 
     
-    16) 
+        level_types
+        -----------
+        
+        1) 'surface'
+        2) 'pressure'
+        3) 'soil
+    
+    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+        
+    17) variables (String List) - Default is all variables. The list of variable names in plain-language. 
+    
+        variables
+        ---------
+        
+        'Geopotential (step 0)'
+        'Standard deviation of sub-gridscale orography (step 0)'
+        '10-meter u-wind component'
+        '10-meter v-wind component'
+        '100-meter u-wind component'
+        '100-meter v-wind component'
+        'maximum 10-meter wind gust step 0'
+        'maximum 10-meter wind gust steps 3-144'
+        '2-meter temperature'
+        '2-meter dewpoint temperature'
+        'mean sea level pressure'
+        'mean zero-crossing wave period'
+        'mean wave direction'
+        'mean wave period'
+        'peak wave period'
+        'significant wave height'
+        'runoff'
+        'total precipitation'
+        'surface pressure'
+        'total column vertically integrated water vapor'
+        'total cloud cover'
+        'snow depth water equivalent'
+        'snowfall water equivalent'
+        'land sea mask'
+        'volumetric soil moisture content'
+        'soil temperature'
+        'most unstable cape'
+        'snow albedo'
+        '3-hour minimum 2-meter temperature'
+        '3-hour maximum 2-meter temperature'
+        '6-hour minimum 2-meter temperature'
+        '6-hour maximum 2-meter temperature'
+        'total precipitation rate'
+        'precipitation type'
+        'top net longwave thermal radiation'
+        'snow density'
+        'surface net longwave thermal radiation'
+        'surface net shortwave solar radiation'
+        'surface shortwave radiation downward'
+        'surface longwave radiation downward'
+        'northward turbulent surface stress'
+        'eastward turbulent surface stress'
+        'eastward surface sea water velocity'
+        'northward surface sea water velocity'
+        'sea ice thickness'
+        'sea surface height'
+        'divergence'
+        'geopotential height'
+        'specific humidity'
+        'relative humidity'
+        'temperature'
+        'u-wind component'
+        'v-wind component'
+        'vertical velocity'
+        'relative vorticity'
+        
+    18) levels (Integer List) - Default=[1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50]. 
+        When level_type='pressure', this is the list of the pressure levels. 
+        
+        Example: User wants only the 500 mb level: levels=[500]
         
     Returns
     -------
@@ -791,13 +865,97 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
     
     13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    14) source (String) - The data server choice. Default='ecmwf'. When set to 'ecmwf' data is pulled from ecmwf-opendata.
+    14) source (String) - Default='ecmwf'. The data server choice. When set to 'ecmwf' data is pulled from ecmwf-opendata.
         To switch to Amazon AWS, switch source='aws'. 
         
-    15) 
+    15) level_type (String) - Default='surface'. The level of the parameters being queried. 
     
-    16) 
+        level_types
+        -----------
         
+        1) 'surface'
+        2) 'pressure'
+        3) 'soil
+    
+    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+        
+    17) variables (String List) - Default is all variables. The list of variable names in plain-language. 
+    
+        variables
+        ---------
+        
+        'Geopotential (step 0)'
+        'Standard deviation of sub-gridscale orography (step 0)'
+        '10-meter u-wind component'
+        '10-meter v-wind component'
+        '100-meter u-wind component'
+        '100-meter v-wind component'
+        'maximum 10-meter wind gust step 0'
+        'maximum 10-meter wind gust steps 3-144'
+        '2-meter temperature'
+        '2-meter dewpoint temperature'
+        'mean sea level pressure'
+        'mean zero-crossing wave period'
+        'mean wave direction'
+        'mean wave period'
+        'peak wave period'
+        'significant wave height'
+        'runoff'
+        'total precipitation'
+        'surface pressure'
+        'total column vertically integrated water vapor'
+        'total cloud cover'
+        'snow depth water equivalent'
+        'snowfall water equivalent'
+        'land sea mask'
+        'volumetric soil moisture content'
+        'soil temperature'
+        'most unstable cape'
+        'snow albedo'
+        '3-hour minimum 2-meter temperature'
+        '3-hour maximum 2-meter temperature'
+        '6-hour minimum 2-meter temperature'
+        '6-hour maximum 2-meter temperature'
+        'total precipitation rate'
+        'precipitation type'
+        'top net longwave thermal radiation'
+        'snow density'
+        'surface net longwave thermal radiation'
+        'surface net shortwave solar radiation'
+        'surface shortwave radiation downward'
+        'surface longwave radiation downward'
+        'northward turbulent surface stress'
+        'eastward turbulent surface stress'
+        'eastward surface sea water velocity'
+        'northward surface sea water velocity'
+        'sea ice thickness'
+        'sea surface height'
+        'divergence'
+        'geopotential height'
+        'specific humidity'
+        'relative humidity'
+        'temperature'
+        'u-wind component'
+        'v-wind component'
+        'vertical velocity'
+        'relative vorticity'
+        
+    18) levels (Integer List) - Default=[1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50]. 
+        When level_type='pressure', this is the list of the pressure levels. 
+        
+        Example: User wants only the 500 mb level: levels=[500]
+        
+    19) members (Integer List) - Default=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                                          11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+                                          21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+                                          31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 
+                                          41, 42, 43, 44, 45, 46, 47, 48, 49, 50]
+                                          
+        The ECMWF IFS Ensemble consists of 50 members. 
+        
+        Example: User wants only the first 5 members: members=[1,2,3,4,5]
+            
     Returns
     -------
     
@@ -851,6 +1009,8 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
     '100m_v_wind_component'
     '2m_dew_point'
     '2m_relative_humidity'
+    '3_hr_maximum_2m_temperature'
+    '3_hr_minimum_2m_temperature'
     
     """
     

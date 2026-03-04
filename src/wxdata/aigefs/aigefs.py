@@ -110,6 +110,9 @@ def aigefs_pressure_members(final_forecast_hour=384,
     
     16) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
+    17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+    
     
     Returns
     -------
@@ -285,6 +288,9 @@ def aigefs_surface_members(final_forecast_hour=384,
     15) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
     16) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    
+    17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
     
     Returns
@@ -472,6 +478,9 @@ def aigefs_single(final_forecast_hour=384,
         
         1) pressure
         2) surface
+        
+    18) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
     
     Returns

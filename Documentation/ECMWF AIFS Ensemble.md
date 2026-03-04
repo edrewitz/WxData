@@ -67,7 +67,7 @@
                       31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 
                       41, 42, 43, 44, 45, 46, 47, 48, 49, 50]):***
 
-    This function scans for the latest ECMWF IFS dataset. If the dataset on the computer is old, the old data will be deleted
+    This function scans for the latest ECMWF AIFS Ensemble dataset. If the dataset on the computer is old, the old data will be deleted
     and the new data will be downloaded. 
     
     1) final_forecast_hour (Integer) - Default = 360. The final forecast hour the user wishes to download. The ECMWF IFS

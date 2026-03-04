@@ -171,7 +171,9 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 1. [ECMWF IFS](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF_IFS.md)
 2. [ECMWF IFS Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20IFS%20Ensemble.md#ecmwf-ifs-ensemble)
 3. [ECMWF AIFS](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF_AIFS.md)
-4. [ECMWF IFS Wave](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF_IFS_Wave.md)
+4. [ECMWF AIFS Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20AIFS%20Ensemble.md#ecmwf-aifs-ensemble)
+5. [ECMWF IFS Wave](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF_IFS_Wave.md)
+6. [ECMWF IFS Wave Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20IFS%20Wave%20Ensemble.md#ecmwf-ifs-wave-ensemble)
    
 ***Real-Time Mesoscale Analysis (RTMA)***
 1. [RTMA](https://github.com/edrewitz/wxdata/blob/main/Documentation/rtma.md#real-time-mesoscale-analysis-rtma)

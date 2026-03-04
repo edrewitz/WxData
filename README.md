@@ -210,9 +210,9 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 1. [HGEFS Post-Processing](https://github.com/edrewitz/WxData/blob/main/Documentation/hgefs_post_processing.md#hybrid-global-ensemble-forecast-system-hgefs-post-processing)
 
 ***ECMWF Post-Processing***
-1. [ECMWF IFS and ECMWF High Resolution IFS](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20IFS%20Post%20Processing.md)
-2. [ECMWF AIFS](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20AIFS%20Post%20Processing.md)
-3. [ECMWF IFS Wave](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20IFS%20Wave%20Post%20Processing.md)
+1. [ECMWF IFS and IFS Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20IFS%20Post%20Processing.md)
+2. [ECMWF AIFS and AIFS Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20AIFS%20Post%20Processing.md)
+3. [ECMWF IFS Wave and IFS Wave Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20IFS%20Wave%20Post%20Processing.md)
 
 ***Real-Time Mesoscale Analysis Post-Processing***
 1. [RTMA](https://github.com/edrewitz/WxData/blob/main/Documentation/RTMA%20Post%20Processing.md)

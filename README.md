@@ -211,8 +211,8 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 ***ECMWF Post-Processing***
 1. [ECMWF IFS and IFS Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20IFS%20Post%20Processing.md#ecmwf-ifs-and-ifs-ensemble-post-processing)
-2. [ECMWF AIFS and AIFS Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20AIFS%20Post%20Processing.md)
-3. [ECMWF IFS Wave and IFS Wave Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20IFS%20Wave%20Post%20Processing.md)
+2. [ECMWF AIFS and AIFS Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20AIFS%20Post%20Processing.md#ecmwf-aifs-and-aifs-ensemble-post-processing)
+3. [ECMWF IFS Wave and IFS Wave Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20IFS%20Wave%20Post%20Processing.md#ecmwf-ifs-wave-and-ifs-wave-ensemble-post-processing)
 
 ***Real-Time Mesoscale Analysis Post-Processing***
 1. [RTMA](https://github.com/edrewitz/WxData/blob/main/Documentation/RTMA%20Post%20Processing.md)

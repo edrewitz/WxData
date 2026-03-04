@@ -1,4 +1,4 @@
-# ECMWF AIFS Post-Processing
+# ECMWF AIFS and AIFS Ensemble Post-Processing
 
 ***def ecmwf_aifs_post_processing(path,
                             western_bound, 

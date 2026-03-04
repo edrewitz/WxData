@@ -170,7 +170,6 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 ***ECMWF Open Data***
 1. [ECMWF IFS](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF_IFS.md)
 2. [ECMWF AIFS](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF_AIFS.md)
-3. [ECMWF High Resolution IFS](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF_High_Res_IFS.md)
 4. [ECMWF IFS Wave](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF_IFS_Wave.md)
    
 ***Real-Time Mesoscale Analysis (RTMA)***
@@ -211,9 +210,9 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 1. [HGEFS Post-Processing](https://github.com/edrewitz/WxData/blob/main/Documentation/hgefs_post_processing.md#hybrid-global-ensemble-forecast-system-hgefs-post-processing)
 
 ***ECMWF Post-Processing***
-1. [ECMWF IFS and ECMWF High Resolution IFS](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20IFS%20Post%20Processing.md)
-2. [ECMWF AIFS](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20AIFS%20Post%20Processing.md)
-3. [ECMWF IFS Wave](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20IFS%20Wave%20Post%20Processing.md)
+1. [ECMWF IFS and IFS Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20IFS%20Post%20Processing.md#ecmwf-ifs-and-ifs-ensemble-post-processing)
+2. [ECMWF AIFS and AIFS Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20AIFS%20Post%20Processing.md#ecmwf-aifs-and-aifs-ensemble-post-processing)
+3. [ECMWF IFS Wave and IFS Wave Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20IFS%20Wave%20Post%20Processing.md#ecmwf-ifs-wave-and-ifs-wave-ensemble-post-processing)
 
 ***Real-Time Mesoscale Analysis Post-Processing***
 1. [RTMA](https://github.com/edrewitz/WxData/blob/main/Documentation/RTMA%20Post%20Processing.md)
@@ -238,6 +237,9 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 ***Line Query***
 1. [line_query](https://github.com/edrewitz/WxData/blob/main/Documentation/line_query.md)
+
+***Linear Anti-Aliasing Between Two Points***
+1. [linear_anti_aliasing](https://github.com/edrewitz/WxData/blob/main/Documentation/linear_anti_aliasing.md#linear-anti-aliasing-between-points)
 
 ***Running External Python Scripts In Your Workflow***
 

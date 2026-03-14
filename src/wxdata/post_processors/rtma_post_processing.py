@@ -36,7 +36,11 @@ def _shift_longitude(ds):
     A RTMA dataset with longitude from -180 to 180    
     """
     
-    ds['longitude'] = ((ds['longitude'] + 180.0) % 360.0) - 180.0
+    lon = ((ds['longitude'].values + 180.0) % 360.0) - 180.0
+    
+    ds = ds.assign(
+    longitude=(("y", "x"), lon)
+    )
     
     return ds
 

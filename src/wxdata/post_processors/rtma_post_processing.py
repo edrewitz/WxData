@@ -15,6 +15,7 @@ _warnings.filterwarnings('ignore')
 from wxdata.utils.exceptions import eccodes_error_message as _eccodes_error_message
 from wxdata.calc.thermodynamics import relative_humidity as _relative_humidity
 from wxdata.utils.file_funcs import clear_idx_files_in_path as _clear_idx_files_in_path
+from wxdata.utils.coords import shift_longitude as _shift_longitude
 
 _sys.tracebacklimit = 0
 _logging.disable()
@@ -293,9 +294,13 @@ def process_rtma_data(filename,
         
         _clear_idx_files_in_path(directory)
         
+        ds1 = _shift_longitude(ds1)
+        
         return ds1
         
     else:
+        
+        ds = _shift_longitude(ds)
         
         _clear_idx_files_in_path(directory)
     

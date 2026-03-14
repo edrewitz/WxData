@@ -14,11 +14,13 @@ import warnings
 warnings.filterwarnings('ignore')
 
 from wxdata.calc.thermodynamics import relative_humidity
+from wxdata.utils.coords import shift_longitude as shift_longitude_regrid
+from wxdata.utils.file_funcs import clear_idx_files_in_path as clear_idx_files_in_path
 
 sys.tracebacklimit = 0
 logging.disable()
 
-def _shift_longitude(ds):
+def shift_longitude(ds):
     
     """
     This function shifts the longitude of dimension (x,y) from 0 to 360 to -180 to 180
@@ -309,10 +311,10 @@ def process_rtma_data(path,
         ds1['10m_wind_speed'] = mpcalc.smooth_gaussian(ds1['10m_wind_speed'], n=8)
         ds1['10m_wind_gust'] = mpcalc.smooth_gaussian(ds1['10m_wind_gust'], n=8)
         
-        ds1 = _shift_longitude(ds)
+        ds1 = shift_longitude_regrid(ds1)
         return ds1
         
     else:
     
-        ds = _shift_longitude(ds)
+        ds = shift_longitude(ds)
         return ds

@@ -18,6 +18,31 @@ from wxdata.calc.thermodynamics import relative_humidity
 sys.tracebacklimit = 0
 logging.disable()
 
+def _shift_longitude(ds):
+    
+    """
+    This function shifts the longitude of dimension (x,y) from 0 to 360 to -180 to 180
+    
+    Required Arguments:
+    
+    1) ds (xarray.array) - The xarray data array of RTMA Data
+    
+    Optional Arguments: None
+    
+    Returns
+    -------
+    
+    A RTMA dataset with longitude from -180 to 180    
+    """
+    
+    lon = ((ds['longitude'].values + 180.0) % 360.0) - 180.0
+    
+    ds = ds.assign(
+    longitude=(("y", "x"), lon)
+    )
+    
+    return ds
+
 def rows_and_cols(model):
     
     """
@@ -284,8 +309,10 @@ def process_rtma_data(path,
         ds1['10m_wind_speed'] = mpcalc.smooth_gaussian(ds1['10m_wind_speed'], n=8)
         ds1['10m_wind_gust'] = mpcalc.smooth_gaussian(ds1['10m_wind_gust'], n=8)
         
+        _shift_longitude(ds)
         return ds1
         
     else:
     
+        _shift_longitude(ds)
         return ds

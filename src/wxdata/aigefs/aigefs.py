@@ -256,9 +256,9 @@ def aigefs_surface_members(final_forecast_hour=384,
     6) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
-                           'http':'http://url',
-                           'https':'https://url'
-                        }
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
     7) members (List) - Default=All 30 ensemble members + control. The individual ensemble members. There are 30 members in this ensemble.  
     
@@ -273,8 +273,9 @@ def aigefs_surface_members(final_forecast_hour=384,
         the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
         be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
     
-    11) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
         
     12) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
@@ -432,9 +433,9 @@ def aigefs_single(final_forecast_hour=384,
     6) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
-                           'http':'http://url',
-                           'https':'https://url'
-                        } 
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
     7) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 

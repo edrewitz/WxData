@@ -309,10 +309,10 @@ def process_rtma_data(path,
         ds1['10m_wind_speed'] = mpcalc.smooth_gaussian(ds1['10m_wind_speed'], n=8)
         ds1['10m_wind_gust'] = mpcalc.smooth_gaussian(ds1['10m_wind_gust'], n=8)
         
-        _shift_longitude(ds)
+        ds1 = _shift_longitude(ds)
         return ds1
         
     else:
     
-        _shift_longitude(ds)
+        ds = _shift_longitude(ds)
         return ds

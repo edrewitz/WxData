@@ -15,10 +15,30 @@ _warnings.filterwarnings('ignore')
 from wxdata.utils.exceptions import eccodes_error_message as _eccodes_error_message
 from wxdata.calc.thermodynamics import relative_humidity as _relative_humidity
 from wxdata.utils.file_funcs import clear_idx_files_in_path as _clear_idx_files_in_path
-from wxdata.utils.coords import shift_longitude as _shift_longitude
 
 _sys.tracebacklimit = 0
 _logging.disable()
+
+def _shift_longitude(ds):
+    
+    """
+    This function shifts the longitude of dimension (x,y) from 0 to 360 to -180 to 180
+    
+    Required Arguments:
+    
+    1) ds (xarray.array) - The xarray data array of RTMA Data
+    
+    Optional Arguments: None
+    
+    Returns
+    -------
+    
+    A RTMA dataset with longitude from -180 to 180    
+    """
+    
+    ds['longitude'] = ((ds['longitude'] + 180.0) % 360.0) - 180.0
+    
+    return ds
 
 def _rows_and_cols(model):
     

@@ -25,6 +25,7 @@ def var_keys(varKey):
     params = {
         'best lifted index':'4LFTX',
         '5 wave geopotential height':'5WAVH',
+        '5 wave geopotential height anomaly':'5WAVA',
         'absolute vorticity':'ABSV',
         'temperature':'TMP',
         'dew point':'DPT',
@@ -125,11 +126,34 @@ def var_keys(varKey):
         'maximum temperature':'TMAX',
         'minimum temperature':'TMIN',
         'upward longwave radiation flux':'ULWRF',
-        'water equivalent of accumulated snow depth':'WEASD'
-        
+        'water equivalent of accumulated snow depth':'WEASD',
+        'aerodynamic conductance':'ACOND',
+        'clear sky downward longwave flux':'CSDLF',
+        'clear sky downward solar flux (surface)':'CSDSF',
+        'clear sky downward solar flux (top of the atmosphere)':'CSULF',
+        'clear sky upward solar flux':'CSUSF',
+        'direct evaporation from bare soil':'EVBS',
+        'canopy water evaporation':'EVCW',
+        'near IR beam downward solar flux':'NBDSF',
+        'near IR diffuse downward solar flux':'NDDSF',
+        '2-meter maximum specific humidity':'QMAX',
+        '2-meter minimum specific humidity':'QMIN',
+        'sublimation (evaporation from snow)':'SBSNO',
+        'sedimentation mass flux':'SFEXC',
+        'surface slope type':'SLTYP',
+        'soil moisture content':'SOILM',
+        'snowfall rate water equivalent':'SRWEQ',
+        'storm surface runoff (non-infiltrating)':'SSRUN',
+        'transpiration':'TRANS',
+        'visible beam downward solar flux':'VBDSF',
+        'visible diffuse downward solar flux':'VDDSF',
+        'vegetation type':'VGTYP',
+        'geopotential height anomaly':'GPA',
+        'stream function':'STRM',
+        'velocity potential':'VPOT'
         
     }
-
+    
     return params[varKey]
 
 def key_list(varKeys):

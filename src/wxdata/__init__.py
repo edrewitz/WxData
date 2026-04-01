@@ -92,13 +92,22 @@ from wxdata.ecmwf.ecmwf import(
 )
 
 # FEMS RAWS Network
-# - Single RAWS Station Data
-# - A SIG Group of RAWS Data by GACC
-# - NFDRS Forecast Data For a RAWS Station
+# - Single Station Observations
+# - Multi Station Observations
+# - Current Observations - Multi Station
+# - Single Station NFDRS Forecast
+# - Multi Station NFDRS Forecast
 from wxdata.fems.fems import(
-    get_single_station_data,
-    get_raws_sig_data,
-    get_nfdrs_forecast_data
+    get_single_raws_station_observations,
+    get_multi_raws_station_observations,
+    get_current_multi_raws_station_observations,
+    get_single_raws_station_nfdrs_forecast,
+    get_multi_raws_station_nfdrs_forecast
+)
+
+from wxdata.fems.meta_data import(
+    get_single_raws_station_meta_data,
+    get_multi_raws_station_meta_data
 )
 
 # Real-Time Mesoscale Analysis (RTMA)

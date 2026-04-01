@@ -312,6 +312,136 @@ def get_csv_data(url,
     else:
         pass
     
+def get_excel_data(url,
+                 path,
+                 filename,
+                 sheet_name,
+                 proxies=None,
+                 notifications='on',
+                 return_pandas_df=True,
+                 clear_recycle_bin=False):
+    
+    """
+    This function is the client that retrieves CSV files from the web.
+    This client supports VPN/PROXY connections. 
+    User also has the ability to read the CSV file and return a Pandas.DataFrame()
+    
+    Required Arguments:
+    
+    1) url (String) - The download URL to the file. 
+    
+    2) path (String) - The directory where the file is saved to. 
+    
+    3) filename (String) - The name the user wishes to save the file as. 
+    
+    Optional Arguments:
+    
+    1) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
+    
+    2) notifications (String) - Default='on'. Notification when a file is downloaded and saved to {path}
+    
+    3) return_pandas_df (Boolean) - Default=True. When set to True, a Pandas.DataFrame() of the data inside the CSV file will be returned to the user. 
+    
+    4) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
+    
+    
+    Returns
+    -------
+    
+    A CSV file saved to {path}
+    
+    if return_pandas_df=True - A Pandas.DataFrame()
+    """
+    
+    if clear_recycle_bin == True:
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
+    else:
+        pass
+    
+    try:
+        _os.makedirs(f"{path}")
+    except Exception as e:
+        pass
+    
+    if proxies==None:
+        try:
+            response = _requests.get(url)
+        except Exception as e:
+            for i in range(0, 6, 1):
+                if i < 3:
+                    print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
+                    _time.sleep(30)
+                else:
+                    print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
+                    _time.sleep(60)  
+                    
+                try:
+                    response = _requests.get(url)
+                    break
+                except Exception as e:
+                    i = i                    
+                    if i >= 5:
+                        print(f"Error - File Cannot Be Downloaded.\nError Code: {e}")    
+                        _sys.exit(1)    
+        finally:
+            if response:
+                response.close() # Ensure the connection is closed.
+                        
+    else:
+        try:
+            response = _requests.get(url, proxies=proxies)
+        except Exception as e:
+            for i in range(0, 6, 1):
+                if i < 3:
+                    print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
+                    _time.sleep(30)
+                else:
+                    print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
+                    _time.sleep(60)  
+                    
+                try:
+                    response = _requests.get(url, proxies=proxies)
+                    break
+                except Exception as e:
+                    i = i                    
+                    if i >= 5:
+                        print(f"Error - File Cannot Be Downloaded.\nError Code: {e}")    
+                        _sys.exit(1) 
+
+                
+                 
+
+    data_stream = _BytesIO(response.content)
+    if response:
+        response.close() # Ensure the connection is closed.
+    
+    df = _pd.read_excel(data_stream)
+    
+    df.to_excel(f"{path}/{filename}", index=False)
+    
+    if notifications == True:
+        print(f"{filename} saved to {path}")
+    else:
+        pass
+    
+    if return_pandas_df == True:
+        
+        df = _pd.read_excel(f"{path}/{filename}", sheet_name=sheet_name)
+        
+        return df
+    
+    else:
+        pass
+    
     
 def get_xmacis_data(station,
                     start_date=None,

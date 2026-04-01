@@ -1,26 +1,24 @@
 """
-This file hosts the functions that retrieve data from the FEMS RAWS Network.
+This file hosts the clients that download and process the following types of data from the USDA/FEMS Database.
 
-These functions also process the data into Pandas.DataFrame format. 
+1) Observed RAWS station data - Single Station.
+2) Observed RAWS station data - Multi Station.
+3) Current observed RAWS station data - Multi Station.
+4) 7-Day NFDRS Forecast for a RAWS station - Single Station.
+5) 7-Day NFDRS Forecast for a group of RAWS stations - Multi Station. 
 
 (C) Eric J. Drewitz 2025-2026
 """
 
-
 import pandas as _pd
 import os as _os
-import shutil as _shutil
-import wxdata.fems.raws_sigs as _raws
+import glob as _glob
 import wxdata.client.client as _client
 
-from wxdata.utils.recycle_bin import(
-    clear_recycle_bin_windows as _clear_recycle_bin_windows,
-    clear_trash_bin_mac as _clear_trash_bin_mac,
-    clear_trash_bin_linux as _clear_trash_bin_linux
+from wxdata.fems.meta_data import(
+    get_single_raws_station_meta_data as _get_single_raws_station_meta_data,
+    get_multi_raws_station_meta_data as _get_multi_raws_station_meta_data
 )
-
-
-from calendar import isleap as _isleap
 
 try:
     from datetime import(
@@ -40,310 +38,61 @@ except Exception as e:
     utc_time = _datetime.utcnow()
     
 folder = _os.getcwd()
-folder_modified = folder.replace("\\", "/")
+folder_modified = folder.replace("\\", "/")  
 
-def _get_psa_ids(gacc_region):
+def _clear_data(path):
     
     """
-    This function returns the Predictive Services Areas IDs for each GACC. 
+    This function clears the directory.
     
-    Required Arguments:
+    Required Arguments: 
     
-    1) gacc_region (String) - The 4-letter GACC abbreviation
+    1) path (String) - The path to the directory.
     
-    GACC Abbreviations
-    ------------------
-    
-    oscc - South Ops
-    oncc - North Ops
-    nwcc - Northwest Coordination Center
-    swcc - Southwest Coordination Center
-    nrcc - Northern Rockies Coordination Center
-    gbcc - Great Basin Coordination Center
-    aicc - Alaska Interagency Coordination Center
-    rmcc - Rocky Mountain Coordination Center
-    sacc - Southern Area Coordination Center
-    eacc - Eastern Area Coordination Center
+    Optional Arguments: None
     
     Returns
     -------
     
-    The PSA IDs for a GACC. 
+    A cleared directory. 
     """
+    
+    try:
+        for file in _os.listdir(f"{path}"):
+            _os.remove(f"{path}/{file}")
+    except Exception as e:
+        pass
 
-    gacc_region = gacc_region.upper()
-
-    if gacc_region == "SACC":
-        psaIDs = ["1",
-                  "2",
-                  "3",
-                  "4",
-                  "5",
-                  "6",
-                  "7",
-                  "8",
-                  "9",
-                  "10",
-                  "11",
-                  "12",
-                  "13",
-                  "14",
-                  "15",
-                  "16",
-                  "17A",
-                  "17B",
-                  "18",
-                  "19",
-                  "20",
-                  "21A",
-                  "21B",
-                  "21C",
-                  "22A",
-                  "22B",
-                  "23",
-                  "24",
-                  "25",
-                  "25B",
-                  "26",
-                  "27",
-                  "28A",
-                  "28B",
-                  "29",
-                  "30",
-                  "31A",
-                  "31B",
-                  "31C",
-                  "32",
-                  "33",
-                  "34",
-                  "35",
-                  "36",
-                  "37",
-                  "38",
-                  "39",
-                  "40",
-                  "41",
-                  "42",
-                  "46",
-                  "47",
-                  "48",
-                  "49",
-                  "50",
-                  "52"
-                 ]
-
-    if gacc_region == 'ONCC':
-        psaIDs = ["1",
-                  "2",
-                  "3A",
-                  "3B",
-                  "4",
-                  "5",
-                  "6",
-                  "7",
-                  "8"
-                 ]
-
-    if gacc_region == "OSCC":
-        psaIDs = ["1",
-                  "2",
-                  "3",
-                  "4",
-                  "5",
-                  "6",
-                  "7",
-                  "8",
-                  "9",
-                  "10",
-                  "11",
-                  "12",
-                  "13",
-                  "14",
-                  "15",
-                  "16"
-                 ]
-
-    if gacc_region == "GBCC":
-        psaIDs = ["1",
-                  "2",
-                  "3",
-                  "4",
-                  "5",
-                  "6",
-                  "7",
-                  "8",
-                  "9",
-                  "10",
-                  "11",
-                  "12",
-                  "13",
-                  "14",
-                  "15",
-                  "16",
-                  "17",
-                  "18",
-                  "19",
-                  "20",
-                  "21",
-                  "22",
-                  "23",
-                  "24",
-                  "25",
-                  "26",
-                  "27",
-                  "28",
-                  "29",
-                  "30",
-                  "31",
-                  "32",
-                  "33",
-                  "34",
-                  "35"                  
-                 ]
-
-    if gacc_region == "EACC":
-        psaIDs = ["1",
-                  "2",
-                  "3",
-                  "4",
-                  "5",
-                  "6",
-                  "7",
-                  "8",
-                  "9",
-                  "10",
-                  "11",
-                  "12",
-                  "13",
-                  "14",
-                  "15",
-                  "16",
-                  "17",
-                  "18",
-                  "19",
-                  "20",
-                  "21",
-                  "22",
-                  "23",
-                  "24"
-                 ]
-
-
-    if gacc_region == "NRCC":
-        psaIDs = ["1",
-                  "2",
-                  "3",
-                  "4",
-                  "5",
-                  "6",
-                  "7",
-                  "8",
-                  "9",
-                  "10",
-                  "11",
-                  "12",
-                  "13",
-                  "14",
-                  "15",
-                  "16",
-                  "17",
-                  "18"
-                 ]
-
-    if gacc_region == "NWCC":
-        psaIDs = ["1",
-                  "2",
-                  "3",
-                  "4",
-                  "5",
-                  "6",
-                  "7",
-                  "8",
-                  "9",
-                  "10",
-                  "11",
-                  "12"
-                 ]
-
-    if gacc_region == "RMCC":
-        psaIDs = ["1",
-                  "2",
-                  "3",
-                  "4",
-                  "5",
-                  "6",
-                  "7",
-                  "8",
-                  "9",
-                  "10",
-                  "11",
-                  "12",
-                  "13",
-                  "14",
-                  "15",
-                  "16",
-                  "17",
-                  "18",
-                  "19",
-                  "20",
-                  "21",
-                  "22",
-                  "23",
-                  "24",
-                  "25",
-                  "26",
-                  "27",
-                  "28"
-                 ]
-
-    if gacc_region == "SWCC":
-        psaIDs = ["1",
-                  "2",
-                  "3",
-                  "4",
-                  "5",
-                  "6N",
-                  "6S",
-                  "7",
-                  "8",
-                  "9",
-                  "10",
-                  "11",
-                  "12",
-                  "13",
-                  "14N"
-                 ]
-                  
-    return psaIDs                 
-
-def get_single_station_data(station_id, 
-                            number_of_days, 
-                            start_date=None, 
-                            end_date=None, 
-                            fuel_model='Y', 
-                            clear_recycle_bin=False,
-                            path=f'{folder_modified}/FEMS Data',
-                            proxies=None):
+def get_single_raws_station_fuels_observations(station_id, 
+                                        number_of_days=7, 
+                                        start_date=None, 
+                                        end_date=None, 
+                                        fuel_model='Y', 
+                                        clear_recycle_bin=False,
+                                        path=f'{folder_modified}/FEMS Data/Single Station/Observations/Fuels',
+                                        proxies=None,
+                                        clear_data=True):
 
     """
-    This function retrieves the dataframe for a single RAWS station in FEMS
+    This function retrieves the observed weather data for a user-specified single RAWS station for a 
+    user-specified period of time. 
 
     Required Arguments:
 
-    1) station_id (Integer) - The WIMS or RAWS ID of the station. 
-
-    2) number_of_days (Integer or String) - How many days the user wants the summary for (90 for 90 days).
-        If the user wants to use a custom date range enter 'Custom' or 'custom' in this field. 
+    1) station_id (Integer) - The RAWS ID of the station. 
 
     Optional Arguments:
+    
+    1) number_of_days (Integer or String) - Default=7. How many days the user wants the summary for (90 for 90 days).
+        If the user wants to use a custom date range enter 'Custom' or 'custom' in this field. 
 
-    1) start_date (String) - Default = None. The start date if the user wants to define a custom period. Enter as a string
+    2) start_date (String) - Default = None. The start date if the user wants to define a custom period. Enter as a string
         in the following format 'YYYY-mm-dd'
 
-    2) end_date (String) - Default = None. The end date if the user wants to define a custom period. Enter as a string
+    3) end_date (String) - Default = None. The end date if the user wants to define a custom period. Enter as a string
         in the following format 'YYYY-mm-dd'
 
-    3) fuel_model (String) - Default = 'Y'. The fuel model being used. 
+    4) fuel_model (String) - Default = 'Y'. The fuel model being used. 
         Fuel Models List:
 
         Y - Timber
@@ -351,40 +100,38 @@ def get_single_station_data(station_id,
         W - Grass/Shrub
         V - Grass
         Z - Slash
-
-    4) to_csv (Boolean) - Default = True. This will save the data into a CSV file and build a directory to hold the CSV files. 
     
-    5) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
+    5) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
+        with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
         
-    6) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    6) path (String) - Default=f'{folder_modified}/FEMS Data/Single Station/Observations'. The directory the data will be saved to. 
+        
+    7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
-
-    7) path (String) - Default='FEMS Data". The parent directory to the FEMS data files.
     
     Returns
     -------
     
-    A Pandas DataFrame of the NFDRS data from FEMS.            
-
+    A Pandas DataFrame of observed weather data for a user-specified single RAWS station for a user-specified time.          
     """
-    if clear_recycle_bin == True:
-        _clear_recycle_bin_windows()
-        _clear_trash_bin_mac()
-        _clear_trash_bin_linux()
-    else:
+    
+    if clear_data is True:
+        _clear_data(path)
+    
+    try:
+        number_of_days = number_of_days.lower()
+    except Exception as e:
         pass
     
     fuel_model = fuel_model.upper()
     
     fname = f"{station_id} {number_of_days} Days Fuel Model {fuel_model}.csv"
 
-    if number_of_days == 'Custom' or number_of_days == 'custom':
+    if number_of_days == 'custom':
 
         df = _client.get_csv_data(f"https://fems.fs2c.usda.gov/api/ext-climatology/download-nfdr?"
                             f"stationIds={str(station_id)}&endDate={end_date}Z&startDate={start_date}Z&"
@@ -393,7 +140,7 @@ def get_single_station_data(station_id,
                             fname,
                             proxies=proxies,
                             notifications='off',
-                            clear_data=False)
+                            clear_recycle_bin=clear_recycle_bin)
             
     else:
 
@@ -412,231 +159,153 @@ def get_single_station_data(station_id,
                                 fname,
                                 proxies=proxies,
                                 notifications='off',
-                                clear_data=False)
+                                clear_recycle_bin=False)
     
     return df
 
-
-def get_raws_sig_data(gacc_region, 
-                      number_of_years_for_averages=15, 
-                      fuel_model='Y',
-                      proxies=None, 
-                      start_date=None,
-                      clear_recycle_bin=False):
+def get_multi_raws_station_fuels_observations(station_ids, 
+                                        number_of_days=7, 
+                                        start_date=None, 
+                                        end_date=None, 
+                                        fuel_model='Y', 
+                                        clear_recycle_bin=False,
+                                        path=f'{folder_modified}/FEMS Data/Multi Station/Observations/Fuels',
+                                        proxies=None,
+                                        clear_data=True):
 
     """
-    This function does the following:
-
-    1) Downloads all the data for the Critical RAWS Stations for each GACC Region
-
-    2) Builds the directory where the RAWS data CSV files will be hosted
-
-    3) Saves the CSV files to the paths which are sorted by Predictive Services Area (PSA)
+    This function retrieves the observed weather data for a user-specified list of RAWS stations for a 
+    user-specified period of time. 
 
     Required Arguments:
 
-    1) gacc_region (String) - The 4-letter GACC abbreviation
-    
+    1) station_ids (Integer List) - An integer list of all the RAWS IDs for each RAWS station the user wants in the dataset.
+
     Optional Arguments:
+    
+    1) number_of_days (Integer or String) - Default=7. How many days the user wants the summary for (90 for 90 days).
+        If the user wants to use a custom date range enter 'Custom' or 'custom' in this field. 
 
-    1) number_of_years_for_averages (Integer) - Default=15. The number of years for the average values to be calculated on. 
+    2) start_date (String) - Default = None. The start date if the user wants to define a custom period. Enter as a string
+        in the following format 'YYYY-mm-dd'
 
-    2) fuel_model (String) - Default='Y'. The fuel model being used. 
+    3) end_date (String) - Default = None. The end date if the user wants to define a custom period. Enter as a string
+        in the following format 'YYYY-mm-dd'
+
+    4) fuel_model (String) - Default = 'Y'. The fuel model being used. 
         Fuel Models List:
 
         Y - Timber
         X - Brush
         W - Grass/Shrub
         V - Grass
-        Z - Slash 
-
-    3) start_date (String) - Default=None. If the user wishes to use a selected start date as the starting point enter the start_date
-        as a string in the following format: YYYY-mm-dd
+        Z - Slash
+    
+    5) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
+        with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
         
-    9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
+    6) path (String) - Default=f'{folder_modified}/FEMS Data/Multi Station/Observations'. The directory the data will be saved to.
         
-    5) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
-
-    Returns
-    ------- 
     
-        A list of Pandas DataFrames 
-        ---------------------------
-        
-        1) Raw Data for each PSA
-        2) Average for each PSA
-        3) Minimum for each PSA
-        4) Maximum for each PSA
-        5) Dates
+    Returns
+    -------
+    
+    A Pandas DataFrame of observed weather data for a user-specified list of RAWS stations for a user-specified time.                     
     """
-    if clear_recycle_bin == True:
-        _clear_recycle_bin_windows()
-        _clear_trash_bin_mac()
-        _clear_trash_bin_linux()
-    else:
+    
+    if clear_data is True:
+        _clear_data(path)
+    
+    try:
+        number_of_days = number_of_days.lower()
+    except Exception as e:
         pass
     
-    _raws.check_folders()
-    _raws.get_raws_sig_info()
-
-    gacc_region = gacc_region.upper()
     fuel_model = fuel_model.upper()
+    
+    for station_id in station_ids:
+    
+        fname = f"{station_id} {number_of_days} Days Fuel Model {fuel_model}.csv"
 
-    df_station_list = _raws.get_sigs(gacc_region)
+        if number_of_days == 'custom':
 
-    try:
-        now = _datetime.now(_UTC)
-    except Exception as e:
-        now = _datetime.utcnow()
+            _client.get_csv_data(f"https://fems.fs2c.usda.gov/api/ext-climatology/download-nfdr?"
+                                f"stationIds={str(station_id)}&endDate={end_date}Z&startDate={start_date}Z&"
+                                f"dataFormat=csv&dataset=all&fuelModels={fuel_model}&dateTimeFormat=UTC",
+                                path,
+                                fname,
+                                proxies=proxies,
+                                notifications='off',
+                                clear_recycle_bin=False,
+                                return_pandas_df=clear_recycle_bin)
+                
+        else:
 
-    if start_date == None:
-        number_of_days = number_of_years_for_averages * 365
-            
-        start = now - _timedelta(days=number_of_days)
+            try:
+                now = _datetime.now(_UTC)
+            except Exception as e:
+                now = _datetime.utcnow()
+                
+            start = now - _timedelta(days=number_of_days)
 
-    else:
-        start_date = start_date
-        
-        year = f"{start_date[0]}{start_date[1]}{start_date[2]}{start_date[3]}"
-        month = f"{start_date[5]}{start_date[6]}"
-        day = f"{start_date[8]}{start_date[9]}"
-
-        year = int(year)
-        month = int(month)
-        day = int(day)
-
-        start = _datetime(year, month, day, 0, 0, 0)
-
-    for station, psa in zip(df_station_list['RAWSID'], df_station_list['PSA Code']):
-        
-        fname = f"{station}.csv"
-         
-        _client.get_csv_data(f"https://fems.fs2c.usda.gov/api/ext-climatology/download-nfdr?"
-                                 f"stationIds={station}&endDate={now.strftime('%Y-%m-%dT%H:%M:%S')}Z&"
-                                 f"startDate={start.strftime('%Y-%m-%dT%H:%M:%S')}Z&"
-                                 f"dataFormat=csv&dataset=observation&fuelModels={fuel_model}&dateTimeFormat=UTC",
-                                    f"{folder_modified}/FEMS Data/Stations/{gacc_region}/{psa}",
+            _client.get_csv_data(f"https://fems.fs2c.usda.gov/api/ext-climatology/download-nfdr?"
+                                    f"stationIds={str(station_id)}&endDate={now.strftime(f'%Y-%m-%d')}T{now.strftime(f'%H:%M:%S')}Z&"
+                                    f"startDate={start.strftime(f'%Y-%m-%d')}T{start.strftime(f'%H:%M:%S')}Z&"
+                                    f"dataFormat=csv&dataset=all&fuelModels={fuel_model}&dateTimeFormat=UTC",
+                                    path,
                                     fname,
                                     proxies=proxies,
                                     notifications='off',
-                                    return_pandas_df=False)    
-        
-        
-        
-    _raws.get_psa_percentiles(gacc_region)
-    _raws.station_stats(gacc_region)
-    _raws.get_stats(gacc_region)
-    _raws.get_psa_climatology(gacc_region)
-    _raws.sort_data_by_psa(gacc_region)
-
-    data_dir = f"FEMS Data/{gacc_region}/PSA Data"
-    percentiles_dir = f"FEMS Data/{gacc_region}/PSA Percentiles"
-    climo_avg_dir = f"FEMS Data/{gacc_region}/PSA Climo/AVG"
-    climo_min_dir = f"FEMS Data/{gacc_region}/PSA Climo/MIN"
-    climo_max_dir = f"FEMS Data/{gacc_region}/PSA Climo/MAX"
-
-    percentiles = _pd.read_csv(f"FEMS Data/{gacc_region}/PSA Percentiles/PSA_Percentiles.csv")
-
-    leap = _isleap(utc_time.year)
-    if start_date == None:
-        if leap == False:
-            days = number_of_years_for_averages * 365
-        else:
-            days = number_of_years_for_averages * 366
-        start_date = utc_time - _timedelta(days=days)
-        start_year = start_date.year
-        xmin = start_date
-        xmax = utc_time
-
-    else:
-        start_date = start_date
-        start_year = f"{start_date[0]}{start_date[1]}{start_date[2]}{start_date[3]}"
-        start_month = f"{start_date[5]}{start_date[6]}"
-        start_day = f"{start_date[8]}{start_date[9]}"
-        xmin = _datetime(int(start_year), int(start_month), int(start_day))
-        xmax = utc_time
+                                    clear_recycle_bin=False,
+                                    return_pandas_df=False)
+            
+    file_list = _glob.glob(f"{path}/*.csv")
+            
+    df_list = [_pd.read_csv(file) for file in file_list]
     
-    psa = 1
+    df = _pd.concat(df_list, ignore_index=True)
+    
+    return df
 
-    if _os.path.exists(f"{data_dir}/.ipynb_checkpoints"):
-        _shutil.rmtree(f"{data_dir}/.ipynb_checkpoints")
-    else:
-        pass
-
-    if _os.path.exists(f"{data_dir}/.ipynb_checkpoints"):
-        _shutil.rmtree(f"{data_dir}/.ipynb_checkpoints")
-    else:
-        pass
-
-    files = _os.listdir(f"{data_dir}")
-    psa = 1
-
-    psa_IDs = _get_psa_ids(gacc_region)              
-            
-    data = []
-    climo_avg = []
-    climo_max = []
-    climo_min = []       
-    for i in range(0, len(files)):
-
-        fname = f"{psa_IDs[i]}.png"
-
-        try:
-            df_data = _pd.read_csv(f"{data_dir}/zone_{psa}.csv") 
-            df_climo_avg = _pd.read_csv(f"{climo_avg_dir}/zone_{psa}.csv") 
-            df_climo_min = _pd.read_csv(f"{climo_min_dir}/zone_{psa}.csv") 
-            df_climo_max = _pd.read_csv(f"{climo_max_dir}/zone_{psa}.csv") 
-            
-            data.append(df_data)
-            climo_avg.append(df_climo_avg)
-            climo_min.append(df_climo_min)
-            climo_max.append(df_climo_max)
-        except Exception as e:
-            pass
-
-        try:
-            dates = _pd.to_datetime(df_data['dates'])
-        except Exception as e:
-            pass
-            
-    return data, climo_avg, climo_min, climo_max, dates
-
-
-def get_nfdrs_forecast_data(gacc_region, 
-                            fuel_model='Y',
-                            proxies=None,
-                            clear_recycle_bin=False):
+def get_current_multi_raws_station_fuels_observations(station_ids, 
+                                                fuel_model='Y', 
+                                                clear_recycle_bin=False,
+                                                path=f'{folder_modified}/FEMS Data/Current Multi Station/Observations/Fuels',
+                                                proxies=None,
+                                                clear_data=True,
+                                                meta_path=f'{folder_modified}/FEMS Data/Station Meta Data',
+                                                sheet_name='Sheet1'):
 
     """
-    This function retrieves the latest fuels forecast data from FEMS.
+    This function retrieves the latest observed weather data for a user-specified list of RAWS stations. 
 
     Required Arguments:
 
-    1) gacc_region (String) - The 4-letter GACC abbreviation
-    
+    1) station_ids (Integer List) - An integer list of all the RAWS IDs for each RAWS station the user wants in the dataset.
+
     Optional Arguments:
 
-    1) fuel_model (String) - Default='Y'. The fuel model being used. 
+    1) fuel_model (String) - Default = 'Y'. The fuel model being used. 
         Fuel Models List:
 
         Y - Timber
         X - Brush
         W - Grass/Shrub
         V - Grass
-        Z - Slash 
+        Z - Slash
+    
+    2) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
+        with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
         
-    2) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
+    3) path (String) - Default=f'{folder_modified}/FEMS Data/Current Multi Station/Observations'. The directory the data will be saved to.
         
-    3) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    4) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
@@ -646,56 +315,201 @@ def get_nfdrs_forecast_data(gacc_region,
     Returns
     -------
     
-    A list of NFDRS forecast data in the form of a Pandas DataFrames listed by each Predictive Services Area
+    A Pandas DataFrame of the latest observed weather data for a user-specified list of RAWS stations.                 
     """
-    if clear_recycle_bin == True:
-        _clear_recycle_bin_windows()
-        _clear_trash_bin_mac()
-        _clear_trash_bin_linux()
-    else:
-        pass
+    if clear_data is True:
+        _clear_data(path)
     
-    _raws.check_folders()
-    _raws.get_raws_sig_info()
-
-    gacc_region = gacc_region.upper()
+    number_of_days = 1 
+    
     fuel_model = fuel_model.upper()
     
-    df_station_list = _raws.get_sigs(gacc_region)
+    try:
+        now = _datetime.now(_UTC)
+    except Exception as e:
+        now = _datetime.utcnow()
+            
+    start = now - _timedelta(days=number_of_days)
+    
+    for station_id in station_ids:
+    
+        fname = f"{station_id} {number_of_days} Days Fuel Model {fuel_model}.csv"
+
+        _client.get_csv_data(f"https://fems.fs2c.usda.gov/api/ext-climatology/download-nfdr?"
+                                f"stationIds={str(station_id)}&endDate={now.strftime(f'%Y-%m-%d')}T{now.strftime(f'%H:%M:%S')}Z&"
+                                f"startDate={start.strftime(f'%Y-%m-%d')}T{start.strftime(f'%H:%M:%S')}Z&"
+                                f"dataFormat=csv&dataset=all&fuelModels={fuel_model}&dateTimeFormat=UTC",
+                                path,
+                                fname,
+                                proxies=proxies,
+                                notifications='off',
+                                clear_recycle_bin=clear_recycle_bin,
+                                return_pandas_df=False)
+            
+    file_list = _glob.glob(f"{path}/*.csv")
+            
+    df_list = [_pd.read_csv(file) for file in file_list]
+    
+    df = _pd.concat(df_list, ignore_index=True)
+    
+    keys = df.columns.tolist()
+    
+    df = df.groupby(keys[0]).tail(1)
+    
+    meta = _get_multi_raws_station_meta_data(station_ids, 
+                                        sheet_name=sheet_name,
+                                        clear_recycle_bin=False,
+                                        path=meta_path,
+                                        proxies=proxies)
+    
+    meta_keys = meta.columns.tolist()
+    
+    df = df.sort_values(by=keys[0], ascending=False)
+    meta = meta.sort_values(by=meta_keys[6], ascending=False)
+    df[meta_keys[9]] = meta[meta_keys[9]].values
+    df[meta_keys[10]] = meta[meta_keys[10]].values
+    
+    return df
+
+def get_single_raws_station_nfdrs_forecast(station_id, 
+                                        fuel_model='Y', 
+                                        clear_recycle_bin=False,
+                                        path=f'{folder_modified}/FEMS Data/Single Station/NFDRS Forecasts',
+                                        proxies=None,
+                                        clear_data=True):
+
+    """
+    This function retrieves the 7-Day NFDRS forecast for a user-specified single RAWS station. 
+
+    Required Arguments:
+
+    1) station_id (Integer) - The RAWS ID of the station. 
+
+    Optional Arguments:
+
+    1) fuel_model (String) - Default = 'Y'. The fuel model being used. 
+        Fuel Models List:
+
+        Y - Timber
+        X - Brush
+        W - Grass/Shrub
+        V - Grass
+        Z - Slash
+    
+    2) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
+        with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+        
+    3) path (String) - Default=f'{folder_modified}/FEMS Data/Single Station/Forecasts'. The directory the data will be saved to. 
+        
+    4) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
+    
+    Returns
+    -------
+    
+    A Pandas DataFrame of the 7-Day NFDRS forecast for a user-specified RAWS station.           
+    """
+    if clear_data is True:
+        _clear_data(path)
+    
+    fuel_model = fuel_model.upper()
+    
+    fname = f"{station_id} 7 Day Forecast Fuel Model {fuel_model}.csv"
+
+    try:
+        start = _datetime.now(_UTC)
+    except Exception as e:
+        start = _datetime.utcnow()
+        
+    end = start + _timedelta(days=7)
+
+    df = _client.get_csv_data(f"https://fems.fs2c.usda.gov/api/ext-climatology/download-nfdr"
+                              f"?stationIds={station_id}&endDate={end.strftime('%Y-%m-%dT%H:%M:%S')}Z&startDate={start.strftime('%Y-%m-%dT%H:%M:%S')}Z&"
+                              f"dataFormat=csv&dataset=forecast&fuelModels={fuel_model}&dateTimeFormat=UTC",
+                            path,
+                            fname,
+                            proxies=proxies,
+                            notifications='off',
+                            clear_recycle_bin=clear_recycle_bin)
+    
+    return df
+
+def get_multi_raws_station_nfdrs_forecast(station_ids, 
+                                        fuel_model='Y', 
+                                        clear_recycle_bin=False,
+                                        path=f'{folder_modified}/FEMS Data/Multi Station/NFDRS Forecasts',
+                                        proxies=None,
+                                        clear_data=True):
+
+    """
+    This function retrieves the 7-Day NFDRS forecast for a user-specified list of RAWS stations. 
+
+    Required Arguments:
+
+    1) station_ids (Integer List) - An integer list of all the RAWS IDs for each RAWS station the user wants in the dataset.
+
+    Optional Arguments:
+
+    1) fuel_model (String) - Default = 'Y'. The fuel model being used. 
+        Fuel Models List:
+
+        Y - Timber
+        X - Brush
+        W - Grass/Shrub
+        V - Grass
+        Z - Slash
+    
+    2) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
+        with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+        
+    3) path (String) - Default=f'{folder_modified}/FEMS Data/Multi Station/Forecasts'. The directory the data will be saved to. 
+        
+    4) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
+    
+    Returns
+    -------
+    
+    A Pandas DataFrame of the 7-Day NFDRS forecast for a user-specified list of RAWS stations.   
+    """
+    
+    if clear_data is True:
+        _clear_data(path)
+    
+    fuel_model = fuel_model.upper()
     
     try:
         start = _datetime.now(_UTC)
     except Exception as e:
         start = _datetime.utcnow()
-
-    end = start + _timedelta(days=7)
-
-    psas = []
-    for station, psa in zip(df_station_list['RAWSID'], df_station_list['PSA Code']):
-
-        fname = f"{station}.csv"
-        _client.get_csv_data(f"https://fems.fs2c.usda.gov/api/ext-climatology/download-nfdr-daily-summary/?"
-                            f"dataset=forecast&startDate={start.strftime('%Y-%m-%d')}&endDate={end.strftime('%Y-%m-%d')}&"
-                            f"dataFormat=csv&stationIds={station}&fuelModels={fuel_model}",
-                                    f"{folder_modified}/FEMS Data/Forecasts/{gacc_region}/{psa}",
-                                    fname,
-                                    proxies=proxies,
-                                    notifications='off',
-                                    return_pandas_df=False) 
-
-        psas.append(psa)
         
-    _raws.station_forecast(gacc_region)
-    _raws.sort_forecasts_by_psa(gacc_region)
+    end = start + _timedelta(days=7)
     
-    forecast_dir = f"FEMS Data/{gacc_region}/PSA Forecast"
+    for station_id in station_ids:
     
-    dfs = []
-    for p in range(0, len(psas)):
-        try:
-            df = _pd.read_csv(f"{forecast_dir}/zone_{p}.csv") 
-            dfs.append(df)
-        except Exception as e:
-            pass
+        fname = f"{station_id} 7 Day Forecast Fuel Model {fuel_model}.csv"
+
+        df = _client.get_csv_data(f"https://fems.fs2c.usda.gov/api/ext-climatology/download-nfdr"
+                                f"?stationIds={station_id}&endDate={end.strftime('%Y-%m-%dT%H:%M:%S')}Z&startDate={start.strftime('%Y-%m-%dT%H:%M:%S')}Z&"
+                                f"dataFormat=csv&dataset=forecast&fuelModels={fuel_model}&dateTimeFormat=UTC",
+                                path,
+                                fname,
+                                proxies=proxies,
+                                notifications='off',
+                                clear_recycle_bin=clear_recycle_bin)
     
-    return dfs
+    file_list = _glob.glob(f"{path}/*.csv")
+            
+    df_list = [_pd.read_csv(file) for file in file_list]
+    
+    df = _pd.concat(df_list, ignore_index=True)
+    
+    return df

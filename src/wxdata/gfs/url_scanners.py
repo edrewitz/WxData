@@ -8,7 +8,6 @@ These functions return the URL and filename for the latest available data on the
 
 import requests
 import sys
-import numpy as np
 
 from urllib.parse import urlparse, parse_qs
 from wxdata.utils.coords import convert_lon
@@ -87,38 +86,30 @@ def gfs_0p50_url_scanner(final_forecast_hour,
     
     Required Arguments:
     
-    1) cat (string) - The category of the ensemble data. 
-    
-    Valid categories
-    -----------------
-    
-    1) atmosphere
-    
-    
-    2) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The GEFS0P50
+    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The GEFS0P50
     goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
     384 by the nereast increment of 3 hours. 
     
-    3) western_bound (Float or Integer) - The western bound of the data needed. 
+    2) western_bound (Float or Integer) - The western bound of the data needed. 
 
-    4) eastern_bound (Float or Integer) - The eastern bound of the data needed.
+    3) eastern_bound (Float or Integer) - The eastern bound of the data needed.
 
-    5) northern_bound (Float or Integer) - The northern bound of the data needed.
+    4) northern_bound (Float or Integer) - The northern bound of the data needed.
 
-    6) southern_bound (Float or Integer) - The southern bound of the data needed.
+    5) southern_bound (Float or Integer) - The southern bound of the data needed.
 
-    7) proxies (dict or None) - If the user is using proxy server(s), the user must change the following:
+    6) proxies (dict or None) - If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
                         
-    8) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
+    7) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
     
-    9) members (List) The individual ensemble members. There are 30 members in this ensemble.  
+    8) members (List) The individual ensemble members. There are 30 members in this ensemble.  
     
-    10) variables (List) - A list of variable names the user wants to download in plain language. 
+    9) variables (List) - A list of variable names the user wants to download in plain language. 
     
         Variable Name List for GEFS0P50
         -------------------------------
@@ -340,7 +331,7 @@ def gfs_0p50_url_scanner(final_forecast_hour,
         yd_18z,
         yd_12z,
         yd_06z,
-        yd_18z
+        yd_00z
     ]
     
     responses = [
@@ -606,39 +597,30 @@ def gfs_0p25_url_scanner(final_forecast_hour,
     
     Required Arguments:
     
-    1) cat (string) - The category of the ensemble data. 
-    
-    Valid categories
-    -----------------
-    
-    1) atmosphere
-    2) ocean
-    
-    
-    2) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The GEFS0P50
+    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The GEFS0P50
     goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
     384 by the nereast increment of 3 hours. 
     
-    3) western_bound (Float or Integer) - The western bound of the data needed. 
+    2) western_bound (Float or Integer) - The western bound of the data needed. 
 
-    4) eastern_bound (Float or Integer) - The eastern bound of the data needed.
+    3) eastern_bound (Float or Integer) - The eastern bound of the data needed.
 
-    5) northern_bound (Float or Integer) - The northern bound of the data needed.
+    4) northern_bound (Float or Integer) - The northern bound of the data needed.
 
-    6) southern_bound (Float or Integer) - The southern bound of the data needed.
+    5) southern_bound (Float or Integer) - The southern bound of the data needed.
 
-    7) proxies (dict or None) - If the user is using proxy server(s), the user must change the following:
+    6) proxies (dict or None) - If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
                         
-    8) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
+    7) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
     
-    9) members (List) The individual ensemble members. There are 30 members in this ensemble.  
+    8) members (List) The individual ensemble members. There are 30 members in this ensemble.  
     
-    10) variables (List) - A list of variable names the user wants to download in plain language. 
+    9) variables (List) - A list of variable names the user wants to download in plain language. 
     
         Variable Name List for GEFS0P50
         -------------------------------
@@ -858,7 +840,7 @@ def gfs_0p25_url_scanner(final_forecast_hour,
         yd_18z,
         yd_12z,
         yd_06z,
-        yd_18z
+        yd_00z
     ]
     
     responses = [
@@ -1125,39 +1107,30 @@ def gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
     
     Required Arguments:
     
-    1) cat (string) - The category of the ensemble data. 
-    
-    Valid categories
-    -----------------
-    
-    1) atmosphere
-    2) ocean
-    
-    
-    2) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The GEFS0P50
+    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The GEFS0P50
     goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
     384 by the nereast increment of 3 hours. 
     
-    3) western_bound (Float or Integer) - The western bound of the data needed. 
+    2) western_bound (Float or Integer) - The western bound of the data needed. 
 
-    4) eastern_bound (Float or Integer) - The eastern bound of the data needed.
+    3) eastern_bound (Float or Integer) - The eastern bound of the data needed.
 
-    5) northern_bound (Float or Integer) - The northern bound of the data needed.
+    4) northern_bound (Float or Integer) - The northern bound of the data needed.
 
-    6) southern_bound (Float or Integer) - The southern bound of the data needed.
+    5) southern_bound (Float or Integer) - The southern bound of the data needed.
 
-    7) proxies (dict or None) - If the user is using proxy server(s), the user must change the following:
+    6) proxies (dict or None) - If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
                         
-    8) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
+    7) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
     
-    9) members (List) The individual ensemble members. There are 30 members in this ensemble.  
+    8) members (List) The individual ensemble members. There are 30 members in this ensemble.  
     
-    10) variables (List) - A list of variable names the user wants to download in plain language. 
+    9) variables (List) - A list of variable names the user wants to download in plain language. 
     
         Variable Name List for GEFS0P50
         -------------------------------
@@ -1377,7 +1350,7 @@ def gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
         yd_18z,
         yd_12z,
         yd_06z,
-        yd_18z
+        yd_00z
     ]
     
     responses = [

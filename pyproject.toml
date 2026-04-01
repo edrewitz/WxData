@@ -1,6 +1,6 @@
 [project]
 name = "wxdata"
-version = "1.4.2"
+version = "1.5"
 description = "A Python library that acts as a client to download, pre-process and post-process weather data. Friendly for users on VPN/PROXY connections."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -29,6 +29,7 @@ dependencies = [
   "dask>=2025.5.1",
   "tqdm>=4.67.3",
   "ecmwf-opendata>=0.3.26",
+  "openpyxl>=3.1.5",
  
 ]
 

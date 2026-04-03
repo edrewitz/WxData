@@ -92,19 +92,32 @@ from wxdata.ecmwf.ecmwf import(
 )
 
 # FEMS RAWS Network
-# - Single Station Observations
-# - Multi Station Observations
-# - Current Observations - Multi Station
+# - Single Station Weather Observations
+# - Single Station Fuels Observations
+# - Multi Station Weather Observations
+# - Multi Station Fuels Observations
+# - Current Weather Observations - Multi Station
+# - Current Fuels Observations - Multi Station
 # - Single Station NFDRS Forecast
 # - Multi Station NFDRS Forecast
+# - Single Station Weather Forecast
+# - Multi Station Weather Forecast
 from wxdata.fems.fems import(
-    get_single_raws_station_observations,
-    get_multi_raws_station_observations,
-    get_current_multi_raws_station_observations,
+    get_single_raws_station_weather_observations,
+    get_single_raws_station_fuels_observations,
+    get_multi_raws_station_weather_observations,
+    get_multi_raws_station_fuels_observations,
+    get_current_multi_raws_station_weather_observations,
+    get_current_multi_raws_station_fuels_observations,
     get_single_raws_station_nfdrs_forecast,
-    get_multi_raws_station_nfdrs_forecast
+    get_multi_raws_station_nfdrs_forecast,
+    get_single_raws_station_weather_forecast,
+    get_multi_raws_station_weather_forecast
 )
 
+# FEMS RAWS Network
+# - Single Station Meta Data
+# - Multi Station Meta Data
 from wxdata.fems.meta_data import(
     get_single_raws_station_meta_data,
     get_multi_raws_station_meta_data

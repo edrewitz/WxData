@@ -453,7 +453,8 @@ def get_xmacis_data(station,
                     to_csv=False,
                     path='default',
                     filename='default',
-                    notifications='on'):
+                    notifications='on',
+                    return_pandas_df=True):
     
     """
     This function is a client that downloads user-specified xmACIS2 data and returns a Pandas.DataFrame
@@ -622,7 +623,10 @@ def get_xmacis_data(station,
     else:
         pass
     
-    return df
+    if return_pandas_df == True:
+        return df
+    else:
+        pass
     
     
     

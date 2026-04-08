@@ -1,6 +1,9 @@
 """
 This file hosts the functions that download and extract the meta-data for the various RAWS stations.
 
+1) get_single_raws_station_meta_data
+2) get_multi_raws_station_meta_data
+
 (C) Eric J. Drewitz 2025-2026
 """
 import pandas as _pd
@@ -26,14 +29,7 @@ def get_single_raws_station_meta_data(station_id,
 
     Optional Arguments:
 
-    1) fuel_model (String) - Default = 'Y'. The fuel model being used. 
-        Fuel Models List:
-
-        Y - Timber
-        X - Brush
-        W - Grass/Shrub
-        V - Grass
-        Z - Slash
+    1) sheet_name (String) - The name of the sheet in the excel file to be converted into a pandas.DataFrame. 
     
     2) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
         with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
@@ -83,18 +79,11 @@ def get_multi_raws_station_meta_data(station_ids,
     
     Required Arguments:
 
-    1) station_id (Integer) - The RAWS ID of the station. 
+    1) station_ids (Integer List) - A list of RAWS Station IDs. 
 
     Optional Arguments:
-
-    1) fuel_model (String) - Default = 'Y'. The fuel model being used. 
-        Fuel Models List:
-
-        Y - Timber
-        X - Brush
-        W - Grass/Shrub
-        V - Grass
-        Z - Slash
+    
+    1) sheet_name (String) - The name of the sheet in the excel file to be converted into a pandas.DataFrame. 
     
     2) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
         with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 

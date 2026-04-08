@@ -124,32 +124,32 @@ def get_single_raws_station_weather_observations(station_id,
 
     3) end_date (String) - Default = None. The end date if the user wants to define a custom period. Enter as a string
         in the following format 'YYYY-mm-dd'
-
-    4) fuel_model (String) - Default = 'Y'. The fuel model being used. 
-        Fuel Models List:
-
-        Y - Timber
-        X - Brush
-        W - Grass/Shrub
-        V - Grass
-        Z - Slash
     
-    5) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
+    4) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
         with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
         
-    6) path (String) - Default=f'{folder_modified}/FEMS Data/Single Station/Observations'. The directory the data will be saved to. 
+    5) path (String) - Default=f'{folder_modified}/FEMS Data/Single Station/Observations/Weather'. 
+        The directory the data will be saved to. 
         
-    7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    6) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
+                               
+    7) clear_data (Boolean) - Default=True. When set to True, the data directory clears out and new data is downloaded.
+    
+    8) meta_path (String) - Default=f'{folder_modified}/FEMS Data/Station Meta Data'. 
+        The path to where the RAWS station meta data excel file will be saved to. 
+        
+    9) sheet_name (String) - The name of the sheet in the excel file to be converted into a pandas.DataFrame.
     
     Returns
     -------
     
-    A Pandas DataFrame of observed weather data for a user-specified single RAWS station for a user-specified time.          
+    1) A Pandas DataFrame of observed weather data for a user-specified single RAWS station for a user-specified time.   
+    2) A Pandas DataFrame of the RAWS Station Meta-Data.        
     """
     
     if clear_data is True:
@@ -220,7 +220,7 @@ def get_single_raws_station_fuels_observations(station_id,
                                         sheet_name='Sheet1'):
 
     """
-    This function retrieves the observed weather data for a user-specified single RAWS station for a 
+    This function retrieves the observed fuels data for a user-specified single RAWS station for a 
     user-specified period of time. 
 
     Required Arguments:
@@ -250,7 +250,8 @@ def get_single_raws_station_fuels_observations(station_id,
     5) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
         with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
         
-    6) path (String) - Default=f'{folder_modified}/FEMS Data/Single Station/Observations'. The directory the data will be saved to. 
+    6) path (String) - Default=f'{folder_modified}/FEMS Data/Single Station/Observations/Fuels'. 
+        The directory the data will be saved to. 
         
     7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
@@ -258,11 +259,19 @@ def get_single_raws_station_fuels_observations(station_id,
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
+                               
+    8) clear_data (Boolean) - Default=True. When set to True, the data directory clears out and new data is downloaded.
+    
+    9) meta_path (String) - Default=f'{folder_modified}/FEMS Data/Station Meta Data'. 
+        The path to where the RAWS station meta data excel file will be saved to. 
+        
+    10) sheet_name (String) - The name of the sheet in the excel file to be converted into a pandas.DataFrame.
     
     Returns
     -------
     
-    A Pandas DataFrame of observed weather data for a user-specified single RAWS station for a user-specified time.          
+    1) A Pandas DataFrame of observed fuels data for a user-specified single RAWS station for a user-specified time. 
+    2) A Pandas DataFrame of the RAWS Station Meta-Data.     
     """
     
     if clear_data is True:
@@ -334,12 +343,12 @@ def get_multi_raws_station_weather_observations(station_ids,
                                         sheet_name='Sheet1'):
 
     """
-    This function retrieves the observed weather data for a user-specified single RAWS station for a 
+    This function retrieves the observed weather data for a user-specified list of RAWS stations for a 
     user-specified period of time. 
 
     Required Arguments:
 
-    1) station_id (Integer) - The RAWS ID of the station. 
+    1) station_ids (Integer List) - The list of RAWS station IDs. 
 
     Optional Arguments:
     
@@ -351,32 +360,32 @@ def get_multi_raws_station_weather_observations(station_ids,
 
     3) end_date (String) - Default = None. The end date if the user wants to define a custom period. Enter as a string
         in the following format 'YYYY-mm-dd'
-
-    4) fuel_model (String) - Default = 'Y'. The fuel model being used. 
-        Fuel Models List:
-
-        Y - Timber
-        X - Brush
-        W - Grass/Shrub
-        V - Grass
-        Z - Slash
     
-    5) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
+    4) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
         with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
         
-    6) path (String) - Default=f'{folder_modified}/FEMS Data/Single Station/Observations'. The directory the data will be saved to. 
+    5) path (String) - Default=f'{folder_modified}/FEMS Data/Multi Station/Observations/Weather'. 
+        The directory the data will be saved to. 
         
-    7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    6) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
+                               
+    7) clear_data (Boolean) - Default=True. When set to True, the data directory clears out and new data is downloaded.
+    
+    8) meta_path (String) - Default=f'{folder_modified}/FEMS Data/Station Meta Data'. 
+        The path to where the RAWS station meta data excel file will be saved to. 
+        
+    9) sheet_name (String) - The name of the sheet in the excel file to be converted into a pandas.DataFrame.
     
     Returns
     -------
     
-    A Pandas DataFrame of observed weather data for a user-specified single RAWS station for a user-specified time.          
+    1) A Pandas DataFrame of observed weather data for a user-specified list of RAWS stations for a user-specified time period.    
+    2) A Pandas DataFrame of the RAWS Station Meta-Data.      
     """
     
     if clear_data is True:
@@ -455,7 +464,7 @@ def get_multi_raws_station_fuels_observations(station_ids,
                                         sheet_name='Sheet1'):
 
     """
-    This function retrieves the observed weather data for a user-specified list of RAWS stations for a 
+    This function retrieves the observed fuels data for a user-specified list of RAWS stations for a 
     user-specified period of time. 
 
     Required Arguments:
@@ -485,7 +494,8 @@ def get_multi_raws_station_fuels_observations(station_ids,
     5) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
         with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
         
-    6) path (String) - Default=f'{folder_modified}/FEMS Data/Multi Station/Observations'. The directory the data will be saved to.
+    6) path (String) - Default=f'{folder_modified}/FEMS Data/Multi Station/Observations/Fuels'. 
+        The directory the data will be saved to.
         
     7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
@@ -494,10 +504,18 @@ def get_multi_raws_station_fuels_observations(station_ids,
                                'https':'http://your-proxy-address:port'
                                }
     
+    8) clear_data (Boolean) - Default=True. When set to True, the data directory clears out and new data is downloaded.
+    
+    9) meta_path (String) - Default=f'{folder_modified}/FEMS Data/Station Meta Data'. 
+        The path to where the RAWS station meta data excel file will be saved to. 
+        
+    10) sheet_name (String) - The name of the sheet in the excel file to be converted into a pandas.DataFrame.
+    
     Returns
     -------
     
-    A Pandas DataFrame of observed weather data for a user-specified list of RAWS stations for a user-specified time.                     
+    1) A Pandas DataFrame of observed fuels data for a user-specified list of RAWS stations for a user-specified time period.      
+    2) A Pandas DataFrame of the RAWS Station Meta-Data.               
     """
     
     if clear_data is True:
@@ -577,49 +595,38 @@ def get_current_multi_raws_station_weather_observations(station_ids,
                                                 sheet_name='Sheet1'):
 
     """
-    This function retrieves the observed weather data for a user-specified single RAWS station for a 
-    user-specified period of time. 
+    This function retrieves the current weather observations for a user-specified list of RAWS Stations. 
 
     Required Arguments:
 
-    1) station_id (Integer) - The RAWS ID of the station. 
+    1) station_ids (Integer List) - An integer list of all the RAWS IDs for each RAWS station the user wants in the dataset.
 
     Optional Arguments:
     
-    1) number_of_days (Integer or String) - Default=7. How many days the user wants the summary for (90 for 90 days).
-        If the user wants to use a custom date range enter 'Custom' or 'custom' in this field. 
-
-    2) start_date (String) - Default = None. The start date if the user wants to define a custom period. Enter as a string
-        in the following format 'YYYY-mm-dd'
-
-    3) end_date (String) - Default = None. The end date if the user wants to define a custom period. Enter as a string
-        in the following format 'YYYY-mm-dd'
-
-    4) fuel_model (String) - Default = 'Y'. The fuel model being used. 
-        Fuel Models List:
-
-        Y - Timber
-        X - Brush
-        W - Grass/Shrub
-        V - Grass
-        Z - Slash
-    
-    5) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
+    1) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
         with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
         
-    6) path (String) - Default=f'{folder_modified}/FEMS Data/Single Station/Observations'. The directory the data will be saved to. 
+    2) path (String) - Default=f'{folder_modified}/FEMS Data/Current Multi Station/Observations/Weather'. 
+        The directory the data will be saved to. 
         
-    7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    3) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
+                               
+    4) clear_data (Boolean) - Default=True. When set to True, the data directory clears out and new data is downloaded.
+    
+    5) meta_path (String) - Default=f'{folder_modified}/FEMS Data/Station Meta Data'. 
+        The path to where the RAWS station meta data excel file will be saved to. 
+        
+    6) sheet_name (String) - The name of the sheet in the excel file to be converted into a pandas.DataFrame.
     
     Returns
     -------
     
-    A Pandas DataFrame of observed weather data for a user-specified single RAWS station for a user-specified time.          
+    A Pandas DataFrame of current observed weather data with lat/lon coordinates for each station merged from the meta-data file.         
     """
     if clear_data is True:
         _clear_jupyter_checkpoints(path)
@@ -680,7 +687,7 @@ def get_current_multi_raws_station_fuels_observations(station_ids,
                                                 sheet_name='Sheet1'):
 
     """
-    This function retrieves the latest observed weather data for a user-specified list of RAWS stations. 
+    This function retrieves the current fuels observations for a user-specified list of RAWS Stations. 
 
     Required Arguments:
 
@@ -700,7 +707,8 @@ def get_current_multi_raws_station_fuels_observations(station_ids,
     2) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
         with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
         
-    3) path (String) - Default=f'{folder_modified}/FEMS Data/Current Multi Station/Observations'. The directory the data will be saved to.
+    3) path (String) - Default=f'{folder_modified}/FEMS Data/Current Multi Station/Observations/Fuels'. 
+        The directory the data will be saved to.
         
     4) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
@@ -708,11 +716,18 @@ def get_current_multi_raws_station_fuels_observations(station_ids,
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
-
+                               
+    5) clear_data (Boolean) - Default=True. When set to True, the data directory clears out and new data is downloaded.
+    
+    6) meta_path (String) - Default=f'{folder_modified}/FEMS Data/Station Meta Data'. 
+        The path to where the RAWS station meta data excel file will be saved to. 
+        
+    7) sheet_name (String) - The name of the sheet in the excel file to be converted into a pandas.DataFrame.
+    
     Returns
     -------
     
-    A Pandas DataFrame of the latest observed weather data for a user-specified list of RAWS stations.                 
+    A Pandas DataFrame of current observed fuels data with lat/lon coordinates for each station merged from the meta-data file.             
     """
     if clear_data is True:
         _clear_jupyter_checkpoints(path)
@@ -776,49 +791,37 @@ def get_current_all_raws_station_weather_observations(state='all',
                                                 sheet_name='Sheet1'):
 
     """
-    This function retrieves the observed weather data for a user-specified single RAWS station for a 
-    user-specified period of time. 
+    This function retrieves all current weather observations for all RAWS Stations of a given state.
 
-    Required Arguments:
-
-    1) station_id (Integer) - The RAWS ID of the station. 
+    Required Arguments: None
 
     Optional Arguments:
     
-    1) number_of_days (Integer or String) - Default=7. How many days the user wants the summary for (90 for 90 days).
-        If the user wants to use a custom date range enter 'Custom' or 'custom' in this field. 
-
-    2) start_date (String) - Default = None. The start date if the user wants to define a custom period. Enter as a string
-        in the following format 'YYYY-mm-dd'
-
-    3) end_date (String) - Default = None. The end date if the user wants to define a custom period. Enter as a string
-        in the following format 'YYYY-mm-dd'
-
-    4) fuel_model (String) - Default = 'Y'. The fuel model being used. 
-        Fuel Models List:
-
-        Y - Timber
-        X - Brush
-        W - Grass/Shrub
-        V - Grass
-        Z - Slash
+    1) state (String) - Default='all'. The 2-letter state identifier. Defaults to the entire U.S. 
     
-    5) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
+    2) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
         with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
         
-    6) path (String) - Default=f'{folder_modified}/FEMS Data/Single Station/Observations'. The directory the data will be saved to. 
+    3) path (String) - Default=f'{folder_modified}/FEMS Data/Current Multi Station/Observations/Weather'. 
+        The directory the data will be saved to. 
         
-    7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    4) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
+    5) clear_data (Boolean) - Default=True. When set to True, the data directory clears out and new data is downloaded.
+    
+    6) meta_path (String) - Default=f'{folder_modified}/FEMS Data/Station Meta Data'. 
+        The path to where the RAWS station meta data excel file will be saved to. 
+        
+    7) sheet_name (String) - The name of the sheet in the excel file to be converted into a pandas.DataFrame.
     
     Returns
     -------
     
-    A Pandas DataFrame of observed weather data for a user-specified single RAWS station for a user-specified time.          
+    A Pandas DataFrame of current observed weather data with lat/lon coordinates for each station merged from the meta-data file.         
     """
     if clear_data is True:
         _clear_jupyter_checkpoints(path)
@@ -896,15 +899,15 @@ def get_current_all_raws_station_fuels_observations(state='all',
                                                 sheet_name='Sheet1'):
 
     """
-    This function retrieves the latest observed weather data for a user-specified list of RAWS stations. 
+    This function retrieves all current fuels observations for all RAWS Stations of a given state.
 
-    Required Arguments:
-
-    1) station_ids (Integer List) - An integer list of all the RAWS IDs for each RAWS station the user wants in the dataset.
+    Required Arguments: None
 
     Optional Arguments:
+    
+    1) state (String) - Default='all'. The 2-letter state identifier. Defaults to the entire U.S. 
 
-    1) fuel_model (String) - Default = 'Y'. The fuel model being used. 
+    2) fuel_model (String) - Default = 'Y'. The fuel model being used. 
         Fuel Models List:
 
         Y - Timber
@@ -913,22 +916,30 @@ def get_current_all_raws_station_fuels_observations(state='all',
         V - Grass
         Z - Slash
     
-    2) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
+    3) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
         with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
         
-    3) path (String) - Default=f'{folder_modified}/FEMS Data/Current Multi Station/Observations'. The directory the data will be saved to.
+    4) path (String) - Default=f'{folder_modified}/FEMS Data/Current Multi Station/Observations/Fuels'. 
+        The directory the data will be saved to.
         
-    4) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    5) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
 
+    5) clear_data (Boolean) - Default=True. When set to True, the data directory clears out and new data is downloaded.
+    
+    6) meta_path (String) - Default=f'{folder_modified}/FEMS Data/Station Meta Data'. 
+        The path to where the RAWS station meta data excel file will be saved to. 
+        
+    7) sheet_name (String) - The name of the sheet in the excel file to be converted into a pandas.DataFrame.
+    
     Returns
     -------
     
-    A Pandas DataFrame of the latest observed weather data for a user-specified list of RAWS stations.                 
+    A Pandas DataFrame of current observed fuels data with lat/lon coordinates for each station merged from the meta-data file.                   
     """
     if clear_data is True:
         _clear_jupyter_checkpoints(path)
@@ -1005,42 +1016,43 @@ def get_single_raws_station_weather_forecast(station_id,
                                         path=f'{folder_modified}/FEMS Data/Single Station/Weather Forecasts',
                                         proxies=None,
                                         clear_data=True,
+                                        meta_path=f'{folder_modified}/FEMS Data/Station Meta Data',
                                         sheet_name='Sheet1'):
 
     """
-    This function retrieves the 7-Day NFDRS forecast for a user-specified single RAWS station. 
+    This function retrieves the 7-Day weather forecast for a user-specified single RAWS station. 
 
     Required Arguments:
 
     1) station_id (Integer) - The RAWS ID of the station. 
 
     Optional Arguments:
-
-    1) fuel_model (String) - Default = 'Y'. The fuel model being used. 
-        Fuel Models List:
-
-        Y - Timber
-        X - Brush
-        W - Grass/Shrub
-        V - Grass
-        Z - Slash
     
-    2) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
+    1) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
         with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
         
-    3) path (String) - Default=f'{folder_modified}/FEMS Data/Single Station/Forecasts'. The directory the data will be saved to. 
+    2) path (String) - Default=f'{folder_modified}/FEMS Data/Single Station/Weather Forecasts'. 
+        The directory the data will be saved to. 
         
-    4) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    3) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
     
+    4) clear_data (Boolean) - Default=True. When set to True, the data directory clears out and new data is downloaded.
+    
+    5) meta_path (String) - Default=f'{folder_modified}/FEMS Data/Station Meta Data'. 
+        The path to where the RAWS station meta data excel file will be saved to. 
+        
+    6) sheet_name (String) - The name of the sheet in the excel file to be converted into a pandas.DataFrame.
+    
     Returns
     -------
     
-    A Pandas DataFrame of the 7-Day NFDRS forecast for a user-specified RAWS station.           
+    1) A Pandas DataFrame of 7-Day weather forecast data for a user-specified single RAWS station.   
+    2) A Pandas DataFrame of the RAWS Station Meta-Data.            
     """
     if clear_data is True:
         _clear_jupyter_checkpoints(path)
@@ -1068,7 +1080,7 @@ def get_single_raws_station_weather_forecast(station_id,
     meta = _get_single_raws_station_meta_data(station_id, 
                                         sheet_name=sheet_name,
                                         clear_recycle_bin=False,
-                                        path=f'{folder_modified}/FEMS Data/Station Meta Data',
+                                        path=meta_path,
                                         proxies=proxies)
     
     keys = df.columns.tolist()
@@ -1085,10 +1097,11 @@ def get_single_raws_station_nfdrs_forecast(station_id,
                                         path=f'{folder_modified}/FEMS Data/Single Station/NFDRS Forecasts',
                                         proxies=None,
                                         clear_data=True,
+                                        meta_path=f'{folder_modified}/FEMS Data/Station Meta Data',
                                         sheet_name='Sheet1'):
 
     """
-    This function retrieves the 7-Day NFDRS forecast for a user-specified single RAWS station. 
+    This function retrieves the 7-Day NFDRS (fuels) forecast for a user-specified single RAWS station. 
 
     Required Arguments:
 
@@ -1108,7 +1121,8 @@ def get_single_raws_station_nfdrs_forecast(station_id,
     2) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
         with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
         
-    3) path (String) - Default=f'{folder_modified}/FEMS Data/Single Station/Forecasts'. The directory the data will be saved to. 
+    3) path (String) - Default=f'{folder_modified}/FEMS Data/Single Station/NFDRS Forecasts'. 
+        The directory the data will be saved to. 
         
     4) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
@@ -1117,10 +1131,18 @@ def get_single_raws_station_nfdrs_forecast(station_id,
                                'https':'http://your-proxy-address:port'
                                }
     
+    5) clear_data (Boolean) - Default=True. When set to True, the data directory clears out and new data is downloaded.
+    
+    6) meta_path (String) - Default=f'{folder_modified}/FEMS Data/Station Meta Data'. 
+        The path to where the RAWS station meta data excel file will be saved to. 
+        
+    7) sheet_name (String) - The name of the sheet in the excel file to be converted into a pandas.DataFrame.
+    
     Returns
     -------
     
-    A Pandas DataFrame of the 7-Day NFDRS forecast for a user-specified RAWS station.           
+    1) A Pandas DataFrame of 7-Day NFDRS (fuels) forecast data for a user-specified single RAWS station.   
+    2) A Pandas DataFrame of the RAWS Station Meta-Data.           
     """
     if clear_data is True:
         _clear_jupyter_checkpoints(path)
@@ -1149,7 +1171,7 @@ def get_single_raws_station_nfdrs_forecast(station_id,
     meta = _get_single_raws_station_meta_data(station_id, 
                                         sheet_name=sheet_name,
                                         clear_recycle_bin=False,
-                                        path=f'{folder_modified}/FEMS Data/Station Meta Data',
+                                        path=meta_path,
                                         proxies=proxies)
     
     keys = df.columns.tolist()
@@ -1170,7 +1192,7 @@ def get_multi_raws_station_nfdrs_forecast(station_ids,
                                         sheet_name='Sheet1'):
 
     """
-    This function retrieves the 7-Day NFDRS forecast for a user-specified list of RAWS stations. 
+    This function retrieves the 7-Day NFDRS (fuels) forecast for a user-specified list of RAWS stations. 
 
     Required Arguments:
 
@@ -1190,7 +1212,8 @@ def get_multi_raws_station_nfdrs_forecast(station_ids,
     2) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
         with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
         
-    3) path (String) - Default=f'{folder_modified}/FEMS Data/Multi Station/Forecasts'. The directory the data will be saved to. 
+    3) path (String) - Default=f'{folder_modified}/FEMS Data/Multi Station/NFDRS Forecasts'. 
+        The directory the data will be saved to. 
         
     4) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
@@ -1199,10 +1222,18 @@ def get_multi_raws_station_nfdrs_forecast(station_ids,
                                'https':'http://your-proxy-address:port'
                                }
     
+    5) clear_data (Boolean) - Default=True. When set to True, the data directory clears out and new data is downloaded.
+    
+    6) meta_path (String) - Default=f'{folder_modified}/FEMS Data/Station Meta Data'. 
+        The path to where the RAWS station meta data excel file will be saved to. 
+        
+    7) sheet_name (String) - The name of the sheet in the excel file to be converted into a pandas.DataFrame.
+    
     Returns
     -------
     
-    A Pandas DataFrame of the 7-Day NFDRS forecast for a user-specified list of RAWS stations.   
+    1) A Pandas DataFrame of 7-Day NFDRS (fuels) forecast data for a user-specified list of RAWS stations.   
+    2) A Pandas DataFrame of the RAWS Station Meta-Data.     
     """
     
     if clear_data is True:
@@ -1261,39 +1292,39 @@ def get_multi_raws_station_weather_forecast(station_ids,
                                         sheet_name='Sheet1'):
 
     """
-    This function retrieves the 7-Day NFDRS forecast for a user-specified single RAWS station. 
+    This function retrieves the 7-Day weather forecast for a user-specified list of RAWS stations. 
 
     Required Arguments:
 
-    1) station_id (Integer) - The RAWS ID of the station. 
+    1) station_ids (Integer List) - An integer list of all the RAWS IDs for each RAWS station the user wants in the dataset.
 
     Optional Arguments:
-
-    1) fuel_model (String) - Default = 'Y'. The fuel model being used. 
-        Fuel Models List:
-
-        Y - Timber
-        X - Brush
-        W - Grass/Shrub
-        V - Grass
-        Z - Slash
     
-    2) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
+    1) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
         with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
         
-    3) path (String) - Default=f'{folder_modified}/FEMS Data/Single Station/Forecasts'. The directory the data will be saved to. 
+    2) path (String) - Default=f'{folder_modified}/FEMS Data/Single Station/Forecasts'. 
+        The directory the data will be saved to. 
         
-    4) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    3) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
     
+    4) clear_data (Boolean) - Default=True. When set to True, the data directory clears out and new data is downloaded.
+    
+    5) meta_path (String) - Default=f'{folder_modified}/FEMS Data/Station Meta Data'. 
+        The path to where the RAWS station meta data excel file will be saved to. 
+        
+    6) sheet_name (String) - The name of the sheet in the excel file to be converted into a pandas.DataFrame.
+    
     Returns
     -------
     
-    A Pandas DataFrame of the 7-Day NFDRS forecast for a user-specified RAWS station.           
+    1) A Pandas DataFrame of 7-Day weather forecast data for a user-specified list of RAWS stations.   
+    2) A Pandas DataFrame of the RAWS Station Meta-Data.             
     """
     if clear_data is True:
         _clear_jupyter_checkpoints(path)

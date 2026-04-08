@@ -98,6 +98,8 @@ from wxdata.ecmwf.ecmwf import(
 # - Multi Station Fuels Observations
 # - Current Weather Observations - Multi Station
 # - Current Fuels Observations - Multi Station
+# - Current Weather Observations - All Stations By State
+# - Current Fuels Observations - All Stations By State
 # - Single Station NFDRS Forecast
 # - Multi Station NFDRS Forecast
 # - Single Station Weather Forecast

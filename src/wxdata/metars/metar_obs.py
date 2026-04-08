@@ -1,6 +1,8 @@
 """
 This module has the functions that download, unzip and return METAR data. 
 
+1) download_metar_data
+
 (C) Eric J. Drewitz 2025-2026
 """
 

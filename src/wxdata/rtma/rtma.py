@@ -1,6 +1,9 @@
 """
 This file hosts the function that downloads and returns RTMA Data from the NCEP/NOMADS Server. 
 
+1) rtma
+2) rtma_comparison
+
 (C) Eric J. Drewitz 2025-2026
 """
 import os as _os

@@ -1,6 +1,10 @@
 """
 This file hosts the clients that download, pre-process and post-process AIGEFS Data.
 
+1) aigefs_pressure_members
+2) aigefs_surface_members
+3) aigefs_single
+
 (C) Eric J. Drewitz 2025-2026
 """
 

@@ -3,6 +3,11 @@ This file hosts the functions that are the client that retrieves the data from t
 
 These functions are compatible with users on VPN/PROXY connections as well as normal connections.
 
+1) get_gridded_data
+2) get_csv_data
+3) get_excel_data
+4) get_xmacis_data
+
 (C) Eric J. Drewitz 2025-2026
 """
 
@@ -322,9 +327,9 @@ def get_excel_data(url,
                  clear_recycle_bin=False):
     
     """
-    This function is the client that retrieves CSV files from the web.
+    This function is the client that retrieves Excel files from the web.
     This client supports VPN/PROXY connections. 
-    User also has the ability to read the CSV file and return a Pandas.DataFrame()
+    User also has the ability to read the Excel file and return a Pandas.DataFrame()
     
     Required Arguments:
     
@@ -333,6 +338,8 @@ def get_excel_data(url,
     2) path (String) - The directory where the file is saved to. 
     
     3) filename (String) - The name the user wishes to save the file as. 
+    
+    4) sheet_name (String) - The name of the sheet in the excel file to be converted into a pandas.DataFrame. 
     
     Optional Arguments:
     
@@ -500,6 +507,9 @@ def get_xmacis_data(station,
        
     10) notifications (String) - Default='on'. When set to 'on' a print statement to the user will tell the user their file saved to the path
         they specified. 
+        
+    11) return_pandas_df (Boolean) - Default=True. When set to True, a pandas.DataFrame is returned.
+        To only download CSV files and not return a pandas.DataFrame for each file set to False. 
         
     Returns
     -------

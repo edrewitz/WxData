@@ -1,6 +1,10 @@
 """
 This file hosts the functions the user interacts with to download GFS data. 
 
+1) gfs_0p25
+2) gfs_0p25_secondary_parameters
+3) gfs_0p50
+
 (C) Eric J. Drewitz 2025-2026
 """
 

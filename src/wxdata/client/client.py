@@ -514,7 +514,10 @@ def get_xmacis_data(station,
     Returns
     -------
     
-    A Pandas.DataFrame of the xmACIS2 climate data the user specifies
+    A Pandas.DataFrame of the xmACIS2 climate data the user specifies if return_pandas_df = True.
+    
+    If the user wants to download multiple CSV files reflecting multiple stations, it is recommend to set return_pandas_df = False
+    and set to_csv = True. 
     """
     if clear_recycle_bin == True:
         _clear_recycle_bin_windows()

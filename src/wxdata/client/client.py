@@ -362,7 +362,7 @@ def get_excel_data(url,
     Returns
     -------
     
-    A CSV file saved to {path}
+    An Excel file saved to {path}
     
     if return_pandas_df=True - A Pandas.DataFrame()
     """

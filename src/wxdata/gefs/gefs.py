@@ -1,5 +1,9 @@
 """
-This file hosts functions that download various types of GEFS Data
+This file hosts functions that download various types of GEFS Data.
+
+1) gefs_0p50
+2) gefs_0p50_secondary_parameters
+3) gefs_0p25
 
 (C) Eric J. Drewitz 2025-2026
 """

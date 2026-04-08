@@ -1,6 +1,13 @@
 """
 This file hosts the functions the user has to download ECMWF model data. 
 
+1) ecmwf_ifs
+2) ecmwf_ifs_ens
+3) ecmwf_aifs
+4) ecmwf_aifs_ens
+5) ecmwf_ifs_wave
+6) ecmwf_ifs_wave_ens
+
 (C) Eric J. Drewitz 2025-2026
 """
 

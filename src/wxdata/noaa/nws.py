@@ -1,6 +1,9 @@
 """
 This file has the functions that downloads NOAA/NWS, NOAA/SPC and NOAA/CPC Forecast Data
 
+1) get_ndfd_grids
+2) get_cpc_outlook
+
 (c) Eric J. Drewitz 2025-2026
 """
 # Import the needed libraries

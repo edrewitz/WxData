@@ -3,6 +3,8 @@ This file hosts the function to retrieve Wyoming Sounding Data.
 
 This data is for observed soundings. 
 
+1) get_observed_sounding_data
+
 (C) Eric J. Drewitz 2025-2026
 """
 # Imports the needed libraries

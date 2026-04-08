@@ -3,14 +3,15 @@
 ***def get_xmacis_data(station,
                     start_date=None,
                     end_date=None,
-                    from_when=yesterday,
+                    from_when=_yesterday,
                     time_delta=30,
                     proxies=None,
                     clear_recycle_bin=False,
                     to_csv=False,
                     path='default',
                     filename='default',
-                    notifications='on'):***
+                    notifications='on',
+                    return_pandas_df=True):***
 
     This function is a client that downloads user-specified xmACIS2 data and returns a Pandas.DataFrame
     The user can also save the data as a CSV file in a specified location
@@ -43,7 +44,7 @@
                         
     6) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine.  
+        This setting is to help preserve memory on the machine. 
         
     7) to_csv (Boolean) - Default=False. When set to True, a CSV file of the data will be created and saved to the user specified or default path.
     
@@ -56,7 +57,13 @@
     10) notifications (String) - Default='on'. When set to 'on' a print statement to the user will tell the user their file saved to the path
         they specified. 
         
+    11) return_pandas_df (Boolean) - Default=True. When set to True, a pandas.DataFrame is returned.
+        To only download CSV files and not return a pandas.DataFrame for each file set to False. 
+        
     Returns
     -------
     
-    A Pandas.DataFrame of the xmACIS2 climate data the user specifies
+    A Pandas.DataFrame of the xmACIS2 climate data the user specifies if return_pandas_df = True.
+    
+    If the user wants to download multiple CSV files reflecting multiple stations, it is recommend to set return_pandas_df = False
+    and set to_csv = True. 

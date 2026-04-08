@@ -1,11 +1,18 @@
 """
 This file hosts the clients that download and process the following types of data from the USDA/FEMS Database.
 
-1) Observed RAWS station fuels data - Single Station.
-2) Observed RAWS station fuels data - Multi Station.
-3) Current observed RAWS station fuels data - Multi Station.
-4) 7-Day NFDRS Forecast for a RAWS station - Single Station.
-5) 7-Day NFDRS Forecast for a group of RAWS stations - Multi Station. 
+1) get_single_raws_station_weather_observations
+2) get_single_raws_station_fuels_observations
+3) get_multi_raws_station_weather_observations
+4) get_multi_raws_station_fuels_observations
+5) get_current_multi_raws_station_weather_observations
+6) get_current_multi_raws_station_fuels_observations
+7) get_current_all_raws_station_weather_observations
+8) get_current_all_raws_station_fuels_observations
+9) get_single_raws_station_nfdrs_forecast
+10) get_multi_raws_station_nfdrs_forecast
+11) get_single_raws_station_weather_forecast
+12) get_multi_raws_station_weather_forecast
 
 (C) Eric J. Drewitz 2025-2026
 """
@@ -96,6 +103,7 @@ def get_single_raws_station_weather_observations(station_id,
                                         path=f'{folder_modified}/FEMS Data/Single Station/Observations/Weather',
                                         proxies=None,
                                         clear_data=True,
+                                        meta_path=f'{folder_modified}/FEMS Data/Station Meta Data',
                                         sheet_name='Sheet1'):
 
     """
@@ -188,7 +196,7 @@ def get_single_raws_station_weather_observations(station_id,
     meta = _get_single_raws_station_meta_data(station_id, 
                                         sheet_name=sheet_name,
                                         clear_recycle_bin=False,
-                                        path=f'{folder_modified}/FEMS Data/Station Meta Data',
+                                        path=meta_path,
                                         proxies=proxies)
     
     keys = df.columns.tolist()
@@ -208,6 +216,7 @@ def get_single_raws_station_fuels_observations(station_id,
                                         path=f'{folder_modified}/FEMS Data/Single Station/Observations/Fuels',
                                         proxies=None,
                                         clear_data=True,
+                                        meta_path=f'{folder_modified}/FEMS Data/Station Meta Data',
                                         sheet_name='Sheet1'):
 
     """
@@ -302,7 +311,7 @@ def get_single_raws_station_fuels_observations(station_id,
     meta = _get_single_raws_station_meta_data(station_id, 
                                         sheet_name=sheet_name,
                                         clear_recycle_bin=False,
-                                        path=f'{folder_modified}/FEMS Data/Station Meta Data',
+                                        path=meta_path,
                                         proxies=proxies)
     
     keys = df.columns.tolist()
@@ -321,6 +330,7 @@ def get_multi_raws_station_weather_observations(station_ids,
                                         path=f'{folder_modified}/FEMS Data/Multi Station/Observations/Weather',
                                         proxies=None,
                                         clear_data=True,
+                                        meta_path=f'{folder_modified}/FEMS Data/Station Meta Data',
                                         sheet_name='Sheet1'):
 
     """
@@ -411,13 +421,26 @@ def get_multi_raws_station_weather_observations(station_ids,
                                     notifications='off',
                                     clear_recycle_bin=clear_recycle_bin)
     
+    meta = _get_multi_raws_station_meta_data(station_ids, 
+                                        sheet_name=sheet_name,
+                                        clear_recycle_bin=False,
+                                        path=meta_path,
+                                        proxies=proxies)
+    
+    
     file_list = _glob.glob(f"{path}/*.csv")
             
     df_list = [_pd.read_csv(file) for file in file_list]
     
     df = _pd.concat(df_list, ignore_index=True)
     
-    return df
+    keys = df.columns.tolist()
+    meta_keys = meta.columns.tolist()
+    
+    df = df.sort_values(by=keys[0], ascending=False)
+    meta = meta.sort_values(by=meta_keys[6], ascending=False)
+    
+    return df, meta
 
 def get_multi_raws_station_fuels_observations(station_ids, 
                                         number_of_days=7, 
@@ -428,6 +451,7 @@ def get_multi_raws_station_fuels_observations(station_ids,
                                         path=f'{folder_modified}/FEMS Data/Multi Station/Observations/Fuels',
                                         proxies=None,
                                         clear_data=True,
+                                        meta_path=f'{folder_modified}/FEMS Data/Station Meta Data',
                                         sheet_name='Sheet1'):
 
     """
@@ -523,13 +547,26 @@ def get_multi_raws_station_fuels_observations(station_ids,
                                     clear_recycle_bin=clear_recycle_bin,
                                     return_pandas_df=False)
             
+    meta = _get_multi_raws_station_meta_data(station_ids, 
+                                        sheet_name=sheet_name,
+                                        clear_recycle_bin=False,
+                                        path=meta_path,
+                                        proxies=proxies)
+    
+    
     file_list = _glob.glob(f"{path}/*.csv")
             
     df_list = [_pd.read_csv(file) for file in file_list]
     
     df = _pd.concat(df_list, ignore_index=True)
     
-    return df
+    keys = df.columns.tolist()
+    meta_keys = meta.columns.tolist()
+    
+    df = df.sort_values(by=keys[0], ascending=False)
+    meta = meta.sort_values(by=meta_keys[6], ascending=False)
+    
+    return df, meta
 
 def get_current_multi_raws_station_weather_observations(station_ids, 
                                                 clear_recycle_bin=False,

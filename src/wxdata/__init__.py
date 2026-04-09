@@ -224,6 +224,7 @@ These clients can be easily configured to work on VPN/PROXY connections.
 # Client List:
 #  - get_gridded_data()
 #  - get_csv_data()
+#  - get_excel_data()
 #  - get_xmacis_data()
 import wxdata.client.client as client
 

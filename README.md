@@ -518,6 +518,8 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 **ecmwf-opendata**: European Centre for Medium-Range Weather Forecasts (2026). ecmwf-opendata[Computer software]. GitHub. https://github.com/ecmwf/ecmwf-opendata
 
+**openpyxl**: Gazoni, E., & Clark, C. (2024). openpyxl: A Python library to read/write Excel 2010 xlsx/xlsm/xltx/xltm files (Version 3.1.5) [Computer software]. https://openpyxl.readthedocs.io/
+
 ## Data Sources
 
 1) [National Oceanic and Atmospheric Administration/National Center for Environmental Prediction](https://nomads.ncep.noaa.gov/)
@@ -527,5 +529,6 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 5) [National Oceanic and Atmospheric Administration/Aviation Weather Center](https://aviationweather.gov/)
 6) [National Oceanic and Atmospheric Administration/Climate Prediction Center](https://www.cpc.ncep.noaa.gov/products/GIS/GIS_DATA/us_tempprcpfcst/index.php)
 7) [Applied Climate Information System (ACIS)](https://www.rcc-acis.org/docs_webservices.html)
+8) [USDA Fire Environment Mapping System](https://fems.fs2c.usda.gov/download)
 
 

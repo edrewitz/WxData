@@ -882,10 +882,10 @@ def get_current_all_raws_station_weather_observations(state='all',
     
     df = df.groupby(keys[0]).tail(1)
     
-    df = df.sort_values(by=keys[0], ascending=True)
-    meta = meta.sort_values(by=meta_keys[6], ascending=True)
-    df[meta_keys[9]] = meta[meta_keys[9]].values
-    df[meta_keys[10]] = meta[meta_keys[10]].values
+    df = df.sort_values(by=keys[0], ascending=True, ignore_index=True).reset_index(drop=True)
+    meta = meta.sort_values(by=meta_keys[6], ascending=True, ignore_index=True).reset_index(drop=True)
+    df[meta_keys[9]] = _pd.Series(meta[meta_keys[9]].values)
+    df[meta_keys[10]] = _pd.Series(meta[meta_keys[10]].values)
     
     return df
 
@@ -1004,10 +1004,10 @@ def get_current_all_raws_station_fuels_observations(state='all',
     
     df = df.groupby(keys[0]).tail(1)
     
-    df = df.sort_values(by=keys[0], ascending=True)
-    meta = meta.sort_values(by=meta_keys[6], ascending=True)
-    df[meta_keys[9]] = meta[meta_keys[9]].values
-    df[meta_keys[10]] = meta[meta_keys[10]].values
+    df = df.sort_values(by=keys[0], ascending=True, ignore_index=True).reset_index(drop=True)
+    meta = meta.sort_values(by=meta_keys[6], ascending=True, ignore_index=True).reset_index(drop=True)
+    df[meta_keys[9]] = _pd.Series(meta[meta_keys[9]].values)
+    df[meta_keys[10]] = _pd.Series(meta[meta_keys[10]].values)
     
     return df
 

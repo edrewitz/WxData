@@ -199,12 +199,6 @@ def get_single_raws_station_weather_observations(station_id,
                                         path=meta_path,
                                         proxies=proxies)
     
-    keys = df.columns.tolist()
-    meta_keys = meta.columns.tolist()
-    
-    df = df.sort_values(by=keys[0], ascending=False)
-    meta = meta.sort_values(by=meta_keys[6], ascending=False)
-    
     return df, meta
 
 def get_single_raws_station_fuels_observations(station_id, 
@@ -323,11 +317,6 @@ def get_single_raws_station_fuels_observations(station_id,
                                         path=meta_path,
                                         proxies=proxies)
     
-    keys = df.columns.tolist()
-    meta_keys = meta.columns.tolist()
-    
-    df = df.sort_values(by=keys[0], ascending=False)
-    meta = meta.sort_values(by=meta_keys[6], ascending=False)
     
     return df, meta
 
@@ -1083,11 +1072,6 @@ def get_single_raws_station_weather_forecast(station_id,
                                         path=meta_path,
                                         proxies=proxies)
     
-    keys = df.columns.tolist()
-    meta_keys = meta.columns.tolist()
-    
-    df = df.sort_values(by=keys[0], ascending=False)
-    meta = meta.sort_values(by=meta_keys[6], ascending=False)
     
     return df, meta
 
@@ -1176,9 +1160,6 @@ def get_single_raws_station_nfdrs_forecast(station_id,
     
     keys = df.columns.tolist()
     meta_keys = meta.columns.tolist()
-    
-    df = df.sort_values(by=keys[0], ascending=False)
-    meta = meta.sort_values(by=meta_keys[6], ascending=False)
     
     return df, meta
 

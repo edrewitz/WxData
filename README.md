@@ -132,7 +132,9 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 14) [Downloading Subsets Of ECMWF IFS Ensemble and AIFS Ensemble Data](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/ecmwf_ens.ipynb)
 15) [Downloading the ECMWF IFS 500 mb Geopotential Height Initial Analysis And Plot A North Pole Stereographic Resolving The Meridian With The WxData Cyclic Point Tool](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/cyclic.ipynb)
 16) [Downloading Observed Fuels Data For The Past Year For Acton RAWS and Plotting 1000-HR Dead Fuel Moisture](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/acton_raws.ipynb)
-17) [Downloading RAWS and METAR Data and Plotting Current Relative Humidity Observations Across California and Nevada](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/metar_raws_observed_rh.ipynb)
+17) [Downloading the 7-Day NFDRS Forecast for Acton RAWS and Plotting Forecast 100-HR Dead Fuel Moisture](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/acton_raws_forecast.ipynb)
+18) [Downloading Current RAWS and METAR Data and Plotting Current Relative Humidity Observations Across California and Nevada](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/metar_raws_observed_rh.ipynb)
+19) [Downloading Current RAWS Data and Plotting Current Energy Release Components (ERCs) Observations Across California and Nevada](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/observed_erc_map.ipynb)
 
 *Advanced Users*
 1) [Using the `client` module to download the latest HadCRUT5 Analysis netCDF file and open this dataset in xarray](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/hadcrut5.ipynb)

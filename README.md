@@ -179,9 +179,20 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 1. [METAR Observations](https://github.com/edrewitz/wxdata/blob/main/Documentation/metars.md#metar-observations)
 
 ***FEMS RAWS Network***
-1. [Get Single Station RAWS Data](https://github.com/edrewitz/wxdata/blob/main/Documentation/single_raws.md#fems-get-single-raws-station-data)
-2. [Get Each SIG of RAWS Data for a Geographic Area Coordination Center](https://github.com/edrewitz/wxdata/blob/main/Documentation/raws%20sig.md#fems-get-raws-sig-data-for-a-geographic-area-coordination-center-region)
-3. [Get NFDRS Forecast Data for Each SIG for a Geographic Area Coordination Center](https://github.com/edrewitz/wxdata/blob/main/Documentation/nfdrs%20forecast.md#fems-get-nfdrs-forecast-data-for-a-raws-sig-for-a-geographic-area-coordination-center-region)
+1. [Get Single Station Weather Observations](https://github.com/edrewitz/WxData/blob/main/Documentation/single%20raws%20weather%20obs.md#fems-single-raws-station-weather-observations)
+2. [Get Single Station Fuels Observations](https://github.com/edrewitz/WxData/blob/main/Documentation/single%20raws%20fuels%20obs.md#fems-single-raws-station-fuels-observations)
+3. [Get Multi Station Weather Observations](https://github.com/edrewitz/WxData/blob/main/Documentation/multi%20raws%20weather%20obs.md#fems-multi-raws-station-weather-observations)
+4. [Get Multi Station Fuels Observations](https://github.com/edrewitz/WxData/blob/main/Documentation/multi%20raws%20fuels%20obs.md#fems-multi-raws-station-fuels-observations)
+5. [Get Current Multi Station Weather Observations](https://github.com/edrewitz/WxData/blob/main/Documentation/current%20multi%20raws%20weather%20obs.md#fems-multi-raws-station-current-weather-observations)
+6. [Get Current Multi Station Fuels Observations](https://github.com/edrewitz/WxData/blob/main/Documentation/current%20multi%20raws%20fuels%20obs.md#fems-multi-raws-station-current-fuels-observations)
+7. [Get Current Multi Station Weather Observations By State](https://github.com/edrewitz/WxData/blob/main/Documentation/raws%20weather%20obs%20by%20state.md#fems-raws-station-current-weather-observations-by-state)
+8. [Get Current Multi Station Fuels Observations By State](https://github.com/edrewitz/WxData/blob/main/Documentation/raws%20fuels%20obs%20by%20state.md#fems-raws-station-current-fuels-observations-by-state)
+9. [Get Single Station Weather Forecast](https://github.com/edrewitz/WxData/blob/main/Documentation/single%20raws%20weather%20forecast.md#fems-single-raws-station-weather-forecast)
+10. [Get Single Station NFDRS (Fuels) Forecast](https://github.com/edrewitz/WxData/blob/main/Documentation/single%20raws%20nfdrs%20forecast.md#fems-single-raws-station-nfdrs-fuels-forecast)
+11. [Get Multi Station Weather Forecast](https://github.com/edrewitz/WxData/blob/main/Documentation/multi%20raws%20weather%20forecast.md#fems-multi-raws-station-weather-forecast)
+12. [Get Multi Station NFDRS (Fuels) Forecast](https://github.com/edrewitz/WxData/blob/main/Documentation/multi%20raws%20nfdrs%20forecast.md#fems-multi-raws-station-nfdrs-fuels-forecast)
+13. [Get Single Station Meta-Data](https://github.com/edrewitz/WxData/blob/main/Documentation/raws%20single%20station%20meta%20data.md#fems-single-raws-station-meta-data)
+14. [Get Multi Station Meta-Data](https://github.com/edrewitz/WxData/blob/main/Documentation/raws%20multi%20station%20meta%20data.md#fems-multi-raws-station-meta-data)
 
 ***Observed Atmospheric Soundings***
 1. [University Of Wyoming Soundings](https://github.com/edrewitz/wxdata/blob/main/Documentation/wyoming_soundings.md)
@@ -220,6 +231,9 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 ***Custom CSV Data***
 1. [CSV Data Client](https://github.com/edrewitz/WxData/blob/main/Documentation/get_csv_data.md#get-csv-data)
+
+***Custom Excel Data***
+1. [Excel Data Client](https://github.com/edrewitz/WxData/blob/main/Documentation/get_excel_data.md#get-excel-data)
 
 ***Cyclic Points For Hemispheric Plots***
 1. [Cyclic Points](https://github.com/edrewitz/wxdata/blob/main/Documentation/cyclic_point.md#using-wxdata-to-add-cyclic-points-for-hemispheric-plots)
@@ -468,18 +482,12 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
       # Client List:
       #  - get_gridded_data()
       #  - get_csv_data()
+      #  - get_excel_data() 
       #  - get_xmacis_data()
       import wxdata.client.client as client
       
       # This function executes a list of Python scripts in the order the user lists them
       from wxdata.utils.scripts import run_external_scripts
-
-
-
-
-   
-   
-
 
 ## Citations
 

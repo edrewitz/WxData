@@ -26,10 +26,10 @@
         If the user wants to use a custom date range enter 'Custom' or 'custom' in this field. 
 
     2) start_date (String) - Default = None. The start date if the user wants to define a custom period. Enter as a string
-        in the following format 'YYYY-mm-dd'
+        in the following format 'YYYY-mm-ddTH:M:S'
 
     3) end_date (String) - Default = None. The end date if the user wants to define a custom period. Enter as a string
-        in the following format 'YYYY-mm-dd'
+        in the following format 'YYYY-mm-ddTH:M:S'
 
     4) fuel_model (String) - Default = 'Y'. The fuel model being used. 
         Fuel Models List:

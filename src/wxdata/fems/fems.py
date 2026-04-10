@@ -120,10 +120,10 @@ def get_single_raws_station_weather_observations(station_id,
         If the user wants to use a custom date range enter 'Custom' or 'custom' in this field. 
 
     2) start_date (String) - Default = None. The start date if the user wants to define a custom period. Enter as a string
-        in the following format 'YYYY-mm-dd'
+        in the following format 'YYYY-mm-ddTH:M:S'
 
     3) end_date (String) - Default = None. The end date if the user wants to define a custom period. Enter as a string
-        in the following format 'YYYY-mm-dd'
+        in the following format 'YYYY-mm-ddTH:M:S'
     
     4) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
         with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
@@ -227,10 +227,10 @@ def get_single_raws_station_fuels_observations(station_id,
         If the user wants to use a custom date range enter 'Custom' or 'custom' in this field. 
 
     2) start_date (String) - Default = None. The start date if the user wants to define a custom period. Enter as a string
-        in the following format 'YYYY-mm-dd'
+        in the following format 'YYYY-mm-ddTH:M:S'
 
     3) end_date (String) - Default = None. The end date if the user wants to define a custom period. Enter as a string
-        in the following format 'YYYY-mm-dd'
+        in the following format 'YYYY-mm-ddTH:M:S'
 
     4) fuel_model (String) - Default = 'Y'. The fuel model being used. 
         Fuel Models List:
@@ -345,10 +345,10 @@ def get_multi_raws_station_weather_observations(station_ids,
         If the user wants to use a custom date range enter 'Custom' or 'custom' in this field. 
 
     2) start_date (String) - Default = None. The start date if the user wants to define a custom period. Enter as a string
-        in the following format 'YYYY-mm-dd'
+        in the following format 'YYYY-mm-ddTH:M:S'
 
     3) end_date (String) - Default = None. The end date if the user wants to define a custom period. Enter as a string
-        in the following format 'YYYY-mm-dd'
+        in the following format 'YYYY-mm-ddTH:M:S'
     
     4) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
         with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
@@ -466,10 +466,10 @@ def get_multi_raws_station_fuels_observations(station_ids,
         If the user wants to use a custom date range enter 'Custom' or 'custom' in this field. 
 
     2) start_date (String) - Default = None. The start date if the user wants to define a custom period. Enter as a string
-        in the following format 'YYYY-mm-dd'
+        in the following format 'YYYY-mm-ddTH:M:S'
 
     3) end_date (String) - Default = None. The end date if the user wants to define a custom period. Enter as a string
-        in the following format 'YYYY-mm-dd'
+        in the following format 'YYYY-mm-ddTH:M:S'
 
     4) fuel_model (String) - Default = 'Y'. The fuel model being used. 
         Fuel Models List:

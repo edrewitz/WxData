@@ -538,5 +538,6 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 6) [National Oceanic and Atmospheric Administration/Climate Prediction Center](https://www.cpc.ncep.noaa.gov/products/GIS/GIS_DATA/us_tempprcpfcst/index.php)
 7) [Applied Climate Information System (ACIS)](https://www.rcc-acis.org/docs_webservices.html)
 8) [USDA Fire Environment Mapping System](https://fems.fs2c.usda.gov/download)
+9) [Amazon AWS Unidata NEXRAD2 Bucket](https://unidata-nexrad-level2.s3.amazonaws.com/index.html)
 
 

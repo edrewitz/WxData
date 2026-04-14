@@ -7,6 +7,7 @@ These functions are compatible with users on VPN/PROXY connections as well as no
 2) get_csv_data
 3) get_excel_data
 4) get_xmacis_data
+5) get_open_aws_data
 
 (C) Eric J. Drewitz 2025-2026
 """
@@ -17,9 +18,14 @@ import time as _time
 import sys as _sys
 import os as _os
 import pandas as _pd
+import boto3 as _boto3
+import warnings as _warnings
+_warnings.filterwarnings('ignore')
 
 from io import BytesIO as _BytesIO
-
+from tqdm import tqdm as _tqdm
+from botocore import UNSIGNED as _UNSIGNED
+from botocore.client import Config as _Config
 from datetime import(
     datetime as _datetime, 
     timedelta as _timedelta
@@ -27,7 +33,6 @@ from datetime import(
 from wxdata.utils.progress_bar import progress_bar as _progress_bar
 from wxdata.utils.xmacis2_cleanup import clean_pandas_dataframe as _clean_pandas_dataframe
 from wxdata.utils.recycle_bin import(
-    
     clear_recycle_bin_windows as _clear_recycle_bin_windows,
     clear_trash_bin_mac as _clear_trash_bin_mac,
     clear_trash_bin_linux as _clear_trash_bin_linux
@@ -121,12 +126,12 @@ def get_gridded_data(url,
             else:
                 pass
         except _requests.exceptions.RequestException as e:
-            for i in range(0, 6, 1):
+            for i in range(0, 10, 1):
                 if i < 3:
-                    print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
+                    print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
                     _time.sleep(30)
                 else:
-                    print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
+                    print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
                     _time.sleep(60)  
                     
                 try:
@@ -141,7 +146,7 @@ def get_gridded_data(url,
                     break
                 except _requests.exceptions.RequestException as e:
                     i = i 
-                    if i >= 5:
+                    if i >= 9:
                         print(f"Error - File Cannot Be Downloaded.\nError Code: {e}")    
                         _sys.exit(1)      
                         
@@ -162,12 +167,12 @@ def get_gridded_data(url,
             else:
                 pass
         except _requests.exceptions.RequestException as e:
-            for i in range(0, 6, 1):
+            for i in range(0, 10, 1):
                 if i < 3:
-                    print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
+                    print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
                     _time.sleep(30)
                 else:
-                    print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
+                    print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
                     _time.sleep(60)  
                     
                 try:
@@ -182,7 +187,7 @@ def get_gridded_data(url,
                     break
                 except _requests.exceptions.RequestException as e:
                     i = i 
-                    if i >= 5:
+                    if i >= 9:
                         print(f"Error - File Cannot Be Downloaded.\nError Code: {e}")    
                         _sys.exit(1)    
                         
@@ -254,12 +259,12 @@ def get_csv_data(url,
         try:
             response = _requests.get(url)
         except Exception as e:
-            for i in range(0, 6, 1):
+            for i in range(0, 10, 1):
                 if i < 3:
-                    print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
+                    print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
                     _time.sleep(30)
                 else:
-                    print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
+                    print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
                     _time.sleep(60)  
                     
                 try:
@@ -267,7 +272,7 @@ def get_csv_data(url,
                     break
                 except Exception as e:
                     i = i                    
-                    if i >= 5:
+                    if i >= 9:
                         print(f"Error - File Cannot Be Downloaded.\nError Code: {e}")    
                         _sys.exit(1)    
         finally:
@@ -278,12 +283,12 @@ def get_csv_data(url,
         try:
             response = _requests.get(url, proxies=proxies)
         except Exception as e:
-            for i in range(0, 6, 1):
+            for i in range(0, 10, 1):
                 if i < 3:
-                    print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
+                    print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
                     _time.sleep(30)
                 else:
-                    print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
+                    print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
                     _time.sleep(60)  
                     
                 try:
@@ -291,7 +296,7 @@ def get_csv_data(url,
                     break
                 except Exception as e:
                     i = i                    
-                    if i >= 5:
+                    if i >= 9:
                         print(f"Error - File Cannot Be Downloaded.\nError Code: {e}")    
                         _sys.exit(1) 
 
@@ -383,12 +388,12 @@ def get_excel_data(url,
         try:
             response = _requests.get(url)
         except Exception as e:
-            for i in range(0, 6, 1):
+            for i in range(0, 10, 1):
                 if i < 3:
-                    print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
+                    print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
                     _time.sleep(30)
                 else:
-                    print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
+                    print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
                     _time.sleep(60)  
                     
                 try:
@@ -396,7 +401,7 @@ def get_excel_data(url,
                     break
                 except Exception as e:
                     i = i                    
-                    if i >= 5:
+                    if i >= 9:
                         print(f"Error - File Cannot Be Downloaded.\nError Code: {e}")    
                         _sys.exit(1)    
         finally:
@@ -407,12 +412,12 @@ def get_excel_data(url,
         try:
             response = _requests.get(url, proxies=proxies)
         except Exception as e:
-            for i in range(0, 6, 1):
+            for i in range(0, 10, 1):
                 if i < 3:
-                    print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
+                    print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
                     _time.sleep(30)
                 else:
-                    print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {5 - i}")
+                    print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
                     _time.sleep(60)  
                     
                 try:
@@ -420,7 +425,7 @@ def get_excel_data(url,
                     break
                 except Exception as e:
                     i = i                    
-                    if i >= 5:
+                    if i >= 9:
                         print(f"Error - File Cannot Be Downloaded.\nError Code: {e}")    
                         _sys.exit(1) 
 
@@ -605,12 +610,33 @@ def get_xmacis_data(station,
     output_cols = ['Date', 'Maximum Temperature', 'Minimum Temperature', 'Average Temperature', 'Average Temperature Departure', 'Heating Degree Days', 'Cooling Degree Days', 'Precipitation', 'Snowfall', 'Snow Depth', 'Growing Degree Days']
         
     if proxies == None:
-        response = _requests.post('http://data.rcc-acis.org/StnData', 
-                                 json=input_dict)
+        try:
+            response = _requests.post('http://data.rcc-acis.org/StnData', 
+                                    json=input_dict)
+        except Exception as e:
+            for i in range(0, 10, 1):
+                _time.sleep(60)
+                try:
+                    response = _requests.post('http://data.rcc-acis.org/StnData', 
+                                    json=input_dict)
+                    break
+                except Exception as e:
+                    i = i
     else:
-        response = _requests.post('http://data.rcc-acis.org/StnData', 
-                                 json=input_dict,
-                                 proxies=proxies)
+        try:
+            response = _requests.post('http://data.rcc-acis.org/StnData', 
+                                    json=input_dict,
+                                    proxies=proxies)
+        except Exception as e:
+            for i in range(0, 10, 1):
+                _time.sleep(60)
+                try:
+                    response = _requests.post('http://data.rcc-acis.org/StnData', 
+                                    json=input_dict,
+                                    proxies=proxies)
+                    break
+                except Exception as e:
+                    i = i
         
     response.close()
         
@@ -642,5 +668,108 @@ def get_xmacis_data(station,
         pass
     
     
+def get_open_aws_data(bucket,
+                      key,
+                      path,
+                      filenames,
+                      proxies=None,
+                      notifications='off',
+                      clear_recycle_bin=False,
+                      clear_data=True):
     
+    """
+    This function downloads open data from Amazon AWS.
+    
+    Required Arguments:
+    
+    1) bucket (String) - The Amazon AWS Bucket Name.
+    
+    2) key (String) - The directory inside of the bucket that the file is in. 
+    
+    3) path (String) - The local directory where the file will be saved to
+    
+    4) filenames (String List) - The names of the files being downloaded
+    
+    Optional Arguments:
+    
+    1) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies="http://your-proxy-address:port" ---> get_open_aws_data(bucket,
+                                                                                            key,
+                                                                                            path,
+                                                                                            filenames,
+                                                                                            proxies=proxies)
+
+    2) notifications (String) - Default='on'. When set to 'on' a print statement to the user will tell the user their file saved to the path
+        they specified. 
+    
+    3) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
+                                                                                            
+    4) clear_data (Boolean) - Default=True. When set to True, the files in {path} will be cleared. 
+                                                                                            
+    Returns
+    -------
+    
+    Open data from Amazon AWS downloaded to the local computer.
+    """
+    if clear_recycle_bin == True:
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
+    else:
+        pass  
+    
+    try:
+        _os.makedirs(f"{path}")
+    except Exception as e:
+        pass
+    
+    if clear_data == True:
+        try:
+            for file in _os.listdir(f"{path}"):
+                _os.remove(f"{path}/{file}")
+        except Exception as e:
+            pass
+    else:
+        pass
+        
+    
+    if proxies == None:
+        pass
+    else:
+        _os.environ['http_proxy'] = proxies
+        _os.environ['https_proxy'] = proxies
+        
+    s3 = _boto3.client('s3', config=_Config(signature_version=_UNSIGNED))
+    
+    for file in filenames:
+        try:
+            response = s3.head_object(Bucket=bucket, Key=f"{key}{file}")
+        except Exception as e:
+            for i in range(0, 10, 1):
+                _time.sleep(60)
+                try:
+                    response = s3.head_object(Bucket=bucket, Key=f"{key}{file}")
+                    break
+                except Exception as e:
+                    i = i
+        total_size = response['ContentLength']
+        with _tqdm(total=total_size, unit='B', unit_scale=True, desc=file, leave=False) as pbar:
+            try:
+                s3.download_file(bucket, f"{key}{file}", f"{path}/{file}", Callback=pbar.update)
+            except Exception as e:
+                for i in range(0, 10, 1):
+                    _time.sleep(60)
+                    try:
+                        s3.download_file(bucket, f"{key}{file}", f"{path}/{file}", Callback=pbar.update)
+                    except Exception as e:
+                        i = i
+
+        if notifications == 'on':
+            print(f"{file} saved to {path}")
+        else:
+            pass
+        
         

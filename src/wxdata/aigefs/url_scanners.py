@@ -114,7 +114,7 @@ def aigefs_pres_members_url_scanner(final_forecast_hour,
             y_00 = requests.get(f"{yesterday_00z_url}/{file_00z}", stream=True)
             y_00.close()
         except Exception as e:
-            for i in range(0, 5, 1):
+            for i in range(0, 10, 1):
                 time.sleep(30)
                 try:
                     t_18 = requests.get(f"{today_18z_url}/{file_18z}", stream=True)
@@ -157,7 +157,7 @@ def aigefs_pres_members_url_scanner(final_forecast_hour,
             y_00 = requests.get(f"{yesterday_00z_url}/{file_00z}", stream=True, proxies=proxies)
             y_00.close()
         except Exception as e:
-            for i in range(0, 5, 1):
+            for i in range(0, 10, 1):
                 time.sleep(30)
                 try:
                     t_18 = requests.get(f"{today_18z_url}/{file_18z}", stream=True, proxies=proxies)
@@ -341,7 +341,7 @@ def aigefs_sfc_members_url_scanner(final_forecast_hour,
             y_00 = requests.get(f"{yesterday_00z_url}/{file_00z}", stream=True)
             y_00.close()
         except Exception as e:
-            for i in range(0, 5, 1):
+            for i in range(0, 10, 1):
                 time.sleep(30)
                 try:
                     t_18 = requests.get(f"{today_18z_url}/{file_18z}", stream=True)
@@ -384,7 +384,7 @@ def aigefs_sfc_members_url_scanner(final_forecast_hour,
             y_00 = requests.get(f"{yesterday_00z_url}/{file_00z}", stream=True, proxies=proxies)
             y_00.close()
         except Exception as e:
-            for i in range(0, 5, 1):
+            for i in range(0, 10, 1):
                 time.sleep(30)
                 try:
                     t_18 = requests.get(f"{today_18z_url}/{file_18z}", stream=True, proxies=proxies)
@@ -582,7 +582,7 @@ def aigefs_single_url_scanner(final_forecast_hour,
             y_00 = requests.get(f"{yesterday_00z_url}/{file_00z}", stream=True)
             y_00.close()
         except Exception as e:
-            for i in range(0, 5, 1):
+            for i in range(0, 10, 1):
                 time.sleep(30)
                 try:
                     t_18 = requests.get(f"{today_18z_url}/{file_18z}", stream=True)
@@ -625,7 +625,7 @@ def aigefs_single_url_scanner(final_forecast_hour,
             y_00 = requests.get(f"{yesterday_00z_url}/{file_00z}", stream=True, proxies=proxies)
             y_00.close()
         except Exception as e:
-            for i in range(0, 5, 1):
+            for i in range(0, 10, 1):
                 time.sleep(30)
                 try:
                     t_18 = requests.get(f"{today_18z_url}/{file_18z}", stream=True, proxies=proxies)

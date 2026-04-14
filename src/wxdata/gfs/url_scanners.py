@@ -8,6 +8,7 @@ These functions return the URL and filename for the latest available data on the
 
 import requests
 import sys
+import time
 
 from urllib.parse import urlparse, parse_qs
 from wxdata.utils.coords import convert_lon
@@ -255,7 +256,8 @@ def gfs_0p50_url_scanner(final_forecast_hour,
             y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", stream=True)
             y_00.close()
         except Exception as e:
-            for i in range(0, 5, 1):
+            for i in range(0, 10, 1):
+                time.sleep(30)
                 try:
                     t_18 = requests.get(f"{today_18z_scan}{f_18z}", stream=True)
                     t_18.close()
@@ -298,7 +300,8 @@ def gfs_0p50_url_scanner(final_forecast_hour,
             y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", stream=True, proxies=proxies)
             y_00.close()
         except Exception as e:
-            for i in range(0, 5, 1):
+            for i in range(0, 10, 1):
+                time.sleep(30)
                 try:
                     t_18 = requests.get(f"{today_18z_scan}{f_18z}", stream=True, proxies=proxies)
                     t_18.close()
@@ -764,7 +767,8 @@ def gfs_0p25_url_scanner(final_forecast_hour,
             y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", stream=True)
             y_00.close()
         except Exception as e:
-            for i in range(0, 5, 1):
+            for i in range(0, 10, 1):
+                time.sleep(30)
                 try:
                     t_18 = requests.get(f"{today_18z_scan}{f_18z}", stream=True)
                     t_18.close()
@@ -807,7 +811,8 @@ def gfs_0p25_url_scanner(final_forecast_hour,
             y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", stream=True, proxies=proxies)
             y_00.close()
         except Exception as e:
-            for i in range(0, 5, 1):
+            for i in range(0, 10, 1):
+                time.sleep(30)
                 try:
                     t_18 = requests.get(f"{today_18z_scan}{f_18z}", stream=True, proxies=proxies)
                     t_18.close()
@@ -1274,7 +1279,8 @@ def gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
             y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", stream=True)
             y_00.close()
         except Exception as e:
-            for i in range(0, 5, 1):
+            for i in range(0, 10, 1):
+                time.sleep(30)
                 try:
                     t_18 = requests.get(f"{today_18z_scan}{f_18z}", stream=True)
                     t_18.close()
@@ -1317,7 +1323,8 @@ def gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
             y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", stream=True, proxies=proxies)
             y_00.close()
         except Exception as e:
-            for i in range(0, 5, 1):
+            for i in range(0, 10, 1):
+                time.sleep(30)
                 try:
                     t_18 = requests.get(f"{today_18z_scan}{f_18z}", stream=True, proxies=proxies)
                     t_18.close()

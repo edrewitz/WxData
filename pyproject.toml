@@ -30,6 +30,8 @@ dependencies = [
   "tqdm>=4.67.3",
   "ecmwf-opendata>=0.3.26",
   "openpyxl>=3.1.5",
+  "arm-pyart>=2.2.0",
+  "boto3>=1.42.88",
  
 ]
 

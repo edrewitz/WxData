@@ -524,6 +524,10 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 **openpyxl**: Gazoni, E., & Clark, C. (2024). openpyxl: A Python library to read/write Excel 2010 xlsx/xlsm/xltx/xltm files (Version 3.1.5) [Computer software]. https://openpyxl.readthedocs.io/
 
+**pyart**: Helmus, J.J. & Collis, S.M., (2016). The Python ARM Radar Toolkit (Py-ART), a Library for Working with Weather Radar Data in the Python Programming Language. Journal of Open Research Software. 4(1), p.e25. DOI: 10.5334/jors.119.
+
+**boto3**: Amazon Web Services. (n.d.). Boto3 Documentation (Version 1.x.x) [Computer software]. Retrieved from https://boto3.amazonaws.com/v1/documentation/api/latest/index.html 
+
 ## Data Sources
 
 1) [National Oceanic and Atmospheric Administration/National Center for Environmental Prediction](https://nomads.ncep.noaa.gov/)
@@ -534,5 +538,6 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 6) [National Oceanic and Atmospheric Administration/Climate Prediction Center](https://www.cpc.ncep.noaa.gov/products/GIS/GIS_DATA/us_tempprcpfcst/index.php)
 7) [Applied Climate Information System (ACIS)](https://www.rcc-acis.org/docs_webservices.html)
 8) [USDA Fire Environment Mapping System](https://fems.fs2c.usda.gov/download)
+9) [Amazon AWS Unidata NEXRAD2 Bucket](https://unidata-nexrad-level2.s3.amazonaws.com/index.html)
 
 

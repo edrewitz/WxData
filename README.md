@@ -514,6 +514,8 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 **requests**: K. Reitz, "Requests: HTTP for Humans". Available: https://requests.readthedocs.io/.
 
+**Beautiful Soup**: Richardson, L. (2025). Beautiful Soup (Version 4.14.3) [Computer software]. https://www.crummy.com/software/BeautifulSoup/
+
 **shapeography**: Eric J. Drewitz. (2026). edrewitz/shapeography: shapeography 1.0 Released (shapeography1.0). Zenodo. https://doi.org/10.5281/zenodo.18676845
 
 **geopandas**: Kelsey Jordahl, Joris Van den Bossche, Martin Fleischmann, Jacob Wasserman, James McBride, Jeffrey Gerard, … François Leblanc. (2020, July 15). geopandas/geopandas: v0.8.1 (Version v0.8.1). Zenodo. http://doi.org/10.5281/zenodo.3946761

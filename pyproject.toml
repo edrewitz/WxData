@@ -1,7 +1,7 @@
 [project]
 name = "wxdata"
-version = "1.5"
-description = "A Python library that acts as a client to download, pre-process and post-process weather data. Friendly for users on VPN/PROXY connections."
+version = "1.6"
+description = "A Python package of end-to-end weather data clients & raw data clients with VPN/PROXY support, data processors that decode variable keys from GRIB format into a plain-language format & various tools for assisting Python automated workflows, querying meteorological datasets and filling gaps in meteorological data."
 readme = "README.md"
 requires-python = ">=3.10"
 license-files = ["LICENSE*"]
@@ -31,7 +31,6 @@ dependencies = [
   "ecmwf-opendata>=0.3.26",
   "openpyxl>=3.1.5",
   "arm-pyart>=2.2.0",
-  "boto3>=1.42.88",
  
 ]
 

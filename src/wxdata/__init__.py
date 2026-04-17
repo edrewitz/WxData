@@ -248,5 +248,5 @@ These clients can be easily configured to work on VPN/PROXY connections.
 #  - get_csv_data()
 #  - get_excel_data()
 #  - get_xmacis_data()
-#  - get_open_aws_data()
+#  - get_aws_open_data()
 import wxdata.client.client as client

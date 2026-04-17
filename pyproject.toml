@@ -20,6 +20,7 @@ dependencies = [
   "metpy>=1.7.1",
   "numpy>=2.2.6",
   "pandas>=2.3.3",
+  "cartopy>=0.25.0",
   "xarray>=2025.6.1",
   "netcdf4>=1.7.3",
   "shapeography>=1.2",

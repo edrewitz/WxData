@@ -36,6 +36,7 @@ def download_current_single_station_nexrad2_radar_data(site_id,
                                                         hours=3,
                                                         path=f"Radar Data",
                                                         proxies=None,
+                                                        chunk_size=8192,
                                                         clear_recycle_bin=False,
                                                         mode='precipitation',
                                                         notifications='off'):
@@ -54,22 +55,23 @@ def download_current_single_station_nexrad2_radar_data(site_id,
     
     2) path (String) - Default="Radar Data". The parent directory of the radar data on the local computer.
     
-    3) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    3) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-       proxies=None ---> proxies="http://your-proxy-address:port" ---> download_current_single_station_nexrad2_radar_data(bucket,
-                                                                                                                            key,
-                                                                                                                            path,
-                                                                                                                            filenames,
-                                                                                                                            proxies=proxies)
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
+                               
+    4) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
-    4) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+    5) clear_recycle_bin (Boolean) - Default=False. When set to True, 
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
+        This setting is to help preserve memory on the machine.
         
-    5) mode (String) - Default='precipitation'. When in 'precipitation' mode, data querying is based on 10 scans per hour.
+    6) mode (String) - Default='precipitation'. When in 'precipitation' mode, data querying is based on 10 scans per hour.
         When in 'clear air' mode, data querying is based on 7 scans per hour.
         
-    6) notifications (String) - Default='on'. When set to 'on' a print statement to the user will tell the user their file saved to the path
+    7) notifications (String) - Default='on'. When set to 'on' a print statement to the user will tell the user their file saved to the path
         they specified. 
         
     Returns
@@ -83,12 +85,6 @@ def download_current_single_station_nexrad2_radar_data(site_id,
     notifications = notifications.lower()
     
     import pyart
-    
-    if proxies == None:
-        pass
-    else:
-        _os.environ['http_proxy'] = proxies
-        _os.environ['https_proxy'] = proxies
     
     if clear_recycle_bin == True:
         _clear_recycle_bin_windows()
@@ -111,27 +107,37 @@ def download_current_single_station_nexrad2_radar_data(site_id,
     data = _scan_radar_directory(site_id,
                                     _now, 
                                     hours,
-                                    mode)
+                                    mode,
+                                    proxies)
+    
         
     if len(data) == 2:
-        _client.get_open_aws_data("unidata-nexrad-level2",
-                                    data[0],
-                                    f"{path}/{site_id.upper()}",
-                                    data[1],
-                                    notifications=notifications)
+        for filename in data[1]:
+            _client.get_aws_open_data(data[0],
+                                        f"{path}/{site_id.upper()}",
+                                        filename,
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_recycle_bin=clear_recycle_bin)
     else:
-        _client.get_open_aws_data("unidata-nexrad-level2",
-                                    data[0],
-                                    f"{path}/{site_id.upper()}",
-                                    data[1],
-                                    notifications=notifications)
-                
-        _client.get_open_aws_data("unidata-nexrad-level2",
-                                    data[2],
-                                    f"{path}/{site_id.upper()}",
-                                    data[3],
-                                    notifications=notifications,
-                                    clear_data=False)
+        for filename in data[1]:
+            _client.get_aws_open_data(data[0],
+                                        f"{path}/{site_id.upper()}",
+                                        filename,
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_recycle_bin=clear_recycle_bin)
+            
+        for filename in data[3]:
+            _client.get_aws_open_data(data[2],
+                                        f"{path}/{site_id.upper()}",
+                                        filename,
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_recycle_bin=False)
             
     files = []
     for file in _os.listdir(f"{path}/{site_id.upper()}"):
@@ -152,6 +158,7 @@ def download_current_multi_station_nexrad2_radar_data(site_ids,
                                                         hours=3,
                                                         path=f"Radar Data",
                                                         proxies=None,
+                                                        chunk_size=8192,
                                                         clear_recycle_bin=False,
                                                         mode='precipitation',
                                                         notifications='off'):
@@ -170,22 +177,23 @@ def download_current_multi_station_nexrad2_radar_data(site_ids,
     
     2) path (String) - Default="Radar Data". The parent directory of the radar data on the local computer.
     
-    3) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    3) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-       proxies=None ---> proxies="http://your-proxy-address:port" ---> download_current_single_station_nexrad2_radar_data(bucket,
-                                                                                                                            key,
-                                                                                                                            path,
-                                                                                                                            filenames,
-                                                                                                                            proxies=proxies)
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
+                               
+    4) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
-    4) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+    5) clear_recycle_bin (Boolean) - Default=False. When set to True, 
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
         This setting is to help preserve memory on the machine. 
         
-    5) mode (String) - Default='precipitation'. When in 'precipitation' mode, data querying is based on 10 scans per hour.
+    6) mode (String) - Default='precipitation'. When in 'precipitation' mode, data querying is based on 10 scans per hour.
         When in 'clear air' mode, data querying is based on 7 scans per hour.
         
-    6) notifications (String) - Default='on'. When set to 'on' a print statement to the user will tell the user their file saved to the path
+    7) notifications (String) - Default='on'. When set to 'on' a print statement to the user will tell the user their file saved to the path
         they specified. 
         
     Returns
@@ -201,6 +209,7 @@ def download_current_multi_station_nexrad2_radar_data(site_ids,
                                                         hours=hours,
                                                         path=path,
                                                         proxies=proxies,
+                                                        chunk_size=chunk_size,
                                                         clear_recycle_bin=clear_recycle_bin,
                                                         mode=mode,
                                                         notifications=notifications)

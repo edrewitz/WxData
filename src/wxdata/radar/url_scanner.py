@@ -14,7 +14,8 @@ from datetime import timedelta
 def scan_radar_directory(site_id,
                          end, 
                          hours,
-                         mode):
+                         mode,
+                         proxies):
     
     """
     This function returns the queried files for a given site_id (radar site) for a given time period defined as start to end. 
@@ -29,6 +30,13 @@ def scan_radar_directory(site_id,
                                
     4) mode (String) - When set to 'precipitation' there are about 10 files (scans) per hour.
         When set to 'clean air' there are about 7 files (scans) per hour. 
+        
+    5) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
                                
     Optional Arguments: None
     
@@ -46,17 +54,30 @@ def scan_radar_directory(site_id,
     if prefix_1 == prefix_2:
 
         url = f"{bucket}?list-type=2&prefix={prefix_1}"
+        download_url = f"{bucket}/{prefix_1}"
         
-        try:
-            response = requests.get(url)
-        except Exception as e:
-            for i in range(0, 10, 1):
-                time.sleep(60)
-                try:
-                    response = requests.get(url)
-                    break
-                except Exception as e:
-                    i = i
+        if proxies == None:
+            try:
+                response = requests.get(url)
+            except Exception as e:
+                for i in range(0, 10, 1):
+                    time.sleep(60)
+                    try:
+                        response = requests.get(url)
+                        break
+                    except Exception as e:
+                        i = i
+        else:
+            try:
+                response = requests.get(url, proxies=proxies)
+            except Exception as e:
+                for i in range(0, 10, 1):
+                    time.sleep(60)
+                    try:
+                        response = requests.get(url)
+                        break
+                    except Exception as e:
+                        i = i           
                         
         response.raise_for_status()
         
@@ -92,22 +113,35 @@ def scan_radar_directory(site_id,
                 queried_files.append(files[i])
             
         data = []
-        data.append(prefix_1)
+        data.append(download_url)
         data.append(queried_files)
         
     else:
         url_1 = f"{bucket}?list-type=2&prefix={prefix_1}"
+        download_url_1 = f"{bucket}/{prefix_1}"
         
-        try:
-            response = requests.get(url_1)
-        except Exception as e:
-            for i in range(0, 10, 1):
-                time.sleep(60)
-                try:
-                    response = requests.get(url_1)
-                    break
-                except Exception as e:
-                    i = i
+        if proxies == None:
+            try:
+                response = requests.get(url_1)
+            except Exception as e:
+                for i in range(0, 10, 1):
+                    time.sleep(60)
+                    try:
+                        response = requests.get(url_1)
+                        break
+                    except Exception as e:
+                        i = i
+        else:
+            try:
+                response = requests.get(url_1, proxies=proxies)
+            except Exception as e:
+                for i in range(0, 10, 1):
+                    time.sleep(60)
+                    try:
+                        response = requests.get(url_1)
+                        break
+                    except Exception as e:
+                        i = i      
                         
         response.raise_for_status()
         
@@ -126,16 +160,30 @@ def scan_radar_directory(site_id,
                 files_1.append(file)
         
         url_2 = f"{bucket}?list-type=2&prefix={prefix_2}"
-        try:
-            response = requests.get(url_2)
-        except Exception as e:
-            for i in range(0, 10, 1):
-                time.sleep(60)
-                try:
-                    response = requests.get(url_2)
-                    break
-                except Exception as e:
-                    i = i
+        download_url_2 = f"{bucket}/{prefix_2}"
+        
+        if proxies == None:
+            try:
+                response = requests.get(url_2)
+            except Exception as e:
+                for i in range(0, 10, 1):
+                    time.sleep(60)
+                    try:
+                        response = requests.get(url_2)
+                        break
+                    except Exception as e:
+                        i = i
+        else:
+            try:
+                response = requests.get(url_2, proxies=proxies)
+            except Exception as e:
+                for i in range(0, 10, 1):
+                    time.sleep(60)
+                    try:
+                        response = requests.get(url_2)
+                        break
+                    except Exception as e:
+                        i = i    
 
         response.raise_for_status()
         
@@ -189,9 +237,9 @@ def scan_radar_directory(site_id,
                 queried_files_2.append(files_2[i])
 
         data = []
-        data.append(prefix_1)
+        data.append(download_url_1)
         data.append(queried_files_1)
-        data.append(prefix_2)
+        data.append(download_url_2)
         data.append(queried_files_2)
         
     return data

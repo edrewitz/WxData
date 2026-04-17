@@ -12,15 +12,6 @@ These functions are compatible with users on VPN/PROXY connections as well as no
 (C) Eric J. Drewitz 2025-2026
 """
 
-try:
-    import boto3 as _boto3
-    from botocore import UNSIGNED as _UNSIGNED
-    from botocore.client import Config as _Config
-    HAS_BOTO3 = True
-except Exception as e:
-    HAS_BOTO3 = False
-
-
 import requests as _requests
 import time as _time
 import sys as _sys
@@ -31,16 +22,11 @@ import warnings as _warnings
 _warnings.filterwarnings('ignore')
 
 from io import BytesIO as _BytesIO
-from tqdm import tqdm as _tqdm
 from datetime import(
     datetime as _datetime, 
     timedelta as _timedelta
 )
-from wxdata.utils.pip_installer import installer as _installer
-from wxdata.utils.missing_optional_dependency import(
-    optional_dependency_not_found as _optional_dependency_not_found,
-    install_method as _install_method
-)
+
 from wxdata.utils.progress_bar import progress_bar as _progress_bar
 from wxdata.utils.xmacis2_cleanup import clean_pandas_dataframe as _clean_pandas_dataframe
 from wxdata.utils.recycle_bin import(
@@ -679,128 +665,141 @@ def get_xmacis_data(station,
         pass
     
     
-def get_open_aws_data(bucket,
-                      key,
-                      path,
-                      filenames,
-                      proxies=None,
-                      notifications='off',
-                      clear_recycle_bin=False,
-                      clear_data=True):
+def get_aws_open_data(url,
+                    path,
+                    filename,
+                    proxies=None,
+                    chunk_size=8192,
+                    notifications='on',
+                    clear_recycle_bin=False):
     
     """
-    This function downloads open data from Amazon AWS.
+    This function is the client that retrieves Open Data from Amazon AWS Servers. 
+    This client supports VPN/PROXY connections. 
     
     Required Arguments:
     
-    1) bucket (String) - The Amazon AWS Bucket Name.
+    1) url (String) - The download URL to the file. 
     
-    2) key (String) - The directory inside of the bucket that the file is in. 
+    2) path (String) - The directory where the file is saved to. 
     
-    3) path (String) - The local directory where the file will be saved to
-    
-    4) filenames (String List) - The names of the files being downloaded
+    3) filename (String) - The name the user wishes to save the file as. 
     
     Optional Arguments:
     
-    1) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    1) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-       proxies=None ---> proxies="http://your-proxy-address:port" ---> get_open_aws_data(bucket,
-                                                                                            key,
-                                                                                            path,
-                                                                                            filenames,
-                                                                                            proxies=proxies)
-
-    2) notifications (String) - Default='on'. When set to 'on' a print statement to the user will tell the user their file saved to the path
-        they specified. 
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
+                        
+    2) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
-    3) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+    3) notifications (String) - Default='on'. Notification when a file is downloaded and saved to {path}
+    
+    4) clear_recycle_bin (Boolean) - Default=False. When set to True, 
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
         This setting is to help preserve memory on the machine. 
-                                                                                            
-    4) clear_data (Boolean) - Default=True. When set to True, the files in {path} will be cleared. 
-                                                                                            
+    
     Returns
     -------
     
-    Open data from Amazon AWS downloaded to the local computer.
+    Files from AWS Open Data.  
     """
-    
-    if HAS_BOTO3 == True:
-        pass
-    else:
-        conda = _install_method('boto3')
-        if conda == True:
-            _optional_dependency_not_found('boto3')
-        else:
-            print(f"Optional Dependency (Required for this function) is not installed.")
-            install = input("Want me to install it for you? (Y/N)")
-            install = install.upper()
-            if install == 'Y':
-                _installer('boto3')
-                import boto3 as _boto3
-                from botocore import UNSIGNED as _UNSIGNED
-                from botocore.client import Config as _Config
-            else:
-                _optional_dependency_not_found('boto3')
-                _sys.exit(1)
     
     if clear_recycle_bin == True:
         _clear_recycle_bin_windows()
         _clear_trash_bin_mac()
         _clear_trash_bin_linux()
     else:
-        pass  
+        pass
     
     try:
         _os.makedirs(f"{path}")
     except Exception as e:
         pass
-    
-    if clear_data == True:
-        try:
-            for file in _os.listdir(f"{path}"):
-                _os.remove(f"{path}/{file}")
-        except Exception as e:
-            pass
-    else:
-        pass
-        
-    
-    if proxies == None:
-        pass
-    else:
-        _os.environ['http_proxy'] = proxies
-        _os.environ['https_proxy'] = proxies
-        
-    s3 = _boto3.client('s3', config=_Config(signature_version=_UNSIGNED))
-    
-    for file in filenames:
-        try:
-            response = s3.head_object(Bucket=bucket, Key=f"{key}{file}")
-        except Exception as e:
-            for i in range(0, 10, 1):
-                _time.sleep(60)
-                try:
-                    response = s3.head_object(Bucket=bucket, Key=f"{key}{file}")
-                    break
-                except Exception as e:
-                    i = i
-        total_size = response['ContentLength']
-        with _tqdm(total=total_size, unit='B', unit_scale=True, desc=file, leave=False) as pbar:
-            try:
-                s3.download_file(bucket, f"{key}{file}", f"{path}/{file}", Callback=pbar.update)
-            except Exception as e:
-                for i in range(0, 10, 1):
-                    _time.sleep(60)
-                    try:
-                        s3.download_file(bucket, f"{key}{file}", f"{path}/{file}", Callback=pbar.update)
-                    except Exception as e:
-                        i = i
 
-        if notifications == 'on':
-            print(f"{file} saved to {path}")
-        else:
-            pass
+    if proxies == None:
         
+        try:
+            with _requests.get(f"{url}{filename}", stream=True, allow_redirects=True, timeout=60) as r:
+                r.raise_for_status() 
+                _progress_bar(r,
+                                path,
+                                filename,
+                                blocksize=chunk_size)
+            if notifications == 'on':
+                print(f"Successfully saved {filename} to f:{path}")
+            else:
+                pass
+        except _requests.exceptions.RequestException as e:
+            for i in range(0, 10, 1):
+                if i < 3:
+                    print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
+                    _time.sleep(30)
+                else:
+                    print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
+                    _time.sleep(60)  
+                    
+                try:
+                    with _requests.get(f"{url}{filename}", stream=True, allow_redirects=True, timeout=60) as r:
+                        r.raise_for_status() 
+                        _progress_bar(r,
+                                        path,
+                                        filename,
+                                        blocksize=chunk_size)
+                    if notifications == 'on':
+                        print(f"Successfully saved {filename} to f:{path}")  
+                    break
+                except _requests.exceptions.RequestException as e:
+                    i = i 
+                    if i >= 9:
+                        print(f"Error - File Cannot Be Downloaded.\nError Code: {e}")    
+                        _sys.exit(1)      
+                        
+        finally:
+            if r:
+                r.close() # Ensure the connection is closed.
+            
+    else:
+        try:
+            with _requests.get(f"{url}{filename}", stream=True, proxies=proxies, allow_redirects=True, timeout=60) as r:
+                r.raise_for_status() 
+                _progress_bar(r,
+                                path,
+                                filename,
+                                blocksize=chunk_size)
+            if notifications == 'on':
+                print(f"Successfully saved {filename} to f:{path}")
+            else:
+                pass
+        except _requests.exceptions.RequestException as e:
+            for i in range(0, 10, 1):
+                if i < 3:
+                    print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
+                    _time.sleep(30)
+                else:
+                    print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
+                    _time.sleep(60)  
+                    
+                try:
+                    with _requests.get(f"{url}{filename}", stream=True, proxies=proxies, allow_redirects=True, timeout=60) as r:
+                        r.raise_for_status() 
+                        _progress_bar(r,
+                                        path,
+                                        filename,
+                                        blocksize=chunk_size)
+                    if notifications == 'on':
+                        print(f"Successfully saved {filename} to f:{path}")  
+                    break
+                except _requests.exceptions.RequestException as e:
+                    i = i 
+                    if i >= 9:
+                        print(f"Error - File Cannot Be Downloaded.\nError Code: {e}")    
+                        _sys.exit(1)    
+                        
+        finally:
+            if r:
+                r.close() # Ensure the connection is closed.
         

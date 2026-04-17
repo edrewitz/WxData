@@ -71,7 +71,9 @@ def forecast_file_times(cat,
     Returns
     -------
     
-    The datetimes of the final forecast file and model initialization in string format.    
+    1) The datetimes of the final forecast file 
+    2) The model initialization in string format.  
+    3) The list of filenames to be downloaded  
     """
     
     cat = cat.lower()

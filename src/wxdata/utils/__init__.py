@@ -21,7 +21,13 @@ from wxdata.utils.tools import(
     line_query,
     linear_anti_aliasing
 )
+
+from wxdata.utils.missing_optional_dependency import(
+    optional_dependency_not_found,
+    install_method
+)
 from wxdata.utils.exceptions import *
 from wxdata.utils.scripts import run_external_scripts
 from wxdata.utils.xmacis2_cleanup import clean_pandas_dataframe
 from wxdata.utils.progress_bar import progress_bar
+from wxdata.utils.pip_installer import installer

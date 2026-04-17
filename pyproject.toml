@@ -17,41 +17,22 @@ classifiers = [
 ]
 
 dependencies = [
-    # Core scientific stack
-    "numpy>=1.23,<2.0",
-    "pandas>=1.5,<3.0",
-    "xarray>=2023.1,<2025.0",
-
-    # Heavy compiled libs (bounded to avoid resolver blowups)
-    "netCDF4>=1.6,<1.7",
-    "pyproj>=3.5,<3.7",
-    "cartopy>=0.22,<0.23",
-    "pyart>=1.15,<1.16",
-
-    # Web + async
-    "requests>=2.28",
-    "aiohttp>=3.8",
-    "beautifulsoup4>=4.12",
-    "lxml>=4.9",
-
-    # CLI + formatting
-    "typer>=0.9",
-    "rich>=13.0",
-
-    # Config + validation
-    "pydantic>=2.0,<3.0",
-    "python-dotenv>=1.0",
-
-    # Optional: boto3 is huge; bounding avoids deep dependency recursion
-    "boto3>=1.28,<1.35"
-]
-
-[project.optional-dependencies]
-dev = [
-    "pytest>=7.0",
-    "black>=24.0",
-    "ruff>=0.3",
-]
+  "metpy>=1.7.1",
+  "numpy>=2.2.6",
+  "pandas>=2.3.3",
+  "xarray>=2025.6.1",
+  "netcdf4>=1.7.3",
+  "shapeography>=1.2",
+  "beautifulsoup4>=4.14.3",
+  "requests>=2.32.5",
+  "cfgrib>=0.9.15.1",
+  "dask>=2025.11.0",
+  "tqdm>=4.67.3",
+  "ecmwf-opendata>=0.3.26",
+  "openpyxl>=3.1.5",
+  "arm-pyart>=2.2.0",
+  "boto3>=1.42.88"
+  ]
 
 [build-system]
 requires = ["setuptools>=80.90.0", "wheel"]

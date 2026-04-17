@@ -12,23 +12,34 @@ These functions are compatible with users on VPN/PROXY connections as well as no
 (C) Eric J. Drewitz 2025-2026
 """
 
+try:
+    import boto3 as _boto3
+    from botocore import UNSIGNED as _UNSIGNED
+    from botocore.client import Config as _Config
+    HAS_BOTO3 = True
+except Exception as e:
+    HAS_BOTO3 = False
+
 
 import requests as _requests
 import time as _time
 import sys as _sys
 import os as _os
 import pandas as _pd
-import boto3 as _boto3
+
 import warnings as _warnings
 _warnings.filterwarnings('ignore')
 
 from io import BytesIO as _BytesIO
 from tqdm import tqdm as _tqdm
-from botocore import UNSIGNED as _UNSIGNED
-from botocore.client import Config as _Config
 from datetime import(
     datetime as _datetime, 
     timedelta as _timedelta
+)
+from wxdata.utils.pip_installer import installer as _installer
+from wxdata.utils.missing_optional_dependency import(
+    optional_dependency_not_found as _optional_dependency_not_found,
+    install_method as _install_method
 )
 from wxdata.utils.progress_bar import progress_bar as _progress_bar
 from wxdata.utils.xmacis2_cleanup import clean_pandas_dataframe as _clean_pandas_dataframe
@@ -714,6 +725,26 @@ def get_open_aws_data(bucket,
     
     Open data from Amazon AWS downloaded to the local computer.
     """
+    
+    if HAS_BOTO3 == True:
+        pass
+    else:
+        conda = _install_method('boto3')
+        if conda == True:
+            _optional_dependency_not_found('boto3')
+        else:
+            print(f"Optional Dependency (Required for this function) is not installed.")
+            install = input("Want me to install it for you? (Y/N)")
+            install = install.upper()
+            if install == 'Y':
+                _installer('boto3')
+                import boto3 as _boto3
+                from botocore import UNSIGNED as _UNSIGNED
+                from botocore.client import Config as _Config
+            else:
+                _optional_dependency_not_found('boto3')
+                _sys.exit(1)
+    
     if clear_recycle_bin == True:
         _clear_recycle_bin_windows()
         _clear_trash_bin_mac()

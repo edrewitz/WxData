@@ -33,13 +33,13 @@ dependencies = [
   "openpyxl>=3.1.5",
   "arm-pyart>=2.2.0",
   "boto3>=1.42.90"
-  "lxml>=6.0.2",
-  "matplotlib>=3.10.7",
-  "charset-normalizer>=3.4.4",
-  "idna>=3.11",
-  "geopandas>=1.1.2",
-  "aiobotocore>=3.4.0",
-  "aiohttp>=3.0.5"
+  "lxml==6.0.2",
+  "matplotlib==3.10.7",
+  "charset-normalizer==3.4.4",
+  "idna==3.11",
+  "geopandas==1.1.2",
+  "aiobotocore==3.4.0",
+  "aiohttp==3.0.5"
   ]
 
 [build-system]

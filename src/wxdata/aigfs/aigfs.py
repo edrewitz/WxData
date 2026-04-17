@@ -20,7 +20,6 @@ from wxdata.utils.file_funcs import(
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
 from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
 from wxdata.utils.recycle_bin import(
-    
     clear_recycle_bin_windows as _clear_recycle_bin_windows,
     clear_trash_bin_mac as _clear_trash_bin_mac,
     clear_trash_bin_linux as _clear_trash_bin_linux

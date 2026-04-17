@@ -101,7 +101,7 @@ def ecmwf_ifs_url_scanner(final_forecast_hour):
         y_00 = requests.get(f"{yesterday_00z_url}/{file_00z_yesterday}", stream=True)
         y_00.close()
     except Exception as e:
-        for i in range(0, 5, 1):
+        for i in range(0, 10, 1):
             time.sleep(30)
             try:
                 t_18 = requests.get(f"{today_18z_url}/{file_18z_today}", stream=True)
@@ -248,7 +248,7 @@ def ecmwf_ifs_ens_url_scanner(final_forecast_hour):
         y_00 = requests.get(f"{yesterday_00z_url}/{file_00z_yesterday}", stream=True)
         y_00.close()
     except Exception as e:
-        for i in range(0, 5, 1):
+        for i in range(0, 10, 1):
             time.sleep(30)
             try:
                 t_18 = requests.get(f"{today_18z_url}/{file_18z_today}", stream=True)
@@ -390,7 +390,7 @@ def ecmwf_aifs_url_scanner(final_forecast_hour):
         y_00 = requests.get(f"{yesterday_00z_url}/{file_00z_yesterday}", stream=True)
         y_00.close()
     except Exception as e:
-        for i in range(0, 5, 1):
+        for i in range(0, 10, 1):
             time.sleep(30)
             try:
                 t_18 = requests.get(f"{today_18z_url}/{file_18z_today}", stream=True)
@@ -538,7 +538,7 @@ def ecmwf_aifs_ens_url_scanner(final_forecast_hour,
         y_00 = requests.get(f"{yesterday_00z_url}/{file_00z_yesterday}", stream=True)
         y_00.close()
     except Exception as e:
-        for i in range(0, 5, 1):
+        for i in range(0, 10, 1):
             time.sleep(30)
             try:
                 t_18 = requests.get(f"{today_18z_url}/{file_18z_today}", stream=True)
@@ -678,7 +678,7 @@ def ecmwf_ifs_wave_url_scanner(final_forecast_hour):
         y_00 = requests.get(f"{yesterday_00z_url}/{file_00z_yesterday}", stream=True)
         y_00.close()
     except Exception as e:
-        for i in range(0, 5, 1):
+        for i in range(0, 10, 1):
             time.sleep(30)
             try:
                 t_18 = requests.get(f"{today_18z_url}/{file_18z_today}", stream=True)
@@ -818,7 +818,7 @@ def ecmwf_ifs_wave_ens_url_scanner(final_forecast_hour):
         y_00 = requests.get(f"{yesterday_00z_url}/{file_00z_yesterday}", stream=True)
         y_00.close()
     except Exception as e:
-        for i in range(0, 5, 1):
+        for i in range(0, 10, 1):
             time.sleep(30)
             try:
                 t_18 = requests.get(f"{today_18z_url}/{file_18z_today}", stream=True)

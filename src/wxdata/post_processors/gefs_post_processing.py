@@ -2994,15 +2994,15 @@ def secondary_gefs_post_processing(paths):
     except Exception as e:
         pass              
     try:        
-        ds['995_u_wind_component'] = ds35['u']
+        ds['995_sigma_u_wind_component'] = ds35['u']
     except Exception as e:
         pass              
     try:        
-        ds['995_v_wind_component'] = ds35['v']
+        ds['995_sigma_v_wind_component'] = ds35['v']
     except Exception as e:
         pass              
     try:        
-        ds['995_vertical_velocity'] = ds35['w']
+        ds['995_sigma_vertical_velocity'] = ds35['w']
     except Exception as e:
         pass              
     try:        

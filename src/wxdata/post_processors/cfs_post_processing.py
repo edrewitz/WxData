@@ -22,7 +22,7 @@ _logging.disable()
 def cfs_flux_post_processing(path):
     
     """
-    This function post-processes all GRIB2 Keys into a Plain Language Format for CFS Pressure Data.
+    This function post-processes all GRIB2 Keys into a Plain Language Format for CFS Flux Data.
     
     Required Arguments:
     
@@ -33,7 +33,7 @@ def cfs_flux_post_processing(path):
     Returns
     -------
     
-    An xarray.array of CFS Pressure Data with variable keys decoded into plain-language.
+    An xarray.array of CFS Flux Data with variable keys decoded into plain-language.
     
     CFS Flux Data Variables In Plain-Language Format
     ------------------------------------------------

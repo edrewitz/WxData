@@ -327,6 +327,14 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
           gefs_0p25
       )
       
+      # Climate Forecast System (CFS)
+      # - CFS Flux Products
+      # - CFS Pressure Products
+      from wxdata.cfs.cfs import(
+          cfs_flux,
+          cfs_pressure
+      )
+      
       # AI Global Ensemble Forecast System (AIGEFS)
       # - AIGEFS Pressure Members (Pressure Level Variables)
       # - AIGEFS Surface Members (Surface Level Variables)
@@ -366,7 +374,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
       # - Multi Station NFDRS Forecast
       # - Single Station Weather Forecast
       # - Multi Station Weather Forecast
-      from wxdata.fems.fems import(
+      from wxdata.fems.observations import(
           get_single_raws_station_weather_observations,
           get_single_raws_station_fuels_observations,
           get_multi_raws_station_weather_observations,
@@ -413,6 +421,14 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
       # METAR Observational Data (From NOAA)
       from wxdata.metars.metar_obs import download_metar_data
       
+      # NEXRAD2 Radar Data
+      # - NEXRAD2 Radar Single Station
+      # - NEXRAD2 Radar Multi Station
+      from wxdata.radar.nexrad2 import(
+          download_current_single_station_nexrad2_radar_data,
+          download_current_multi_station_nexrad2_radar_data
+      )
+      
       """
       This section hosts all the functions and modules that involve post-processing the data.
       These are the functions and modules that:
@@ -440,6 +456,9 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
       
       # European Centre for Medium-Range Weather Forecasts (ECMWF)
       import wxdata.post_processors.ecmwf_post_processing as ecmwf_post_processing
+      
+      # Climate Forecast System (CFS)
+      import wxdata.post_processors.cfs_post_processing as cfs_post_processing
       
       # Real-Time Mesoscale Analysis (RTMA)
       from wxdata.post_processors.rtma_post_processing import process_rtma_data
@@ -476,6 +495,9 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
           linear_anti_aliasing
       )
       
+      # This function executes a list of Python scripts in the order the user lists them
+      from wxdata.utils.scripts import run_external_scripts
+      
       """
       This section hosts the various data clients that retrieve various types of data.
       
@@ -486,12 +508,10 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
       # Client List:
       #  - get_gridded_data()
       #  - get_csv_data()
-      #  - get_excel_data() 
+      #  - get_excel_data()
       #  - get_xmacis_data()
+      #  - get_open_aws_data()
       import wxdata.client.client as client
-      
-      # This function executes a list of Python scripts in the order the user lists them
-      from wxdata.utils.scripts import run_external_scripts
 
 ## Citations
 

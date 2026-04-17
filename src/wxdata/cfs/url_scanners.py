@@ -340,7 +340,7 @@ def forecast_file_times(cat,
     init = f"{runtime[0:8]}"
     date = datetime.strptime(init_date, '%Y%m%d%H')
     date = date + timedelta(hours=final_forecast_hour)
-    final = f"pgbf{date.strftime('%Y%m%d%H')}.01.{runtime}.grb2"
+    final = f"{cat}{date.strftime('%Y%m%d%H')}.01.{runtime}.grb2"
     idx = files.index(final)
     files = files[0:(idx + 1)]
             
@@ -650,7 +650,6 @@ def cfs_flux_url_scanner(western_bound,
     for response, url in zip(responses, urls):
         if response.status_code == 200:
             url = url
-            run = int(f"{url[77]}{url[78]}")
             break        
     
     try:
@@ -986,7 +985,6 @@ def cfs_pressure_url_scanner(western_bound,
     for response, url in zip(responses, urls):
         if response.status_code == 200:
             url = url
-            run = int(f"{url[77]}{url[78]}")
             break        
     
     try:

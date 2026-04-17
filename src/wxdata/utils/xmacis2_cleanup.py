@@ -73,7 +73,23 @@ def clean_pandas_dataframe(df):
     A Pandas.DataFrame with string values converted to integers and floating points.    
     """
     
+    cols = ['Maximum Temperature', 
+            'Minimum Temperature', 
+            'Average Temperature',
+            'Average Temperature Departure',
+            'Heating Degree Days',
+            'Cooling Degree Days',
+            'Precipitation',
+            'Snowfall',
+            'Snow Depth',
+            'Growing Degree Days']
+    
+    
     df = replace_trace_with_zeros(df)
+    
+    for col in cols:
+        df[col] = pd.to_numeric(df[col], errors="coerce")
+    
     df = missing_to_nan(df)
     
     new_df = pd.DataFrame()

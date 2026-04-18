@@ -98,11 +98,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
       
    3) `pixel_query()` tool if the user needs to download the airport station codes list.
 
-   4) All NEXRAD II Radar Data clients.
-
-   5) Open AWS Data Client.
-
-      All other clients use proxies as a dictionary
+   All other clients use proxies as a dictionary
 
                   Example: We want to download the latest Observed Sounding Data for San Diego, CA (NKX)
          

@@ -29,7 +29,7 @@ def cfs_flux(western_bound=-180,
             eastern_bound=180, 
             northern_bound=90, 
             southern_bound=-90, 
-            final_forecast_hour=384,
+            final_forecast_hour=720,
             proxies=None, 
             clear_recycle_bin=False,
             clear_data=False,
@@ -121,7 +121,7 @@ def cfs_flux(western_bound=-180,
 
     4) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
 
-    5) final_forecast_hour (Integer) - Default=384. The last forecast timestep the user wishes to download.
+    5) final_forecast_hour (Integer) - Default=720 (30-Days). The last forecast timestep the user wishes to download.
         The CFS outputs 6 hourly data for the span of several months. Note that if the user wishes to download
         6 hourly data for several months, processing times may be long. Must be a multiple of 6. 
 
@@ -394,7 +394,7 @@ def cfs_pressure(western_bound=-180,
             eastern_bound=180, 
             northern_bound=90, 
             southern_bound=-90, 
-            final_forecast_hour=384,
+            final_forecast_hour=720,
             proxies=None, 
             clear_recycle_bin=False,
             clear_data=False,
@@ -459,7 +459,7 @@ def cfs_pressure(western_bound=-180,
 
     4) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
 
-    5) final_forecast_hour (Integer) - Default=384. The last forecast timestep the user wishes to download.
+    5) final_forecast_hour (Integer) - Default=720 (30-Days). The last forecast timestep the user wishes to download.
         The CFS outputs 6 hourly data for the span of several months. Note that if the user wishes to download
         6 hourly data for several months, processing times may be long. Must be a multiple of 6. 
 

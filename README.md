@@ -593,7 +593,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
       #  - get_csv_data()
       #  - get_excel_data()
       #  - get_xmacis_data()
-      #  - get_open_aws_data()
+      #  - get_aws_open_data()
       import wxdata.client.client as client
 
 -------------------------------------------

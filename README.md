@@ -307,8 +307,8 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 ***Custom Excel Data***
 1. [Excel Data Client](https://github.com/edrewitz/WxData/blob/main/Documentation/get_excel_data.md#get-excel-data)
 
-***Open AWS Data***
-1. [Open AWS Data](https://github.com/edrewitz/WxData/blob/main/Documentation/get_open_aws_data.md#get-open-aws-data)
+***AWS Open Data***
+1. [AWS Open Data](https://github.com/edrewitz/WxData/blob/main/Documentation/get_open_aws_data.md#get-aws-open-data)
 
 ---------------------------------------------------------------
 

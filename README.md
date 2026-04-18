@@ -21,11 +21,26 @@ PIP Downloads:
 
 **(C) Eric J. Drewitz 2025-2026**
 
-An open-source package that helps meteorologists and weather enthusiats download, pre-process and post-process various types of weather data. 
+A Python package consisting of the following:
 
-This package only retrieves open-source publicly available weather data. 
+1) End-to-end weather data clients with VPN/PROXY support
+2) Raw data clients with VPN/PROXY support
+3) Data processors that decode variable keys from GRIB format into a plain-language format
+4) Various tools for assisting Python automated workflows, querying meteorological datasets and filling gaps in meteorological data.
 
-This package provides the following extra functionality compared to existing packages for downloading weather data:
+# Table of Contents
+
+1) [Installation Instructions](https://github.com/edrewitz/WxData?tab=readme-ov-file#installation-instructions)
+2) [Proxy Server Configuration](https://github.com/edrewitz/WxData?tab=readme-ov-file#proxy-server-configuration)
+3) [What makes WxData unique among various meteorological Python packages?](https://github.com/edrewitz/WxData?tab=readme-ov-file#what-makes-wxdata-unique-among-various-meteorological-python-packages)
+4) [WxData Tutorials](https://github.com/edrewitz/WxData?tab=readme-ov-file#wxdata-tutorials)
+5) [WxData Documentation](https://github.com/edrewitz/WxData?tab=readme-ov-file#wxdata-documentation)
+6) [Importing Functions from WxData](https://github.com/edrewitz/WxData?tab=readme-ov-file#importing-functions-from-wxdata)
+7) [Citations](https://github.com/edrewitz/WxData?tab=readme-ov-file#citations)
+8) [Data Sources](https://github.com/edrewitz/WxData?tab=readme-ov-file#data-sources)
+
+
+## Installation Instructions
 
 **How To Install**
 
@@ -67,17 +82,25 @@ i) Install wxdata via Anaconda/Miniconda3 --> `conda install wxdata`
 
 ii) Set up a new environment with an earlier version of Python (must be Python >= 3.10) and then `pip install wxdata`
 
+---------------------------------------------------------
+
+## Proxy Server Configuration
+
 ***Friendly for users working on VPN/PROXY connections***
 
    Depending on which client, the proxy-address:port must be entered as either a dictionary or a string.
 
    The clients that use a string for proxies are:
 
-   1) All ECMWF clients
+   1) All ECMWF clients.
 
-   2) METAR Observations Client
+   2) METAR Observations Client.
       
-   3) `pixel_query()` tool if the user needs to download the airport station codes list. 
+   3) `pixel_query()` tool if the user needs to download the airport station codes list.
+
+   4) All NEXRAD II Radar Data clients.
+
+   5) Open AWS Data Client.
 
       All other clients use proxies as a dictionary
 
@@ -98,6 +121,10 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 
    For more information on configuring proxies: https://requests.readthedocs.io/en/latest/user/advanced/#proxies
+
+---------------------------------------------------------------------
+
+## What makes WxData unique among various meteorological Python packages?
        
 1) Converts GRIB variable keys into variable keys that are in plain language.
     - (e.g. 'r2' ---> '2m_relative_humidity')
@@ -113,7 +140,15 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
         - If a user wishes to not clear out their recycle bin `set clear_recycle_bin=False`.
         - Default: `clear_recycle_bin=False`.
     
-## WxData Examples
+4) Has built-in support for users on VPN/PROXY connections.
+
+5) Consists of both observational and model data.
+
+6) Has additional tools to assist querying data, resolving gaps in data and automating your Python workflow. 
+
+-----------------------------------------------
+    
+## WxData Tutorials
 
 *Regular Users*
 1) [Downloading METAR Data](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/metars.ipynb)
@@ -140,7 +175,20 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 1) [Using the `client` module to download the latest HadCRUT5 Analysis netCDF file and open this dataset in xarray](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/hadcrut5.ipynb)
 2) [Downloading the GFS0P25 for temperature fields and using run_external_scripts() to post-process this GFS0P25 dataset in an external Python script](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/external_scripts.ipynb)
 
+---------------------------------------------------
+
 ## WxData Documentation
+
+***Documentation Sections***
+
+1. [End-To-End Data Clients](https://github.com/edrewitz/WxData?tab=readme-ov-file#end-to-end-data-clients)
+2. [Raw Data Clients](https://github.com/edrewitz/WxData?tab=readme-ov-file#raw-data-clients)
+3. [Post-Processors](https://github.com/edrewitz/WxData?tab=readme-ov-file#post-processors)
+4. [Data Querying Tools](https://github.com/edrewitz/WxData?tab=readme-ov-file#data-querying-tools)
+5. [Data Transformation & Gap Filling Tools](https://github.com/edrewitz/WxData?tab=readme-ov-file#data-transformation--gap-filling-tools)
+6. [Automated Python Workflow Tools](https://github.com/edrewitz/WxData?tab=readme-ov-file#automated-python-workflow-tools)
+
+### End-To-End Data Clients
 
 ***Global Forecast System (GFS)***
 1. [GFS0P25](https://github.com/edrewitz/WxData/blob/main/Documentation/GFS0P25.md)
@@ -149,6 +197,10 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 ***AI Global Forecast System (AIGFS)***
 1. [AIGFS](https://github.com/edrewitz/WxData/blob/main/Documentation/aigfs.md)
+
+***Climate Forecast System (CFS)***
+1. [CFS Pressure](https://github.com/edrewitz/WxData/blob/main/Documentation/cfs_pressure.md#climate-forecast-system-cfs-pressure)
+2. [CFS Flux](https://github.com/edrewitz/WxData/blob/main/Documentation/cfs_flux.md#climate-forecast-system-cfs-flux)
 
 ***Hybrid Global Ensemble Forecast System (HGEFS)***
 1. [HGEFS](https://github.com/edrewitz/WxData/blob/main/Documentation/hgefs.md#hybrid-global-ensemble-forecast-system-hgefs)
@@ -201,12 +253,24 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 ***Observed Atmospheric Soundings***
 1. [University Of Wyoming Soundings](https://github.com/edrewitz/wxdata/blob/main/Documentation/wyoming_soundings.md)
 
+***NEXRAD II Radar Data***
+1. [Single Site](https://github.com/edrewitz/WxData/blob/main/Documentation/nexrad2_single.md#nexrad-ii-single-radar)
+2. [Multi-Site](https://github.com/edrewitz/WxData/blob/main/Documentation/nexrad2_multi.md#nexrad-ii-multi-radar)
+
+-----------------------------
+
+### Post-Processors
+
 ***GFS Post-Processing***
 1. [Primary GFS Post-Processing](https://github.com/edrewitz/WxData/blob/main/Documentation/Primary%20GFS%20Post%20Processing.md)
 2. [Secondary GFS Post-Processing](https://github.com/edrewitz/WxData/blob/main/Documentation/Secondary%20GFS%20Post%20Processing.md)
 
 ***AIGFS Post-Processing***
 1. [AIGFS Post-Processing](https://github.com/edrewitz/WxData/blob/main/Documentation/aigfs_post_processing.md)
+
+***CFS Post-Processing***
+1. [CFS Pressure Post-Processing](https://github.com/edrewitz/WxData/blob/main/Documentation/cfs_pressure_post_processing.md#climate-forecast-system-cfs-pressure-post-processing)
+2. [CFS Flux Post-Processing](https://github.com/edrewitz/WxData/blob/main/Documentation/cfs_flux_post_processing.md#climate-forecast-system-cfs-flux-post-processing)
 
 ***GEFS Post-Processing***
 1. [Primary GEFS Post-Processing](https://github.com/edrewitz/WxData/blob/main/Documentation/Primary%20GEFS%20Post-Processing.md)
@@ -227,6 +291,10 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 ***Real-Time Mesoscale Analysis Post-Processing***
 1. [RTMA](https://github.com/edrewitz/WxData/blob/main/Documentation/RTMA%20Post%20Processing.md)
 
+-----------------------------------------------
+
+### Raw Data Clients
+
 ***xmACIS2 Climate Data***
 1. [xmACIS2 Client](https://github.com/edrewitz/WxData/blob/main/Documentation/xmacis2_client.md)
 
@@ -239,11 +307,12 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 ***Custom Excel Data***
 1. [Excel Data Client](https://github.com/edrewitz/WxData/blob/main/Documentation/get_excel_data.md#get-excel-data)
 
-***Cyclic Points For Hemispheric Plots***
-1. [Cyclic Points](https://github.com/edrewitz/wxdata/blob/main/Documentation/cyclic_point.md#using-wxdata-to-add-cyclic-points-for-hemispheric-plots)
+***Open AWS Data***
+1. [Open AWS Data](https://github.com/edrewitz/WxData/blob/main/Documentation/get_open_aws_data.md#get-open-aws-data)
 
-***Shifting Longitude From 0 to 360 --> -180 to 180***
-1. [shift_longitude](https://github.com/edrewitz/WxData/blob/main/Documentation/shift_longitude.md)
+---------------------------------------------------------------
+
+### Data Querying Tools
 
 ***Pixel Query***
 1. [pixel_query](https://github.com/edrewitz/WxData/blob/main/Documentation/pixel_query.md)
@@ -251,12 +320,28 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 ***Line Query***
 1. [line_query](https://github.com/edrewitz/WxData/blob/main/Documentation/line_query.md)
 
+--------------------------------------------------
+
+### Data Transformation & Gap Filling Tools
+
+***Cyclic Points For Hemispheric Plots***
+1. [Cyclic Points](https://github.com/edrewitz/wxdata/blob/main/Documentation/cyclic_point.md#using-wxdata-to-add-cyclic-points-for-hemispheric-plots)
+
+***Shifting Longitude From 0 to 360 --> -180 to 180***
+1. [shift_longitude](https://github.com/edrewitz/WxData/blob/main/Documentation/shift_longitude.md)
+
 ***Linear Anti-Aliasing Between Two Points***
 1. [linear_anti_aliasing](https://github.com/edrewitz/WxData/blob/main/Documentation/linear_anti_aliasing.md#linear-anti-aliasing-between-points)
+
+------------------------------------------
+
+### Automated Python Workflow Tools
 
 ***Running External Python Scripts In Your Workflow***
 
 1 [run_external_scripts](https://github.com/edrewitz/WxData/blob/main/Documentation/run_external_scripts.md)
+
+---------------------------------------
 
 ## Importing Functions from WxData
 
@@ -327,6 +412,14 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
           gefs_0p25
       )
       
+      # Climate Forecast System (CFS)
+      # - CFS Flux Products
+      # - CFS Pressure Products
+      from wxdata.cfs.cfs import(
+          cfs_flux,
+          cfs_pressure
+      )
+      
       # AI Global Ensemble Forecast System (AIGEFS)
       # - AIGEFS Pressure Members (Pressure Level Variables)
       # - AIGEFS Surface Members (Surface Level Variables)
@@ -366,7 +459,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
       # - Multi Station NFDRS Forecast
       # - Single Station Weather Forecast
       # - Multi Station Weather Forecast
-      from wxdata.fems.fems import(
+      from wxdata.fems.observations import(
           get_single_raws_station_weather_observations,
           get_single_raws_station_fuels_observations,
           get_multi_raws_station_weather_observations,
@@ -413,6 +506,14 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
       # METAR Observational Data (From NOAA)
       from wxdata.metars.metar_obs import download_metar_data
       
+      # NEXRAD2 Radar Data
+      # - NEXRAD2 Radar Single Station
+      # - NEXRAD2 Radar Multi Station
+      from wxdata.radar.nexrad2 import(
+          download_current_single_station_nexrad2_radar_data,
+          download_current_multi_station_nexrad2_radar_data
+      )
+      
       """
       This section hosts all the functions and modules that involve post-processing the data.
       These are the functions and modules that:
@@ -440,6 +541,9 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
       
       # European Centre for Medium-Range Weather Forecasts (ECMWF)
       import wxdata.post_processors.ecmwf_post_processing as ecmwf_post_processing
+      
+      # Climate Forecast System (CFS)
+      import wxdata.post_processors.cfs_post_processing as cfs_post_processing
       
       # Real-Time Mesoscale Analysis (RTMA)
       from wxdata.post_processors.rtma_post_processing import process_rtma_data
@@ -476,6 +580,9 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
           linear_anti_aliasing
       )
       
+      # This function executes a list of Python scripts in the order the user lists them
+      from wxdata.utils.scripts import run_external_scripts
+      
       """
       This section hosts the various data clients that retrieve various types of data.
       
@@ -486,12 +593,12 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
       # Client List:
       #  - get_gridded_data()
       #  - get_csv_data()
-      #  - get_excel_data() 
+      #  - get_excel_data()
       #  - get_xmacis_data()
+      #  - get_open_aws_data()
       import wxdata.client.client as client
-      
-      # This function executes a list of Python scripts in the order the user lists them
-      from wxdata.utils.scripts import run_external_scripts
+
+-------------------------------------------
 
 ## Citations
 
@@ -514,6 +621,8 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 **requests**: K. Reitz, "Requests: HTTP for Humans". Available: https://requests.readthedocs.io/.
 
+**Beautiful Soup**: Richardson, L. (2025). Beautiful Soup (Version 4.14.3) [Computer software]. https://www.crummy.com/software/BeautifulSoup/
+
 **shapeography**: Eric J. Drewitz. (2026). edrewitz/shapeography: shapeography 1.0 Released (shapeography1.0). Zenodo. https://doi.org/10.5281/zenodo.18676845
 
 **geopandas**: Kelsey Jordahl, Joris Van den Bossche, Martin Fleischmann, Jacob Wasserman, James McBride, Jeffrey Gerard, … François Leblanc. (2020, July 15). geopandas/geopandas: v0.8.1 (Version v0.8.1). Zenodo. http://doi.org/10.5281/zenodo.3946761
@@ -527,6 +636,8 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 **pyart**: Helmus, J.J. & Collis, S.M., (2016). The Python ARM Radar Toolkit (Py-ART), a Library for Working with Weather Radar Data in the Python Programming Language. Journal of Open Research Software. 4(1), p.e25. DOI: 10.5334/jors.119.
 
 **boto3**: Amazon Web Services. (n.d.). Boto3 Documentation (Version 1.x.x) [Computer software]. Retrieved from https://boto3.amazonaws.com/v1/documentation/api/latest/index.html 
+
+----------------------------------------------------------
 
 ## Data Sources
 

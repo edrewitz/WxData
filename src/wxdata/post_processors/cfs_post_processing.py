@@ -1372,12 +1372,12 @@ def cfs_pressure_post_processing(path):
     
     
     try:
-        ds['mslp'] = ds['msl']
         ds = ds.drop_vars('msl')
     except Exception as e:
         pass
     
     try:
+        ds['mslp'] = ds['prmsl']
         ds = ds.drop_vars('prmsl')
     except Exception as e:
         pass

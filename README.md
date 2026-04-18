@@ -635,8 +635,6 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 **pyart**: Helmus, J.J. & Collis, S.M., (2016). The Python ARM Radar Toolkit (Py-ART), a Library for Working with Weather Radar Data in the Python Programming Language. Journal of Open Research Software. 4(1), p.e25. DOI: 10.5334/jors.119.
 
-**boto3**: Amazon Web Services. (n.d.). Boto3 Documentation (Version 1.x.x) [Computer software]. Retrieved from https://boto3.amazonaws.com/v1/documentation/api/latest/index.html 
-
 ----------------------------------------------------------
 
 ## Data Sources

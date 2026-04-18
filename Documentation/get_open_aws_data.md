@@ -1,47 +1,43 @@
-# Get Open AWS Data
+# Get AWS Open Data
 
-***def get_open_aws_data(bucket,
-                      key,
-                      path,
-                      filenames,
-                      proxies=None,
-                      notifications='off',
-                      clear_recycle_bin=False,
-                      clear_data=True):***
+***def get_aws_open_data(url,
+                    path,
+                    filename,
+                    proxies=None,
+                    chunk_size=8192,
+                    notifications='on',
+                    clear_recycle_bin=False):***
 
-    This function downloads open data from Amazon AWS.
+    This function is the client that retrieves Open Data from Amazon AWS Servers. 
+    This client supports VPN/PROXY connections. 
     
     Required Arguments:
     
-    1) bucket (String) - The Amazon AWS Bucket Name.
+    1) url (String) - The download URL to the file. 
     
-    2) key (String) - The directory inside of the bucket that the file is in. 
+    2) path (String) - The directory where the file is saved to. 
     
-    3) path (String) - The local directory where the file will be saved to
-    
-    4) filenames (String List) - The names of the files being downloaded
+    3) filename (String) - The name the user wishes to save the file as. 
     
     Optional Arguments:
     
-    1) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    1) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-       proxies=None ---> proxies="http://your-proxy-address:port" ---> get_open_aws_data(bucket,
-                                                                                            key,
-                                                                                            path,
-                                                                                            filenames,
-                                                                                            proxies=proxies)
-
-    2) notifications (String) - Default='on'. When set to 'on' a print statement to the user will tell the user their file saved to the path
-        they specified. 
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
+                        
+    2) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
-    3) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+    3) notifications (String) - Default='on'. Notification when a file is downloaded and saved to {path}
+    
+    4) clear_recycle_bin (Boolean) - Default=False. When set to True, 
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
         This setting is to help preserve memory on the machine. 
-                                                                                            
-    4) clear_data (Boolean) - Default=True. When set to True, the files in {path} will be cleared. 
-                                                                                            
+    
     Returns
     -------
     
-    Open data from Amazon AWS downloaded to the local computer.
+    Files from AWS Open Data.  
 

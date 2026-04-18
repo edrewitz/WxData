@@ -167,6 +167,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 18) [Downloading Current RAWS and METAR Data and Plotting Current Relative Humidity Observations Across California and Nevada](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/metar_raws_observed_rh.ipynb)
 19) [Downloading Current RAWS Data and Plotting Current Energy Release Components (ERCs) Observations Across California and Nevada](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/observed_erc_map.ipynb)
 20) [Downloading NEXRAD II Radar Data and then plotting it in Py-ART](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/NEXRADII.ipynb)
+21) [Downloading 30 Days of 6hrly CFS Data and plotting the 30-Day time-mean for geopotential height anomaly across the Northern Hemisphere](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/cfs.ipynb)
 
 *Advanced Users*
 1) [Using the `client` module to download the latest HadCRUT5 Analysis netCDF file and open this dataset in xarray](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/hadcrut5.ipynb)

@@ -199,7 +199,7 @@ def _FIX_1D_GRIB_DATA(ds_short,
         
     dims = ("step", "latitude", "longitude")
     short_coords = {
-        "step": len(ds_list_short),
+        "step": ds_short['step'],
         "latitude": lat1d,  
         "longitude": lon1d,  
     }
@@ -239,7 +239,7 @@ def _FIX_1D_GRIB_DATA(ds_short,
         
     dims = ("step", "latitude", "longitude")
     extended_coords = {
-        "step": len(ds_list_extended),
+        "step": ds_extended['step'],
         "latitude": lat1d,  
         "longitude": lon1d,  
     }

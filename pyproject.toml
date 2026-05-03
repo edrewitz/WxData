@@ -1,6 +1,6 @@
 [project]
 name = "wxdata"
-version = "1.6"
+version = "1.6.1"
 description = "A Python package of end-to-end weather data clients & raw data clients with VPN/PROXY support, data processors that decode variable keys from GRIB format into a plain-language format & various tools for assisting Python automated workflows, querying meteorological datasets and filling gaps in meteorological data."
 readme = "README.md"
 requires-python = ">=3.10"

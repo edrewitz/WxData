@@ -74,7 +74,7 @@ def rows_and_cols(model):
     
     dims = {
         
-        'HI RTMA':[449, 649],
+        'HI RTMA':[225, 321],
         'PR RTMA':[176, 251],
         'GU RTMA':[193, 193]
     }

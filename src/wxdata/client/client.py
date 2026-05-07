@@ -802,4 +802,116 @@ def get_aws_open_data(url,
         finally:
             if r:
                 r.close() # Ensure the connection is closed.
+                
+                
+def byte_range_request(grib_url,
+                      idx_url,
+                      variable,
+                      path,
+                      filename,
+                      proxies=None,
+                      chunk_size=8192,
+                      notifications='on',
+                      clear_recycle_bin=False):
+    
+    """
+    This client downloads GRIB data for a specific variable that is defined by the range in bytes in that GRIB file. 
+    This is useful when the user wants to download a GRIB file where there is no GRIB filter present, especially when the file size is large.
+    This will allow users to download the variable they are interested in and filter out all other variables prior to downloading.
+    
+    Required Arguments:
+    
+    1) grib_url (String) - The URL of the GRIB file that will be downloaded.
+    
+    2) idx_url (String) - The URL of the index file that corresponds to the GRIB file (ends in .idx).
+    
+    3) variable (String) - The variable to be downloaded.
+    
+    4) path (String) - The directory where the file is saved to. 
+    
+    5) filename (String) - The name the user wishes to save the file as. 
+    
+    Optional Arguments:
+    
+    1) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
+                        
+    2) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    
+    3) notifications (String) - Default='on'. Notification when a file is downloaded and saved to {path}
+    
+    4) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
+        
+    Returns
+    -------
+    
+    Downloads a partial GRIB file consisting of the variable the user specifies.     
+    """
+    if clear_recycle_bin == True:
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
+    else:
+        pass
+    
+    try:
+        _os.makedirs(f"{path}")
+    except Exception as e:
+        pass
+    
+    if proxies == None:
+        idx_text = _requests.get(idx_url).text
+    else:
+        idx_text = _requests.get(idx_url, proxies=proxies).text
+        
+    records = []
+    for line in idx_text.splitlines():
+        parts = line.split(":")
+        recno = int(parts[0])
+        offset = int(parts[1])
+        shortname = parts[3]
+        desc = ":".join(parts[4:])
+        records.append((recno, offset, shortname, desc))
+        
+    matches = [r for r in records if r[2] == variable]
+    try:
+        recno, start, shortname, desc = matches[0]
+    except Exception as e:
+        print(f"{variable} is not a valid variable.")
+        print(f"Please visit {idx_url} to look at the variables in the GRIB file meta-data")
+        _sys.exit(1)
+    next_start = records[recno][1]  
+    end = next_start - 1
+    
+    recno, start, shortname, desc = matches[0]
+    
+    headers = {"Range": f"bytes={start}-{end}"}
+    
+    if proxies == None:
+        response = _requests.get(grib_url, 
+                                 headers=headers, 
+                                 stream=True)
+    else:
+        response = _requests.get(grib_url, 
+                                 headers=headers, 
+                                 proxies=proxies, 
+                                 stream=True)
+
+    _progress_bar(response,
+                path,
+                filename,
+                blocksize=chunk_size)
+        
+    response.close()
+    
+    if notifications == 'on':
+        print(f"{filename} saved to {path}")
+        
+    
         

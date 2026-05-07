@@ -8,6 +8,7 @@ These functions are compatible with users on VPN/PROXY connections as well as no
 3) get_excel_data
 4) get_xmacis_data
 5) get_open_aws_data
+6) byte_range_request
 
 (C) Eric J. Drewitz 2025-2026
 """

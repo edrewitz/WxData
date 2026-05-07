@@ -904,7 +904,7 @@ def byte_range_request(grib_url,
     else:
         end = None  
         
-        headers = {"Range": f"bytes={start}-{end}"}
+    headers = {"Range": f"bytes={start}-{end}"}
     
     if proxies == None:
         response = _requests.get(grib_url, 

@@ -808,6 +808,7 @@ def get_aws_open_data(url,
 def byte_range_request(grib_url,
                       idx_url,
                       variable,
+                      level,
                       path,
                       filename,
                       proxies=None,
@@ -827,6 +828,8 @@ def byte_range_request(grib_url,
     2) idx_url (String) - The URL of the index file that corresponds to the GRIB file (ends in .idx).
     
     3) variable (String) - The variable to be downloaded.
+    
+    4) level (Float or Integer) - The pressure or height level. 
     
     4) path (String) - The directory where the file is saved to. 
     
@@ -872,27 +875,36 @@ def byte_range_request(grib_url,
         idx_text = _requests.get(idx_url, proxies=proxies).text
         
     records = []
-    for line in idx_text.splitlines():
-        parts = line.split(":")
-        recno = int(parts[0])
+    for line in idx_text.strip().splitlines():
+        parts = line.split(':')
+        msg_no = int(parts[0])
         offset = int(parts[1])
-        shortname = parts[3]
-        desc = ":".join(parts[4:])
-        records.append((recno, offset, shortname, desc))
+        var = parts[3]
+        lev = parts[4]
+        records.append({
+            "msg": msg_no,
+            "offset": offset,
+            "var": var,
+            "lev": lev
+        })
         
-    matches = [r for r in records if r[2] == variable]
+    req_level = f"{level} mb"    
+    matches = [r for r in records if r["var"] == variable and r["lev"] == req_level]
     try:
-        recno, start, shortname, desc = matches[0]
+        rec = matches[0]
+        start = rec["offset"]
     except Exception as e:
-        print(f"{variable} is not a valid variable.")
+        print(f"{variable} is not a valid variable OR {level} is not a valid level.")
         print(f"Please visit {idx_url} to look at the variables in the GRIB file meta-data")
         _sys.exit(1)
-    next_start = records[recno][1]  
-    end = next_start - 1
-    
-    recno, start, shortname, desc = matches[0]
-    
-    headers = {"Range": f"bytes={start}-{end}"}
+        
+    idx = records.index(rec)
+    if idx < len(records) - 1:
+        end = records[idx + 1]["offset"] - 1
+    else:
+        end = None  
+        
+        headers = {"Range": f"bytes={start}-{end}"}
     
     if proxies == None:
         response = _requests.get(grib_url, 

@@ -834,7 +834,7 @@ def byte_range_request(grib_url,
     
     3) variables (String List) - The list of variables to be downloaded.
     
-    4) levels (Float or Integer List) - The pressure or height level. 
+    4) levels (Float or Integer List) - The list of pressure or height levels. 
     
     5) level_type (String) - The type of level.
     

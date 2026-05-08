@@ -66,7 +66,7 @@ def fetch_range(url,
     else:
         pass
     
-    return response
+    return response.content
 
 
 def fetch_data(ranges,
@@ -158,12 +158,12 @@ def download_grib_data_by_byte_range(ranges,
     
     A GRIB file of {filename} saved to {path}
     """
-
+    
     results = fetch_data(ranges,
-                              grib_url, 
-                              start, 
-                              end,
-                              proxies)
+                            grib_url, 
+                            start, 
+                            end,
+                            proxies)
 
     ordered = sorted(results.items(), key=lambda x: (x[0][0], x[0][1]))
 
@@ -180,23 +180,24 @@ def download_grib_data_by_byte_range(ranges,
         for (var, level), data in ordered:
 
             total_bytes = len(data)
+            label = f"{var} @ {level}"
 
             # Inner bar (disappears after finishing)
             with tqdm(
-                    total=total_bytes,
-                    unit="B",
-                    unit_scale=True,
-                    bar_format="{desc} {bar} {percentage:3.0f}%",
-                    ncols=80,
-                    leave=False
-                ) as pbar:
-                
-                    pbar.set_description(f"{var} @ {level}")
-                
-                    for chunk in results.iter_content(chunk_size=chunk_size):
-                        if chunk:
-                            data += chunk
-                            pbar.update(len(chunk))
+                total=total_bytes,
+                unit="B",
+                unit_scale=True,
+                unit_divisor=chunk_size,
+                desc=label,
+                position=1,
+                leave=False,
+                bar_format="{desc:<30} |{bar:30}| {percentage:3.0f}% [{n_fmt}/{total_fmt}]"
+            ) as pbar:
+
+                for i in range(0, total_bytes, chunk_size):
+                    chunk = data[i:i+chunk_size]
+                    f.write(chunk)
+                    pbar.update(len(chunk))
 
             master.update(1)
 

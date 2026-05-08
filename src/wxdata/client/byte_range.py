@@ -193,7 +193,7 @@ def download_grib_data_by_byte_range(ranges,
                 
                     pbar.set_description(f"{var} @ {level}")
                 
-                    for chunk in r.iter_content(chunk_size=chunk_size):
+                    for chunk in results.iter_content(chunk_size=chunk_size):
                         if chunk:
                             data += chunk
                             pbar.update(len(chunk))

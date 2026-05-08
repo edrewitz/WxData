@@ -13,6 +13,7 @@ These functions are compatible with users on VPN/PROXY connections as well as no
 (C) Eric J. Drewitz 2025-2026
 """
 
+import itertools as _itertools
 import requests as _requests
 import time as _time
 import sys as _sys
@@ -28,8 +29,11 @@ from datetime import(
     timedelta as _timedelta
 )
 
-from wxdata.utils.progress_bar import progress_bar as _progress_bar
+from wxdata.utils.nomads_gribfilter import key_list as _key_list
+from wxdata.client.level_coords import get_level_expression as _get_level_expression
 from wxdata.utils.xmacis2_cleanup import clean_pandas_dataframe as _clean_pandas_dataframe
+from wxdata.utils.progress_bar import progress_bar as _progress_bar
+from wxdata.client.byte_range import download_grib_data_by_byte_range as _download_grib_data_by_byte_range
 from wxdata.utils.recycle_bin import(
     clear_recycle_bin_windows as _clear_recycle_bin_windows,
     clear_trash_bin_mac as _clear_trash_bin_mac,
@@ -807,12 +811,13 @@ def get_aws_open_data(url,
                 
 def byte_range_request(grib_url,
                       idx_url,
-                      variable,
-                      level,
+                      variables,
+                      levels,
+                      level_type,
                       path,
                       filename,
                       proxies=None,
-                      chunk_size=8192,
+                      chunk_size=1024,
                       notifications='on',
                       clear_recycle_bin=False):
     
@@ -829,11 +834,39 @@ def byte_range_request(grib_url,
     
     3) variable (String) - The variable to be downloaded.
     
-    4) level (Float or Integer) - The pressure or height level. 
+    4) levels (Float or Integer List) - The pressure or height level. 
     
-    4) path (String) - The directory where the file is saved to. 
+    5) level_type (String) - The type of level.
     
-    5) filename (String) - The name the user wishes to save the file as. 
+        Level Types
+        -----------
+        
+        'hybrid'
+        'entire atmosphere'
+        'surface':'surface',
+        'boundary layer'
+        'pressure'
+        'mean sea level'
+        'height above ground'
+        'height below ground'
+        'height above sea level'
+        'entire atmosphere single layer'
+        'low cloud layer'
+        'middle cloud layer'
+        'high cloud layer'
+        'cloud ceiling'
+        'tropopause'
+        'max wind'
+        'isothermal'
+        'highest tropospheric freezing level'
+        'sigma layer'
+        'sigma level'
+        'potential vorticity surface'
+        'reserved'
+    
+    6) path (String) - The directory where the file is saved to. 
+    
+    7) filename (String) - The name the user wishes to save the file as. 
     
     Optional Arguments:
     
@@ -869,6 +902,8 @@ def byte_range_request(grib_url,
     except Exception as e:
         pass
     
+    variables = _key_list(variables)
+    
     if proxies == None:
         idx_text = _requests.get(idx_url).text
     else:
@@ -888,40 +923,46 @@ def byte_range_request(grib_url,
             "lev": lev
         })
         
-    req_level = f"{level} mb"    
-    matches = [r for r in records if r["var"] == variable and r["lev"] == req_level]
-    try:
+    req_levels, levels = _get_level_expression(levels,
+                                level_type)
+    
+    if levels is not None:
+        reqs = list(_itertools.product(variables, req_levels))
+    else:
+        reqs = []
+        for v in variables:
+            req = (v, req_levels)
+            reqs.append(req)
+            
+    ranges = {}
+    for v, l in reqs:
+        matches = [r for r in records if r["var"] == v and r["lev"] == l]
+        if not matches:
+            print(f"{v} is not a valid variable OR {l} is not a valid level.")
+            print(f"Please visit {idx_url} to look at the variables in the GRIB file meta-data")
+            _sys.exit(1)
+        else:
+            pass
+
         rec = matches[0]
         start = rec["offset"]
-    except Exception as e:
-        print(f"{variable} is not a valid variable OR {level} is not a valid level.")
-        print(f"Please visit {idx_url} to look at the variables in the GRIB file meta-data")
-        _sys.exit(1)
-        
-    idx = records.index(rec)
-    if idx < len(records) - 1:
-        end = records[idx + 1]["offset"] - 1
-    else:
-        end = None  
-        
-    headers = {"Range": f"bytes={start}-{end}"}
-    
-    if proxies == None:
-        response = _requests.get(grib_url, 
-                                 headers=headers, 
-                                 stream=True)
-    else:
-        response = _requests.get(grib_url, 
-                                 headers=headers, 
-                                 proxies=proxies, 
-                                 stream=True)
 
-    _progress_bar(response,
-                path,
-                filename,
-                blocksize=chunk_size)
-        
-    response.close()
+        idx = records.index(rec)
+        if idx < len(records) - 1:
+            end = records[idx + 1]["offset"] - 1
+        else:
+            end = None
+
+        ranges[(v, l)] = (start, end)
+    
+    _download_grib_data_by_byte_range(ranges,
+                             chunk_size,
+                             path,
+                             filename,
+                             grib_url,
+                             start,
+                             end,
+                             proxies)
     
     if notifications == 'on':
         print(f"{filename} saved to {path}")

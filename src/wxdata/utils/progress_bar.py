@@ -4,10 +4,7 @@ This file hosts a function that displays a progress bar for downloading a file.
 (C) Eric J. Drewitz 2025-2026
 """
 
-
-import os
-
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 def progress_bar(response,
                  path,

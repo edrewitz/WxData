@@ -598,6 +598,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
       #  - get_excel_data()
       #  - get_xmacis_data()
       #  - get_aws_open_data()
+      #  - byte_range_request()
       import wxdata.client.client as client
 
 -------------------------------------------

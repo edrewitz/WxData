@@ -22,9 +22,9 @@
     
     2) idx_url (String) - The URL of the index file that corresponds to the GRIB file (ends in .idx).
     
-    3) variable (String) - The variable to be downloaded.
+    3) variables (String List) - The list of variables to be downloaded.
     
-    4) levels (Float or Integer List) - The pressure or height level. 
+    4) levels (Float or Integer List) - The list of pressure or height levels. 
     
     5) level_type (String) - The type of level.
     
@@ -78,4 +78,4 @@
     Returns
     -------
     
-    Downloads a partial GRIB file consisting of the variable the user specifies.   
+    Downloads a partial GRIB file consisting of the variable the user specifies.     

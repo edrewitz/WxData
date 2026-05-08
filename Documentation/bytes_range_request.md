@@ -1,4 +1,4 @@
-# Bytes-Range Request
+# Byte-Range Request
 
 ***def byte_range_request(grib_url,
                       idx_url,

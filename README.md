@@ -172,6 +172,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 *Advanced Users*
 1) [Using the `client` module to download the latest HadCRUT5 Analysis netCDF file and open this dataset in xarray](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/hadcrut5.ipynb)
 2) [Downloading the GFS0P25 for temperature fields and using run_external_scripts() to post-process this GFS0P25 dataset in an external Python script](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/external_scripts.ipynb)
+3) [Downloading GFS Data Using Bytes-Range Requests](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/bytes_range_request.ipynb)
 
 ---------------------------------------------------
 

@@ -158,14 +158,6 @@ def download_grib_data_by_byte_range(ranges,
     
     A GRIB file of {filename} saved to {path}
     """
-    
-    results = fetch_data(ranges,
-                            grib_url, 
-                            start, 
-                            end,
-                            proxies)
-
-    ordered = sorted(results.items(), key=lambda x: (x[0][0], x[0][1]))
 
     # Master progress bar (stays visible)
     master = tqdm(
@@ -191,6 +183,14 @@ def download_grib_data_by_byte_range(ranges,
                 leave=False,
                 bar_format="{desc:<30} |{bar:30}| {percentage:3.0f}% [{n_fmt}/{total_fmt}]"
             ) as pbar:
+
+                results = fetch_data(ranges,
+                              grib_url, 
+                              start, 
+                              end,
+                              proxies)
+
+                ordered = sorted(results.items(), key=lambda x: (x[0][0], x[0][1]))
 
                 for i in range(0, total_bytes, chunk_size):
                     chunk = data[i:i+chunk_size]

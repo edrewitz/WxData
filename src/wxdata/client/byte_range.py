@@ -180,7 +180,6 @@ def download_grib_data_by_byte_range(ranges,
         for (var, level), data in ordered:
 
             total_bytes = len(data)
-            label = f"{var} @ {level}"
 
             # Inner bar (disappears after finishing)
             with tqdm(
@@ -188,7 +187,6 @@ def download_grib_data_by_byte_range(ranges,
                 unit="B",
                 unit_scale=True,
                 unit_divisor=chunk_size,
-                desc=label,
                 position=1,
                 leave=False,
                 bar_format="{desc:<30} |{bar:30}| {percentage:3.0f}% [{n_fmt}/{total_fmt}]"
@@ -198,9 +196,6 @@ def download_grib_data_by_byte_range(ranges,
                     chunk = data[i:i+chunk_size]
                     f.write(chunk)
                     pbar.update(len(chunk))
-
-            # After the bar disappears, print a clean summary line
-            tqdm.write(f"✔ Finished {label} ({total_bytes/chunk_size:.1f} KB)")
 
             master.update(1)
 

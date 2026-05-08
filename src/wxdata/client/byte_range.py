@@ -66,7 +66,7 @@ def fetch_range(url,
     else:
         pass
     
-    return response.content
+    return response
 
 
 def fetch_data(ranges,

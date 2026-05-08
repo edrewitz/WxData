@@ -308,6 +308,9 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 ***AWS Open Data***
 1. [AWS Open Data](https://github.com/edrewitz/WxData/blob/main/Documentation/get_open_aws_data.md#get-aws-open-data)
 
+***Bytes-Range Requests***
+1. [Bytes-Range Requests](https://github.com/edrewitz/WxData/blob/main/Documentation/bytes_range_request.md#bytes-range-request)
+
 ---------------------------------------------------------------
 
 ### Data Querying Tools

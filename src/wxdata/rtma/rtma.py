@@ -7,6 +7,7 @@ This file hosts the function that downloads and returns RTMA Data from the NCEP/
 (C) Eric J. Drewitz 2025-2026
 """
 import os as _os
+import sys as _sys
 import warnings as _warnings
 import wxdata.client.client as _client
 _warnings.filterwarnings('ignore')
@@ -23,9 +24,9 @@ from wxdata.rtma.url_scanners import(
 
 from wxdata.utils.file_funcs import custom_branch as _custom_branch
 from wxdata.calc.derived_fields import rtma_derived_fields as _rtma_derived_fields
-from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
+from wxdata.rtma.file_scanner import local_file_scanner as _local_file_scanner
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
-from wxdata.rtma.process import process_rtma_data as _process_rtma_data
+from wxdata.post_processors.rtma_post_processing import process_rtma_data as _process_rtma_data
 from wxdata.utils.recycle_bin import(
     clear_recycle_bin_windows as _clear_recycle_bin_windows,
     clear_trash_bin_mac as _clear_trash_bin_mac,
@@ -62,20 +63,27 @@ def _bounds(model):
     return models[model][0], models[model][1], models[model][2], models[model][3]
 
 def rtma(model='rtma', 
-         cat='analysis', 
+         cat='analysis',
+         variables=['temperature',
+                    'dew point',
+                    'u-component of wind',
+                    'v-component of wind',
+                    'specific humidity',
+                    'wind direction',
+                    'wind speed',
+                    'wind gust'],
+         levels=[2,10],
+         level_type='height above ground', 
          proxies=None,
          process_data=True,
          clear_recycle_bin=False,
-         western_bound=None,
-         eastern_bound=None,
-         southern_bound=None,
-         northern_bound=None,
          convert_temperature=True,
          convert_to='fahrenheit',
-         custom_directory=None,
+         path=f"RTMA/CONUS",
          clear_data=False,
          chunk_size=8192,
-         notifications='off'):
+         notifications='off',
+         source='nomads'):
     
     """
     This function downloads the latest RTMA Dataset and returns it as an xarray data array. 
@@ -166,29 +174,16 @@ def rtma(model='rtma',
     
     """
     
-    if clear_recycle_bin == True:
-        _clear_recycle_bin_windows()
-        _clear_trash_bin_mac()
-        _clear_trash_bin_linux()
-    
+    source = source.lower()
     model = model.upper()
     cat = cat.upper()
     
-    if custom_directory == None:
-        path = _build_directory(model,
-                            cat)
-    else:
-        path = _custom_branch(custom_directory)
+    try:
+        _os.makedirs(path)
+    except Exception as e:
+        pass
     
     _clear_idx_files(path)
-    
-    if western_bound == None and eastern_bound == None and southern_bound == None and northern_bound == None:
-        western_bound, eastern_bound, southern_bound, northern_bound = _bounds(model)
-    else:
-        western_bound = western_bound
-        eastern_bound = eastern_bound 
-        southern_bound = southern_bound 
-        northern_bound = northern_bound
             
     try:
         files = []
@@ -202,18 +197,50 @@ def rtma(model='rtma',
     except Exception as e:
         pass
     
-    url, filename, run = _rtma_url_scanner(model, 
-                    cat,
-                    western_bound, 
-                    eastern_bound, 
-                    northern_bound, 
-                    southern_bound, 
-                    proxies)
+    try:
+        url, filename, idx_filename, run = _rtma_url_scanner(model, 
+                                                cat,
+                                                proxies,
+                                                source)
+    except Exception as e:
+        filename = None
+    
+    if filename == None:
+        if source == 'noaa':
+            print("NOAA/NCEP/NOMADS Server Is Down.")
+            print("Rotating to Amazon AWS Server..")
+            try:
+                url, filename, idx_filename, run = _rtma_url_scanner(model, 
+                                                    cat,
+                                                    proxies,
+                                                    'aws')
+                
+                print("Amazon AWS Server Online - Connected.")
+            except Exception as e:
+                print("Error: Both Servers Appear Down")
+                print("System Exit")
+                _sys.exit(1)
+        else:
+            print("Amazon AWS Server Is Down.")
+            print("Rotating to NOAA/NCEP/NOMADS")
+            try:
+                url, filename, idx_filename, run = _rtma_url_scanner(model, 
+                                                    cat,
+                                                    proxies,
+                                                    'noaa')
+                
+                print("NOAA/NCEP/NOMADS Server Online - Connected.")
+            except Exception as e:
+                print("Error: Both Servers Appear Down")
+                print("System Exit")
+                _sys.exit(1)
+    else:
+        pass
+    
     
     download = _local_file_scanner(path, 
-                                filename,
-                                'nomads',
-                                run) 
+                                    filename,
+                                    run)
     
     if clear_data == True:
         download = True
@@ -229,12 +256,17 @@ def rtma(model='rtma',
         except Exception as e:
             pass
 
-        _client.get_gridded_data(f"{url}", 
-                    path,
-                    f"{filename}.grib2",
-                    proxies=proxies,
-                    chunk_size=chunk_size,
-                    notifications=notifications)
+        _client.byte_range_request(f"{url}{filename}",
+                      f"{url}{idx_filename}",
+                      variables,
+                      levels,
+                      level_type,
+                      path,
+                      f"{filename}.grib2",
+                      proxies=proxies,
+                      chunk_size=chunk_size,
+                      notifications=notifications,
+                      clear_recycle_bin=clear_recycle_bin)
         
         print(f"{model.upper()} Download Complete.")
     else:
@@ -243,10 +275,11 @@ def rtma(model='rtma',
     if process_data == True:
         print(f"{model.upper()} Data Processing...")
         filename = f"{filename}.grib2"
-        ds = _process_rtma_data(path, 
-                                filename, 
-                                model)
-        
+        ds = _process_rtma_data(
+                     path,
+                     filename, 
+                     model,
+                     )
         
         if convert_temperature == True:
             try:

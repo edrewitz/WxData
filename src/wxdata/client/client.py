@@ -933,7 +933,7 @@ def byte_range_request(grib_url,
         for v in variables:
             req = (v, req_levels)
             reqs.append(req)
-            
+    
     ranges = {}
     for v, l in reqs:
         matches = [r for r in records if r["var"] == v and r["lev"] == l]

@@ -831,8 +831,7 @@ def ecmwf_ifs_post_processing(path,
         ds = ds.sortby('step')
         return ds
     except Exception as e:
-       _eccodes_error_message()
-       _sys.exit(1)
+       pass
    
     
 
@@ -1582,8 +1581,7 @@ def ecmwf_aifs_post_processing(path,
         ds = ds.sortby('step')
         return ds
     except Exception as e:
-       _eccodes_error_message()
-       _sys.exit(1)
+       pass
     
 
 
@@ -1680,6 +1678,5 @@ def ecmwf_ifs_wave_post_processing(path,
     try:    
         ds = ds.sortby('step')
     except Exception as e:
-        _eccodes_error_message()
-        _sys.exit(1)
+        pass
     return ds

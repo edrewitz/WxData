@@ -32,9 +32,10 @@ from shapeography import(
 )
 
 
-alaska = '/SL.us008001/ST.opnl/DF.gr2/DC.ndfd/AR.alaska/'
-conus = '/SL.us008001/ST.opnl/DF.gr2/DC.ndfd/AR.conus/'
-hawaii = '/SL.us008001/ST.opnl/DF.gr2/DC.ndfd/AR.hawaii/'
+AMAZON_AWS_PREFIX = f"https://noaa-ndfd-pds.s3.amazonaws.com/opnl/"
+ALASKA_NOAA_DIRECTORY = '/SL.us008001/ST.opnl/DF.gr2/DC.ndfd/AR.alaska/'
+CONUS_NOAA_DIRECTORY = '/SL.us008001/ST.opnl/DF.gr2/DC.ndfd/AR.conus/'
+HAWAII_NOAA_DIRECTORY = '/SL.us008001/ST.opnl/DF.gr2/DC.ndfd/AR.hawaii/'
 
 def _eccodes_error_intructions():
     
@@ -489,13 +490,13 @@ def get_cpc_outlook(parameter,
     
 
 
-def get_ndfd_grids(parameter, 
-                   state,
-                   proxies=None,
-                   chunk_size=8192,
-                   notifications='on',
-                   clear_recycle_bin=False,
-                   include_extended_grids=True,):
+def get_ndfd_grids_noaa_server(parameter, 
+                                state,
+                                proxies=None,
+                                chunk_size=8192,
+                                notifications='on',
+                                clear_recycle_bin=False,
+                                include_extended_grids=True):
 
     """
 
@@ -632,11 +633,11 @@ def get_ndfd_grids(parameter,
     state = state.upper()
 
     if state == 'AK': 
-        directory_name = alaska
+        directory_name = ALASKA_NOAA_DIRECTORY
     elif state == 'HI':
-        directory_name = hawaii
+        directory_name = HAWAII_NOAA_DIRECTORY
     else:
-        directory_name = conus
+        directory_name = CONUS_NOAA_DIRECTORY
         
     parameter = parameter
 
@@ -782,3 +783,555 @@ def get_ndfd_grids(parameter,
         return ds1, ds2
     else:
         return ds1
+    
+    
+def get_ndfd_grids_aws_server(parameter, 
+                                state,
+                                proxies=None,
+                                chunk_size=8192,
+                                notifications='on',
+                                clear_recycle_bin=False,
+                                include_extended_grids=True):
+
+    """
+
+    This function retrieves the latest NWS Forecast (NDFD) files from the NWS FTP Server. 
+
+    Data Source: NOAA/NWS/NDFD (tgftp.nws.noaa.gov)
+
+    Required Arguments: 
+
+    1) parameter (String) - The parameter that the user wishes to download. 
+    
+    2) state (String) - The two letter state identifier (US States).
+    
+    Optional Arguments:
+    
+    1) proxies (dict or None) - Default=None. If the user is using a proxy server, the user must change the following:
+
+    proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
+    
+    2) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    
+    3) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    
+    4) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
+        
+    5) include_extended_grids (Boolean) - Default=True. Most NOAA/NWS products have extended grids. However, SPC products do not have extended grids.
+        When downloading SPC plots or if the user does not wish to include the extended grids, set include_extended_grids=False.
+        
+        
+    Parameters
+    ----------
+    
+    'maximum_relative_humidity'
+    'mainimum_relative_humidity'
+    'maximum_temperature'
+    'minimum_temperature'
+    'relative_humidity'
+    'temperature'
+    'apparent_temperature'
+    'wind_speed'
+    'wind_gust'
+    'wind_direction'
+    'spc_critical_fire_weather_forecast'
+    'spc_dry_lightning_forecast'
+    'spc_convective_outlook'
+    'ice_accumulation'
+    'probability_of_hail'
+    '12_hour_probability_of_precipitation'
+    'probability_of_extreme_tornadoes'
+    'total_probability_of_severe_thunderstorms'
+    'total_probability_of_extreme_severe_thunderstorms'
+    'probability_of_extreme_thunderstorm_winds'
+    'probability_of_extreme_hail'
+    'probability_of_extreme_tornadoes'
+    'probability_of_damaging_thunderstorm_winds'
+    'quantitative_precipitation_forecast'
+    'sky_cover'
+    'snow_amount'
+    'snow_level'
+    'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_34kts_cumulative'
+    'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_34kts_incremental'
+    'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_50kts_cumulative'
+    'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_50kts_incremental'
+    'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_64kts_cumulative'
+    'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_64kts_incremental'
+    'dew_point'
+    'visibility'
+    'significant_wave_height'
+    'warnings'
+    'weather' 
+
+    Returns
+    -------
+    
+    An xarray.data array of the latest NWS/SPC Forecast data.
+    
+    Variable names are also changed from their origional key value into plain language.
+    
+        Plain Language Variable Key List
+        --------------------------------
+        
+        'maximum_relative_humidity'
+        'mainimum_relative_humidity'
+        'maximum_temperature'
+        'minimum_temperature'
+        'relative_humidity'
+        'temperature'
+        'apparent_temperature'
+        'wind_speed'
+        'wind_gust'
+        'wind_direction'
+        'spc_critical_fire_weather_forecast'
+        'spc_dry_lightning_forecast'
+        'spc_convective_outlook'
+        'ice_accumulation'
+        'probability_of_hail'
+        '12_hour_probability_of_precipitation'
+        'probability_of_extreme_tornadoes'
+        'total_probability_of_severe_thunderstorms'
+        'total_probability_of_extreme_severe_thunderstorms'
+        'probability_of_extreme_thunderstorm_winds'
+        'probability_of_extreme_hail'
+        'probability_of_extreme_tornadoes'
+        'probability_of_damaging_thunderstorm_winds'
+        'quantitative_precipitation_forecast'
+        'sky_cover'
+        'snow_amount'
+        'snow_level'
+        'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_34kts_cumulative'
+        'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_34kts_incremental'
+        'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_50kts_cumulative'
+        'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_50kts_incremental'
+        'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_64kts_cumulative'
+        'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_64kts_incremental'
+        'dew_point'
+        'visibility'
+        'significant_wave_height'
+        'warnings'
+        'weather'       
+
+    """
+    if clear_recycle_bin == True:
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
+    else:
+        pass
+    
+    state = state.upper()
+
+    if state == 'AK': 
+        directory_name = 'AR.alaska'
+    elif state == 'HI':
+        directory_name = 'AR.hawaii'
+    else:
+        directory_name = 'AR.conus'
+        
+    parameter = parameter
+
+    if _os.path.exists(f"NWS Data"):
+        pass
+    else:
+        _os.mkdir(f"NWS Data")
+
+    for file in _os.listdir(f"NWS Data"):
+        try:
+            _os.remove(f"NWS Data"/{file})
+        except Exception as e:
+            pass
+
+    fname = _get_parameters(parameter)
+
+    short_term_fname = f"ds.{parameter}_short.bin"
+    extended_fname = f"ds.{parameter}_extended.bin"
+    
+    if _os.path.exists(short_term_fname):
+        _os.remove(short_term_fname)
+        _client.get_gridded_data(f"{AMAZON_AWS_PREFIX}{directory_name}/VP.001-003/{fname}", 
+                                f"NWS Data",
+                                f"{short_term_fname}",
+                                proxies=proxies,
+                                chunk_size=chunk_size,
+                                notifications=notifications)
+    else:
+        _client.get_gridded_data(f"{AMAZON_AWS_PREFIX}{directory_name}/VP.001-003/{fname}", 
+                                f"NWS Data",
+                                f"{short_term_fname}",
+                                proxies=proxies,
+                                chunk_size=chunk_size,
+                                notifications=notifications)
+        
+    if include_extended_grids == True:
+    
+        if _os.path.exists(extended_fname):
+            try:
+                _os.remove(extended_fname)
+                _client.get_gridded_data(f"{AMAZON_AWS_PREFIX}{directory_name}/VP.004-007/{fname}", 
+                                        f"NWS Data",
+                                        f"{extended_fname}",
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications)
+                extended = True
+            except Exception as e:
+                extended = False
+        else:
+            try:
+                _client.get_gridded_data(f"{AMAZON_AWS_PREFIX}{directory_name}/VP.004-007/{fname}", 
+                                        f"NWS Data",
+                                        f"{extended_fname}",
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications)
+                extended = True
+            except Exception as e:
+                extended = False
+
+    try:
+        _os.remove(parameter)
+    except Exception as e:
+        pass
+    
+    try:
+        if state != 'AK' or state != 'ak' or state == None:
+            ds1 = _xr.open_dataset(f"NWS Data/{short_term_fname}", engine='cfgrib', decode_timedelta=False)
+        else:
+            ds1 = _xr.open_dataset(f"NWS Data/{short_term_fname}", engine='cfgrib', decode_timedelta=False).sel(x=slice(20, 1400, 2), y=slice(100, 1400, 2)) 
+    except Exception as e:
+        _eccodes_error_intructions()
+        _sys.exit(1)
+    try:
+        if ds1['time'][1] == True:
+            ds1 = ds1.isel(time=1)
+        else:
+            ds1 = ds1.isel(time=0)
+    except Exception as e:
+        try:
+            ds1 = ds1.isel(time=0)
+        except Exception as e:
+            ds1 = ds1
+
+    if include_extended_grids == True:
+        try:
+
+            if state != 'AK' or state != 'ak' or state == None:
+                ds2 = _xr.open_dataset(f"NWS Data/{extended_fname}", engine='cfgrib', decode_timedelta=False)
+            else:
+                ds2 = _xr.open_dataset(f"NWS Data/{extended_fname}", engine='cfgrib', decode_timedelta=False).sel(x=slice(20, 1400, 2), y=slice(100, 1400, 2)) 
+    
+            try:
+                if ds2['time'][1] == True:
+                        ds2 = ds2.isel(time=1)
+                else:
+                    ds2 = ds2.isel(time=0)  
+            except Exception as e:
+                try:
+                    ds2 = ds2.isel(time=0)
+                except Exception as e:
+                    ds2 = ds2
+        except Exception as e:
+            pass
+    else:
+        ds2 = False
+        
+    ds1 = ds1.metpy.parse_cf()
+
+    if include_extended_grids == True:
+        try:
+            ds2 = ds2.metpy.parse_cf() 
+        except Exception as e:
+            ds2 = False
+    else:
+        pass
+
+    for item in _os.listdir(f"NWS Data"):
+        if item.endswith(".idx"):
+            _os.remove(f"NWS Data/{item}")
+        
+    print(f"Retrieved {parameter} NDFD grids.")
+    
+    data_var_names_1 = [var.name for var in ds1.data_vars.values()]
+    ds1[parameter] = ds1[data_var_names_1[0]]
+    ds1 = ds1.drop_vars(data_var_names_1[0])
+    
+    if include_extended_grids == True:
+        data_var_names_2 = [var.name for var in ds2.data_vars.values()]
+        ds2[parameter] = ds2[data_var_names_2[0]]
+        ds2 = ds2.drop_vars(data_var_names_2[0])
+    
+    if state == 'HI':
+        
+        ds1, ds2 = _FIX_1D_GRIB_DATA(ds1, ds2, parameter, short_term_fname, extended_fname)
+        
+    else:
+        pass
+
+    if include_extended_grids == True:
+        return ds1, ds2
+    else:
+        return ds1
+    
+    
+def get_ndfd_grids(parameter, 
+                    state,
+                    proxies=None,
+                    chunk_size=8192,
+                    notifications='on',
+                    clear_recycle_bin=False,
+                    include_extended_grids=True,
+                    source='noaa'):
+
+    """
+
+    This function retrieves the latest NWS Forecast (NDFD) files from the NWS FTP Server. 
+
+    Data Source: NOAA/NWS/NDFD (tgftp.nws.noaa.gov)
+
+    Required Arguments: 
+
+    1) parameter (String) - The parameter that the user wishes to download. 
+    
+    2) state (String) - The two letter state identifier (US States).
+    
+    Optional Arguments:
+    
+    1) proxies (dict or None) - Default=None. If the user is using a proxy server, the user must change the following:
+
+    proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
+    
+    2) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    
+    3) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    
+    4) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
+        
+    5) include_extended_grids (Boolean) - Default=True. Most NOAA/NWS products have extended grids. However, SPC products do not have extended grids.
+        When downloading SPC plots or if the user does not wish to include the extended grids, set include_extended_grids=False.
+        
+        
+    Parameters
+    ----------
+    
+    'maximum_relative_humidity'
+    'mainimum_relative_humidity'
+    'maximum_temperature'
+    'minimum_temperature'
+    'relative_humidity'
+    'temperature'
+    'apparent_temperature'
+    'wind_speed'
+    'wind_gust'
+    'wind_direction'
+    'spc_critical_fire_weather_forecast'
+    'spc_dry_lightning_forecast'
+    'spc_convective_outlook'
+    'ice_accumulation'
+    'probability_of_hail'
+    '12_hour_probability_of_precipitation'
+    'probability_of_extreme_tornadoes'
+    'total_probability_of_severe_thunderstorms'
+    'total_probability_of_extreme_severe_thunderstorms'
+    'probability_of_extreme_thunderstorm_winds'
+    'probability_of_extreme_hail'
+    'probability_of_extreme_tornadoes'
+    'probability_of_damaging_thunderstorm_winds'
+    'quantitative_precipitation_forecast'
+    'sky_cover'
+    'snow_amount'
+    'snow_level'
+    'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_34kts_cumulative'
+    'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_34kts_incremental'
+    'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_50kts_cumulative'
+    'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_50kts_incremental'
+    'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_64kts_cumulative'
+    'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_64kts_incremental'
+    'dew_point'
+    'visibility'
+    'significant_wave_height'
+    'warnings'
+    'weather' 
+
+    Returns
+    -------
+    
+    An xarray.data array of the latest NWS/SPC Forecast data.
+    
+    Variable names are also changed from their origional key value into plain language.
+    
+        Plain Language Variable Key List
+        --------------------------------
+        
+        'maximum_relative_humidity'
+        'mainimum_relative_humidity'
+        'maximum_temperature'
+        'minimum_temperature'
+        'relative_humidity'
+        'temperature'
+        'apparent_temperature'
+        'wind_speed'
+        'wind_gust'
+        'wind_direction'
+        'spc_critical_fire_weather_forecast'
+        'spc_dry_lightning_forecast'
+        'spc_convective_outlook'
+        'ice_accumulation'
+        'probability_of_hail'
+        '12_hour_probability_of_precipitation'
+        'probability_of_extreme_tornadoes'
+        'total_probability_of_severe_thunderstorms'
+        'total_probability_of_extreme_severe_thunderstorms'
+        'probability_of_extreme_thunderstorm_winds'
+        'probability_of_extreme_hail'
+        'probability_of_extreme_tornadoes'
+        'probability_of_damaging_thunderstorm_winds'
+        'quantitative_precipitation_forecast'
+        'sky_cover'
+        'snow_amount'
+        'snow_level'
+        'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_34kts_cumulative'
+        'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_34kts_incremental'
+        'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_50kts_cumulative'
+        'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_50kts_incremental'
+        'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_64kts_cumulative'
+        'probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_64kts_incremental'
+        'dew_point'
+        'visibility'
+        'significant_wave_height'
+        'warnings'
+        'weather'       
+
+    """
+    
+    source = source.lower()
+    
+    if source == 'noaa':
+        if include_extended_grids == True:
+            try:
+                ds1, ds2 = get_ndfd_grids_noaa_server(parameter, 
+                                        state,
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        include_extended_grids=True)
+                return ds1, ds2
+            except Exception as e:
+                print("NOAA NWS FTP Server Is Down.")
+                print("Rotating to Amazon AWS Server.")
+                
+                ds1, ds2 = get_ndfd_grids_aws_server(parameter, 
+                                state,
+                                proxies=proxies,
+                                chunk_size=chunk_size,
+                                notifications=notifications,
+                                clear_recycle_bin=clear_recycle_bin,
+                                include_extended_grids=True)
+                
+                print("Retrieved Data via Amazon AWS Server.")
+                return ds1, ds2
+                
+                
+        else:
+            try:
+                ds = get_ndfd_grids_noaa_server(parameter, 
+                                        state,
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        include_extended_grids=False)
+                
+                return ds
+            except Exception as e:
+                print("NOAA NWS FTP Server Is Down.")
+                print("Rotating to Amazon AWS Server")
+                
+                ds = get_ndfd_grids_aws_server(parameter, 
+                                state,
+                                proxies=proxies,
+                                chunk_size=chunk_size,
+                                notifications=notifications,
+                                clear_recycle_bin=clear_recycle_bin,
+                                include_extended_grids=False)
+                
+                print("Retrieved Data via Amazon AWS Server.") 
+                return ds
+            
+    else:
+        if include_extended_grids == True:
+            try:
+                ds1, ds2 = get_ndfd_grids_aws_server(parameter, 
+                                    state,
+                                    proxies=proxies,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications,
+                                    clear_recycle_bin=clear_recycle_bin,
+                                    include_extended_grids=True)
+                    
+                return ds1, ds2
+            except Exception as e:
+                print("Amazon AWS Server Is Down.")
+                print("Rotating to NOAA NWS FTP Server.")
+                try:
+                    
+                    ds1, ds2 = get_ndfd_grids_noaa_server(parameter, 
+                                            state,
+                                            proxies=proxies,
+                                            chunk_size=chunk_size,
+                                            notifications=notifications,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            include_extended_grids=True)
+                    
+                    print("Retrieved Data via NOAA NWS FTP Server.") 
+                    return ds1, ds2
+                except Exception as e:
+                    print("Both servers are down.")
+                    print("System Exit.")
+                    _sys.exit(1)
+            
+        else:
+            try:
+                ds = get_ndfd_grids_aws_server(parameter, 
+                                    state,
+                                    proxies=proxies,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications,
+                                    clear_recycle_bin=clear_recycle_bin,
+                                    include_extended_grids=False)
+                    
+                return ds 
+            except Exception as e:
+                print("Amazon AWS Server Is Down.")
+                print("Rotating to NOAA NWS FTP Server.")
+                
+                try:
+                    ds = get_ndfd_grids_noaa_server(parameter, 
+                                            state,
+                                            proxies=proxies,
+                                            chunk_size=chunk_size,
+                                            notifications=notifications,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            include_extended_grids=False)
+                
+                    print("Retrieved Data via NOAA NWS FTP Server.") 
+                
+                    return ds
+                except Exception as e:
+                    print("Both servers are down.")
+                    print("System Exit.")
+                    _sys.exit(1)
+        
+                                
+                

@@ -8,7 +8,6 @@ These functions return the URL and filename for the latest available data on the
 
 import requests
 import sys
-import numpy as np
 
 from urllib.parse import urlparse, parse_qs
 from wxdata.utils.coords import convert_lon
@@ -32,14 +31,14 @@ local = datetime.now()
 # Gets yesterday's date
 yd = now - timedelta(days=1)
 
+NOMADS_PREFIX = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/rtma/prod/"
+AMAZON_AWS_PREFIX = f"https://noaa-rtma-pds.s3.amazonaws.com/"
+
 
 def rtma_url_scanner(model, 
                     cat,
-                    western_bound, 
-                    eastern_bound, 
-                    northern_bound, 
-                    southern_bound, 
-                    proxies):
+                    proxies,
+                    source):
     
     """
     This function scans for the latest available RTMA Dataset within the past 4 hours.
@@ -82,11 +81,15 @@ def rtma_url_scanner(model,
     The URL path to the file and the filename for the most recent RTMA Dataset.
     
     """
+    source = source.lower()
     model = model.upper()
     cat = cat.upper()
     
-    western_bound, eastern_bound = convert_lon(western_bound, eastern_bound)
-    
+    if source == 'noaa':
+        PREFIX = NOMADS_PREFIX
+    else:
+        PREFIX = AMAZON_AWS_PREFIX
+        
     if model == 'RTMA':
         directory = 'rtma2p5'
     elif model == 'AK RTMA':
@@ -110,13 +113,13 @@ def rtma_url_scanner(model,
     h_02 = now - timedelta(hours=2)
     h_03 = now - timedelta(hours=3)
     h_04 = now - timedelta(hours=4)
-            
-    url_00 = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/rtma/prod/{directory}.{h_00.strftime('%Y%m%d')}/"    
-    url_01 = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/rtma/prod/{directory}.{h_01.strftime('%Y%m%d')}/" 
-    url_02 = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/rtma/prod/{directory}.{h_02.strftime('%Y%m%d')}/"  
-    url_03 = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/rtma/prod/{directory}.{h_03.strftime('%Y%m%d')}/"  
-    url_04 = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/rtma/prod/{directory}.{h_04.strftime('%Y%m%d')}/"  
     
+    url_00 = f"{PREFIX}{directory}.{h_00.strftime('%Y%m%d')}/"    
+    url_01 = f"{PREFIX}{directory}.{h_01.strftime('%Y%m%d')}/" 
+    url_02 = f"{PREFIX}{directory}.{h_02.strftime('%Y%m%d')}/"  
+    url_03 = f"{PREFIX}{directory}.{h_03.strftime('%Y%m%d')}/"  
+    url_04 = f"{PREFIX}{directory}.{h_04.strftime('%Y%m%d')}/"  
+
     if h_00.hour < 10:
         abbrev_0 = f"t0{h_00.hour}"
     else:
@@ -162,28 +165,38 @@ def rtma_url_scanner(model,
     
     if proxies == None:
         try:
-            r0 = requests.get(f"{url_00}/{f_00}", stream=True)
+            r0 = requests.get(f"{url_00}{f_00}", 
+                              stream=True)
             r0.close()
-            r1 = requests.get(f"{url_01}/{f_01}", stream=True)
+            r1 = requests.get(f"{url_01}{f_01}", 
+                              stream=True)
             r1.close()
-            r2 = requests.get(f"{url_02}/{f_02}", stream=True)
+            r2 = requests.get(f"{url_02}{f_02}", 
+                              stream=True)
             r2.close()
-            r3 = requests.get(f"{url_03}/{f_03}", stream=True)
+            r3 = requests.get(f"{url_03}{f_03}", 
+                              stream=True)
             r3.close()
-            r4 = requests.get(f"{url_04}/{f_04}", stream=True)
+            r4 = requests.get(f"{url_04}{f_04}", 
+                              stream=True)
             r4.close()
         except Exception as e:
             for i in range(0, 5, 1):
                 try:
-                    r0 = requests.get(f"{url_00}/{f_00}", stream=True)
+                    r0 = requests.get(f"{url_00}{f_00}", 
+                                      stream=True)
                     r0.close()
-                    r1 = requests.get(f"{url_01}/{f_01}", stream=True)
+                    r1 = requests.get(f"{url_01}{f_01}", 
+                                      stream=True)
                     r1.close()
-                    r2 = requests.get(f"{url_02}/{f_02}", stream=True)
+                    r2 = requests.get(f"{url_02}{f_02}", 
+                                      stream=True)
                     r2.close()
-                    r3 = requests.get(f"{url_03}/{f_03}", stream=True)
+                    r3 = requests.get(f"{url_03}{f_03}", 
+                                      stream=True)
                     r3.close()
-                    r4 = requests.get(f"{url_04}/{f_04}", stream=True)
+                    r4 = requests.get(f"{url_04}{f_04}", 
+                                      stream=True)
                     r4.close()
                     break
                 except Exception as e:
@@ -191,52 +204,58 @@ def rtma_url_scanner(model,
         
     else:
         try:
-            r0 = requests.get(f"{url_00}/{f_00}", stream=True, proxies=proxies)
+            r0 = requests.get(f"{url_00}{f_00}", 
+                              stream=True, 
+                              proxies=proxies)
             r0.close()
-            r1 = requests.get(f"{url_01}/{f_01}", stream=True, proxies=proxies)
+            r1 = requests.get(f"{url_01}{f_01}", 
+                              stream=True, 
+                              proxies=proxies)
             r1.close()
-            r2 = requests.get(f"{url_02}/{f_02}", stream=True, proxies=proxies)
+            r2 = requests.get(f"{url_02}{f_02}", 
+                              stream=True, 
+                              proxies=proxies)
             r2.close()
-            r3 = requests.get(f"{url_03}/{f_03}", stream=True, proxies=proxies)
+            r3 = requests.get(f"{url_03}{f_03}", 
+                              stream=True, 
+                              proxies=proxies)
             r3.close()
-            r4 = requests.get(f"{url_04}/{f_04}", stream=True, proxies=proxies)
+            r4 = requests.get(f"{url_04}{f_04}", 
+                              stream=True, 
+                              proxies=proxies)
             r4.close()
         except Exception as e:
             for i in range(0, 5, 1):
                 try:
-                    r0 = requests.get(f"{url_00}/{f_00}", stream=True, proxies=proxies)
+                    r0 = requests.get(f"{url_00}{f_00}", 
+                                      stream=True, 
+                                      proxies=proxies)
                     r0.close()
-                    r1 = requests.get(f"{url_01}/{f_01}", stream=True, proxies=proxies)
+                    r1 = requests.get(f"{url_01}{f_01}", 
+                                      stream=True, 
+                                      proxies=proxies)
                     r1.close()
-                    r2 = requests.get(f"{url_02}/{f_02}", stream=True, proxies=proxies)
+                    r2 = requests.get(f"{url_02}{f_02}", 
+                                      stream=True, 
+                                      proxies=proxies)
                     r2.close()
-                    r3 = requests.get(f"{url_03}/{f_03}", stream=True, proxies=proxies)
+                    r3 = requests.get(f"{url_03}{f_03}", 
+                                      stream=True, 
+                                      proxies=proxies)
                     r3.close()
-                    r4 = requests.get(f"{url_04}/{f_04}", stream=True, proxies=proxies)
+                    r4 = requests.get(f"{url_04}{f_04}", 
+                                      stream=True, 
+                                      proxies=proxies)
                     r4.close()
                     break
                 except Exception as e:
                     i = i      
         
-    url_0 = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_{directory}.pl?"
-             f"dir=%2F{directory}.{h_00.strftime('%Y%m%d')}&file={f_00}&all_var=on&all_lev=on&subregion=&"
-             f"toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")    
-    
-    url_1 = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_{directory}.pl?"
-             f"dir=%2F{directory}.{h_01.strftime('%Y%m%d')}&file={f_01}&all_var=on&all_lev=on&subregion=&"
-             f"toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")    
-    
-    url_2 = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_{directory}.pl?"
-             f"dir=%2F{directory}.{h_02.strftime('%Y%m%d')}&file={f_02}&all_var=on&all_lev=on&subregion=&"
-             f"toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")    
-    
-    url_3 = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_{directory}.pl?"
-             f"dir=%2F{directory}.{h_03.strftime('%Y%m%d')}&file={f_03}&all_var=on&all_lev=on&subregion=&"
-             f"toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")    
-    
-    url_4 = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_{directory}.pl?"
-             f"dir=%2F{directory}.{h_04.strftime('%Y%m%d')}&file={f_04}&all_var=on&all_lev=on&subregion=&"
-             f"toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")    
+    url_0 = (f"{url_00}")    
+    url_1 = (f"{url_01}")    
+    url_2 = (f"{url_02}")    
+    url_3 = (f"{url_03}")    
+    url_4 = (f"{url_04}")    
     
     urls = [
         url_0,
@@ -254,10 +273,19 @@ def rtma_url_scanner(model,
         r4
     ]
     
-    for response, url in zip(responses, urls):
+    filenames = [
+        f_00,
+        f_01,
+        f_02,
+        f_03,
+        f_04
+    ]
+    
+    for response, url, filename in zip(responses, urls, filenames):
         if response.status_code == 200:
             url = url
             run = get_run_by_keyword(url)
+            filename = filename
             break        
     
     try:
@@ -265,19 +293,9 @@ def rtma_url_scanner(model,
     except Exception as e:
         print(f"Latest analysis data is over 4 hours old. Aborting.....")
         sys.exit(1)
-        
-    parsed_url = urlparse(url)
-
-    # Extract the query string
-    query_string = parsed_url.query
-
-    # Parse the query string into a dictionary of parameters
-    query_params = parse_qs(query_string)
-
-    # Access individual parameters
-    filename = query_params.get('file', [''])[0] 
     
-    return url, filename, run
+    idx_filename = f"{filename}.idx"
+    return url, filename, idx_filename, run
 
 def rtma_comparison_url_scanner(model, 
                     cat,

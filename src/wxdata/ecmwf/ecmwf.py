@@ -641,6 +641,7 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                                             param=params,
                                             levelist=levels,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                            success = True
                         except Exception as e:
                             for k in range(0, 3, 1):
                                 print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -656,10 +657,12 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                                                 param=params,
                                                 levelist=levels,
                                                 target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                                    success = True
                                     break
                                 except Exception as e:
                                     k = k
                                     if k >= 2:
+                                        success = False
                                         pass
       
                     else:
@@ -672,6 +675,7 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                                             levtype=level_type,
                                             param=params,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                            success = True
                         except Exception as e:
                             for k in range(0, 3, 1):
                                 print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -686,16 +690,21 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                                             levtype=level_type,
                                             param=params,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                                    success = True
                                     break
                                 except Exception as e:
                                     k = k
                                     if k >= 2:
+                                        success = False
                                         pass
                             
+                if success == True:
                     if notifications == True:
                         print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
                     else:
                         pass
+                else:
+                    break
         else:
             for i in range(0, 144 + step, step):
                 f = _io.StringIO()
@@ -711,6 +720,7 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                                             param=params,
                                             levelist=levels,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                            success = False
                         except Exception as e:
                             for k in range(0, 3, 1):
                                 print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -726,11 +736,14 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                                             param=params,
                                             levelist=levels,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                                    success = False
                                     break
                                 except Exception as e:
                                     k = k
                                     if k >= 2:
-                                        pass
+                                        success = False
+                                        break
+                                        
                     else:
                         try:
                             client.retrieve(date=valid_date,
@@ -741,6 +754,7 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                                             levtype=level_type,
                                             param=params,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                            success = True
                         except Exception as e:
                             for k in range(0, 3, 1):
                                 print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -755,16 +769,20 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                                             levtype=level_type,
                                             param=params,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                                    success = True
                                     break
                                 except Exception as e:
                                     k = k
                                     if k >= 2:
-                                        pass
-                                                           
+                                        success = False
+                                        break
+                if success == True:                              
                     if notifications == True:
                         print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
                     else:
                         pass
+                else:
+                    break
                                 
             for i in range(144, final_forecast_hour + 6, 6):
                 f = _io.StringIO()
@@ -780,6 +798,7 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                                             param=params,
                                             levelist=levels,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                            success = True
                         except Exception as e:
                             for k in range(0, 3, 1):
                                 print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -795,11 +814,13 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                                             param=params,
                                             levelist=levels,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                                    success = True
                                     break
                                 except Exception as e:
                                     k = k
                                     if k >= 2:
-                                        pass                       
+                                        success = False
+                                        break                       
                     else:
                         try:
                             client.retrieve(date=valid_date,
@@ -810,6 +831,7 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                                             levtype=level_type,
                                             param=params,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                            success = True
                         except Exception as e:
                             for k in range(0, 3, 1):
                                 print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -824,25 +846,35 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                                             levtype=level_type,
                                             param=params,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                                    success = True
                                     break
                                 except Exception as e:
                                     k = k
                                     if k >= 2:
-                                        pass
-                                                            
+                                        success = False
+                                        break
+                
+                if success == True:                       
                     if notifications == True:
                         print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
                     else:
                         pass
+                else:
+                    break
 
-        
-        print(f"ECMWF IFS Download Complete.")    
+        if success == True:
+            print(f"ECMWF IFS Download Complete.")   
+        else:
+            pass 
         
     else:
         print(f"ECMWF IFS Data is up to date. Skipping download...")    
 
     if process_data == True:
-        print(f"ECMWF IFS Data Processing...")
+        if success == True:
+            print(f"ECMWF IFS Data Processing...")
+        else:
+            pass
         
         ds = _ecmwf_post_processing.ecmwf_ifs_post_processing(path,
                                                             western_bound, 
@@ -1388,10 +1420,6 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                                     if k >= 2:
                                         success = False
                                         break
-                        if success == False:
-                            break
-                        else:
-                            pass
                     else:
                         try:
                             client.retrieve(date=valid_date,
@@ -1403,6 +1431,7 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                                             param=params,
                                             number=members,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
+                            success = True
                         except Exception as e:
                             for k in range(0, 100, 1):
                                 print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -1418,16 +1447,20 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                                             param=params,
                                             number=members,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
+                                    success = True
                                     break
                                 except Exception as e:
                                     k = k
                                     if k >= 2:
-                                        pass
-                            
+                                        success = False
+                                        break
+                if success == True:
                     if notifications == True:
                         print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
                     else:
                         pass
+                else:
+                    break
         else:
             for i in range(0, 144 + step, step):
                 f = _io.StringIO()
@@ -1444,6 +1477,7 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                                             levelist=levels,
                                             number=members,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
+                            success = True
                         except Exception as e:
                             for k in range(0, 3, 1):
                                 print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -1460,11 +1494,13 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                                             levelist=levels,
                                             number=members,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
+                                    success = True
                                     break
                                 except Exception as e:
                                     k = k
                                     if k >= 2:
-                                        pass
+                                        success = False
+                                        break
                     else:
                         try:
                             client.retrieve(date=valid_date,
@@ -1476,6 +1512,7 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                                             param=params,
                                             number=members,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
+                            success = True
                         except Exception as e:
                             for k in range(0, 3, 1):
                                 print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -1491,18 +1528,20 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                                             param=params,
                                             number=members,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
+                                    success = True
                                     break
                                 except Exception as e:
                                     k = k
                                     if k >= 2:
-                                        print(f"Cannot re-establish connection - System Exiting.", file=original_stdout)
-                                        _sys.exit(1)   
-                                    else:
-                                        pass                         
+                                        success = False
+                                        break
+                if success == True:                    
                     if notifications == True:
                         print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
                     else:
                         pass
+                else:
+                    break
                                 
             for i in range(144, final_forecast_hour + 6, 6):
                 f = _io.StringIO()
@@ -1519,6 +1558,7 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                                             levelist=levels,
                                             number=members,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
+                            success = True
                         except Exception as e:
                             for k in range(0, 3, 1):
                                 print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -1535,11 +1575,13 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                                             levelist=levels,
                                             number=members,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
+                                    success = True
                                     break
                                 except Exception as e:
                                     k = k
                                     if k >= 2:
-                                        pass                   
+                                        success = False
+                                        break                 
                     else:
                         try:
                             client.retrieve(date=valid_date,
@@ -1551,6 +1593,7 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                                             param=params,
                                             number=members,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
+                            success = True
                         except Exception as e:
                             for k in range(0, 3, 1):
                                 print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -1566,21 +1609,35 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                                             param=params,
                                             number=members,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
+                                    success = True
                                     break
                                 except Exception as e:
                                     k = k
                                     if k >= 2:
-                                        pass                       
+                                        success = False
+                                        break
+                if success == True:                   
                     if notifications == True:
                         print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
                     else:
                         pass
-
+                else:
+                    break
                 
+        if success == True:
+            print(f"ECMWF IFS Download Complete.")   
+        else:
+            pass 
+
     else:
         print(f"ECMWF IFS ENSEMBLE Data is up to date. Skipping download...")    
 
-    if process_data == True:        
+    if process_data == True:    
+        if success == True:
+            print("ECMWF IFS ENSEMBLE Data Processing")   
+        else:
+            pass
+         
         ds = _ecmwf_post_processing.ecmwf_ifs_post_processing(path,
                                                             western_bound, 
                                                             eastern_bound, 
@@ -2012,6 +2069,7 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
                                         param=params,
                                         levelist=levels,
                                         target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2")
+                        success = True
                     except Exception as e:
                             for k in range(0, 3, 1):
                                 print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -2027,11 +2085,13 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
                                         param=params,
                                         levelist=levels,
                                         target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2")
+                                    success = True
                                     break
                                 except Exception as e:
                                     k = k
                                     if k >= 2:
-                                        pass                      
+                                        success = False
+                                        break                      
                 else:
                     try:
                         client.retrieve(date=valid_date,
@@ -2042,6 +2102,7 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
                                         levtype=level_type,
                                         param=params,
                                         target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2")
+                        success = True
                     except Exception as e:
                         for k in range(0, 3, 1):
                                 print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -2056,24 +2117,34 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
                                         levtype=level_type,
                                         param=params,
                                         target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2")
+                                    success = True
                                     break
                                 except Exception as e:
                                     k = k
                                     if k >= 2:
-                                        pass
-                                    
+                                        success = False
+                                        break
+            if success == True:      
                 if notifications == True:
                     print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2 saved to {path}", file=original_stdout)
                 else:
                     pass
-
-        print(f"ECMWF AIFS Download Complete.")    
+            else:
+                break
+        
+        if success == True:
+            print(f"ECMWF AIFS Download Complete.")  
+        else:
+            pass  
         
     else:
         print(f"ECMWF AIFS Data is up to date. Skipping download...")    
         
     if process_data == True:
-        print(f"ECMWF AIFS Data Processing...")
+        if success == True:
+            print(f"ECMWF AIFS Data Processing...")
+        else:
+            pass
         
         ds = _ecmwf_post_processing.ecmwf_aifs_post_processing(path,
                                                             western_bound, 
@@ -2543,6 +2614,7 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
                                             param=params,
                                             levelist=levels,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-{cat}.grib2")
+                            success = True
                         except Exception as e:
                                 for k in range(0, 3, 1):
                                     print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -2558,11 +2630,13 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
                                             param=params,
                                             levelist=levels,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-{cat}.grib2")
+                                        success = True
                                         break
                                     except Exception as e:
                                         k = k
                                         if k >= 2:
-                                            pass                      
+                                           success = False
+                                           break                   
                     else:
                         try:
                             client.retrieve(date=valid_date,
@@ -2573,6 +2647,7 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
                                             levtype=level_type,
                                             param=params,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-{cat}.grib2")
+                            success = True
                         except Exception as e:
                             for k in range(0, 3, 1):
                                     print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -2587,16 +2662,20 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
                                             levtype=level_type,
                                             param=params,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-{cat}.grib2")
+                                        success = True
                                         break
                                     except Exception as e:
                                         k = k
                                         if k >= 2:
-                                            pass
-                                        
+                                            success = False
+                                            break
+                if success == True:                
                     if notifications == True:
                         print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-{cat}.grib2 saved to {path}", file=original_stdout)
                     else:
                         pass
+                else:
+                    break
                     
         else:        
             for i in range(0, final_forecast_hour + 6, 6):
@@ -2614,6 +2693,7 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
                                             levelist=levels,
                                             number=members,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-{cat}.grib2")
+                            success = True
                         except Exception as e:
                                 for k in range(0, 3, 1):
                                     print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -2630,11 +2710,13 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
                                             levelist=levels,
                                             number=members,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-{cat}.grib2")
+                                        success = True
                                         break
                                     except Exception as e:
                                         k = k
                                         if k >= 2:
-                                            pass                      
+                                            success = False
+                                            break                      
                     else:
                         try:
                             client.retrieve(date=valid_date,
@@ -2646,6 +2728,7 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
                                             param=params,
                                             number=members,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-{cat}.grib2")
+                            success = True
                         except Exception as e:
                             for k in range(0, 3, 1):
                                     print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -2661,24 +2744,33 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
                                             param=params,
                                             number=members,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-{cat}.grib2")
+                                        success = True
                                         break
                                     except Exception as e:
                                         k = k
                                         if k >= 2:
-                                            pass
-                                        
+                                            success = False
+                                            break
+                if success == True:  
                     if notifications == True:
                         print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-{cat}.grib2 saved to {path}", file=original_stdout)
                     else:
                         pass
-
-        print(f"ECMWF AIFS ENSEMBLE {cat.upper()} Download Complete.")    
+                else:
+                    break
+        if success == True:
+            print(f"ECMWF AIFS ENSEMBLE {cat.upper()} Download Complete.")   
+        else:
+            pass 
         
     else:
         print(f"ECMWF AIFS ENSEMBLE {cat.upper()} Data is up to date. Skipping download...")    
         
     if process_data == True:
-        print(f"ECMWF AIFS ENSEMBLE {cat.upper()} Data Processing...")
+        if success == True:
+            print(f"ECMWF AIFS ENSEMBLE {cat.upper()} Data Processing...")
+        else:
+            pass
         
         ds = _ecmwf_post_processing.ecmwf_aifs_post_processing(path,
                                                             western_bound, 
@@ -3002,6 +3094,7 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
                                         type="fc",
                                         param=params,
                                         target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                        success = True
                     except Exception as e:
                         for k in range(0, 3, 1):
                             print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -3015,16 +3108,20 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
                                             type="fc",
                                             param=params,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                                success = True
                                 break
                             except Exception as e:
                                 k = k
                                 if k >= 2:
-                                    pass
-                                
-                if notifications == True:
-                    print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
+                                    success = False
+                                    break
+                if success == True:
+                    if notifications == True:
+                        print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
+                    else:
+                        pass       
                 else:
-                    pass                        
+                    break                 
                                 
         else:
             for i in range(0, 144 + step, step):
@@ -3038,6 +3135,7 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
                                         type="fc",
                                         param=params,
                                         target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                        success = True
                     except Exception as e:
                         for k in range(0, 3, 1):
                             print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -3051,11 +3149,17 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
                                         type="fc",
                                         param=params,
                                         target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                                success = True
                                 break
                             except Exception as e:
                                 k = k
                                 if k >= 2:
-                                    pass
+                                    success = False
+                                    break
+                if success == True:
+                    pass
+                else:
+                    break
                             
             for i in range(144, final_forecast_hour + 6, 6):
                 f = _io.StringIO()
@@ -3068,6 +3172,7 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
                                         type="fc",
                                         param=params,
                                         target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                        success = True
                     except Exception as e:
                         for k in range(0, 3, 1):
                             print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -3081,25 +3186,34 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
                                         type="fc",
                                         param=params,
                                         target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                                success = True
                                 break
                             except Exception as e:
                                 k = k
                                 if k >= 2:
-                                    pass
-                                                                           
+                                    success = False
+                                    break
+                if success == True:                                           
                     if notifications == True:
                         print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
                     else:
                         pass
+                else:
+                    break
 
-        
-        print(f"ECMWF IFS-WAVE Download Complete.")    
+        if success == True:
+            print(f"ECMWF IFS-WAVE Download Complete.")   
+        else:
+            pass 
         
     else:
         print(f"ECMWF IFS-WAVE Data is up to date. Skipping download...")    
         
     if process_data == True:
-        print(f"ECMWF IFS-WAVE Data Processing...")
+        if success == True:
+            print(f"ECMWF IFS-WAVE Data Processing...")
+        else:
+            pass
         
         ds = _ecmwf_post_processing.ecmwf_ifs_wave_post_processing(path,
                                                             western_bound, 
@@ -3416,6 +3530,7 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
                                         param=params,
                                         number=members,
                                         target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
+                        success = True
                     except Exception as e:
                         for k in range(0, 3, 1):
                             print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -3430,16 +3545,22 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
                                             param=params,
                                             number=members,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
+                                success = True
                                 break
                             except Exception as e:
                                 k = k
                                 if k >= 2:
+                                    success = False
                                     pass   
-                                
-                    if notifications == 'on':
-                        print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-waef-fc.grib2 saved to {path}", file=original_stdout)
+                    
+                    if success == True:
+                        if notifications == 'on':
+                            print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-waef-fc.grib2 saved to {path}", file=original_stdout)
+                        else:
+                            pass
                     else:
-                        pass                      
+                        break      
+                                                 
                                 
         else:
             for i in range(0, 144 + step, step):
@@ -3454,6 +3575,7 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
                                         param=params,
                                         number=members,
                                         target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
+                        success = True
                     except Exception as e:
                         for k in range(0, 3, 1):
                             print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -3468,11 +3590,18 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
                                         param=params,
                                         number=members,
                                         target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
+                                success = True
                                 break
                             except Exception as e:
                                 k = k
                                 if k >= 2:
+                                    success = False
                                     pass
+                                
+                    if success == True:
+                        pass
+                    else:
+                        break
                             
             for i in range(144, final_forecast_hour + 6, 6):
                 f = _io.StringIO()
@@ -3486,6 +3615,7 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
                                         param=params,
                                         number=members,
                                         target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
+                        success = True
                     except Exception as e:
                         for k in range(0, 3, 1):
                             print(f"Server Connection Unstable - Retrying.", file=original_stdout)
@@ -3500,25 +3630,35 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
                                         param=params,
                                         number=members,
                                         target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
+                                success = True
                                 break
                             except Exception as e:
                                 k = k
                                 if k >= 2:
+                                    success = False
                                     pass
-                                                                           
-                    if notifications == 'on':
-                        print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-waef-fc.grib2 saved to {path}", file=original_stdout)
+                                
+                    if success == True:
+                        if notifications == 'on':
+                            print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-waef-fc.grib2 saved to {path}", file=original_stdout)
+                        else:
+                            pass
                     else:
-                        pass
-
-        
-        print(f"ECMWF IFS-WAVE ENSEMBLE Download Complete.")    
+                        break
+                                                                           
+        if success == True:
+            print(f"ECMWF IFS-WAVE ENSEMBLE Download Complete.")    
+        else:
+            pass
         
     else:
         print(f"ECMWF IFS-WAVE ENSEMBLE Data is up to date. Skipping download...")    
         
     if process_data == True:
-        print(f"ECMWF IFS-WAVE ENSEMBLE Data Processing...")
+        if success == True:
+            print(f"ECMWF IFS-WAVE ENSEMBLE Data Processing...")
+        else:
+            pass
         
         ds = _ecmwf_post_processing.ecmwf_ifs_wave_post_processing(path,
                                                             western_bound, 

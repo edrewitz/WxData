@@ -490,7 +490,7 @@ def get_cpc_outlook(parameter,
     
 
 
-def get_ndfd_grids_noaa_server(parameter, 
+def _get_ndfd_grids_noaa_server(parameter, 
                                 state,
                                 proxies=None,
                                 chunk_size=8192,
@@ -785,7 +785,7 @@ def get_ndfd_grids_noaa_server(parameter,
         return ds1
     
     
-def get_ndfd_grids_aws_server(parameter, 
+def _get_ndfd_grids_aws_server(parameter, 
                                 state,
                                 proxies=None,
                                 chunk_size=8192,
@@ -1219,7 +1219,7 @@ def get_ndfd_grids(parameter,
     if source == 'noaa':
         if include_extended_grids == True:
             try:
-                ds1, ds2 = get_ndfd_grids_noaa_server(parameter, 
+                ds1, ds2 = _get_ndfd_grids_noaa_server(parameter, 
                                         state,
                                         proxies=proxies,
                                         chunk_size=chunk_size,
@@ -1231,7 +1231,7 @@ def get_ndfd_grids(parameter,
                 print("NOAA NWS FTP Server Is Down.")
                 print("Rotating to Amazon AWS Server.")
                 
-                ds1, ds2 = get_ndfd_grids_aws_server(parameter, 
+                ds1, ds2 = _get_ndfd_grids_aws_server(parameter, 
                                 state,
                                 proxies=proxies,
                                 chunk_size=chunk_size,
@@ -1245,7 +1245,7 @@ def get_ndfd_grids(parameter,
                 
         else:
             try:
-                ds = get_ndfd_grids_noaa_server(parameter, 
+                ds = _get_ndfd_grids_noaa_server(parameter, 
                                         state,
                                         proxies=proxies,
                                         chunk_size=chunk_size,
@@ -1258,7 +1258,7 @@ def get_ndfd_grids(parameter,
                 print("NOAA NWS FTP Server Is Down.")
                 print("Rotating to Amazon AWS Server")
                 
-                ds = get_ndfd_grids_aws_server(parameter, 
+                ds = _get_ndfd_grids_aws_server(parameter, 
                                 state,
                                 proxies=proxies,
                                 chunk_size=chunk_size,
@@ -1272,7 +1272,7 @@ def get_ndfd_grids(parameter,
     else:
         if include_extended_grids == True:
             try:
-                ds1, ds2 = get_ndfd_grids_aws_server(parameter, 
+                ds1, ds2 = _get_ndfd_grids_aws_server(parameter, 
                                     state,
                                     proxies=proxies,
                                     chunk_size=chunk_size,
@@ -1286,7 +1286,7 @@ def get_ndfd_grids(parameter,
                 print("Rotating to NOAA NWS FTP Server.")
                 try:
                     
-                    ds1, ds2 = get_ndfd_grids_noaa_server(parameter, 
+                    ds1, ds2 = _get_ndfd_grids_noaa_server(parameter, 
                                             state,
                                             proxies=proxies,
                                             chunk_size=chunk_size,
@@ -1303,7 +1303,7 @@ def get_ndfd_grids(parameter,
             
         else:
             try:
-                ds = get_ndfd_grids_aws_server(parameter, 
+                ds = _get_ndfd_grids_aws_server(parameter, 
                                     state,
                                     proxies=proxies,
                                     chunk_size=chunk_size,
@@ -1317,7 +1317,7 @@ def get_ndfd_grids(parameter,
                 print("Rotating to NOAA NWS FTP Server.")
                 
                 try:
-                    ds = get_ndfd_grids_noaa_server(parameter, 
+                    ds = _get_ndfd_grids_noaa_server(parameter, 
                                             state,
                                             proxies=proxies,
                                             chunk_size=chunk_size,

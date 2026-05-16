@@ -816,6 +816,7 @@ def byte_range_request(grib_url,
                       level_type,
                       path,
                       filename,
+                      model,
                       proxies=None,
                       chunk_size=1024,
                       notifications='on',
@@ -867,6 +868,8 @@ def byte_range_request(grib_url,
     6) path (String) - The directory where the file is saved to. 
     
     7) filename (String) - The name the user wishes to save the file as. 
+    
+    8) model (String) - The model being used (e.g. 'rtma' for RTMA).
     
     Optional Arguments:
     
@@ -924,15 +927,25 @@ def byte_range_request(grib_url,
         })
         
     req_levels, levels = _get_level_expression(levels,
-                                level_type)
+                                level_type,
+                                variables,
+                                model)
     
-    if levels is not None:
+    if level_type == 'pressure':
         reqs = list(_itertools.product(variables, req_levels))
+    elif level_type == 'height above ground':
+        reqs = []
+        i = 0
+        for v in variables:
+            req = (v, req_levels[i])
+            reqs.append(req)
+            i = i + 1
     else:
         reqs = []
         for v in variables:
             req = (v, req_levels)
             reqs.append(req)
+
     
     ranges = {}
     for v, l in reqs:

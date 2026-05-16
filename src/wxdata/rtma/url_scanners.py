@@ -299,12 +299,9 @@ def rtma_url_scanner(model,
 
 def rtma_comparison_url_scanner(model, 
                     cat,
-                    western_bound, 
-                    eastern_bound, 
-                    northern_bound, 
-                    southern_bound, 
                     proxies,
-                    hours):
+                    hours,
+                    source):
     
     """
     This function scans for the latest available RTMA Dataset within the past 4 hours and the dataset from a user specified amount of hours prior to the latest available dataset. 
@@ -352,9 +349,13 @@ def rtma_comparison_url_scanner(model,
     """
     model = model.upper()
     cat = cat.upper()
+    source = source.lower()
     
-    western_bound, eastern_bound = convert_lon(western_bound, eastern_bound)
-    
+    if source == 'noaa':
+        PREFIX = NOMADS_PREFIX
+    else:
+        PREFIX = AMAZON_AWS_PREFIX 
+           
     if model == 'RTMA':
         directory = 'rtma2p5'
     elif model == 'AK RTMA':
@@ -385,17 +386,17 @@ def rtma_comparison_url_scanner(model,
     d3 = h_03 - timedelta(hours=hours)
     d4 = h_04 - timedelta(hours=hours)
             
-    url_00 = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/rtma/prod/{directory}.{h_00.strftime('%Y%m%d')}/"    
-    url_01 = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/rtma/prod/{directory}.{h_01.strftime('%Y%m%d')}/" 
-    url_02 = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/rtma/prod/{directory}.{h_02.strftime('%Y%m%d')}/"  
-    url_03 = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/rtma/prod/{directory}.{h_03.strftime('%Y%m%d')}/"  
-    url_04 = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/rtma/prod/{directory}.{h_04.strftime('%Y%m%d')}/"  
+    url_00 = f"{PREFIX}{directory}.{h_00.strftime('%Y%m%d')}/"    
+    url_01 = f"{PREFIX}{directory}.{h_01.strftime('%Y%m%d')}/" 
+    url_02 = f"{PREFIX}{directory}.{h_02.strftime('%Y%m%d')}/"  
+    url_03 = f"{PREFIX}{directory}.{h_03.strftime('%Y%m%d')}/"  
+    url_04 = f"{PREFIX}{directory}.{h_04.strftime('%Y%m%d')}/"  
     
-    url_05 = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/rtma/prod/{directory}.{d0.strftime('%Y%m%d')}/"    
-    url_06 = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/rtma/prod/{directory}.{d1.strftime('%Y%m%d')}/" 
-    url_07 = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/rtma/prod/{directory}.{d2.strftime('%Y%m%d')}/"  
-    url_08 = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/rtma/prod/{directory}.{d3.strftime('%Y%m%d')}/"  
-    url_09 = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/rtma/prod/{directory}.{d4.strftime('%Y%m%d')}/" 
+    url_05 = f"{PREFIX}{directory}.{d0.strftime('%Y%m%d')}/"    
+    url_06 = f"{PREFIX}{directory}.{d1.strftime('%Y%m%d')}/" 
+    url_07 = f"{PREFIX}{directory}.{d2.strftime('%Y%m%d')}/"  
+    url_08 = f"{PREFIX}{directory}.{d3.strftime('%Y%m%d')}/"  
+    url_09 = f"{PREFIX}{directory}.{d4.strftime('%Y%m%d')}/" 
     
     if h_00.hour < 10:
         abbrev_0 = f"t0{h_00.hour}"
@@ -481,50 +482,70 @@ def rtma_comparison_url_scanner(model,
     
     if proxies == None:
         try:
-            r0 = requests.get(f"{url_00}/{f_00}", stream=True)
+            r0 = requests.get(f"{url_00}{f_00}", 
+                              stream=True)
             r0.close()
-            r1 = requests.get(f"{url_01}/{f_01}", stream=True)
+            r1 = requests.get(f"{url_01}{f_01}", 
+                              stream=True)
             r1.close()
-            r2 = requests.get(f"{url_02}/{f_02}", stream=True)
+            r2 = requests.get(f"{url_02}{f_02}", 
+                              stream=True)
             r2.close()
-            r3 = requests.get(f"{url_03}/{f_03}", stream=True)
+            r3 = requests.get(f"{url_03}{f_03}", 
+                              stream=True)
             r3.close()
-            r4 = requests.get(f"{url_04}/{f_04}", stream=True)
+            r4 = requests.get(f"{url_04}{f_04}", 
+                              stream=True)
             r4.close()
             
-            r5 = requests.get(f"{url_00}/{f_00}", stream=True)
+            r5 = requests.get(f"{url_05}{f_05}", 
+                              stream=True)
             r5.close()
-            r6 = requests.get(f"{url_01}/{f_01}", stream=True)
+            r6 = requests.get(f"{url_06}{f_06}", 
+                              stream=True)
             r6.close()
-            r7 = requests.get(f"{url_02}/{f_02}", stream=True)
+            r7 = requests.get(f"{url_02}{f_07}", 
+                              stream=True)
             r7.close()
-            r8 = requests.get(f"{url_03}/{f_03}", stream=True)
+            r8 = requests.get(f"{url_08}{f_08}", 
+                              stream=True)
             r8.close()
-            r9 = requests.get(f"{url_04}/{f_04}", stream=True)
+            r9 = requests.get(f"{url_09}{f_09}", 
+                              stream=True)
             r9.close()
         except Exception as e:
             for i in range(0, 5, 1):
                 try:
-                    r0 = requests.get(f"{url_00}/{f_00}", stream=True)
+                    r0 = requests.get(f"{url_00}{f_00}", 
+                                      stream=True)
                     r0.close()
-                    r1 = requests.get(f"{url_01}/{f_01}", stream=True)
+                    r1 = requests.get(f"{url_01}{f_01}", 
+                                      stream=True)
                     r1.close()
-                    r2 = requests.get(f"{url_02}/{f_02}", stream=True)
+                    r2 = requests.get(f"{url_02}{f_02}", 
+                                      stream=True)
                     r2.close()
-                    r3 = requests.get(f"{url_03}/{f_03}", stream=True)
+                    r3 = requests.get(f"{url_03}{f_03}", 
+                                      stream=True)
                     r3.close()
-                    r4 = requests.get(f"{url_04}/{f_04}", stream=True)
+                    r4 = requests.get(f"{url_04}{f_04}", 
+                                      stream=True)
                     r4.close()
                     
-                    r5 = requests.get(f"{url_00}/{f_00}", stream=True)
+                    r5 = requests.get(f"{url_05}{f_05}", 
+                                      stream=True)
                     r5.close()
-                    r6 = requests.get(f"{url_01}/{f_01}", stream=True)
+                    r6 = requests.get(f"{url_06}{f_06}", 
+                                      stream=True)
                     r6.close()
-                    r7 = requests.get(f"{url_02}/{f_02}", stream=True)
+                    r7 = requests.get(f"{url_07}{f_07}", 
+                                      stream=True)
                     r7.close()
-                    r8 = requests.get(f"{url_03}/{f_03}", stream=True)
+                    r8 = requests.get(f"{url_08}{f_08}", 
+                                      stream=True)
                     r8.close()
-                    r9 = requests.get(f"{url_04}/{f_04}", stream=True)
+                    r9 = requests.get(f"{url_09}{f_09}", 
+                                      stream=True)
                     r9.close()
                     break
                 except Exception as e:
@@ -532,96 +553,107 @@ def rtma_comparison_url_scanner(model,
                                      
     else:
         try:
-            r0 = requests.get(f"{url_00}/{f_00}", stream=True, proxies=proxies)
+            r0 = requests.get(f"{url_00}{f_00}", 
+                              stream=True, 
+                              proxies=proxies)
             r0.close()
-            r1 = requests.get(f"{url_01}/{f_01}", stream=True, proxies=proxies)
+            r1 = requests.get(f"{url_01}{f_01}", 
+                              stream=True, 
+                              proxies=proxies)
             r1.close()
-            r2 = requests.get(f"{url_02}/{f_02}", stream=True, proxies=proxies)
+            r2 = requests.get(f"{url_02}{f_02}", 
+                              stream=True, 
+                              proxies=proxies)
             r2.close()
-            r3 = requests.get(f"{url_03}/{f_03}", stream=True, proxies=proxies)
+            r3 = requests.get(f"{url_03}{f_03}", 
+                              stream=True, 
+                              proxies=proxies)
             r3.close()
-            r4 = requests.get(f"{url_04}/{f_04}", stream=True, proxies=proxies)
+            r4 = requests.get(f"{url_04}{f_04}", 
+                              stream=True, 
+                              proxies=proxies)
             r4.close()
             
-            r5 = requests.get(f"{url_00}/{f_00}", stream=True, proxies=proxies)
+            r5 = requests.get(f"{url_05}{f_05}", 
+                              stream=True, 
+                              proxies=proxies)
             r5.close()
-            r6 = requests.get(f"{url_01}/{f_01}", stream=True, proxies=proxies)
+            r6 = requests.get(f"{url_06}{f_06}", 
+                              stream=True, 
+                              proxies=proxies)
             r6.close()
-            r7 = requests.get(f"{url_02}/{f_02}", stream=True, proxies=proxies)
+            r7 = requests.get(f"{url_07}{f_07}", 
+                              stream=True, 
+                              proxies=proxies)
             r7.close()
-            r8 = requests.get(f"{url_03}/{f_03}", stream=True, proxies=proxies)
+            r8 = requests.get(f"{url_08}{f_08}", 
+                              stream=True, 
+                              proxies=proxies)
             r8.close()
-            r9 = requests.get(f"{url_04}/{f_04}", stream=True, proxies=proxies)
+            r9 = requests.get(f"{url_09}{f_09}", 
+                              stream=True, 
+                              proxies=proxies)
             r9.close()
         except Exception as e:
             for i in range(0, 5, 1):
                 try:
-                    r0 = requests.get(f"{url_00}/{f_00}", stream=True, proxies=proxies)
+                    r0 = requests.get(f"{url_00}{f_00}", 
+                                      stream=True, 
+                                      proxies=proxies)
                     r0.close()
-                    r1 = requests.get(f"{url_01}/{f_01}", stream=True, proxies=proxies)
+                    r1 = requests.get(f"{url_01}{f_01}", 
+                                      stream=True, 
+                                      proxies=proxies)
                     r1.close()
-                    r2 = requests.get(f"{url_02}/{f_02}", stream=True, proxies=proxies)
+                    r2 = requests.get(f"{url_02}{f_02}", 
+                                      stream=True, 
+                                      proxies=proxies)
                     r2.close()
-                    r3 = requests.get(f"{url_03}/{f_03}", stream=True, proxies=proxies)
+                    r3 = requests.get(f"{url_03}{f_03}", 
+                                      stream=True, 
+                                      proxies=proxies)
                     r3.close()
-                    r4 = requests.get(f"{url_04}/{f_04}", stream=True, proxies=proxies)
+                    r4 = requests.get(f"{url_04}{f_04}", 
+                                      stream=True, 
+                                      proxies=proxies)
                     r4.close()
                     
-                    r5 = requests.get(f"{url_00}/{f_00}", stream=True, proxies=proxies)
+                    r5 = requests.get(f"{url_05}{f_05}", 
+                                      stream=True, 
+                                      proxies=proxies)
                     r5.close()
-                    r6 = requests.get(f"{url_01}/{f_01}", stream=True, proxies=proxies)
+                    r6 = requests.get(f"{url_06}{f_06}", 
+                                      stream=True, 
+                                      proxies=proxies)
                     r6.close()
-                    r7 = requests.get(f"{url_02}/{f_02}", stream=True, proxies=proxies)
+                    r7 = requests.get(f"{url_07}{f_07}", 
+                                      stream=True, 
+                                      proxies=proxies)
                     r7.close()
-                    r8 = requests.get(f"{url_03}/{f_03}", stream=True, proxies=proxies)
+                    r8 = requests.get(f"{url_08}{f_08}", 
+                                      stream=True, 
+                                      proxies=proxies)
                     r8.close()
-                    r9 = requests.get(f"{url_04}/{f_04}", stream=True, proxies=proxies)
+                    r9 = requests.get(f"{url_09}{f_09}", 
+                                      stream=True, 
+                                      proxies=proxies)
                     r9.close()
                     break
                 except Exception as e:
                     i = i  
                     
-                    
-    url_0 = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_{directory}.pl?"
-             f"dir=%2F{directory}.{h_00.strftime('%Y%m%d')}&file={f_00}&all_var=on&all_lev=on&subregion=&"
-             f"toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")    
+    url_0 = (f"{url_00}")    
+    url_1 = (f"{url_01}")    
+    url_2 = (f"{url_02}")    
+    url_3 = (f"{url_03}")    
+    url_4 = (f"{url_04}")  
     
-    url_1 = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_{directory}.pl?"
-             f"dir=%2F{directory}.{h_01.strftime('%Y%m%d')}&file={f_01}&all_var=on&all_lev=on&subregion=&"
-             f"toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")    
+    url_5 = (f"{url_05}")    
+    url_6 = (f"{url_06}")    
+    url_7 = (f"{url_07}")    
+    url_8 = (f"{url_08}")    
+    url_9 = (f"{url_09}")  
     
-    url_2 = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_{directory}.pl?"
-             f"dir=%2F{directory}.{h_02.strftime('%Y%m%d')}&file={f_02}&all_var=on&all_lev=on&subregion=&"
-             f"toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")    
-    
-    url_3 = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_{directory}.pl?"
-             f"dir=%2F{directory}.{h_03.strftime('%Y%m%d')}&file={f_03}&all_var=on&all_lev=on&subregion=&"
-             f"toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")    
-    
-    url_4 = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_{directory}.pl?"
-             f"dir=%2F{directory}.{h_04.strftime('%Y%m%d')}&file={f_04}&all_var=on&all_lev=on&subregion=&"
-             f"toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")   
-    
-    
-    url_5 = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_{directory}.pl?"
-             f"dir=%2F{directory}.{d0.strftime('%Y%m%d')}&file={f_05}&all_var=on&all_lev=on&subregion=&"
-             f"toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")    
-    
-    url_6 = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_{directory}.pl?"
-             f"dir=%2F{directory}.{d1.strftime('%Y%m%d')}&file={f_06}&all_var=on&all_lev=on&subregion=&"
-             f"toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")    
-    
-    url_7 = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_{directory}.pl?"
-             f"dir=%2F{directory}.{d2.strftime('%Y%m%d')}&file={f_07}&all_var=on&all_lev=on&subregion=&"
-             f"toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")    
-    
-    url_8 = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_{directory}.pl?"
-             f"dir=%2F{directory}.{d3.strftime('%Y%m%d')}&file={f_08}&all_var=on&all_lev=on&subregion=&"
-             f"toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")    
-    
-    url_9 = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_{directory}.pl?"
-             f"dir=%2F{directory}.{d4.strftime('%Y%m%d')}&file={f_09}&all_var=on&all_lev=on&subregion=&"
-             f"toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")   
     
     urls = [
         url_0,
@@ -657,10 +689,28 @@ def rtma_comparison_url_scanner(model,
         r9
     ]
     
-    for response, url, response_dt, url_dt in zip(responses, urls, responses_dt, urls_dt):
+    filenames = [
+        f_00,
+        f_01,
+        f_02,
+        f_03,
+        f_04
+    ]
+    
+    filenames_dt = [
+        f_05,
+        f_06,
+        f_07,
+        f_08,
+        f_09
+    ]
+    
+    for response, url, response_dt, url_dt, filename, filename_dt in zip(responses, urls, responses_dt, urls_dt, filenames, filenames_dt):
         if response.status_code == 200 and response_dt.status_code == 200:
             url = url
             url_dt = url_dt
+            filename = filename
+            filename_dt = filename_dt
             run = get_run_by_keyword(url)
             break        
     
@@ -670,28 +720,6 @@ def rtma_comparison_url_scanner(model,
         print(f"Latest analysis data is over 4 hours old. Aborting.....")
         sys.exit(1)
         
-    parsed_url = urlparse(url)
-
-    # Extract the query string
-    query_string = parsed_url.query
-
-    # Parse the query string into a dictionary of parameters
-    query_params = parse_qs(query_string)
-
-    # Access individual parameters
-    filename = query_params.get('file', [''])[0] 
     
-    parsed_url_dt = urlparse(url_dt)
-
-    # Extract the query string
-    query_string_dt = parsed_url_dt.query
-
-    # Parse the query string into a dictionary of parameters
-    query_params_dt = parse_qs(query_string_dt)
-
-    # Access individual parameters
-    filename_dt = query_params_dt.get('file', [''])[0] 
-    
-    filename_dt = f"{filename_dt}_dt"
-    
-    return url, url_dt, filename, filename_dt, run
+    idx_filename = f"{filename}.idx"
+    return url, url_dt, filename, filename_dt, run, idx_filename

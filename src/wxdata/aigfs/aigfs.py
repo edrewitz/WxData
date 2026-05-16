@@ -40,7 +40,25 @@ def aigfs(final_forecast_hour=384,
              chunk_size=8192,
              notifications='off',
              type_of_level='pressure',
-             clear_data=False):
+             clear_data=False,
+            variables=['geopotential height',
+                       'specific humidity',
+                       'temperature',
+                       'u-component of wind',
+                       'v-component of wind',
+                       'vertical velocity'],
+            levels=[1000,
+                    925,
+                    850,
+                    700,
+                    600,
+                    500,
+                    400,
+                    300,
+                    250,
+                    150,
+                    100,
+                    50]):
     
     """
     This function downloads, pre-processes and post-processes the latest AIGFS Data. 
@@ -106,6 +124,32 @@ def aigfs(final_forecast_hour=384,
     
     17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+        
+    18) variables (String List) **type_of_level='pressure'** - Default=['geopotential height',
+                                                                        'specific humidity',
+                                                                        'temperature',
+                                                                        'u-component of wind',
+                                                                        'v-component of wind',
+                                                                        'vertical velocity']
+                       
+        When the type_of_level = 'pressure', the user can filter by variable to the variable they want. (Surface level files are very small 
+        compared to pressure level files).
+        
+    19) levels (Integer List) **type_of_level='pressure'** - Default=[1000,
+                                                                        925,
+                                                                        850,
+                                                                        700,
+                                                                        600,
+                                                                        500,
+                                                                        400,
+                                                                        300,
+                                                                        250,
+                                                                        150,
+                                                                        100,
+                                                                        50]
+                                                                        
+        When the type_of_level = 'pressure', the user can filter by level to the level they want. (Surface level files are very small 
+        compared to pressure level files).
     
     Returns
     -------
@@ -178,27 +222,65 @@ def aigfs(final_forecast_hour=384,
         stop = final_forecast_hour + 6
         
         for i in range(0, stop, 6):
-            if i < 10:
-                _client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f00{i}.grib2",
-                            path,
-                            f"aigfs.t{run}z.{level}.f00{i}.grib2",
-                            proxies=proxies,
-                            chunk_size=chunk_size,
-                            notifications=notifications)  
-            elif i >= 10 and i < 100:
-                _client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f0{i}.grib2",
-                            path,
-                            f"aigfs.t{run}z.{level}.f0{i}.grib2",
-                            proxies=proxies,
-                            chunk_size=chunk_size,
-                            notifications=notifications)  
+            if type_of_level == 'surface':
+                if i < 10:
+                    _client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f00{i}.grib2",
+                                path,
+                                f"aigfs.t{run}z.{level}.f00{i}.grib2",
+                                proxies=proxies,
+                                chunk_size=chunk_size,
+                                notifications=notifications)  
+                elif i >= 10 and i < 100:
+                    _client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f0{i}.grib2",
+                                path,
+                                f"aigfs.t{run}z.{level}.f0{i}.grib2",
+                                proxies=proxies,
+                                chunk_size=chunk_size,
+                                notifications=notifications)  
+                else:
+                    _client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f{i}.grib2",
+                                path,
+                                f"aigfs.t{run}z.{level}.f{i}.grib2",
+                                proxies=proxies,
+                                chunk_size=chunk_size,
+                                notifications=notifications)   
             else:
-                _client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f{i}.grib2",
-                            path,
-                            f"aigfs.t{run}z.{level}.f{i}.grib2",
-                            proxies=proxies,
-                            chunk_size=chunk_size,
-                            notifications=notifications)    
+                if i < 10:
+                    _client.byte_range_request(f"{url}aigfs.t{run}z.{level}.f00{i}.grib2",
+                                                    f"{url}aigfs.t{run}z.{level}.f00{i}.grib2.idx",
+                                                    variables,
+                                                    levels,
+                                                    'pressure',
+                                                    path,
+                                                    f"aigfs.t{run}z.{level}.f00{i}.grib2",
+                                                    proxies=proxies,
+                                                    chunk_size=chunk_size,
+                                                    notifications=notifications,
+                                                    clear_recycle_bin=clear_recycle_bin)
+                elif i >= 10 and i < 100:
+                    _client.byte_range_request(f"{url}aigfs.t{run}z.{level}.f0{i}.grib2",
+                                                f"{url}aigfs.t{run}z.{level}.f0{i}.grib2.idx",
+                                                variables,
+                                                levels,
+                                                'pressure',
+                                                path,
+                                                f"aigfs.t{run}z.{level}.f0{i}.grib2",
+                                                proxies=proxies,
+                                                chunk_size=chunk_size,
+                                                notifications=notifications,
+                                                clear_recycle_bin=clear_recycle_bin)
+                else:
+                    _client.byte_range_request(f"{url}aigfs.t{run}z.{level}.f{i}.grib2",
+                                                f"{url}aigfs.t{run}z.{level}.f{i}.grib2.idx",
+                                                variables,
+                                                levels,
+                                                'pressure',
+                                                path,
+                                                f"aigfs.t{run}z.{level}.f{i}.grib2",
+                                                proxies=proxies,
+                                                chunk_size=chunk_size,
+                                                notifications=notifications,
+                                                clear_recycle_bin=clear_recycle_bin)    
                     
     else:
         print(f"User has latest AIGFS {type_of_level.upper()} Files\nSkipping Download...")  

@@ -136,15 +136,11 @@ from wxdata.fems.meta_data import(
 )
 
 # Real-Time Mesoscale Analysis (RTMA)
-# - RTMA Latest (CONUS and Alaska)
-# - RTMA Comparison Between Two Times (CONUS and Alaska)
-# - RTMA Mercator - (Hawaii, Guam, Puerto Rico)
-# - RTMA Comparison Mercator - (Hawaii, Guam, Puerto Rico)
+# - RTMA Latest 
+# - RTMA Comparison Between Two Times 
 from wxdata.rtma.rtma import(
     rtma, 
-    rtma_comparison,
-    rtma_mercator,
-    rtma_comparison_mercator
+    rtma_comparison
 )
 
 # NOAA 

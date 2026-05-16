@@ -9,8 +9,6 @@ These functions return the URL and filename for the latest available data on the
 import requests
 import sys
 
-from urllib.parse import urlparse, parse_qs
-from wxdata.utils.coords import convert_lon
 from wxdata.rtma.keys import *
 
 # Exception handling for Python >= 3.13 and Python < 3.13
@@ -710,7 +708,7 @@ def rtma_comparison_url_scanner(model,
             url = url
             url_dt = url_dt
             filename = filename
-            filename_dt = filename_dt
+            filename_dt = f"{filename_dt}"
             run = get_run_by_keyword(url)
             break        
     
@@ -720,6 +718,4 @@ def rtma_comparison_url_scanner(model,
         print(f"Latest analysis data is over 4 hours old. Aborting.....")
         sys.exit(1)
         
-    
-    idx_filename = f"{filename}.idx"
-    return url, url_dt, filename, filename_dt, run, idx_filename
+    return url, url_dt, filename, filename_dt, run

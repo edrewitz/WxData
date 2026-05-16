@@ -77,9 +77,7 @@ def get_level_suffix(level_type):
 
 
 def get_level_expression(levels,
-                         level_type,
-                         variables,
-                         model):
+                         level_type):
     
     """
     This function returns the full expression for the level.
@@ -129,55 +127,18 @@ def get_level_expression(levels,
     The full expression for the level to make the bytes-range request.
     """
     level_type = level_type.lower()
-    model = model.lower()
 
-    if model == 'rtma':
-        suffix = get_level_suffix(level_type)    
-        if levels is not None:
-            expression = []
-            if level_type == 'pressure':
-                for level in levels:
-                    ex = f"{level} {suffix}"
-                    expression.append(ex)
-                    levels = levels
-            else:
-                levels = levels
-                
-                if level_type == 'height above ground':
-                    params = {
-                        
-                        'TMP':'2 m above ground',
-                        'DPT':'2 m above ground',
-                        'UGRD':'10 m above ground',
-                        'VGRD':'10 m above ground',
-                        'SPFH':'2 m above ground',
-                        'WDIR':'10 m above ground',
-                        'WIND':'10 m above ground',
-                        'GUST':'10 m above ground',
-                        
-                    }
-                    
-                expression = []
-                for var in variables:
-                    ex = params[var]
-                    expression.append(ex)
-
-        else:
-            expression = suffix
-            levels = None
-            
+    suffix = get_level_suffix(level_type)    
+    if levels is not None:
+        expression = []
+        for level in levels:
+            ex = f"{level} {suffix}"
+            expression.append(ex)
+            levels = levels
     else:
-        suffix = get_level_suffix(level_type)    
-        if levels is not None:
-            expression = []
-            for level in levels:
-                ex = f"{level} {suffix}"
-                expression.append(ex)
-                levels = levels
-        else:
-            expression = suffix
-            levels = None
-        
+        expression = suffix
+        levels = None
+    
     return expression, levels
     
     

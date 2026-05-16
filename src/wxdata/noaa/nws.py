@@ -1120,6 +1120,16 @@ def get_ndfd_grids(parameter,
     5) include_extended_grids (Boolean) - Default=True. Most NOAA/NWS products have extended grids. However, SPC products do not have extended grids.
         When downloading SPC plots or if the user does not wish to include the extended grids, set include_extended_grids=False.
         
+    6) source (String) - Default='noaa'. The data server the client will try first.
+    
+        Server List
+        -----------
+        
+        1) NOAA/NWS/FTP - source='noaa'
+        2) Amazon AWS - source='aws'
+        
+    **If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.**
         
     Parameters
     ----------

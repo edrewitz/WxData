@@ -83,6 +83,36 @@ i) Install wxdata via Anaconda/Miniconda3 --> `conda install wxdata`
 ii) Set up a new environment with an earlier version of Python (must be Python >= 3.10) and then `pip install wxdata`
 
 ---------------------------------------------------------
+## Server List
+
+Clients with multiple servers to pull data from can find the different options for `source` by the table below
+
+`source='noaa' - NOAA/NCEP/NOMADS OR NOAA/NWS/FTP`
+
+`source='ecmwf' - ECMWF Open-Data Server`
+
+`source='aws' - Amazon Web Services (AWS)`
+
+`source='google' - Google Cloud`
+
+
+| Client | NOAA/NCEP/NOMADS | ECMWF Open-Data | Amazon AWS | Google Cloud | NOAA/NWS/FTP |
+| -------- | -------- | -------- | -------- | -------- | -------- |
+| GFS0P25  |Y|N|Y|Y|N|
+| GFS0P25 SECONDARY PARAMETERS  |Y|N|Y|Y|N| 
+| GFS0P50  |Y|N|Y|Y|N|
+| GEFS0P50  |Y|N|Y|Y|N|
+| GEFS0P50 SECONDARY PARAMETERS  |Y|N|Y|Y|N|
+| GEFS0P25  |Y|N|Y|Y|N|
+| ECMWF IFS |N|Y|Y|Y|N|
+| ECMWF IFS Ensemble |N|Y|Y|Y|N|
+| ECMWF AIFS|N|Y|Y|Y|N|
+| ECMWF AIFS Ensemble|N|Y|Y|Y|N|
+| ECMWF IFS Wave |N|Y|Y|Y|N|
+| ECMWF IFS Wave Ensemble |N|Y|Y|Y|N|
+| Get NDFD Grids |N|N|Y|N|Y|
+
+---------------------------------------------------------
 
 ## Proxy Server Configuration
 

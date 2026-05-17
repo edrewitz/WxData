@@ -133,6 +133,9 @@ def primary_gefs_post_processing(paths,
     
     """
     
+    # Returns an Error if pip was unable to install eccodes - This is an issue in latest versions of Python (>= 3.14)
+    _eccodes_error_message()
+    
     western_bound, eastern_bound = _convert_lon(western_bound, 
                                                     eastern_bound) 
 
@@ -515,11 +518,11 @@ def secondary_gefs_post_processing(paths,
     '3km_helicity'
     'u_component_of_storm_motion'
     'v_component_of_storm_motion'
-    'tropopause_pressure'
+    'pressure'
     'tropopause_standard_atmosphere_reference_height'
-    'tropopause_vertical_speed_shear'
     '995_sigma_theta'
     'potential_vorticity'
+    'vertical_speed_shear'
     'theta_level_montgomery_potential'
     'potential_vorticity_level_vertical_speed_shear'
     'mixed_layer_dew_point'
@@ -530,6 +533,9 @@ def secondary_gefs_post_processing(paths,
     'pressure_level_from_which_a_parcel_was_lifted'
     
     """
+    
+    # Returns an Error if pip was unable to install eccodes - This is an issue in latest versions of Python (>= 3.14)
+    _eccodes_error_message()
 
     western_bound, eastern_bound = _convert_lon(western_bound, 
                                                     eastern_bound) 
@@ -895,7 +901,7 @@ def secondary_gefs_post_processing(paths,
         pass        
                        
     try:        
-        ds['tropopause_vertical_speed_shear'] = ds['vwsh']
+        ds['vertical_speed_shear'] = ds['vwsh']
         ds = ds.drop_vars('vwsh')
     except Exception as e:
         pass                           
@@ -916,13 +922,7 @@ def secondary_gefs_post_processing(paths,
         ds['theta_level_montgomery_potential'] = ds['mont']
         ds = ds.drop_vars('mont')
     except Exception as e:
-        pass                         
-    
-    try:        
-        ds['potential_vorticity_level_vertical_speed_shear'] = ds['vwsh']
-        ds = ds.drop_vars('vwsh')
-    except Exception as e:
-        pass        
+        pass                           
               
     try:        
         ds['mixed_layer_dew_point'] = ds['dpt']
@@ -965,8 +965,7 @@ def secondary_gefs_post_processing(paths,
     try:    
         ds = ds.sortby('step')
     except Exception as e:
-        _eccodes_error_message()
-        _sys.exit(1)
+        pass
 
     return ds
 

@@ -62,7 +62,7 @@ def aigefs_pressure_members(final_forecast_hour=384,
                        'temperature',
                        'u-component of wind',
                        'v-component of wind',
-                       'vertical velocity'],
+                       'vertical velocity (pressure)'],
             levels=[1000,
                     925,
                     850,
@@ -140,7 +140,7 @@ def aigefs_pressure_members(final_forecast_hour=384,
                                         'temperature',
                                         'u-component of wind',
                                         'v-component of wind',
-                                        'vertical velocity']
+                                        'vertical velocity (pressure)']
                        
         
     19) levels (Integer List) - Default=[1000,
@@ -471,7 +471,7 @@ def aigefs_single(final_forecast_hour=384,
                        'temperature',
                        'u-component of wind',
                        'v-component of wind',
-                       'vertical velocity'],
+                       'vertical velocity (pressure)'],
             levels=[1000,
                     925,
                     850,
@@ -564,7 +564,7 @@ def aigefs_single(final_forecast_hour=384,
                                                                         'temperature',
                                                                         'u-component of wind',
                                                                         'v-component of wind',
-                                                                        'vertical velocity']
+                                                                        'vertical velocity (pressure)']
                        
         When the level_type = 'pressure', the user can filter by variable to the variable they want. (Surface level files are very small 
         compared to pressure level files).

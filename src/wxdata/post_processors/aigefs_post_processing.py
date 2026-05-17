@@ -69,7 +69,7 @@ def aigefs_members_post_processing(paths,
     'mslp'
     '2m_temperature'
     """
-    
+    _eccodes_error_message()
     paths = _file_paths_for_xarray(paths)
     
     western_bound, eastern_bound = _convert_lon(western_bound, 
@@ -194,8 +194,7 @@ def aigefs_members_post_processing(paths,
     try:    
         ds = ds.sortby('step')
     except Exception as e:
-        _eccodes_error_message()
-        _sys.exit(1)
+        pass
     return ds
 
 
@@ -245,7 +244,7 @@ def aigefs_single_post_processing(path,
     'mslp'
     '2m_temperature'
     """
-    
+    _eccodes_error_message()
     western_bound, eastern_bound = _convert_lon(western_bound, 
                                                     eastern_bound) 
     
@@ -357,7 +356,6 @@ def aigefs_single_post_processing(path,
     try:    
         ds = ds.sortby('step')
     except Exception as e:
-        _eccodes_error_message()
-        _sys.exit(1)
+        pass
     
     return ds

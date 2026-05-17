@@ -48,6 +48,8 @@ def get_level_suffix(level_type):
     'convective cloud layer'
     'boundary layer cloud layer'
     'pressure above ground'
+    'convective cloud bottom level'
+    'convective cloud top level'
     
     Optional Arguments: None
     
@@ -91,7 +93,9 @@ def get_level_suffix(level_type):
         'convective cloud layer':'convective cloud layer',
         'boundary layer cloud layer':'boundary layer cloud layer',
         'pressure above ground':'mb above ground',
-        'isentropic level':'K isentropic level'
+        'isentropic level':'K isentropic level',
+        'convective cloud bottom level':'convective cloud bottom level',
+        'convective cloud top level':'convective cloud top level'
     }
     
     return level_types[level_type]
@@ -145,6 +149,8 @@ def get_level_expression(levels,
     'convective cloud layer'
     'boundary layer cloud layer'
     'pressure above ground'
+    'convective cloud bottom level'
+    'convective cloud top level'
     
     3) variables (String List) - A list of variables. 
     

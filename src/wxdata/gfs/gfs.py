@@ -31,7 +31,7 @@ from wxdata.utils.recycle_bin import(
 )
 
 
-def gfs_0p25(final_forecast_hour=384, 
+def _gfs_0p25_client(final_forecast_hour=384, 
             western_bound=-180, 
             eastern_bound=180, 
             northern_bound=90, 
@@ -39,94 +39,11 @@ def gfs_0p25(final_forecast_hour=384,
             step=3,
             process_data=True,
             proxies=None, 
-            variables=['best lifted index',
-                       'absolute vorticity',
-                       'convective precipitation',
-                       'albedo',
-                       'total precipitation',
-                       'convective available potential energy',
-                       'categorical freezing rain',
-                       'categorical ice pellets',
-                       'convective inhibition',
-                       'cloud mixing ratio',
-                       'plant canopy surface water',
-                       'percent frozen precipitaion',
-                       'convective precipitation rate',
-                       'categorical rain',
-                       'categorical snow',
-                       'cloud water',
-                       'cloud work function',
-                       'downward longwave radiation flux',
-                       'dew point',
-                       'downward shortwave radiation flux',
-                       'vertical velocity (height)',
-                       'field capacity',
-                       'surface friction velocity',
-                       'ground heat flux',
-                       'graupel',
-                       'wind gust',
-                       'high cloud cover',
-                       'geopotential height',
-                       'haines index',
-                       'storm relative helicity',
-                       'planetary boundary layer height',
-                       'icao standard atmosphere reference height',
-                       'ice cover',
-                       'ice growth rate',
-                       'ice thickness',
-                       'ice temperature',
-                       'ice water mixing ratio',
-                       'land cover',
-                       'low cloud cover',
-                       'surface lifted index',
-                       'latent heat net flux',
-                       'middle cloud cover',
-                       'mslp (eta model reduction)',
-                       'ozone mixing ratio',
-                       'potential evaporation rate',
-                       'pressure level from which parcel was lifted',
-                       'potential temperature',
-                       'precipitation rate',
-                       'pressure',
-                       'mean sea level pressure',
-                       'precipitable water',
-                       'composite reflectivity',
-                       'reflectivity',
-                       'relative humidity',
-                       'rain mixing ratio',
-                       'surface roughness',
-                       'sensible heat net flux',
-                       'snow mixing ratio',
-                       'snow depth',
-                       'liquid volumetric soil moisture (non-frozen)',
-                       'volumetric soil moisture content',
-                       'soil type',
-                       'specific humidity',
-                       'sunshine duration',
-                       'total cloud cover',
-                       'maximum temperature',
-                       'minimum temperature',
+            variables=['geopotential height',
                        'temperature',
-                       'total ozone',
-                       'soil temperature',
-                       'momentum flux (u-component)',
-                       'u-component of wind',
-                       'zonal flux of gravity wave stress',
-                       'upward longwave radiation flux',
-                       'u-component of storm motion',
-                       'upward shortwave radiation flux',
-                       'vegetation',
-                       'momentum flux (v-component)',
-                       'v-component of wind',
-                       'meridional flux of gravity wave stress',
-                       'visibility',
-                       'ventilation rate',
-                       'v-component of storm motion',
-                       'vertical velocity (pressure)',
-                       'vertical speed shear',
-                       'water runoff',
-                       'water equivalent of accumulated snow depth',
-                       'wilting point'],
+                       'relative humidity',
+                       'u-component of wind'
+                       'v-component of wind'],
             custom_directory=None,
             clear_recycle_bin=False,
             convert_temperature=True,
@@ -180,99 +97,589 @@ def gfs_0p25(final_forecast_hour=384,
                                'https':'http://your-proxy-address:port'
                                }
        
-    9) variables (String List) - The variables the user wishes to query.
+    9) variables (String List) - Default=['geopotential height',
+                                            'temperature',
+                                            'relative humidity',
+                                            'u-component of wind'
+                                            'v-component of wind']
+                       
+        The variables the user wishes to query.
     
         Variables
         ---------
         
-    'best lifted index'
-    'absolute vorticity'
-    'convective precipitation'
-    'albedo'
-    'total precipitation'
-    'convective available potential energy'
-    'categorical freezing rain'
-    'categorical ice pellets'
-    'convective inhibition'
-    'cloud mixing ratio'
-    'plant canopy surface water'
-    'percent frozen precipitaion'
-    'convective precipitation rate'
-    'categorical rain'
-    'categorical snow'
-    'cloud water'
-    'cloud work function'
-    'downward longwave radiation flux'
-    'dew point'
-    'downward shortwave radiation flux'
-    'vertical velocity (height)'
-    'field capacity'
-    'surface friction velocity'
-    'ground heat flux'
-    'graupel'
-    'wind gust'
-    'high cloud cover'
-    'geopotential height'
-    'haines index'
-    'storm relative helicity'
-    'planetary boundary layer height'
-    'icao standard atmosphere reference height'
-    'ice cover'
-    'ice growth rate'
-    'ice thickness'
-    'ice temperature'
-    'ice water mixing ratio'
-    'land cover'
-    'low cloud cover'
-    'surface lifted index'
-    'latent heat net flux'
-    'middle cloud cover'
-    'mslp (eta model reduction)'
-    'ozone mixing ratio'
-    'potential evaporation rate'
-    'pressure level from which parcel was lifted'
-    'potential temperature'
-    'precipitation rate'
-    'pressure'
-    'mean sea level pressure'
-    'precipitable water'
-    'composite reflectivity'
-    'reflectivity'
-    'relative humidity'
-    'rain mixing ratio'
-    'surface roughness'
-    'sensible heat net flux'
-    'snow mixing ratio'
-    'snow depth'
-    'liquid volumetric soil moisture (non-frozen)'
-    'volumetric soil moisture content'
-    'soil type'
-    'specific humidity'
-    'sunshine duration'
-    'total cloud cover'
-    'maximum temperature'
-    'minimum temperature'
-    'temperature'
-    'total ozone'
-    'soil temperature'
-    'momentum flux (u-component)'
-    'u-component of wind'
-    'zonal flux of gravity wave stress'
-    'upward longwave radiation flux'
-    'u-component of storm motion'
-    'upward shortwave radiation flux'
-    'vegetation'
-    'momentum flux (v-component)'
-    'v-component of wind'
-    'meridional flux of gravity wave stress'
-    'visibility'
-    'ventilation rate'
-    'v-component of storm motion'
-    'vertical velocity (pressure)'
-    'vertical speed shear'
-    'water runoff'
-    'water equivalent of accumulated snow depth'
-    'wilting point'          
+        'best lifted index'
+        'absolute vorticity'
+        'convective precipitation'
+        'albedo'
+        'total precipitation'
+        'convective available potential energy'
+        'categorical freezing rain'
+        'categorical ice pellets'
+        'convective inhibition'
+        'cloud mixing ratio'
+        'plant canopy surface water'
+        'percent frozen precipitaion'
+        'convective precipitation rate'
+        'categorical rain'
+        'categorical snow'
+        'cloud water'
+        'cloud work function'
+        'downward longwave radiation flux'
+        'dew point'
+        'downward shortwave radiation flux'
+        'vertical velocity (height)'
+        'field capacity'
+        'surface friction velocity'
+        'ground heat flux'
+        'graupel'
+        'wind gust'
+        'high cloud cover'
+        'geopotential height'
+        'haines index'
+        'storm relative helicity'
+        'planetary boundary layer height'
+        'icao standard atmosphere reference height'
+        'ice cover'
+        'ice growth rate'
+        'ice thickness'
+        'ice temperature'
+        'ice water mixing ratio'
+        'land cover'
+        'low cloud cover'
+        'surface lifted index'
+        'latent heat net flux'
+        'middle cloud cover'
+        'mslp (eta model reduction)'
+        'ozone mixing ratio'
+        'potential evaporation rate'
+        'pressure level from which parcel was lifted'
+        'potential temperature'
+        'precipitation rate'
+        'pressure'
+        'mean sea level pressure'
+        'precipitable water'
+        'composite reflectivity'
+        'reflectivity'
+        'relative humidity'
+        'rain mixing ratio'
+        'surface roughness'
+        'sensible heat net flux'
+        'snow mixing ratio'
+        'snow depth'
+        'liquid volumetric soil moisture (non-frozen)'
+        'volumetric soil moisture content'
+        'soil type'
+        'specific humidity'
+        'sunshine duration'
+        'total cloud cover'
+        'maximum temperature'
+        'minimum temperature'
+        'temperature'
+        'total ozone'
+        'soil temperature'
+        'momentum flux (u-component)'
+        'u-component of wind'
+        'zonal flux of gravity wave stress'
+        'upward longwave radiation flux'
+        'u-component of storm motion'
+        'upward shortwave radiation flux'
+        'vegetation'
+        'momentum flux (v-component)'
+        'v-component of wind'
+        'meridional flux of gravity wave stress'
+        'visibility'
+        'ventilation rate'
+        'v-component of storm motion'
+        'vertical velocity (pressure)'
+        'vertical speed shear'
+        'water runoff'
+        'water equivalent of accumulated snow depth'
+        'wilting point'          
+    
+    10) custom_directory (String or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
+        the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
+        be used. 
+    
+    11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
+        
+    12) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+        either Celsius or Fahrenheit. When False, this data remains in Kelvin.
+        
+    13) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+        Set convert_to='fahrenheit' for Fahrenheit. 
+        
+    14) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
+        Default = f:ECMWF/IFS/WAVE
+        
+    15) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    
+    16) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    
+    17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+        
+    18) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+    
+        Server List
+        -----------
+        
+        1) NOAA/NCEP/NOMADS - source='noaa'
+        2) Amazon AWS - source='aws'
+        3) Google Cloud - source='google'
+        
+    19) level_type (String) - Default='pressure'. The type of level for the variable.
+    
+        Level Types
+        -----------
+        
+        'pressure'
+        'mean sea level'
+        'hybrid'
+        'entire atmosphere'
+        'boundary layer'
+        'low cloud layer'
+        'middle cloud layer'
+        'high cloud layer'
+        'convective cloud bottom level'
+        'low cloud bottom level'
+        'middle cloud bottom level'
+        'high cloud bottom level'
+        'convective cloud top level'
+        'low cloud top level'
+        'middle cloud top level'
+        'high cloud top level'
+        'convective cloud layer'
+        'tropopause'
+        'max wind'
+        'isothermal'
+        'highest tropospheric freezing level'
+        'height above ground'
+        'surface'
+        'height below ground'
+        'sigma layer'
+        'sigma level'
+        'entire atmosphere (considered as a single layer)'
+        'pressure above ground'
+        'potential vorticity surface'
+        
+    20) levels (String, Integer or Float List) - Default=[1000,
+                                                            925,
+                                                            850,
+                                                            700,
+                                                            500,
+                                                            400,
+                                                            300,
+                                                            250,
+                                                            200,
+                                                            100,
+                                                            50,
+                                                            10]   
+                                                            
+        The pressure, height or depth levels.
+    
+    Returns
+    -------
+    
+    An xarray.array dataset of the most recent GFS0P25 run. 
+    
+    Post-processed Variable Key List
+    --------------------------------
+    
+    'surface_pressure'
+    'total_precipitation'
+    'categorical_snow'
+    'categorical_ice_pellets'
+    'categorical_freezing_rain'
+    'categorical_rain'
+    'time_mean_surface_latent_heat_flux'
+    'time_mean_surface_sensible_heat_flux'
+    'surface_downward_shortwave_radiation_flux'
+    'surface_downward_longwave_radiation_flux'
+    'surface_upward_shortwave_radiation_flux'
+    'surface_upward_longwave_radiation_flux'
+    'orography'
+    'water_equivalent_of_accumulated_snow_depth'
+    'snow_depth'
+    'sea_ice_thickness'
+    'surface_visibility'
+    'surface_wind_gust'
+    'percent_frozen_precipitation'
+    'convective_available_potential_energy'
+    'convective_inhibition'
+    'mslp'
+    'soil_temperature'
+    'volumetric_soil_moisture_content'
+    '2m_temperature'
+    '2m_relative_humidity'
+    '2m_dew_point'
+    'maximum_temperature'
+    'minimum_temperature'
+    '10m_u_wind_component'
+    '10m_v_wind_component'
+    'precipitable_water'
+    'mixed_layer_cape'
+    'mixed_layer_cin'
+    '3km_helicity'
+    
+    """
+    
+    source = source.lower()
+    
+    if clear_recycle_bin == True:
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
+    else:
+        pass
+    
+    if custom_directory==None:
+        path = _build_directory('gfs0p25',
+                               'atmospheric')
+        
+    else:
+        try:
+            _os.makedirs(f"{custom_directory}")
+        except Exception as e:
+            pass
+        
+        path = custom_directory
+        
+    if clear_data == True:
+        _clear_old_data(path)
+    else:
+        pass
+        
+    if source == 'noaa':
+        try:
+            url, filename, run = _gfs_0p25_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    source)
+        except Exception as e:
+            filename = None
+            
+        if filename == None:
+            print("NCEP/NOMADS Server Is Down.")
+            print("Rotating to Amazon AWS Server.")
+            try:
+                url, filename, run = _gfs_0p25_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    'aws')
+                print("Amazon AWS Server Online - Connected.")
+            except Exception as e:
+                filename = None
+                
+            if filename == None:
+                print("Amazon AWS Server Is Down.")
+                print("Rotating to Google Cloud Server.")
+                try:
+                    url, filename, run = _gfs_0p25_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    'google')
+                    print("Google Cloud Server Online - Connected.")
+                except Exception as e:
+                    print("Error: All Servers Appear Down.")
+                    print("System Exit")
+                    _sys.exit(1)
+            else:
+                pass
+        
+        else:
+            pass
+        
+    if source == 'aws':
+        try:
+            url, filename, run = _gfs_0p25_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    source)
+        except Exception as e:
+            filename = None
+            
+        if filename == None:
+            print("NCEP/NOMADS Server Is Down.")
+            print("Rotating to NCEP/NOMADS Server.")
+            try:
+                url, filename, run = _gfs_0p25_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    'noaa')
+                print("NCEP/NOMADS Server Online - Connected.")
+            except Exception as e:
+                filename = None
+                
+            if filename == None:
+                print("Amazon NCEP/NOMADS Is Down.")
+                print("Rotating to Google Cloud Server.")
+                try:
+                    url, filename, run = _gfs_0p25_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    'google')
+                    print("Google Cloud Server Online - Connected.")
+                except Exception as e:
+                    print("Error: All Servers Appear Down.")
+                    print("System Exit")
+                    _sys.exit(1)
+            else:
+                pass
+        
+        else:
+            pass
+        
+    
+    if source == 'google':
+        try:
+            url, filename, run = _gfs_0p25_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    source)
+        except Exception as e:
+            filename = None
+            
+        if filename == None:
+            print("Google Cloud Server Is Down.")
+            print("Rotating to NCEP/NOMADS Server.")
+            try:
+                url, filename, run = _gfs_0p25_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    'noaa')
+                print("Google Cloud Server Online - Connected.")
+            except Exception as e:
+                filename = None
+                
+            if filename == None:
+                print("Amazon NCEP/NOMADS Is Down.")
+                print("Rotating to Amazon AWS Server.")
+                try:
+                    url, filename, run = _gfs_0p25_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    'aws')
+                    print("Amazon AWS Server Online - Connected.")
+                except Exception as e:
+                    print("Error: All Servers Appear Down.")
+                    print("System Exit")
+                    _sys.exit(1)
+            else:
+                pass
+        
+        else:
+            pass        
+        
+    
+    download = _local_file_scanner(path, 
+                                    filename,
+                                    'nomads',
+                                    run)   
+    
+    if download == True:
+        print(f"Downloading GFS0P25...")
+        
+        if run < 10:
+            run = f"0{run}"
+        else:
+            run = run
+        
+        _clear_old_data(path)
+        
+        cont = False
+
+        for i in range(0, final_forecast_hour + step, step):
+            if i < 10:
+                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2.0p25.f00{i}",
+                                            f"{url}gfs.t{run}z.pgrb2.0p25.f00{i}.idx",
+                                            variables,
+                                            levels,
+                                            level_type,
+                                            path,
+                                            f"gfs.t{run}z.pgrb2.0p25.f00{i}.grib2",
+                                            proxies=proxies,
+                                            chunk_size=chunk_size,
+                                            notifications=notifications,
+                                            clear_recycle_bin=clear_recycle_bin) 
+                
+            elif i >= 10 and i < (99 + step):
+                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2.0p25.f0{i}",
+                                            f"{url}gfs.t{run}z.pgrb2.0p25.f0{i}.idx",
+                                            variables,
+                                            levels,
+                                            level_type,
+                                            path,
+                                            f"gfs.t{run}z.pgrb2.0p25.f0{i}.grib2",
+                                            proxies=proxies,
+                                            chunk_size=chunk_size,
+                                            notifications=notifications,
+                                            clear_recycle_bin=clear_recycle_bin)   
+                
+            elif i >= 102 and i < (240 + step):
+                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2.0p25.f{i}",
+                                            f"{url}gfs.t{run}z.pgrb2.0p25.f{i}.idx",
+                                            variables,
+                                            levels,
+                                            level_type,
+                                            path,
+                                            f"gfs.t{run}z.pgrb2.0p25.f{i}.grib2",
+                                            proxies=proxies,
+                                            chunk_size=chunk_size,
+                                            notifications=notifications,
+                                            clear_recycle_bin=clear_recycle_bin)    
+                
+            else:
+                cont = True
+                break
+            
+        if cont == True:
+            for i in range(240, final_forecast_hour + 6, 6):
+                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2.0p25.f{i}",
+                                            f"{url}gfs.t{run}z.pgrb2.0p25.f{i}.idx",
+                                            variables,
+                                            levels,
+                                            level_type,
+                                            path,
+                                            f"gfs.t{run}z.pgrb2.0p25.f{i}.grib2",
+                                            proxies=proxies,
+                                            chunk_size=chunk_size,
+                                            notifications=notifications,
+                                            clear_recycle_bin=clear_recycle_bin) 
+        else:
+            pass      
+        
+        print("GFS0P25 Download Complete") 
+            
+    else:
+        print(f"GFS0P25 Data is up to date. Skipping download...") 
+    
+    if process_data == True:
+        print(f"GFS0P25 Data Processing...")
+        
+        ds = _gfs_post_processing.primary_gfs_post_processing(path,
+                                                              western_bound,
+                                                              eastern_bound,
+                                                              southern_bound,
+                                                              northern_bound)
+        
+        if convert_temperature == True:
+                ds = _convert_temperature_units(ds, 
+                                            convert_to)
+                
+        else:
+            pass
+        
+        print(f"GFS0P25 Data Processing Complete.")
+        return ds
+    
+    else:
+        pass        
+    
+    
+    
+def _gfs_0p25_secondary_parameters_client(final_forecast_hour=384, 
+            western_bound=-180, 
+            eastern_bound=180, 
+            northern_bound=90, 
+            southern_bound=-90, 
+            step=3,
+            process_data=True,
+            proxies=None, 
+            variables=['geopotential height',
+                       'temperature',
+                       'relative humidity',
+                       'u-component of wind'
+                       'v-component of wind'],
+            custom_directory=None,
+            clear_recycle_bin=False,
+            convert_temperature=True,
+            convert_to='celsius',
+            chunk_size=8192,
+            notifications='off',
+            clear_data=False,
+            source='noaa',
+            level_type='pressure',
+            levels=[875,
+                    825,
+                    775,
+                    725,
+                    675,
+                    625,
+                    575,
+                    525,
+                    475,
+                    425,
+                    375,
+                    325,
+                    275,
+                    225,
+                    175,
+                    125,
+                    7,
+                    5,
+                    3,
+                    2,
+                    1]):
+    
+    """
+    This function downloads GFS0P25 SECONDARY PARAMETERS data and saves it to a folder. 
+    
+    Required Argumemnts: None
+    
+    Optional Arguments:
+    
+    1) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The GFS0P25
+    goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
+    384 by the nereast increment of 6 hours. 
+    
+    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+
+    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+
+    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+
+    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+    
+    6) step (Integer) - Default=3. Set to 3 for 3hr increments and 6 for 6hrly increments.
+    
+    7) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
+       data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
+
+    8) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
+       
+    9) variables (String List) - Default=['geopotential height',
+                                            'temperature',
+                                            'relative humidity',
+                                            'u-component of wind'
+                                            'v-component of wind']
+                       
+        The variables the user wishes to query.
+    
+        Variables
+        ---------
+        
+        'absolute vorticity'
+        'clear sky uv-b downward solar flux'
+        'cloud mixing ratio'
+        'plant canopy surface water'
+        'uv-b downward solar flux'
+        'vertical velocity (height)'
+        'graupel'
+        'geopotential height'
+        'ice thickness'
+        'ice water mixing ratio'
+        'ozone mixing ratio'
+        'pressure'
+        'relative humidity'
+        'rain mixing ratio'
+        'snow mixing ratio'
+        'liquid volumetric soil moisture (non-frozen)'
+        'specific humidity'
+        'total cloud cover'
+        'temperature'
+        'u-component of wind'
+        'v-component of wind'
+        'vertical velocity (pressure)'
+        'vertical speed shear'      
     
     10) custom_directory (String or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
         the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
@@ -298,10 +705,637 @@ def gfs_0p25(final_forecast_hour=384,
     17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
+    18) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+    
+        Server List
+        -----------
+        
+        1) NOAA/NCEP/NOMADS - source='noaa'
+        2) Amazon AWS - source='aws'
+        3) Google Cloud - source='google'
+        
+    19) level_type (String) - Default='pressure'. The type of level for the variable.
+    
+        Level Types
+        -----------
+        
+        'pressure'
+        'height below ground'
+        'surface'
+        'height above ground'
+        'height above sea level'
+        'pressure above ground'
+        'potential vorticity surface'
+        
+    20) levels (String, Integer or Float List) - Default=[875,
+                                                            825,
+                                                            775,
+                                                            725,
+                                                            675,
+                                                            625,
+                                                            575,
+                                                            525,
+                                                            475,
+                                                            425,
+                                                            375,
+                                                            325,
+                                                            275,
+                                                            225,
+                                                            175,
+                                                            125,
+                                                            7,
+                                                            5,
+                                                            3,
+                                                            2,
+                                                            1]
+                                                            
+        The pressure, height or depth levels.
+    
     Returns
     -------
     
     An xarray.array dataset of the most recent GFS0P25 run. 
+    
+    Post-processed Variable Key List
+    --------------------------------
+    
+    'u_wind_component'
+    'v_wind_component'
+    'air_temperature'
+    'relative_humidity'
+    'absolute_vorticity'
+    'geopotential_height'
+    'ozone_mixing_ratio'
+    'total_cloud_cover'
+    'cloud_mixing_ratio'
+    'ice_water_mixing_ratio'
+    'rain_water_mixing_ratio'
+    'snow_mixing_ratio'
+    'graupel'
+    'vertical_velocity'
+    'geometric_vertical_velocity'
+    'liquid_volumetric_soil_moisture_non_frozen'
+    'plant_canopy_surface_water'
+    'sea_ice_thickness'
+    'temperature_height_above_sea'
+    'u_wind_component_height_above_sea'
+    'v_wind_component_height_above_sea'
+    'mixed_layer_temperature'
+    'mixed_layer_relative_humidity'
+    'mixed_layer_specific_humidity'
+    'mixed_layer_u_wind_component'
+    'mixed_layer_v_wind_component'
+    'potential_vorticity_level_u_wind_component'
+    'potential_vorticity_level_v_wind_component'
+    'potential_vorticity_level_temperature'
+    'potential_vorticity_level_geopotential_height'
+    'potential_vorticity_level_air_pressure'
+    'potential_vorticity_level_vertical_speed_shear' 
+    
+    """
+    
+    source = source.lower()
+    
+    if clear_recycle_bin == True:
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
+    else:
+        pass
+    
+    if custom_directory==None:
+        path = _build_directory('gfs0p25 secondary parameters',
+                               'atmospheric')
+        
+    else:
+        try:
+            _os.makedirs(f"{custom_directory}")
+        except Exception as e:
+            pass
+        
+        path = custom_directory
+        
+    if clear_data == True:
+        _clear_old_data(path)
+    else:
+        pass
+        
+    if source == 'noaa':
+        try:
+            url, filename, run = _gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    source)
+        except Exception as e:
+            filename = None
+            
+        if filename == None:
+            print("NCEP/NOMADS Server Is Down.")
+            print("Rotating to Amazon AWS Server.")
+            try:
+                url, filename, run = _gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    'aws')
+                print("Amazon AWS Server Online - Connected.")
+            except Exception as e:
+                filename = None
+                
+            if filename == None:
+                print("Amazon AWS Server Is Down.")
+                print("Rotating to Google Cloud Server.")
+                try:
+                    url, filename, run = _gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    'google')
+                    print("Google Cloud Server Online - Connected.")
+                except Exception as e:
+                    print("Error: All Servers Appear Down.")
+                    print("System Exit")
+                    _sys.exit(1)
+            else:
+                pass
+        
+        else:
+            pass
+        
+    if source == 'aws':
+        try:
+            url, filename, run = _gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    source)
+        except Exception as e:
+            filename = None
+            
+        if filename == None:
+            print("NCEP/NOMADS Server Is Down.")
+            print("Rotating to NCEP/NOMADS Server.")
+            try:
+                url, filename, run = _gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    'noaa')
+                print("NCEP/NOMADS Server Online - Connected.")
+            except Exception as e:
+                filename = None
+                
+            if filename == None:
+                print("Amazon NCEP/NOMADS Is Down.")
+                print("Rotating to Google Cloud Server.")
+                try:
+                    url, filename, run = _gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    'google')
+                    print("Google Cloud Server Online - Connected.")
+                except Exception as e:
+                    print("Error: All Servers Appear Down.")
+                    print("System Exit")
+                    _sys.exit(1)
+            else:
+                pass
+        
+        else:
+            pass
+        
+    
+    if source == 'google':
+        try:
+            url, filename, run = _gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    source)
+        except Exception as e:
+            filename = None
+            
+        if filename == None:
+            print("Google Cloud Server Is Down.")
+            print("Rotating to NCEP/NOMADS Server.")
+            try:
+                url, filename, run = _gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    'noaa')
+                print("Google Cloud Server Online - Connected.")
+            except Exception as e:
+                filename = None
+                
+            if filename == None:
+                print("Amazon NCEP/NOMADS Is Down.")
+                print("Rotating to Amazon AWS Server.")
+                try:
+                    url, filename, run = _gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    'aws')
+                    print("Amazon AWS Server Online - Connected.")
+                except Exception as e:
+                    print("Error: All Servers Appear Down.")
+                    print("System Exit")
+                    _sys.exit(1)
+            else:
+                pass
+        
+        else:
+            pass        
+    
+    download = _local_file_scanner(path, 
+                                    filename,
+                                    'nomads',
+                                    run)   
+    
+    if download == True:
+        print(f"Downloading GFS0P25 Secondary Parameters...")
+        
+        _clear_old_data(path)
+        
+        if run < 10:
+            run = f"0{run}"
+        else:
+            run = run
+        
+        cont = False
+
+        for i in range(0, final_forecast_hour + step, step):
+            if i < 10:
+                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2b.0p25.f00{i}",
+                                            f"{url}gfs.t{run}z.pgrb2b.0p25.f00{i}.idx",
+                                            variables,
+                                            levels,
+                                            level_type,
+                                            path,
+                                            f"gfs.t{run}z.pgrb2b.0p25.f00{i}.grib2",
+                                            proxies=proxies,
+                                            chunk_size=chunk_size,
+                                            notifications=notifications,
+                                            clear_recycle_bin=clear_recycle_bin) 
+                
+            elif i >= 10 and i < (99 + step):
+                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2b.0p25.f0{i}",
+                                            f"{url}gfs.t{run}z.pgrb2b.0p25.f0{i}.idx",
+                                            variables,
+                                            levels,
+                                            level_type,
+                                            path,
+                                            f"gfs.t{run}z.pgrb2b.0p25.f0{i}.grib2",
+                                            proxies=proxies,
+                                            chunk_size=chunk_size,
+                                            notifications=notifications,
+                                            clear_recycle_bin=clear_recycle_bin)   
+                
+            elif i >= 102 and i < (240 + step):
+                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2b.0p25.f{i}",
+                                            f"{url}gfs.t{run}z.pgrb2b.0p25.f{i}.idx",
+                                            variables,
+                                            levels,
+                                            level_type,
+                                            path,
+                                            f"gfs.t{run}z.pgrb2b.0p25.f{i}.grib2",
+                                            proxies=proxies,
+                                            chunk_size=chunk_size,
+                                            notifications=notifications,
+                                            clear_recycle_bin=clear_recycle_bin)    
+                
+            else:
+                cont = True
+                break
+            
+        if cont == True:
+            for i in range(240, final_forecast_hour + 6, 6):
+                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2b.0p25.f{i}",
+                                            f"{url}gfs.t{run}z.pgrb2b.0p25.f{i}.idx",
+                                            variables,
+                                            levels,
+                                            level_type,
+                                            path,
+                                            f"gfs.t{run}z.pgrb2b.0p25.f{i}.grib2",
+                                            proxies=proxies,
+                                            chunk_size=chunk_size,
+                                            notifications=notifications,
+                                            clear_recycle_bin=clear_recycle_bin) 
+        else:
+            pass      
+            
+        print("GFS0P25 Secondary Parameters Download Complete") 
+            
+    else:
+        print(f"GFS0P25 Secondary Parameters Data is up to date. Skipping download...") 
+    
+    if process_data == True:
+        print(f"GFS0P25 Secondary Parameters Data Processing...")
+        
+        ds = _gfs_post_processing.secondary_gfs_post_processing(path,
+                                                                western_bound,
+                                                                eastern_bound,
+                                                                southern_bound,
+                                                                northern_bound)
+        
+        if convert_temperature == True:
+                ds = _convert_temperature_units(ds, 
+                                            convert_to)
+                
+        else:
+            pass
+        
+        print(f"GFS0P25 Secondary Parameters Data Processing Complete.")
+        return ds
+    
+    else:
+        pass        
+    
+        
+        
+def _gfs_0p50_client(final_forecast_hour=384, 
+            western_bound=-180, 
+            eastern_bound=180, 
+            northern_bound=90, 
+            southern_bound=-90, 
+            step=3,
+            process_data=True,
+            proxies=None, 
+            variables=['geopotential height',
+                       'temperature',
+                       'relative humidity',
+                       'u-component of wind'
+                       'v-component of wind'],
+            custom_directory=None,
+            clear_recycle_bin=False,
+            convert_temperature=True,
+            convert_to='celsius',
+            chunk_size=8192,
+            notifications='off',
+            clear_data=False,
+            source='noaa',
+            level_type='pressure',
+            levels=[1000,
+                    975,
+                    950,
+                    925,
+                    900,
+                    850,
+                    800,
+                    750,
+                    700,
+                    650,
+                    600,
+                    550,
+                    500,
+                    450,
+                    400,
+                    350,
+                    300,
+                    250,
+                    200,
+                    150,
+                    100,
+                    70,
+                    50,
+                    40,
+                    30,
+                    20,
+                    15,
+                    10,
+                    7,
+                    5,
+                    3,
+                    2,
+                    1]):
+    
+    """
+    This function downloads GFS0P50 data and saves it to a folder. 
+    
+    Required Argumemnts: None
+    
+    Optional Arguments:
+    
+    1) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The GFS0P50
+    goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
+    384 by the nereast increment of 6 hours. 
+    
+    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+
+    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+
+    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+
+    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+    
+    6) step (Integer) - Default=3. Set to 3 for 3hr increments and 6 for 6hrly increments.
+    
+    7) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
+       data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
+
+    8) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
+       
+    9) variables (String List) - Default=['geopotential height',
+                                            'temperature',
+                                            'relative humidity',
+                                            'u-component of wind'
+                                            'v-component of wind']
+                       
+        The variables the user wishes to query.
+    
+        Variables
+        ---------
+        
+        'best lifted index'
+        'absolute vorticity'
+        'convective precipitation'
+        'albedo'
+        'total precipitation'
+        'convective available potential energy'
+        'categorical freezing rain'
+        'categorical ice pellets'
+        'convective inhibition'
+        'cloud mixing ratio'
+        'plant canopy surface water'
+        'percent frozen precipitaion'
+        'convective precipitation rate'
+        'categorical rain'
+        'categorical snow'
+        'cloud water'
+        'cloud work function'
+        'downward longwave radiation flux'
+        'dew point'
+        'downward shortwave radiation flux'
+        'vertical velocity (height)'
+        'field capacity'
+        'surface friction velocity'
+        'ground heat flux'
+        'graupel'
+        'wind gust'
+        'high cloud cover'
+        'geopotential height'
+        'haines index'
+        'storm relative helicity'
+        'planetary boundary layer height'
+        'icao standard atmosphere reference height'
+        'ice cover'
+        'ice growth rate'
+        'ice thickness'
+        'ice temperature'
+        'ice water mixing ratio'
+        'land cover'
+        'low cloud cover'
+        'surface lifted index'
+        'latent heat net flux'
+        'middle cloud cover'
+        'mslp (eta model reduction)'
+        'ozone mixing ratio'
+        'potential evaporation rate'
+        'pressure level from which parcel was lifted'
+        'potential temperature'
+        'precipitation rate'
+        'pressure'
+        'mean sea level pressure'
+        'precipitable water'
+        'composite reflectivity'
+        'reflectivity'
+        'relative humidity'
+        'rain mixing ratio'
+        'surface roughness'
+        'sensible heat net flux'
+        'snow mixing ratio'
+        'snow depth'
+        'liquid volumetric soil moisture (non-frozen)'
+        'volumetric soil moisture content'
+        'soil type'
+        'specific humidity'
+        'sunshine duration'
+        'total cloud cover'
+        'maximum temperature'
+        'minimum temperature'
+        'temperature'
+        'total ozone'
+        'soil temperature'
+        'momentum flux (u-component)'
+        'u-component of wind'
+        'zonal flux of gravity wave stress'
+        'upward longwave radiation flux'
+        'u-component of storm motion'
+        'upward shortwave radiation flux'
+        'vegetation'
+        'momentum flux (v-component)'
+        'v-component of wind'
+        'meridional flux of gravity wave stress'
+        'visibility'
+        'ventilation rate'
+        'v-component of storm motion'
+        'vertical velocity (pressure)'
+        'vertical speed shear'
+        'water runoff'
+        'water equivalent of accumulated snow depth'
+        'wilting point'
+        'clear sky uv-b downward solar flux'
+        'uv-b downward solar flux'       
+    
+    10) custom_directory (String or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
+        the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
+        be used. 
+    
+    11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
+        
+    12) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+        either Celsius or Fahrenheit. When False, this data remains in Kelvin.
+        
+    13) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+        Set convert_to='fahrenheit' for Fahrenheit. 
+        
+    14) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
+        Default = f:ECMWF/IFS/WAVE
+        
+    15) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    
+    16) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    
+    17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+    
+    18) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+    
+        Server List
+        -----------
+        
+        1) NOAA/NCEP/NOMADS - source='noaa'
+        2) Amazon AWS - source='aws'
+        3) Google Cloud - source='google'
+        
+    19) level_type (String) - Default='pressure'. The type of level for the variable.
+    
+        Level Types
+        -----------
+        
+        'pressure'
+        'mean sea level'
+        'hybrid'
+        'entire atmosphere'
+        'boundary layer'
+        'low cloud layer'
+        'middle cloud layer'
+        'high cloud layer'
+        'convective cloud bottom level'
+        'low cloud bottom level'
+        'middle cloud bottom level'
+        'high cloud bottom level'
+        'convective cloud top level'
+        'low cloud top level'
+        'middle cloud top level'
+        'high cloud top level'
+        'convective cloud layer'
+        'tropopause'
+        'max wind'
+        'isothermal'
+        'highest tropospheric freezing level'
+        'height above ground'
+        'surface'
+        'height below ground'
+        'sigma layer'
+        'sigma level'
+        'entire atmosphere (considered as a single layer)'
+        'pressure above ground'
+        'potential vorticity surface'
+        
+        
+    20) levels (String, Integer or Float List) - Default=levels=[1000,
+                                                                    975,
+                                                                    950,
+                                                                    925,
+                                                                    900,
+                                                                    850,
+                                                                    800,
+                                                                    750,
+                                                                    700,
+                                                                    650,
+                                                                    600,
+                                                                    550,
+                                                                    500,
+                                                                    450,
+                                                                    400,
+                                                                    350,
+                                                                    300,
+                                                                    250,
+                                                                    200,
+                                                                    150,
+                                                                    100,
+                                                                    70,
+                                                                    50,
+                                                                    40,
+                                                                    30,
+                                                                    20,
+                                                                    15,
+                                                                    10,
+                                                                    7,
+                                                                    5,
+                                                                    3,
+                                                                    2,
+                                                                    1]
+                                                            
+        The pressure, height or depth levels.
+    
+    Returns
+    -------
+    
+    An xarray.array dataset of the most recent GFS0P50 run. 
     
     Post-processed Variable Key List
     --------------------------------
@@ -320,13 +1354,11 @@ def gfs_0p25(final_forecast_hour=384,
     'geopotential_height'
     'air_temperature'
     'relative_humidity'
-    'specific_humidity'
     'vertical_velocity'
     'geometric_vertical_velocity'
     'u_wind_component'
     'v_wind_component'
     'absolute_vorticity'
-    'ozone_mixing_ratio'
     'total_cloud_cover'
     'ice_water_mixing_ratio'
     'rain_mixing_ratio'
@@ -398,9 +1430,10 @@ def gfs_0p25(final_forecast_hour=384,
     'potential_vorticity_level_temperature'
     'potential_vorticity_level_geopotential_height'
     'potential_vorticity_level_air_pressure'
-    'potential_vorticity_level_vertical_speed_shear' 
-    """
+    'potential_vorticity_level_vertical_speed_shear'
     
+    """
+    source = source.lower()
     if clear_recycle_bin == True:
         _clear_recycle_bin_windows()
         _clear_trash_bin_mac()
@@ -409,7 +1442,7 @@ def gfs_0p25(final_forecast_hour=384,
         pass
     
     if custom_directory==None:
-        path = _build_directory('gfs0p25',
+        path = _build_directory('gfs0p50',
                                'atmospheric')
         
     else:
@@ -535,8 +1568,7 @@ def gfs_0p25(final_forecast_hour=384,
                 pass
         
         else:
-            pass        
-        
+            pass     
     
     download = _local_file_scanner(path, 
                                     filename,
@@ -544,47 +1576,51 @@ def gfs_0p25(final_forecast_hour=384,
                                     run)   
     
     if download == True:
-        print(f"Downloading GFS0P25...")
+        print(f"Downloading GFS0P50...")
         
         _clear_old_data(path)
+        if run < 10:
+            run = f"0{run}"
+        else:
+            run = run
         
         cont = False
 
         for i in range(0, final_forecast_hour + step, step):
             if i < 10:
-                _client.byte_range_request(f"gfs.t{run}z.pgrb2.0p25.f00{i}",
-                                            f"{url}gfs.t{run}z.pgrb2.0p25.f00{i}.idx",
+                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2full.0p50.f00{i}",
+                                            f"{url}gfs.t{run}z.pgrb2full.0p50.f00{i}.idx",
                                             variables,
                                             levels,
                                             level_type,
                                             path,
-                                            f"gfs.t{run}z.pgrb2.0p25.f00{i}.grib2",
+                                            f"gfs.t{run}z.pgrb2full.0p50.f00{i}.grib2",
                                             proxies=proxies,
                                             chunk_size=chunk_size,
                                             notifications=notifications,
                                             clear_recycle_bin=clear_recycle_bin) 
                 
             elif i >= 10 and i < (99 + step):
-                _client.byte_range_request(f"gfs.t{run}z.pgrb2.0p25.f0{i}",
-                                            f"{url}gfs.t{run}z.pgrb2.0p25.f0{i}.idx",
+                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2full.0p50.f0{i}",
+                                            f"{url}gfs.t{run}z.pgrb2full.0p50.f0{i}.idx",
                                             variables,
                                             levels,
                                             level_type,
                                             path,
-                                            f"gfs.t{run}z.pgrb2.0p25.f0{i}.grib2",
+                                            f"gfs.t{run}z.pgrb2full.0p50.f0{i}.grib2",
                                             proxies=proxies,
                                             chunk_size=chunk_size,
                                             notifications=notifications,
                                             clear_recycle_bin=clear_recycle_bin)   
                 
             elif i >= 102 and i < (240 + step):
-                _client.byte_range_request(f"gfs.t{run}z.pgrb2.0p25.f{i}",
-                                            f"{url}gfs.t{run}z.pgrb2.0p25.f{i}.idx",
+                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2full.0p50.f{i}",
+                                            f"{url}gfs.t{run}z.pgrb2full.0p50.f{i}.idx",
                                             variables,
                                             levels,
                                             level_type,
                                             path,
-                                            f"gfs.t{run}z.pgrb2.0p25.f{i}.grib2",
+                                            f"gfs.t{run}z.pgrb2full.0p50.f{i}.grib2",
                                             proxies=proxies,
                                             chunk_size=chunk_size,
                                             notifications=notifications,
@@ -596,33 +1632,31 @@ def gfs_0p25(final_forecast_hour=384,
             
         if cont == True:
             for i in range(240, final_forecast_hour + 6, 6):
-                _client.byte_range_request(f"gfs.t{run}z.pgrb2.0p25.f{i}",
-                                            f"{url}gfs.t{run}z.pgrb2.0p25.f{i}.idx",
+                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2full.0p50.f{i}",
+                                            f"{url}gfs.t{run}z.pgrb2full.0p50.f{i}.idx",
                                             variables,
                                             levels,
                                             level_type,
                                             path,
-                                            f"gfs.t{run}z.pgrb2.0p25.f{i}.grib2",
+                                            f"gfs.t{run}z.pgrb2full.0p50.f{i}.grib2",
                                             proxies=proxies,
                                             chunk_size=chunk_size,
                                             notifications=notifications,
                                             clear_recycle_bin=clear_recycle_bin) 
         else:
             pass      
-        
-        print("GFS0P25 Download Complete") 
             
     else:
-        print(f"GFS0P25 Data is up to date. Skipping download...") 
+        print(f"GFS0P50 Data is up to date. Skipping download...") 
     
     if process_data == True:
-        print(f"GFS0P25 Data Processing...")
+        print(f"GFS0P50 Data Processing...")
         
         ds = _gfs_post_processing.primary_gfs_post_processing(path,
-                                                              western_bound,
-                                                              eastern_bound,
-                                                              southern_bound,
-                                                              northern_bound)
+                                                                western_bound,
+                                                                eastern_bound,
+                                                                southern_bound,
+                                                                northern_bound)
         
         if convert_temperature == True:
                 ds = _convert_temperature_units(ds, 
@@ -631,15 +1665,14 @@ def gfs_0p25(final_forecast_hour=384,
         else:
             pass
         
-        print(f"GFS0P25 Data Processing Complete.")
+        print(f"GFS0P50 Data Processing Complete.")
         return ds
     
     else:
-        pass        
+        pass      
     
-    
-    
-def gfs_0p25_secondary_parameters(final_forecast_hour=384, 
+
+def gfs_0p25(final_forecast_hour=384, 
             western_bound=-180, 
             eastern_bound=180, 
             northern_bound=90, 
@@ -647,39 +1680,35 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
             step=3,
             process_data=True,
             proxies=None, 
-            variables=['absolute vorticity',
-                       'clear sky uv-b downward solar flux',
-                       'cloud mixing ratio',
-                       'plant canopy surface water',
-                       'uv-b downward solar flux',
-                       'vertical velocity (height)',
-                       'graupel',
-                       'geopotential height',
-                       'ice thickness',
-                       'ice water mixing ratio',
-                       'ozone mixing ratio',
-                       'pressure',
-                       'relative humidity',
-                       'rain mixing ratio',
-                       'snow mixing ratio',
-                       'liquid volumetric soil moisture (non-frozen)',
-                       'specific humidity',
-                       'total cloud cover',
+            variables=['geopotential height',
                        'temperature',
-                       'u-component of wind',
-                       'v-component of wind',
-                       'vertical velocity (pressure)',
-                       'vertical speed shear'],
+                       'relative humidity',
+                       'u-component of wind'
+                       'v-component of wind'],
             custom_directory=None,
             clear_recycle_bin=False,
             convert_temperature=True,
             convert_to='celsius',
             chunk_size=8192,
             notifications='off',
-            clear_data=False):
+            clear_data=False,
+            source='noaa',
+            level_type='pressure',
+            levels=[1000,
+                    925,
+                    850,
+                    700,
+                    500,
+                    400,
+                    300,
+                    250,
+                    200,
+                    100,
+                    50,
+                    10]):
     
     """
-    This function downloads GFS0P25 SECONDARY PARAMETERS data and saves it to a folder. 
+    This function downloads GFS0P25 data and saves it to a folder. 
     
     Required Argumemnts: None
     
@@ -709,34 +1738,105 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
                                'https':'http://your-proxy-address:port'
                                }
        
-    9) variables (String List) - The variables the user wishes to query.
+    9) variables (String List) - Default=['geopotential height',
+                                            'temperature',
+                                            'relative humidity',
+                                            'u-component of wind'
+                                            'v-component of wind']
+                       
+        The variables the user wishes to query.
     
         Variables
         ---------
         
+        'best lifted index'
         'absolute vorticity'
-        'clear sky uv-b downward solar flux'
+        'convective precipitation'
+        'albedo'
+        'total precipitation'
+        'convective available potential energy'
+        'categorical freezing rain'
+        'categorical ice pellets'
+        'convective inhibition'
         'cloud mixing ratio'
         'plant canopy surface water'
-        'uv-b downward solar flux'
+        'percent frozen precipitaion'
+        'convective precipitation rate'
+        'categorical rain'
+        'categorical snow'
+        'cloud water'
+        'cloud work function'
+        'downward longwave radiation flux'
+        'dew point'
+        'downward shortwave radiation flux'
         'vertical velocity (height)'
+        'field capacity'
+        'surface friction velocity'
+        'ground heat flux'
         'graupel'
+        'wind gust'
+        'high cloud cover'
         'geopotential height'
+        'haines index'
+        'storm relative helicity'
+        'planetary boundary layer height'
+        'icao standard atmosphere reference height'
+        'ice cover'
+        'ice growth rate'
         'ice thickness'
+        'ice temperature'
         'ice water mixing ratio'
+        'land cover'
+        'low cloud cover'
+        'surface lifted index'
+        'latent heat net flux'
+        'middle cloud cover'
+        'mslp (eta model reduction)'
         'ozone mixing ratio'
+        'potential evaporation rate'
+        'pressure level from which parcel was lifted'
+        'potential temperature'
+        'precipitation rate'
         'pressure'
+        'mean sea level pressure'
+        'precipitable water'
+        'composite reflectivity'
+        'reflectivity'
         'relative humidity'
         'rain mixing ratio'
+        'surface roughness'
+        'sensible heat net flux'
         'snow mixing ratio'
+        'snow depth'
         'liquid volumetric soil moisture (non-frozen)'
+        'volumetric soil moisture content'
+        'soil type'
         'specific humidity'
+        'sunshine duration'
         'total cloud cover'
+        'maximum temperature'
+        'minimum temperature'
         'temperature'
+        'total ozone'
+        'soil temperature'
+        'momentum flux (u-component)'
         'u-component of wind'
+        'zonal flux of gravity wave stress'
+        'upward longwave radiation flux'
+        'u-component of storm motion'
+        'upward shortwave radiation flux'
+        'vegetation'
+        'momentum flux (v-component)'
         'v-component of wind'
+        'meridional flux of gravity wave stress'
+        'visibility'
+        'ventilation rate'
+        'v-component of storm motion'
         'vertical velocity (pressure)'
-        'vertical speed shear'      
+        'vertical speed shear'
+        'water runoff'
+        'water equivalent of accumulated snow depth'
+        'wilting point'          
     
     10) custom_directory (String or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
         the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
@@ -761,6 +1861,65 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
     
     17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+        
+    18) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+    
+        Server List
+        -----------
+        
+        1) NOAA/NCEP/NOMADS - source='noaa'
+        2) Amazon AWS - source='aws'
+        3) Google Cloud - source='google'
+        
+    19) level_type (String) - Default='pressure'. The type of level for the variable.
+    
+        Level Types
+        -----------
+        
+        'pressure'
+        'mean sea level'
+        'hybrid'
+        'entire atmosphere'
+        'boundary layer'
+        'low cloud layer'
+        'middle cloud layer'
+        'high cloud layer'
+        'convective cloud bottom level'
+        'low cloud bottom level'
+        'middle cloud bottom level'
+        'high cloud bottom level'
+        'convective cloud top level'
+        'low cloud top level'
+        'middle cloud top level'
+        'high cloud top level'
+        'convective cloud layer'
+        'tropopause'
+        'max wind'
+        'isothermal'
+        'highest tropospheric freezing level'
+        'height above ground'
+        'surface'
+        'height below ground'
+        'sigma layer'
+        'sigma level'
+        'entire atmosphere (considered as a single layer)'
+        'pressure above ground'
+        'potential vorticity surface'
+        
+    20) levels (String, Integer or Float List) - Default=[1000,
+                                                            925,
+                                                            850,
+                                                            700,
+                                                            500,
+                                                            400,
+                                                            300,
+                                                            250,
+                                                            200,
+                                                            100,
+                                                            50,
+                                                            10]   
+                                                            
+        The pressure, height or depth levels.
     
     Returns
     -------
@@ -770,117 +1929,255 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
     Post-processed Variable Key List
     --------------------------------
     
-    'u_wind_component'
-    'v_wind_component'
-    'air_temperature'
-    'relative_humidity'
-    'absolute_vorticity'
-    'geopotential_height'
-    'ozone_mixing_ratio'
-    'total_cloud_cover'
-    'cloud_mixing_ratio'
-    'ice_water_mixing_ratio'
-    'rain_water_mixing_ratio'
-    'snow_mixing_ratio'
-    'graupel'
-    'vertical_velocity'
-    'geometric_vertical_velocity'
-    'liquid_volumetric_soil_moisture_non_frozen'
-    'plant_canopy_surface_water'
+    'surface_pressure'
+    'total_precipitation'
+    'categorical_snow'
+    'categorical_ice_pellets'
+    'categorical_freezing_rain'
+    'categorical_rain'
+    'time_mean_surface_latent_heat_flux'
+    'time_mean_surface_sensible_heat_flux'
+    'surface_downward_shortwave_radiation_flux'
+    'surface_downward_longwave_radiation_flux'
+    'surface_upward_shortwave_radiation_flux'
+    'surface_upward_longwave_radiation_flux'
+    'orography'
+    'water_equivalent_of_accumulated_snow_depth'
+    'snow_depth'
     'sea_ice_thickness'
-    'temperature_height_above_sea'
-    'u_wind_component_height_above_sea'
-    'v_wind_component_height_above_sea'
-    'mixed_layer_temperature'
-    'mixed_layer_relative_humidity'
-    'mixed_layer_specific_humidity'
-    'mixed_layer_u_wind_component'
-    'mixed_layer_v_wind_component'
-    'potential_vorticity_level_u_wind_component'
-    'potential_vorticity_level_v_wind_component'
-    'potential_vorticity_level_temperature'
-    'potential_vorticity_level_geopotential_height'
-    'potential_vorticity_level_air_pressure'
-    'potential_vorticity_level_vertical_speed_shear' 
+    'surface_visibility'
+    'surface_wind_gust'
+    'percent_frozen_precipitation'
+    'convective_available_potential_energy'
+    'convective_inhibition'
+    'mslp'
+    'soil_temperature'
+    'volumetric_soil_moisture_content'
+    '2m_temperature'
+    '2m_relative_humidity'
+    '2m_dew_point'
+    'maximum_temperature'
+    'minimum_temperature'
+    '10m_u_wind_component'
+    '10m_v_wind_component'
+    'precipitable_water'
+    'mixed_layer_cape'
+    'mixed_layer_cin'
+    '3km_helicity'
     
     """
     
-    if clear_recycle_bin == True:
-        _clear_recycle_bin_windows()
-        _clear_trash_bin_mac()
-        _clear_trash_bin_linux()
-    else:
-        pass
-    
-    if custom_directory==None:
-        path = _build_directory('gfs0p25 secondary parameters',
-                               'atmospheric')
+    try:
+        ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                            western_bound=western_bound, 
+                            eastern_bound=eastern_bound, 
+                            northern_bound=northern_bound, 
+                            southern_bound=southern_bound, 
+                            step=step,
+                            process_data=process_data,
+                            proxies=proxies, 
+                            variables=variables,
+                            custom_directory=custom_directory,
+                            clear_recycle_bin=clear_recycle_bin,
+                            convert_temperature=convert_temperature,
+                            convert_to=convert_to,
+                            chunk_size=chunk_size,
+                            notifications=notifications,
+                            clear_data=clear_data,
+                            source=source,
+                            level_type=level_type,
+                            levels=levels)
         
-    else:
-        try:
-            _os.makedirs(f"{custom_directory}")
-        except Exception as e:
-            pass
+        rotate = False
+    except Exception as e:
+        rotate = True
         
-        path = custom_directory
-        
-    if clear_data == True:
-        _clear_old_data(path)
-    else:
-        pass
-        
-    urls, filenames, run = _gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
-                                            western_bound, 
-                                            eastern_bound, 
-                                            northern_bound, 
-                                            southern_bound, 
-                                            proxies, 
-                                            step, 
-                                            variables)
-    
-    download = _local_file_scanner(path, 
-                                    filenames[-1],
-                                    'nomads',
-                                    run)   
-    
-    if download == True:
-        print(f"Downloading GFS0P25 Secondary Parameters...")
-        
-        _clear_old_data(path)
-        
-        for url, filename in zip(urls, filenames):
-            _client.get_gridded_data(f"{url}",
-                        path,
-                        f"{filename}.grib2",
-                        proxies=proxies,
-                        chunk_size=chunk_size,
-                        notifications=notifications)   
+    if rotate == True:
+        if source == 'noaa':
+            print("Error: Corrupted File Cannot Process.")
+            print("Clearing Out Data.")
+            print("Rotating to Amazon AWS Server.")
             
-        print("GFS0P25 Secondary Parameters Download Complete") 
+            try:
+                ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                                    western_bound=western_bound, 
+                                    eastern_bound=eastern_bound, 
+                                    northern_bound=northern_bound, 
+                                    southern_bound=southern_bound, 
+                                    step=step,
+                                    process_data=process_data,
+                                    proxies=proxies, 
+                                    variables=variables,
+                                    custom_directory=custom_directory,
+                                    clear_recycle_bin=clear_recycle_bin,
+                                    convert_temperature=convert_temperature,
+                                    convert_to=convert_to,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications,
+                                    clear_data=clear_data,
+                                    source='aws',
+                                    level_type=level_type,
+                                    levels=levels)
+                rotate = False
+            except Exception as e:
+                rotate = True
+                
+        if source == 'aws':
+            print("Error: Corrupted File Cannot Process.")
+            print("Clearing Out Data.")
+            print("Rotating to NOAA/NCEP/NOMADS Server.")
             
-    else:
-        print(f"GFS0P25 Secondary Parameters Data is up to date. Skipping download...") 
-    
-    if process_data == True:
-        print(f"GFS0P25 Secondary Parameters Data Processing...")
-        
-        ds = _gfs_post_processing.secondary_gfs_post_processing(path)
-        
-        if convert_temperature == True:
-                ds = _convert_temperature_units(ds, 
-                                            convert_to)
+            try:
+                ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                                    western_bound=western_bound, 
+                                    eastern_bound=eastern_bound, 
+                                    northern_bound=northern_bound, 
+                                    southern_bound=southern_bound, 
+                                    step=step,
+                                    process_data=process_data,
+                                    proxies=proxies, 
+                                    variables=variables,
+                                    custom_directory=custom_directory,
+                                    clear_recycle_bin=clear_recycle_bin,
+                                    convert_temperature=convert_temperature,
+                                    convert_to=convert_to,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications,
+                                    clear_data=clear_data,
+                                    source='noaa',
+                                    level_type=level_type,
+                                    levels=levels)
+                rotate = False
+            except Exception as e:
+                rotate = True
                 
         else:
-            pass
-        
-        print(f"GFS0P25 Secondary Parameters Data Processing Complete.")
-        return ds
+            print("Error: Corrupted File Cannot Process.")
+            print("Clearing Out Data.")
+            print("Rotating to NOAA/NCEP/NOMADS Server.")
+            
+            try:
+                ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                                    western_bound=western_bound, 
+                                    eastern_bound=eastern_bound, 
+                                    northern_bound=northern_bound, 
+                                    southern_bound=southern_bound, 
+                                    step=step,
+                                    process_data=process_data,
+                                    proxies=proxies, 
+                                    variables=variables,
+                                    custom_directory=custom_directory,
+                                    clear_recycle_bin=clear_recycle_bin,
+                                    convert_temperature=convert_temperature,
+                                    convert_to=convert_to,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications,
+                                    clear_data=clear_data,
+                                    source='noaa',
+                                    level_type=level_type,
+                                    levels=levels)
+                rotate = False
+            except Exception as e:
+                rotate = True
     
     else:
-        pass        
+        pass
     
-        
-        
+    if rotate == True:
+        if source == 'noaa':
+            print("Error: Corrupted File Cannot Process.")
+            print("Clearing Out Data.")
+            print("Rotating to Google Cloud Server.")
+            
+            try:
+                ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                                    western_bound=western_bound, 
+                                    eastern_bound=eastern_bound, 
+                                    northern_bound=northern_bound, 
+                                    southern_bound=southern_bound, 
+                                    step=step,
+                                    process_data=process_data,
+                                    proxies=proxies, 
+                                    variables=variables,
+                                    custom_directory=custom_directory,
+                                    clear_recycle_bin=clear_recycle_bin,
+                                    convert_temperature=convert_temperature,
+                                    convert_to=convert_to,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications,
+                                    clear_data=clear_data,
+                                    source='google',
+                                    level_type=level_type,
+                                    levels=levels)
+                rotate = False
+            except Exception as e:
+                rotate = True
+                
+        if source == 'aws':
+            print("Error: Corrupted File Cannot Process.")
+            print("Clearing Out Data.")
+            print("Rotating to Google Cloud Server.")
+            
+            try:
+                ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                                    western_bound=western_bound, 
+                                    eastern_bound=eastern_bound, 
+                                    northern_bound=northern_bound, 
+                                    southern_bound=southern_bound, 
+                                    step=step,
+                                    process_data=process_data,
+                                    proxies=proxies, 
+                                    variables=variables,
+                                    custom_directory=custom_directory,
+                                    clear_recycle_bin=clear_recycle_bin,
+                                    convert_temperature=convert_temperature,
+                                    convert_to=convert_to,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications,
+                                    clear_data=clear_data,
+                                    source='google',
+                                    level_type=level_type,
+                                    levels=levels)
+                rotate = False
+            except Exception as e:
+                rotate = True
+                
+        else:
+            print("Error: Corrupted File Cannot Process.")
+            print("Clearing Out Data.")
+            print("Rotating to Amazon AWS Server.")
+            
+            try:
+                ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                                    western_bound=western_bound, 
+                                    eastern_bound=eastern_bound, 
+                                    northern_bound=northern_bound, 
+                                    southern_bound=southern_bound, 
+                                    step=step,
+                                    process_data=process_data,
+                                    proxies=proxies, 
+                                    variables=variables,
+                                    custom_directory=custom_directory,
+                                    clear_recycle_bin=clear_recycle_bin,
+                                    convert_temperature=convert_temperature,
+                                    convert_to=convert_to,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications,
+                                    clear_data=clear_data,
+                                    source='aws',
+                                    level_type=level_type,
+                                    levels=levels)
+                rotate = False
+            except Exception as e:
+                print("Client cannot connect to any server.")
+                print("System Exit.")
+                _sys.exit(1)
+    
+    else:
+        pass
+    
+    return ds
+
 def gfs_0p50(final_forecast_hour=384, 
             western_bound=-180, 
             eastern_bound=180, 
@@ -889,103 +2186,53 @@ def gfs_0p50(final_forecast_hour=384,
             step=3,
             process_data=True,
             proxies=None, 
-            variables=['best lifted index',
-                       'absolute vorticity',
-                       'convective precipitation',
-                       'albedo',
-                       'total precipitation',
-                       'convective available potential energy',
-                       'categorical freezing rain',
-                       'categorical ice pellets',
-                       'convective inhibition',
-                       'cloud mixing ratio',
-                       'plant canopy surface water',
-                       'percent frozen precipitaion',
-                       'convective precipitation rate',
-                       'categorical rain',
-                       'categorical snow',
-                       'cloud water',
-                       'cloud work function',
-                       'downward longwave radiation flux',
-                       'dew point',
-                       'downward shortwave radiation flux',
-                       'vertical velocity (height)',
-                       'field capacity',
-                       'surface friction velocity',
-                       'ground heat flux',
-                       'graupel',
-                       'wind gust',
-                       'high cloud cover',
-                       'geopotential height',
-                       'haines index',
-                       'storm relative helicity',
-                       'planetary boundary layer height',
-                       'icao standard atmosphere reference height',
-                       'ice cover',
-                       'ice growth rate',
-                       'ice thickness',
-                       'ice temperature',
-                       'ice water mixing ratio',
-                       'land cover',
-                       'low cloud cover',
-                       'surface lifted index',
-                       'latent heat net flux',
-                       'middle cloud cover',
-                       'mslp (eta model reduction)',
-                       'ozone mixing ratio',
-                       'potential evaporation rate',
-                       'pressure level from which parcel was lifted',
-                       'potential temperature',
-                       'precipitation rate',
-                       'pressure',
-                       'mean sea level pressure',
-                       'precipitable water',
-                       'composite reflectivity',
-                       'reflectivity',
-                       'relative humidity',
-                       'rain mixing ratio',
-                       'surface roughness',
-                       'sensible heat net flux',
-                       'snow mixing ratio',
-                       'snow depth',
-                       'liquid volumetric soil moisture (non-frozen)',
-                       'volumetric soil moisture content',
-                       'soil type',
-                       'specific humidity',
-                       'sunshine duration',
-                       'total cloud cover',
-                       'maximum temperature',
-                       'minimum temperature',
+            variables=['geopotential height',
                        'temperature',
-                       'total ozone',
-                       'soil temperature',
-                       'momentum flux (u-component)',
-                       'u-component of wind',
-                       'zonal flux of gravity wave stress',
-                       'upward longwave radiation flux',
-                       'u-component of storm motion',
-                       'upward shortwave radiation flux',
-                       'vegetation',
-                       'momentum flux (v-component)',
-                       'v-component of wind',
-                       'meridional flux of gravity wave stress',
-                       'visibility',
-                       'ventilation rate',
-                       'v-component of storm motion',
-                       'vertical velocity (pressure)',
-                       'vertical speed shear',
-                       'water runoff',
-                       'water equivalent of accumulated snow depth',
-                       'wilting point',
-                       'clear sky uv-b downward solar flux',
-                       'uv-b downward solar flux'],
+                       'relative humidity',
+                       'u-component of wind'
+                       'v-component of wind'],
             custom_directory=None,
             clear_recycle_bin=False,
             convert_temperature=True,
             convert_to='celsius',
             chunk_size=8192,
             notifications='off',
-            clear_data=False):
+            clear_data=False,
+            source='noaa',
+            level_type='pressure',
+            levels=[1000,
+                    975,
+                    950,
+                    925,
+                    900,
+                    850,
+                    800,
+                    750,
+                    700,
+                    650,
+                    600,
+                    550,
+                    500,
+                    450,
+                    400,
+                    350,
+                    300,
+                    250,
+                    200,
+                    150,
+                    100,
+                    70,
+                    50,
+                    40,
+                    30,
+                    20,
+                    15,
+                    10,
+                    7,
+                    5,
+                    3,
+                    2,
+                    1]):
     
     """
     This function downloads GFS0P50 data and saves it to a folder. 
@@ -1018,101 +2265,107 @@ def gfs_0p50(final_forecast_hour=384,
                                'https':'http://your-proxy-address:port'
                                }
        
-    9) variables (String List) - The variables the user wishes to query.
+    9) variables (String List) - Default=['geopotential height',
+                                            'temperature',
+                                            'relative humidity',
+                                            'u-component of wind'
+                                            'v-component of wind']
+                       
+        The variables the user wishes to query.
     
         Variables
         ---------
         
-    'best lifted index'
-    'absolute vorticity'
-    'convective precipitation'
-    'albedo'
-    'total precipitation'
-    'convective available potential energy'
-    'categorical freezing rain'
-    'categorical ice pellets'
-    'convective inhibition'
-    'cloud mixing ratio'
-    'plant canopy surface water'
-    'percent frozen precipitaion'
-    'convective precipitation rate'
-    'categorical rain'
-    'categorical snow'
-    'cloud water'
-    'cloud work function'
-    'downward longwave radiation flux'
-    'dew point'
-    'downward shortwave radiation flux'
-    'vertical velocity (height)'
-    'field capacity'
-    'surface friction velocity'
-    'ground heat flux'
-    'graupel'
-    'wind gust'
-    'high cloud cover'
-    'geopotential height'
-    'haines index'
-    'storm relative helicity'
-    'planetary boundary layer height'
-    'icao standard atmosphere reference height'
-    'ice cover'
-    'ice growth rate'
-    'ice thickness'
-    'ice temperature'
-    'ice water mixing ratio'
-    'land cover'
-    'low cloud cover'
-    'surface lifted index'
-    'latent heat net flux'
-    'middle cloud cover'
-    'mslp (eta model reduction)'
-    'ozone mixing ratio'
-    'potential evaporation rate'
-    'pressure level from which parcel was lifted'
-    'potential temperature'
-    'precipitation rate'
-    'pressure'
-    'mean sea level pressure'
-    'precipitable water'
-    'composite reflectivity'
-    'reflectivity'
-    'relative humidity'
-    'rain mixing ratio'
-    'surface roughness'
-    'sensible heat net flux'
-    'snow mixing ratio'
-    'snow depth'
-    'liquid volumetric soil moisture (non-frozen)'
-    'volumetric soil moisture content'
-    'soil type'
-    'specific humidity'
-    'sunshine duration'
-    'total cloud cover'
-    'maximum temperature'
-    'minimum temperature'
-    'temperature'
-    'total ozone'
-    'soil temperature'
-    'momentum flux (u-component)'
-    'u-component of wind'
-    'zonal flux of gravity wave stress'
-    'upward longwave radiation flux'
-    'u-component of storm motion'
-    'upward shortwave radiation flux'
-    'vegetation'
-    'momentum flux (v-component)'
-    'v-component of wind'
-    'meridional flux of gravity wave stress'
-    'visibility'
-    'ventilation rate'
-    'v-component of storm motion'
-    'vertical velocity (pressure)'
-    'vertical speed shear'
-    'water runoff'
-    'water equivalent of accumulated snow depth'
-    'wilting point'
-    'clear sky uv-b downward solar flux'
-    'uv-b downward solar flux'       
+        'best lifted index'
+        'absolute vorticity'
+        'convective precipitation'
+        'albedo'
+        'total precipitation'
+        'convective available potential energy'
+        'categorical freezing rain'
+        'categorical ice pellets'
+        'convective inhibition'
+        'cloud mixing ratio'
+        'plant canopy surface water'
+        'percent frozen precipitaion'
+        'convective precipitation rate'
+        'categorical rain'
+        'categorical snow'
+        'cloud water'
+        'cloud work function'
+        'downward longwave radiation flux'
+        'dew point'
+        'downward shortwave radiation flux'
+        'vertical velocity (height)'
+        'field capacity'
+        'surface friction velocity'
+        'ground heat flux'
+        'graupel'
+        'wind gust'
+        'high cloud cover'
+        'geopotential height'
+        'haines index'
+        'storm relative helicity'
+        'planetary boundary layer height'
+        'icao standard atmosphere reference height'
+        'ice cover'
+        'ice growth rate'
+        'ice thickness'
+        'ice temperature'
+        'ice water mixing ratio'
+        'land cover'
+        'low cloud cover'
+        'surface lifted index'
+        'latent heat net flux'
+        'middle cloud cover'
+        'mslp (eta model reduction)'
+        'ozone mixing ratio'
+        'potential evaporation rate'
+        'pressure level from which parcel was lifted'
+        'potential temperature'
+        'precipitation rate'
+        'pressure'
+        'mean sea level pressure'
+        'precipitable water'
+        'composite reflectivity'
+        'reflectivity'
+        'relative humidity'
+        'rain mixing ratio'
+        'surface roughness'
+        'sensible heat net flux'
+        'snow mixing ratio'
+        'snow depth'
+        'liquid volumetric soil moisture (non-frozen)'
+        'volumetric soil moisture content'
+        'soil type'
+        'specific humidity'
+        'sunshine duration'
+        'total cloud cover'
+        'maximum temperature'
+        'minimum temperature'
+        'temperature'
+        'total ozone'
+        'soil temperature'
+        'momentum flux (u-component)'
+        'u-component of wind'
+        'zonal flux of gravity wave stress'
+        'upward longwave radiation flux'
+        'u-component of storm motion'
+        'upward shortwave radiation flux'
+        'vegetation'
+        'momentum flux (v-component)'
+        'v-component of wind'
+        'meridional flux of gravity wave stress'
+        'visibility'
+        'ventilation rate'
+        'v-component of storm motion'
+        'vertical velocity (pressure)'
+        'vertical speed shear'
+        'water runoff'
+        'water equivalent of accumulated snow depth'
+        'wilting point'
+        'clear sky uv-b downward solar flux'
+        'uv-b downward solar flux'       
     
     10) custom_directory (String or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
         the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
@@ -1137,6 +2390,87 @@ def gfs_0p50(final_forecast_hour=384,
     
     17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+    
+    18) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+    
+        Server List
+        -----------
+        
+        1) NOAA/NCEP/NOMADS - source='noaa'
+        2) Amazon AWS - source='aws'
+        3) Google Cloud - source='google'
+        
+    19) level_type (String) - Default='pressure'. The type of level for the variable.
+    
+        Level Types
+        -----------
+        
+        'pressure'
+        'mean sea level'
+        'hybrid'
+        'entire atmosphere'
+        'boundary layer'
+        'low cloud layer'
+        'middle cloud layer'
+        'high cloud layer'
+        'convective cloud bottom level'
+        'low cloud bottom level'
+        'middle cloud bottom level'
+        'high cloud bottom level'
+        'convective cloud top level'
+        'low cloud top level'
+        'middle cloud top level'
+        'high cloud top level'
+        'convective cloud layer'
+        'tropopause'
+        'max wind'
+        'isothermal'
+        'highest tropospheric freezing level'
+        'height above ground'
+        'surface'
+        'height below ground'
+        'sigma layer'
+        'sigma level'
+        'entire atmosphere (considered as a single layer)'
+        'pressure above ground'
+        'potential vorticity surface'
+        
+        
+    20) levels (String, Integer or Float List) - Default=levels=[1000,
+                                                                    975,
+                                                                    950,
+                                                                    925,
+                                                                    900,
+                                                                    850,
+                                                                    800,
+                                                                    750,
+                                                                    700,
+                                                                    650,
+                                                                    600,
+                                                                    550,
+                                                                    500,
+                                                                    450,
+                                                                    400,
+                                                                    350,
+                                                                    300,
+                                                                    250,
+                                                                    200,
+                                                                    150,
+                                                                    100,
+                                                                    70,
+                                                                    50,
+                                                                    40,
+                                                                    30,
+                                                                    20,
+                                                                    15,
+                                                                    10,
+                                                                    7,
+                                                                    5,
+                                                                    3,
+                                                                    2,
+                                                                    1]
+                                                            
+        The pressure, height or depth levels.
     
     Returns
     -------
@@ -1239,76 +2573,648 @@ def gfs_0p50(final_forecast_hour=384,
     'potential_vorticity_level_vertical_speed_shear'
     
     """
-    if clear_recycle_bin == True:
-        _clear_recycle_bin_windows()
-        _clear_trash_bin_mac()
-        _clear_trash_bin_linux()
-    else:
-        pass
     
-    if custom_directory==None:
-        path = _build_directory('gfs0p50',
-                               'atmospheric')
+    try:
+        ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                            western_bound=western_bound, 
+                            eastern_bound=eastern_bound, 
+                            northern_bound=northern_bound, 
+                            southern_bound=southern_bound, 
+                            step=step,
+                            process_data=process_data,
+                            proxies=proxies, 
+                            variables=variables,
+                            custom_directory=custom_directory,
+                            clear_recycle_bin=clear_recycle_bin,
+                            convert_temperature=convert_temperature,
+                            convert_to=convert_to,
+                            chunk_size=chunk_size,
+                            notifications=notifications,
+                            clear_data=clear_data,
+                            source=source,
+                            level_type=level_type,
+                            levels=levels)
         
-    else:
-        try:
-            _os.makedirs(f"{custom_directory}")
-        except Exception as e:
-            pass
+        rotate = False
+    except Exception as e:
+        rotate = True
         
-        path = custom_directory
-        
-    if clear_data == True:
-        _clear_old_data(path)
-    else:
-        pass
-        
-    urls, filenames, run = _gfs_0p50_url_scanner(final_forecast_hour,
-                                            western_bound, 
-                                            eastern_bound, 
-                                            northern_bound, 
-                                            southern_bound, 
-                                            proxies, 
-                                            step, 
-                                            variables)
-    
-    download = _local_file_scanner(path, 
-                                    filenames[-1],
-                                    'nomads',
-                                    run)   
-    
-    if download == True:
-        print(f"Downloading GFS0P50...")
-        
-        _clear_old_data(path)
-        
-        for url, filename in zip(urls, filenames):
-            _client.get_gridded_data(f"{url}",
-                        path,
-                        f"{filename}.grib2",
-                        proxies=proxies,
-                        chunk_size=chunk_size,
-                        notifications=notifications)   
+    if rotate == True:
+        if source == 'noaa':
+            print("Error: Corrupted File Cannot Process.")
+            print("Clearing Out Data.")
+            print("Rotating to Amazon AWS Server.")
             
-        print("GFS0P50 Download Complete") 
+            try:
+                ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                                    western_bound=western_bound, 
+                                    eastern_bound=eastern_bound, 
+                                    northern_bound=northern_bound, 
+                                    southern_bound=southern_bound, 
+                                    step=step,
+                                    process_data=process_data,
+                                    proxies=proxies, 
+                                    variables=variables,
+                                    custom_directory=custom_directory,
+                                    clear_recycle_bin=clear_recycle_bin,
+                                    convert_temperature=convert_temperature,
+                                    convert_to=convert_to,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications,
+                                    clear_data=clear_data,
+                                    source='aws',
+                                    level_type=level_type,
+                                    levels=levels)
+                rotate = False
+            except Exception as e:
+                rotate = True
+                
+        if source == 'aws':
+            print("Error: Corrupted File Cannot Process.")
+            print("Clearing Out Data.")
+            print("Rotating to NOAA/NCEP/NOMADS Server.")
             
-    else:
-        print(f"GFS0P50 Data is up to date. Skipping download...") 
-    
-    if process_data == True:
-        print(f"GFS0P50 Data Processing...")
-        
-        ds = _gfs_post_processing.primary_gfs_post_processing(path)
-        
-        if convert_temperature == True:
-                ds = _convert_temperature_units(ds, 
-                                            convert_to)
+            try:
+                ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                                    western_bound=western_bound, 
+                                    eastern_bound=eastern_bound, 
+                                    northern_bound=northern_bound, 
+                                    southern_bound=southern_bound, 
+                                    step=step,
+                                    process_data=process_data,
+                                    proxies=proxies, 
+                                    variables=variables,
+                                    custom_directory=custom_directory,
+                                    clear_recycle_bin=clear_recycle_bin,
+                                    convert_temperature=convert_temperature,
+                                    convert_to=convert_to,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications,
+                                    clear_data=clear_data,
+                                    source='noaa',
+                                    level_type=level_type,
+                                    levels=levels)
+                rotate = False
+            except Exception as e:
+                rotate = True
                 
         else:
-            pass
-        
-        print(f"GFS0P50 Data Processing Complete.")
-        return ds
+            print("Error: Corrupted File Cannot Process.")
+            print("Clearing Out Data.")
+            print("Rotating to NOAA/NCEP/NOMADS Server.")
+            
+            try:
+                ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                                    western_bound=western_bound, 
+                                    eastern_bound=eastern_bound, 
+                                    northern_bound=northern_bound, 
+                                    southern_bound=southern_bound, 
+                                    step=step,
+                                    process_data=process_data,
+                                    proxies=proxies, 
+                                    variables=variables,
+                                    custom_directory=custom_directory,
+                                    clear_recycle_bin=clear_recycle_bin,
+                                    convert_temperature=convert_temperature,
+                                    convert_to=convert_to,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications,
+                                    clear_data=clear_data,
+                                    source='noaa',
+                                    level_type=level_type,
+                                    levels=levels)
+                rotate = False
+            except Exception as e:
+                rotate = True
     
     else:
-        pass      
+        pass
+    
+    if rotate == True:
+        if source == 'noaa':
+            print("Error: Corrupted File Cannot Process.")
+            print("Clearing Out Data.")
+            print("Rotating to Google Cloud Server.")
+            
+            try:
+                ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                                    western_bound=western_bound, 
+                                    eastern_bound=eastern_bound, 
+                                    northern_bound=northern_bound, 
+                                    southern_bound=southern_bound, 
+                                    step=step,
+                                    process_data=process_data,
+                                    proxies=proxies, 
+                                    variables=variables,
+                                    custom_directory=custom_directory,
+                                    clear_recycle_bin=clear_recycle_bin,
+                                    convert_temperature=convert_temperature,
+                                    convert_to=convert_to,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications,
+                                    clear_data=clear_data,
+                                    source='google',
+                                    level_type=level_type,
+                                    levels=levels)
+                rotate = False
+            except Exception as e:
+                rotate = True
+                
+        if source == 'aws':
+            print("Error: Corrupted File Cannot Process.")
+            print("Clearing Out Data.")
+            print("Rotating to Google Cloud Server.")
+            
+            try:
+                ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                                    western_bound=western_bound, 
+                                    eastern_bound=eastern_bound, 
+                                    northern_bound=northern_bound, 
+                                    southern_bound=southern_bound, 
+                                    step=step,
+                                    process_data=process_data,
+                                    proxies=proxies, 
+                                    variables=variables,
+                                    custom_directory=custom_directory,
+                                    clear_recycle_bin=clear_recycle_bin,
+                                    convert_temperature=convert_temperature,
+                                    convert_to=convert_to,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications,
+                                    clear_data=clear_data,
+                                    source='google',
+                                    level_type=level_type,
+                                    levels=levels)
+                rotate = False
+            except Exception as e:
+                rotate = True
+                
+        else:
+            print("Error: Corrupted File Cannot Process.")
+            print("Clearing Out Data.")
+            print("Rotating to Amazon AWS Server.")
+            
+            try:
+                ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                                    western_bound=western_bound, 
+                                    eastern_bound=eastern_bound, 
+                                    northern_bound=northern_bound, 
+                                    southern_bound=southern_bound, 
+                                    step=step,
+                                    process_data=process_data,
+                                    proxies=proxies, 
+                                    variables=variables,
+                                    custom_directory=custom_directory,
+                                    clear_recycle_bin=clear_recycle_bin,
+                                    convert_temperature=convert_temperature,
+                                    convert_to=convert_to,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications,
+                                    clear_data=clear_data,
+                                    source='aws',
+                                    level_type=level_type,
+                                    levels=levels)
+                rotate = False
+            except Exception as e:
+                print("Client cannot connect to any server.")
+                print("System Exit.")
+                _sys.exit(1)
+    
+    else:
+        pass
+    
+    return ds
+
+def gfs_0p25_secondary_parameters(final_forecast_hour=384, 
+            western_bound=-180, 
+            eastern_bound=180, 
+            northern_bound=90, 
+            southern_bound=-90, 
+            step=3,
+            process_data=True,
+            proxies=None, 
+            variables=['geopotential height',
+                       'temperature',
+                       'relative humidity',
+                       'u-component of wind'
+                       'v-component of wind'],
+            custom_directory=None,
+            clear_recycle_bin=False,
+            convert_temperature=True,
+            convert_to='celsius',
+            chunk_size=8192,
+            notifications='off',
+            clear_data=False,
+            source='noaa',
+            level_type='pressure',
+            levels=[875,
+                    825,
+                    775,
+                    725,
+                    675,
+                    625,
+                    575,
+                    525,
+                    475,
+                    425,
+                    375,
+                    325,
+                    275,
+                    225,
+                    175,
+                    125,
+                    7,
+                    5,
+                    3,
+                    2,
+                    1]):
+    
+    """
+    This function downloads GFS0P25 SECONDARY PARAMETERS data and saves it to a folder. 
+    
+    Required Argumemnts: None
+    
+    Optional Arguments:
+    
+    1) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The GFS0P25
+    goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
+    384 by the nereast increment of 6 hours. 
+    
+    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+
+    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+
+    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+
+    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+    
+    6) step (Integer) - Default=3. Set to 3 for 3hr increments and 6 for 6hrly increments.
+    
+    7) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
+       data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
+
+    8) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
+       
+    9) variables (String List) - Default=['geopotential height',
+                                            'temperature',
+                                            'relative humidity',
+                                            'u-component of wind'
+                                            'v-component of wind']
+                       
+        The variables the user wishes to query.
+    
+        Variables
+        ---------
+        
+        'absolute vorticity'
+        'clear sky uv-b downward solar flux'
+        'cloud mixing ratio'
+        'plant canopy surface water'
+        'uv-b downward solar flux'
+        'vertical velocity (height)'
+        'graupel'
+        'geopotential height'
+        'ice thickness'
+        'ice water mixing ratio'
+        'ozone mixing ratio'
+        'pressure'
+        'relative humidity'
+        'rain mixing ratio'
+        'snow mixing ratio'
+        'liquid volumetric soil moisture (non-frozen)'
+        'specific humidity'
+        'total cloud cover'
+        'temperature'
+        'u-component of wind'
+        'v-component of wind'
+        'vertical velocity (pressure)'
+        'vertical speed shear'      
+    
+    10) custom_directory (String or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
+        the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
+        be used. 
+    
+    11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
+        
+    12) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+        either Celsius or Fahrenheit. When False, this data remains in Kelvin.
+        
+    13) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+        Set convert_to='fahrenheit' for Fahrenheit. 
+        
+    14) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
+        Default = f:ECMWF/IFS/WAVE
+        
+    15) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    
+    16) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    
+    17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+    
+    18) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+    
+        Server List
+        -----------
+        
+        1) NOAA/NCEP/NOMADS - source='noaa'
+        2) Amazon AWS - source='aws'
+        3) Google Cloud - source='google'
+        
+    19) level_type (String) - Default='pressure'. The type of level for the variable.
+    
+        Level Types
+        -----------
+        
+        'pressure'
+        'height below ground'
+        'surface'
+        'height above ground'
+        'height above sea level'
+        'pressure above ground'
+        'potential vorticity surface'
+        
+    20) levels (String, Integer or Float List) - Default=[875,
+                                                            825,
+                                                            775,
+                                                            725,
+                                                            675,
+                                                            625,
+                                                            575,
+                                                            525,
+                                                            475,
+                                                            425,
+                                                            375,
+                                                            325,
+                                                            275,
+                                                            225,
+                                                            175,
+                                                            125,
+                                                            7,
+                                                            5,
+                                                            3,
+                                                            2,
+                                                            1]
+                                                            
+        The pressure, height or depth levels.
+    
+    Returns
+    -------
+    
+    An xarray.array dataset of the most recent GFS0P25 run. 
+    
+    Post-processed Variable Key List
+    --------------------------------
+    
+    'u_wind_component'
+    'v_wind_component'
+    'air_temperature'
+    'relative_humidity'
+    'absolute_vorticity'
+    'geopotential_height'
+    'ozone_mixing_ratio'
+    'total_cloud_cover'
+    'cloud_mixing_ratio'
+    'ice_water_mixing_ratio'
+    'rain_water_mixing_ratio'
+    'snow_mixing_ratio'
+    'graupel'
+    'vertical_velocity'
+    'geometric_vertical_velocity'
+    'liquid_volumetric_soil_moisture_non_frozen'
+    'plant_canopy_surface_water'
+    'sea_ice_thickness'
+    'temperature_height_above_sea'
+    'u_wind_component_height_above_sea'
+    'v_wind_component_height_above_sea'
+    'mixed_layer_temperature'
+    'mixed_layer_relative_humidity'
+    'mixed_layer_specific_humidity'
+    'mixed_layer_u_wind_component'
+    'mixed_layer_v_wind_component'
+    'potential_vorticity_level_u_wind_component'
+    'potential_vorticity_level_v_wind_component'
+    'potential_vorticity_level_temperature'
+    'potential_vorticity_level_geopotential_height'
+    'potential_vorticity_level_air_pressure'
+    'potential_vorticity_level_vertical_speed_shear' 
+    
+    """
+    
+    try:
+        ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                            western_bound=western_bound, 
+                            eastern_bound=eastern_bound, 
+                            northern_bound=northern_bound, 
+                            southern_bound=southern_bound, 
+                            step=step,
+                            process_data=process_data,
+                            proxies=proxies, 
+                            variables=variables,
+                            custom_directory=custom_directory,
+                            clear_recycle_bin=clear_recycle_bin,
+                            convert_temperature=convert_temperature,
+                            convert_to=convert_to,
+                            chunk_size=chunk_size,
+                            notifications=notifications,
+                            clear_data=clear_data,
+                            source=source,
+                            level_type=level_type,
+                            levels=levels)
+        
+        rotate = False
+    except Exception as e:
+        rotate = True
+        
+    if rotate == True:
+        if source == 'noaa':
+            print("Error: Corrupted File Cannot Process.")
+            print("Clearing Out Data.")
+            print("Rotating to Amazon AWS Server.")
+            
+            try:
+                ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                                    western_bound=western_bound, 
+                                    eastern_bound=eastern_bound, 
+                                    northern_bound=northern_bound, 
+                                    southern_bound=southern_bound, 
+                                    step=step,
+                                    process_data=process_data,
+                                    proxies=proxies, 
+                                    variables=variables,
+                                    custom_directory=custom_directory,
+                                    clear_recycle_bin=clear_recycle_bin,
+                                    convert_temperature=convert_temperature,
+                                    convert_to=convert_to,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications,
+                                    clear_data=clear_data,
+                                    source='aws',
+                                    level_type=level_type,
+                                    levels=levels)
+                rotate = False
+            except Exception as e:
+                rotate = True
+                
+        if source == 'aws':
+            print("Error: Corrupted File Cannot Process.")
+            print("Clearing Out Data.")
+            print("Rotating to NOAA/NCEP/NOMADS Server.")
+            
+            try:
+                ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                                    western_bound=western_bound, 
+                                    eastern_bound=eastern_bound, 
+                                    northern_bound=northern_bound, 
+                                    southern_bound=southern_bound, 
+                                    step=step,
+                                    process_data=process_data,
+                                    proxies=proxies, 
+                                    variables=variables,
+                                    custom_directory=custom_directory,
+                                    clear_recycle_bin=clear_recycle_bin,
+                                    convert_temperature=convert_temperature,
+                                    convert_to=convert_to,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications,
+                                    clear_data=clear_data,
+                                    source='noaa',
+                                    level_type=level_type,
+                                    levels=levels)
+                rotate = False
+            except Exception as e:
+                rotate = True
+                
+        else:
+            print("Error: Corrupted File Cannot Process.")
+            print("Clearing Out Data.")
+            print("Rotating to NOAA/NCEP/NOMADS Server.")
+            
+            try:
+                ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                                    western_bound=western_bound, 
+                                    eastern_bound=eastern_bound, 
+                                    northern_bound=northern_bound, 
+                                    southern_bound=southern_bound, 
+                                    step=step,
+                                    process_data=process_data,
+                                    proxies=proxies, 
+                                    variables=variables,
+                                    custom_directory=custom_directory,
+                                    clear_recycle_bin=clear_recycle_bin,
+                                    convert_temperature=convert_temperature,
+                                    convert_to=convert_to,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications,
+                                    clear_data=clear_data,
+                                    source='noaa',
+                                    level_type=level_type,
+                                    levels=levels)
+                rotate = False
+            except Exception as e:
+                rotate = True
+    
+    else:
+        pass
+    
+    if rotate == True:
+        if source == 'noaa':
+            print("Error: Corrupted File Cannot Process.")
+            print("Clearing Out Data.")
+            print("Rotating to Google Cloud Server.")
+            
+            try:
+                ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                                    western_bound=western_bound, 
+                                    eastern_bound=eastern_bound, 
+                                    northern_bound=northern_bound, 
+                                    southern_bound=southern_bound, 
+                                    step=step,
+                                    process_data=process_data,
+                                    proxies=proxies, 
+                                    variables=variables,
+                                    custom_directory=custom_directory,
+                                    clear_recycle_bin=clear_recycle_bin,
+                                    convert_temperature=convert_temperature,
+                                    convert_to=convert_to,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications,
+                                    clear_data=clear_data,
+                                    source='google',
+                                    level_type=level_type,
+                                    levels=levels)
+                rotate = False
+            except Exception as e:
+                rotate = True
+                
+        if source == 'aws':
+            print("Error: Corrupted File Cannot Process.")
+            print("Clearing Out Data.")
+            print("Rotating to Google Cloud Server.")
+            
+            try:
+                ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                                    western_bound=western_bound, 
+                                    eastern_bound=eastern_bound, 
+                                    northern_bound=northern_bound, 
+                                    southern_bound=southern_bound, 
+                                    step=step,
+                                    process_data=process_data,
+                                    proxies=proxies, 
+                                    variables=variables,
+                                    custom_directory=custom_directory,
+                                    clear_recycle_bin=clear_recycle_bin,
+                                    convert_temperature=convert_temperature,
+                                    convert_to=convert_to,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications,
+                                    clear_data=clear_data,
+                                    source='google',
+                                    level_type=level_type,
+                                    levels=levels)
+                rotate = False
+            except Exception as e:
+                rotate = True
+                
+        else:
+            print("Error: Corrupted File Cannot Process.")
+            print("Clearing Out Data.")
+            print("Rotating to Amazon AWS Server.")
+            
+            try:
+                ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                                    western_bound=western_bound, 
+                                    eastern_bound=eastern_bound, 
+                                    northern_bound=northern_bound, 
+                                    southern_bound=southern_bound, 
+                                    step=step,
+                                    process_data=process_data,
+                                    proxies=proxies, 
+                                    variables=variables,
+                                    custom_directory=custom_directory,
+                                    clear_recycle_bin=clear_recycle_bin,
+                                    convert_temperature=convert_temperature,
+                                    convert_to=convert_to,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications,
+                                    clear_data=clear_data,
+                                    source='aws',
+                                    level_type=level_type,
+                                    levels=levels)
+                rotate = False
+            except Exception as e:
+                print("Client cannot connect to any server.")
+                print("System Exit.")
+                _sys.exit(1)
+    
+    else:
+        pass
+    
+    return ds

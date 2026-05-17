@@ -991,11 +991,11 @@ def _gefs_0p50_secondary_parameters_client(cat='mean',
     '3km_helicity'
     'u_component_of_storm_motion'
     'v_component_of_storm_motion'
-    'tropopause_pressure'
+    'pressure'
     'tropopause_standard_atmosphere_reference_height'
-    'tropopause_vertical_speed_shear'
     '995_sigma_theta'
     'potential_vorticity'
+    'vertical_speed_shear'
     'theta_level_montgomery_potential'
     'potential_vorticity_level_vertical_speed_shear'
     'mixed_layer_dew_point'
@@ -2028,7 +2028,9 @@ def gefs_0p50(cat='mean',
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
         This setting is to help preserve memory on the machine. 
         
-    12) variables (List) - A list of variable names the user wants to download in plain language. 
+    12) variables (List) - Default=['geopotential height'].
+    
+        A list of variable names the user wants to download in plain language. 
     
         Variable Name List for GEFS0P50
         -------------------------------
@@ -2101,13 +2103,16 @@ def gefs_0p50(cat='mean',
         -----------
         
         'pressure'
-        'height above ground'
-        'surface'
         'height below ground'
-        'entire atmosphere (considered as a single layer)'
+        'surface'
+        'height above ground'
+        'top of atmosphere'
         'pressure above ground'
+        'mean sea level'
         
-    23) levels (String, Integer or Float List) - Default=[1000,
+        
+        
+    23) levels (String, Integer or Float List) - Default==[1000,
                                                             925,
                                                             850,
                                                             700,
@@ -2118,7 +2123,7 @@ def gefs_0p50(cat='mean',
                                                             200,
                                                             100,
                                                             50,
-                                                            10]    
+                                                            10]  
                                                             
         The pressure, height or depth levels.
     
@@ -2587,18 +2592,18 @@ def gefs_0p50_secondary_parameters(cat='control',
         'surface'
         'boundary layer'
         'pressure'
-        'height above ground'
         'height below ground'
+        'height above ground'
         'entire atmosphere (considered as a single layer)'
         'cloud ceiling'
         'top of atmosphere'
         'tropopause'
         'max wind'
         'height above sea level'
-        '0C isotherm'
+        'isothermal'
         'highest tropospheric freezing level'
-        'pressure above ground'
-        'sigma'
+        'sigma layer'
+        'sigma level'
         'isentropic level'
         'potential vorticity surface'
         
@@ -2675,11 +2680,11 @@ def gefs_0p50_secondary_parameters(cat='control',
     '3km_helicity'
     'u_component_of_storm_motion'
     'v_component_of_storm_motion'
-    'tropopause_pressure'
+    'pressure'
     'tropopause_standard_atmosphere_reference_height'
-    'tropopause_vertical_speed_shear'
     '995_sigma_theta'
     'potential_vorticity'
+    'vertical_speed_shear'
     'theta_level_montgomery_potential'
     'potential_vorticity_level_vertical_speed_shear'
     'mixed_layer_dew_point'

@@ -31,7 +31,6 @@ def convert_temperature_units(ds,
     
     keyword1 = 'temperature'
     keyword2 = 'dew_point'
-    keyword3 = 'dew_point_depression'
     for param in params:
         if keyword1 in param:
             if convert_to == 'celsius':

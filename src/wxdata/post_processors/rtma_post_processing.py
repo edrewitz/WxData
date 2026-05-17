@@ -136,6 +136,7 @@ def process_rtma_data(
     '10m_wind_gust'
         
     """
+    _eccodes_error_message()
     model = model.upper()
     
     _clear_idx_files_in_path(path)
@@ -144,8 +145,7 @@ def process_rtma_data(
         ds = _xr.open_dataset(f"{path}/{filename}", engine='cfgrib',
                               backend_kwargs={"indexpath": ""})
     except Exception as e:
-        _eccodes_error_message()
-        _sys.exit(1)
+        pass
     
     try:
         ds['orography'] = ds['orog']

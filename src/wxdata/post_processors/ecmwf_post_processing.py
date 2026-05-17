@@ -111,6 +111,8 @@ def ecmwf_ifs_post_processing(path,
     '3_hr_minimum_2m_temperature'
 
     """
+    _eccodes_error_message()
+    
     _clear_idx_files_in_path(path)
     
     files = _sorted_paths(path)
@@ -906,6 +908,7 @@ def ecmwf_aifs_post_processing(path,
     'mslp'
         
     """
+    _eccodes_error_message()
     _clear_idx_files_in_path(path)
     
     files = _sorted_paths(path)
@@ -1627,6 +1630,7 @@ def ecmwf_ifs_wave_post_processing(path,
     'mean_wave_period'
 
     """
+    _eccodes_error_message()
     _clear_idx_files_in_path(path)
     
     files = _sorted_paths(path)

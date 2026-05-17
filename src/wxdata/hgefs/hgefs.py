@@ -43,8 +43,26 @@ def hgefs_mean_spread(final_forecast_hour=240,
                     chunk_size=8192,
                     notifications='off',
                     cat='mean',
-                    type_of_level='pressure',
-                    clear_data=False):                   
+                    level_type='pressure',
+                    clear_data=False,
+            variables=['geopotential height',
+                       'specific humidity',
+                       'temperature',
+                       'u-component of wind',
+                       'v-component of wind',
+                       'vertical velocity (pressure)'],
+            levels=[1000,
+                    925,
+                    850,
+                    700,
+                    600,
+                    500,
+                    400,
+                    300,
+                    250,
+                    150,
+                    100,
+                    50]):                   
     
     """
     This function downloads, pre-processes and post-processes the latest HGEFS Ensemble Mean or Ensemble Spread for either the Pressure or Surface Parameters. 
@@ -108,7 +126,7 @@ def hgefs_mean_spread(final_forecast_hour=240,
         1) mean
         2) spread
         
-    17) type_of_level (String) - Default='pressure'. The type of level the data is in.
+    17) level_type (String) - Default='pressure'. The type of level the data is in.
     
         Types of Levels
         ---------------
@@ -119,6 +137,31 @@ def hgefs_mean_spread(final_forecast_hour=240,
     18) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
+    19) variables (String List) **level_type='pressure'** - Default=['geopotential height',
+                                                                        'specific humidity',
+                                                                        'temperature',
+                                                                        'u-component of wind',
+                                                                        'v-component of wind',
+                                                                        'vertical velocity (pressure)']
+                       
+        When the level_type = 'pressure', the user can filter by variable to the variable they want. (Surface level files are very small 
+        compared to pressure level files).
+        
+    20) levels (Integer List) **level_type='pressure'** - Default=[1000,
+                                                                        925,
+                                                                        850,
+                                                                        700,
+                                                                        600,
+                                                                        500,
+                                                                        400,
+                                                                        300,
+                                                                        250,
+                                                                        150,
+                                                                        100,
+                                                                        50]
+                                                                        
+        When the level_type = 'pressure', the user can filter by level to the level they want. (Surface level files are very small 
+        compared to pressure level files).
     
     Returns
     -------
@@ -144,14 +187,14 @@ def hgefs_mean_spread(final_forecast_hour=240,
     '2m_temperature'
     """
     cat = cat.lower()
-    type_of_level = type_of_level.lower()
+    level_type = level_type.lower()
     
     if cat == 'mean':
         cat = 'avg'
     else:
         cat = 'spr'
         
-    if type_of_level == 'pressure':
+    if level_type == 'pressure':
         level = 'pres'
     else:
         level = 'sfc'
@@ -164,7 +207,7 @@ def hgefs_mean_spread(final_forecast_hour=240,
         pass    
     
     if custom_directory == None:
-        path = _build_directory(type_of_level,
+        path = _build_directory(level_type,
                                   cat)
     else:
         path = _custom_branch(custom_directory)
@@ -177,7 +220,7 @@ def hgefs_mean_spread(final_forecast_hour=240,
     url, file, run = _hgefs_url_scanner(final_forecast_hour,
                                                         proxies,
                                                         cat,
-                                                        type_of_level)
+                                                        level_type)
     
     download = _local_file_scanner(path, 
                                     file,
@@ -186,7 +229,7 @@ def hgefs_mean_spread(final_forecast_hour=240,
                                     model='hgefs')  
     
     if download == True:
-        print(f"Downloading HGEFS {type_of_level.upper()} {cat.upper()} Files...")
+        print(f"Downloading HGEFS {level_type.upper()} {cat.upper()} Files...")
         
         _clear_old_data(path)
         
@@ -194,36 +237,82 @@ def hgefs_mean_spread(final_forecast_hour=240,
             run = f"0{run}"
         else:
             run = f"{run}"        
+            
         stop = final_forecast_hour + 6
         
         for i in range(0, stop, 6):
-            if i < 10:
-                _client.get_gridded_data(f"{url}hgefs.t{run}z.{level}.{cat}.f00{i}.grib2",
-                            path,
-                            f"hgefs.t{run}z.{level}.{cat}.f00{i}.grib2",
-                            proxies=proxies,
-                            chunk_size=chunk_size,
-                            notifications=notifications)  
-            elif i >= 10 and i < 100:
-                _client.get_gridded_data(f"{url}hgefs.t{run}z.{level}.{cat}.f0{i}.grib2",
-                            path,
-                            f"hgefs.t{run}z.{level}.{cat}.f0{i}.grib2",
-                            proxies=proxies,
-                            chunk_size=chunk_size,
-                            notifications=notifications)  
+            if level_type == 'surface':
+                try:
+                    if i < 10:
+                        _client.get_gridded_data(f"{url}hgefs.t{run}z.{level}.{cat}.f00{i}.grib2",
+                                    path,
+                                    f"hgefs.t{run}z.{level}.{cat}.f00{i}.grib2",
+                                    proxies=proxies,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications)  
+                    elif i >= 10 and i < 100:
+                        _client.get_gridded_data(f"{url}hgefs.t{run}z.{level}.{cat}.f0{i}.grib2",
+                                    path,
+                                    f"hgefs.t{run}z.{level}.{cat}.f0{i}.grib2",
+                                    proxies=proxies,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications)  
+                    else:
+                        _client.get_gridded_data(f"{url}hgefs.t{run}z.{level}.{cat}.f{i}.grib2",
+                                    path,
+                                    f"hgefs.t{run}z.{level}.{cat}.f{i}.grib2",
+                                    proxies=proxies,
+                                    chunk_size=chunk_size,
+                                    notifications=notifications) 
+                except Exception as e:
+                    pass
             else:
-                _client.get_gridded_data(f"{url}hgefs.t{run}z.{level}.{cat}.f{i}.grib2",
-                            path,
-                            f"hgefs.t{run}z.{level}.{cat}.f{i}.grib2",
-                            proxies=proxies,
-                            chunk_size=chunk_size,
-                            notifications=notifications)    
+                try:
+                    if i < 10:
+                        _client.byte_range_request(f"{url}hgefs.t{run}z.{level}.{cat}.f00{i}.grib2",
+                                                            f"{url}hgefs.t{run}z.{level}.{cat}.f00{i}.grib2.idx",
+                                                            variables,
+                                                            levels,
+                                                            'pressure',
+                                                            path,
+                                                            f"hgefs.t{run}z.{level}.{cat}.f00{i}.grib2",
+                                                            proxies=proxies,
+                                                            chunk_size=chunk_size,
+                                                            notifications=notifications,
+                                                            clear_recycle_bin=clear_recycle_bin)
+                    elif i >= 10 and i < 100:
+                        _client.byte_range_request(f"{url}hgefs.t{run}z.{level}.{cat}.f0{i}.grib2",
+                                                        f"{url}hgefs.t{run}z.{level}.{cat}.f0{i}.grib2.idx",
+                                                        variables,
+                                                        levels,
+                                                        'pressure',
+                                                        path,
+                                                        f"hgefs.t{run}z.{level}.{cat}.f0{i}.grib2",
+                                                        proxies=proxies,
+                                                        chunk_size=chunk_size,
+                                                        notifications=notifications,
+                                                        clear_recycle_bin=clear_recycle_bin)
+                    else:
+                        _client.byte_range_request(f"{url}hgefs.t{run}z.{level}.{cat}.f{i}.grib2",
+                                                        f"{url}hgefs.t{run}z.{level}.{cat}.f{i}.grib2.idx",
+                                                        variables,
+                                                        levels,
+                                                        'pressure',
+                                                        path,
+                                                        f"hgefs.t{run}z.{level}.{cat}.f{i}.grib2",
+                                                        proxies=proxies,
+                                                        chunk_size=chunk_size,
+                                                        notifications=notifications,
+                                                        clear_recycle_bin=clear_recycle_bin)  
+                    
+                except Exception as e:
+                    pass
                     
     else:
-        print(f"User has latest HGEFS {type_of_level.upper()} {cat.upper()} Files\nSkipping Download...")  
+        print(f"User has latest HGEFS {level_type.upper()} {cat.upper()} Files\nSkipping Download...")  
             
     if process_data == True:
-        print(f"HGEFS {type_of_level.upper()} {cat.upper()} Data Processing...")    
+        print(f"HGEFS {level_type.upper()} {cat.upper()} Data Processing...")    
         
         ds = _hgefs_post_processing.hgefs_mean_spread_post_processing(path,
                                                                     western_bound,
@@ -237,7 +326,7 @@ def hgefs_mean_spread(final_forecast_hour=240,
                                            cat='mean')
                 
         
-        print(f"HGEFS {type_of_level.upper()} {cat.upper()} Data Processing Complete.")
+        print(f"HGEFS {level_type.upper()} {cat.upper()} Data Processing Complete.")
         return ds
     else:
         pass       

@@ -38,6 +38,16 @@ def get_level_suffix(level_type):
     'sigma level'
     'potential vorticity surface'
     'reserved'
+    'top of atmosphere'
+    'high cloud top level'
+    'middle cloud top level'
+    'low cloud top level'
+    'high cloud bottom level'
+    'middle cloud bottom level'
+    'low cloud bottom level'
+    'convective cloud layer'
+    'boundary layer cloud layer'
+    'pressure above ground'
     
     Optional Arguments: None
     
@@ -70,7 +80,18 @@ def get_level_suffix(level_type):
         'sigma layer':'sigma layer',
         'sigma level':'sigma level',
         'potential vorticity surface':'PV=2e-06 (Km^2/kg/s) surface',
-        'reserved':'reserved'
+        'reserved':'reserved',
+        'top of atmosphere':'top of atmosphere',
+        'high cloud top level':'high cloud top level',
+        'middle cloud top level':'middle cloud top level',
+        'low cloud top level':'low cloud top level',
+        'high cloud bottom level':'high cloud bottom level',
+        'middle cloud bottom level':'middle cloud bottom level',
+        'low cloud bottom level':'low cloud bottom level',
+        'convective cloud layer':'convective cloud layer',
+        'boundary layer cloud layer':'boundary layer cloud layer',
+        'pressure above ground':'mb above ground',
+        'isentropic level':'K isentropic level'
     }
     
     return level_types[level_type]
@@ -94,7 +115,7 @@ def get_level_expression(levels,
     
     'hybrid'
     'entire atmosphere'
-    'surface':'surface',
+    'surface' 
     'boundary layer'
     'pressure'
     'mean sea level'
@@ -114,6 +135,16 @@ def get_level_expression(levels,
     'sigma level'
     'potential vorticity surface'
     'reserved'
+    'top of atmosphere'
+    'high cloud top level'
+    'middle cloud top level'
+    'low cloud top level'
+    'high cloud bottom level'
+    'middle cloud bottom level'
+    'low cloud bottom level'
+    'convective cloud layer'
+    'boundary layer cloud layer'
+    'pressure above ground'
     
     3) variables (String List) - A list of variables. 
     

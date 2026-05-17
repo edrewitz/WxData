@@ -39,7 +39,7 @@ def aigfs(final_forecast_hour=384,
              custom_directory=None,
              chunk_size=8192,
              notifications='off',
-             type_of_level='pressure',
+             level_type='pressure',
              clear_data=False,
             variables=['geopotential height',
                        'specific humidity',
@@ -114,7 +114,7 @@ def aigfs(final_forecast_hour=384,
     
     15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    16) type_of_level (String) - Default='pressure'. The type of level the data is in.
+    16) level_type (String) - Default='pressure'. The type of level the data is in.
     
         Types of Levels
         ---------------
@@ -125,17 +125,17 @@ def aigfs(final_forecast_hour=384,
     17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
         
-    18) variables (String List) **type_of_level='pressure'** - Default=['geopotential height',
+    18) variables (String List) **level_type='pressure'** - Default=['geopotential height',
                                                                         'specific humidity',
                                                                         'temperature',
                                                                         'u-component of wind',
                                                                         'v-component of wind',
                                                                         'vertical velocity']
                        
-        When the type_of_level = 'pressure', the user can filter by variable to the variable they want. (Surface level files are very small 
+        When the level_type = 'pressure', the user can filter by variable to the variable they want. (Surface level files are very small 
         compared to pressure level files).
         
-    19) levels (Integer List) **type_of_level='pressure'** - Default=[1000,
+    19) levels (Integer List) **level_type='pressure'** - Default=[1000,
                                                                         925,
                                                                         850,
                                                                         700,
@@ -148,7 +148,7 @@ def aigfs(final_forecast_hour=384,
                                                                         100,
                                                                         50]
                                                                         
-        When the type_of_level = 'pressure', the user can filter by level to the level they want. (Surface level files are very small 
+        When the level_type = 'pressure', the user can filter by level to the level they want. (Surface level files are very small 
         compared to pressure level files).
     
     Returns
@@ -175,9 +175,9 @@ def aigfs(final_forecast_hour=384,
     '2m_temperature'
     """
     
-    type_of_level = type_of_level.lower()
+    level_type = level_type.lower()
     
-    if type_of_level == 'pressure':
+    if level_type == 'pressure':
         level = 'pres'
     else:
         level = 'sfc'
@@ -190,7 +190,7 @@ def aigfs(final_forecast_hour=384,
         pass   
     
     if custom_directory == None:
-        path = _build_aigfs_directory(type_of_level)
+        path = _build_aigfs_directory(level_type)
     else:
         path = _custom_branch(custom_directory)
         
@@ -201,7 +201,7 @@ def aigfs(final_forecast_hour=384,
         
     url, file, run = _aigfs_url_scanner(final_forecast_hour,
                                                         proxies,
-                                                        type_of_level)
+                                                        level_type)
     
     download = _local_file_scanner(path, 
                                     file,
@@ -211,7 +211,7 @@ def aigfs(final_forecast_hour=384,
     
     
     if download == True:
-        print(f"Downloading AIGFS {type_of_level.upper()} Files...")
+        print(f"Downloading AIGFS {level_type.upper()} Files...")
         
         _clear_old_data(path)
         
@@ -222,7 +222,7 @@ def aigfs(final_forecast_hour=384,
         stop = final_forecast_hour + 6
         
         for i in range(0, stop, 6):
-            if type_of_level == 'surface':
+            if level_type == 'surface':
                 if i < 10:
                     _client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f00{i}.grib2",
                                 path,
@@ -283,10 +283,10 @@ def aigfs(final_forecast_hour=384,
                                                 clear_recycle_bin=clear_recycle_bin)    
                     
     else:
-        print(f"User has latest AIGFS {type_of_level.upper()} Files\nSkipping Download...")  
+        print(f"User has latest AIGFS {level_type.upper()} Files\nSkipping Download...")  
     
     if process_data == True:
-        print(f"AIGFS {type_of_level.upper()} Data Processing...")    
+        print(f"AIGFS {level_type.upper()} Data Processing...")    
         
         ds = _aigfs_post_processing.aigfs_post_processing(path,
                                                         western_bound,
@@ -300,7 +300,7 @@ def aigfs(final_forecast_hour=384,
                                            cat='mean')
                 
         
-        print(f"AIGFS {type_of_level.upper()} Data Processing Complete.")
+        print(f"AIGFS {level_type.upper()} Data Processing Complete.")
         return ds
     else:
         pass    

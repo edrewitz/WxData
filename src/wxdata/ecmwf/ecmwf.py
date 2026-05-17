@@ -1263,7 +1263,7 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                     print("Google Cloud Server Online - Connected.")
                     source = 'google'
                 except Exception as e:
-                    print("Error: Both Servers Appear Down")
+                    print("Error: All Servers Appear Down")
                     print("System Exit")
                     _sys.exit(1)
                 
@@ -1302,7 +1302,7 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                     print("Google Cloud Server Online - Connected.")
                     source = 'google'
                 except Exception as e:
-                    print("Error: Both Servers Appear Down")
+                    print("Error: All Servers Appear Down")
                     print("System Exit")
                     _sys.exit(1)
                 
@@ -1341,7 +1341,7 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                     print("Amazon AWS Server Online - Connected.")
                     source = 'aws'
                 except Exception as e:
-                    print("Error: Both Servers Appear Down")
+                    print("Error: All Servers Appear Down")
                     print("System Exit")
                     _sys.exit(1)
                 

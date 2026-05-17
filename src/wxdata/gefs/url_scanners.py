@@ -43,16 +43,15 @@ local = datetime.now()
 # Gets yesterday's date
 yd = now - timedelta(days=1)
 
+NCEP_NOMADS_PREFIX = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/"
+AMAZON_AWS_PREFIX = f"https://noaa-gefs-pds.s3.amazonaws.com/"
+GOOGLE_CLOUD_PREFIX = f"https://storage.googleapis.com/gfs-ensemble-forecast-system/"
+
 def gefs_0p50_url_scanner(cat, 
                           final_forecast_hour, 
-                          western_bound, 
-                          eastern_bound, 
-                          northern_bound, 
-                          southern_bound, 
                           proxies, 
-                          step, 
                           members,
-                          variables):
+                          source):
     
     
     """
@@ -140,9 +139,14 @@ def gefs_0p50_url_scanner(cat,
     # Makes the category all lower case for consistency
     cat = cat.lower()
     
-    # Converts the longitude from -180 to 180 into 0 to 360
-    western_bound, eastern_bound = convert_lon(western_bound, eastern_bound)
-    
+    source = source.lower()
+    if source == 'noaa':
+        PREFIX = NCEP_NOMADS_PREFIX
+    elif source == 'aws':
+        PREFIX = AMAZON_AWS_PREFIX
+    else:
+        PREFIX = GOOGLE_CLOUD_PREFIX
+            
     m = []
     for member in members:
         if member < 10:
@@ -192,56 +196,16 @@ def gefs_0p50_url_scanner(cat,
     # These are the different download URLs for the various runtimes in the past 24 hours
     
     # URLs to scan for the latest file
-    today_18z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{now.strftime('%Y%m%d')}/18/atmos/pgrb2ap5/")
-    today_12z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{now.strftime('%Y%m%d')}/12/atmos/pgrb2ap5/")
-    today_06z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{now.strftime('%Y%m%d')}/06/atmos/pgrb2ap5/")
-    today_00z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{now.strftime('%Y%m%d')}/00/atmos/pgrb2ap5/")
+    today_18z_scan = (f"{PREFIX}gefs.{now.strftime('%Y%m%d')}/18/atmos/pgrb2ap5/")
+    today_12z_scan = (f"{PREFIX}gefs.{now.strftime('%Y%m%d')}/12/atmos/pgrb2ap5/")
+    today_06z_scan = (f"{PREFIX}gefs.{now.strftime('%Y%m%d')}/06/atmos/pgrb2ap5/")
+    today_00z_scan = (f"{PREFIX}gefs.{now.strftime('%Y%m%d')}/00/atmos/pgrb2ap5/")
     
-    yesterday_18z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{yd.strftime('%Y%m%d')}/18/atmos/pgrb2ap5/")
-    yesterday_12z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{yd.strftime('%Y%m%d')}/12/atmos/pgrb2ap5/")
-    yesterday_06z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{yd.strftime('%Y%m%d')}/06/atmos/pgrb2ap5/")
-    yesterday_00z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{yd.strftime('%Y%m%d')}/00/atmos/pgrb2ap5/")
-    
-    # Gets the variable list in a string format convered to GRIB filter keys
-    
-    keys = key_list(variables)
-    params = result_string(keys)
+    yesterday_18z_scan = (f"{PREFIX}gefs.{yd.strftime('%Y%m%d')}/18/atmos/pgrb2ap5/")
+    yesterday_12z_scan = (f"{PREFIX}gefs.{yd.strftime('%Y%m%d')}/12/atmos/pgrb2ap5/")
+    yesterday_06z_scan = (f"{PREFIX}gefs.{yd.strftime('%Y%m%d')}/06/atmos/pgrb2ap5/")
+    yesterday_00z_scan = (f"{PREFIX}gefs.{yd.strftime('%Y%m%d')}/00/atmos/pgrb2ap5/")
         
-    # Today's runs
-    today_18z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t18z.pgrb2a.0p50.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-    
-    today_12z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t12z.pgrb2a.0p50.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-    
-    today_06z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t06z.pgrb2a.0p50.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-    
-    today_00z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t00z.pgrb2a.0p50.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-    
-    # Yesterday's runs
-    yd_18z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t18z.pgrb2a.0p50.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-    
-    yd_12z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t12z.pgrb2a.0p50.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-    
-    yd_06z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t06z.pgrb2a.0p50.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-    
-    yd_00z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t00z.pgrb2a.0p50.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")    
-    
-
     # The filenames for the different run times
     f_18z = f"ge{aa}.t18z.pgrb2a.0p50.f{final_forecast_hour}"
     f_12z = f"ge{aa}.t12z.pgrb2a.0p50.f{final_forecast_hour}"
@@ -254,41 +218,57 @@ def gefs_0p50_url_scanner(cat,
     # This is if the user has proxy servers disabled
     if proxies == None:
         try:
-            t_18 = requests.get(f"{today_18z_scan}{f_18z}", stream=True)
+            t_18 = requests.get(f"{today_18z_scan}{f_18z}", 
+                                stream=True)
             t_18.close()
-            t_12 = requests.get(f"{today_12z_scan}{f_12z}", stream=True)
+            t_12 = requests.get(f"{today_12z_scan}{f_12z}", 
+                                stream=True)
             t_12.close()
-            t_06 = requests.get(f"{today_06z_scan}{f_06z}", stream=True)
+            t_06 = requests.get(f"{today_06z_scan}{f_06z}", 
+                                stream=True)
             t_06.close()
-            t_00 = requests.get(f"{today_00z_scan}{f_00z}", stream=True)
+            t_00 = requests.get(f"{today_00z_scan}{f_00z}", 
+                                stream=True)
             t_00.close()
-            y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", stream=True)
+            y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", 
+                                stream=True)
             y_18.close()
-            y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", stream=True)
+            y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", 
+                                stream=True)
             y_12.close()
-            y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", stream=True)
+            y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", 
+                                stream=True)
             y_06.close()
-            y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", stream=True)
+            y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", 
+                                stream=True)
             y_00.close()
         except Exception as e:
             for i in range(0, 10, 1):
                 time.sleep(30)
                 try:
-                    t_18 = requests.get(f"{today_18z_scan}{f_18z}", stream=True)
+                    t_18 = requests.get(f"{today_18z_scan}{f_18z}", 
+                                        stream=True)
                     t_18.close()
-                    t_12 = requests.get(f"{today_12z_scan}{f_12z}", stream=True)
+                    t_12 = requests.get(f"{today_12z_scan}{f_12z}", 
+                                        stream=True)
                     t_12.close()
-                    t_06 = requests.get(f"{today_06z_scan}{f_06z}", stream=True)
+                    t_06 = requests.get(f"{today_06z_scan}{f_06z}", 
+                                        stream=True)
                     t_06.close()
-                    t_00 = requests.get(f"{today_00z_scan}{f_00z}", stream=True)
+                    t_00 = requests.get(f"{today_00z_scan}{f_00z}", 
+                                        stream=True)
                     t_00.close()
-                    y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", stream=True)
+                    y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", 
+                                        stream=True)
                     y_18.close()
-                    y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", stream=True)
+                    y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", 
+                                        stream=True)
                     y_12.close()
-                    y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", stream=True)
+                    y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", 
+                                        stream=True)
                     y_06.close()
-                    y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", stream=True)
+                    y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", 
+                                        stream=True)
                     y_00.close()   
                     break
                 except Exception as e:
@@ -297,41 +277,73 @@ def gefs_0p50_url_scanner(cat,
     # This is if the user has a VPN/Proxy Server connection enabled
     else:
         try:
-            t_18 = requests.get(f"{today_18z_scan}{f_18z}", stream=True, proxies=proxies)
+            t_18 = requests.get(f"{today_18z_scan}{f_18z}", 
+                                stream=True, 
+                                proxies=proxies)
             t_18.close()
-            t_12 = requests.get(f"{today_12z_scan}{f_12z}", stream=True, proxies=proxies)
+            t_12 = requests.get(f"{today_12z_scan}{f_12z}", 
+                                stream=True, 
+                                proxies=proxies)
             t_12.close()
-            t_06 = requests.get(f"{today_06z_scan}{f_06z}", stream=True, proxies=proxies)
+            t_06 = requests.get(f"{today_06z_scan}{f_06z}", 
+                                stream=True, 
+                                proxies=proxies)
             t_06.close()
-            t_00 = requests.get(f"{today_00z_scan}{f_00z}", stream=True, proxies=proxies)
+            t_00 = requests.get(f"{today_00z_scan}{f_00z}", 
+                                stream=True, 
+                                proxies=proxies)
             t_00.close()
-            y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", stream=True, proxies=proxies)
+            y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", 
+                                stream=True, 
+                                proxies=proxies)
             y_18.close()
-            y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", stream=True, proxies=proxies)
+            y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", 
+                                stream=True, 
+                                proxies=proxies)
             y_12.close()
-            y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", stream=True, proxies=proxies)
+            y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", 
+                                stream=True, 
+                                proxies=proxies)
             y_06.close()
-            y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", stream=True, proxies=proxies)
+            y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", 
+                                stream=True, 
+                                proxies=proxies)
             y_00.close()
         except Exception as e:
             for i in range(0, 10, 1):
                 time.sleep(30)
                 try:
-                    t_18 = requests.get(f"{today_18z_scan}{f_18z}", stream=True, proxies=proxies)
+                    t_18 = requests.get(f"{today_18z_scan}{f_18z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     t_18.close()
-                    t_12 = requests.get(f"{today_12z_scan}{f_12z}", stream=True, proxies=proxies)
+                    t_12 = requests.get(f"{today_12z_scan}{f_12z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     t_12.close()
-                    t_06 = requests.get(f"{today_06z_scan}{f_06z}", stream=True, proxies=proxies)
+                    t_06 = requests.get(f"{today_06z_scan}{f_06z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     t_06.close()
-                    t_00 = requests.get(f"{today_00z_scan}{f_00z}", stream=True, proxies=proxies)
+                    t_00 = requests.get(f"{today_00z_scan}{f_00z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     t_00.close()
-                    y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", stream=True, proxies=proxies)
+                    y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     y_18.close()
-                    y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", stream=True, proxies=proxies)
+                    y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     y_12.close()
-                    y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", stream=True, proxies=proxies)
+                    y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     y_06.close()
-                    y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", stream=True, proxies=proxies)
+                    y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     y_00.close()   
                     break
                 except Exception as e:
@@ -340,14 +352,14 @@ def gefs_0p50_url_scanner(cat,
     # Creates a list of URLs and URL responses to loop through when checking
     
     urls = [
-        today_18z,
-        today_12z,
-        today_06z,
-        today_00z,
-        yd_18z,
-        yd_12z,
-        yd_06z,
-        yd_18z
+        today_18z_scan,
+        today_12z_scan,
+        today_06z_scan,
+        today_00z_scan,
+        yesterday_18z_scan,
+        yesterday_12z_scan,
+        yesterday_06z_scan,
+        yesterday_00z_scan
     ]
     
     responses = [
@@ -361,11 +373,23 @@ def gefs_0p50_url_scanner(cat,
         y_00
     ]
     
+    filenames = [
+        f_18z,
+        f_12z,
+        f_06z,
+        f_00z,
+        f_18z,
+        f_12z,
+        f_06z,
+        f_00z
+    ]
+    
     # Testing the status code and then returning the first link with a status code of 200
-    for response, url in zip(responses, urls):
+    for response, url, filename in zip(responses, urls, filenames):
         if response.status_code == 200:
             url = url
-            run = int(f"{url[121]}{url[122]}")
+            run = int(f"{url[-18]}{url[-17]}")
+            filename = filename
             break        
     
     try:
@@ -374,545 +398,14 @@ def gefs_0p50_url_scanner(cat,
         print(f"Latest forecast data is over 24 hours old. Aborting.....")
         sys.exit(1)
     
-    if step == 6:
-        if int(final_forecast_hour) > 100:
-            step = 6
-            stop = 96 + step
-            start = 102
-        else:
-            step = 6
-            stop = int(final_forecast_hour) + step
-    elif step == 3:
-        if int(final_forecast_hour) > 100:
-            step = 3
-            stop = 99 + step
-            start = 102
-        else:
-            step = 3
-            stop = int(final_forecast_hour) + step
-    else:
-        print("ERROR! User entered an invalid step value\nDefaulting to 6 hourly.")
-        if int(final_forecast_hour) > 100:
-            step = 6
-            stop = 96 + step
-            start = 102
-        else:
-            step = 6
-            stop = int(final_forecast_hour) + step
-        
-        
-    urls = []
-    
-    if cat != 'members':
-    
-        if url == today_18z:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t18z.pgrb2a.0p50.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t18z.pgrb2a.0p50.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                urls.append(url)
-                    
-            if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t18z.pgrb2a.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                    
-            if int(final_forecast_hour) > 240:
-                for i in range(start, int(final_forecast_hour) + 6, 6):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t18z.pgrb2a.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                        
-        elif url == today_12z:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t12z.pgrb2a.0p50.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t12z.pgrb2a.0p50.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                urls.append(url)
-                    
-            if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t12z.pgrb2a.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                    
-            if int(final_forecast_hour) > 240:
-                for i in range(start, int(final_forecast_hour) + 6, 6):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t12z.pgrb2a.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                        
-        elif url == today_06z:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t06z.pgrb2a.0p50.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t06z.pgrb2a.0p50.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                urls.append(url)
-                    
-            if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t06z.pgrb2a.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                    
-            if int(final_forecast_hour) > 240:
-                for i in range(start, int(final_forecast_hour) + 6, 6):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t06z.pgrb2a.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                        
-        elif url == today_00z:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t00z.pgrb2a.0p50.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t00z.pgrb2a.0p50.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                urls.append(url)
-                    
-            if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t00z.pgrb2a.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                    
-            if int(final_forecast_hour) > 240:
-                for i in range(start, int(final_forecast_hour) + 6, 6):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t00z.pgrb2a.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                        
-        elif url == yd_18z:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t18z.pgrb2a.0p50.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t18z.pgrb2a.0p50.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                    
-            if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t18z.pgrb2a.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                    
-            if int(final_forecast_hour) > 240:
-                for i in range(start, int(final_forecast_hour) + 6, 6):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t18z.pgrb2a.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                        
-        elif url == yd_12z:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t12z.pgrb2a.0p50.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t12z.pgrb2a.0p50.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                urls.append(url)
-                    
-            if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t12z.pgrb2a.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                    
-            if int(final_forecast_hour) > 240:
-                for i in range(start, int(final_forecast_hour) + 6, 6):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t12z.pgrb2a.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                        
-        elif url == yd_06z:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t06z.pgrb2a.0p50.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t06z.pgrb2a.0p50.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                urls.append(url)
-                    
-            if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t06z.pgrb2a.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                    
-            if int(final_forecast_hour) > 240:
-                for i in range(start, int(final_forecast_hour) + 6, 6):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t06z.pgrb2a.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                        
-        else:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t00z.pgrb2a.0p50.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t00z.pgrb2a.0p50.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                urls.append(url)
-                    
-            if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t00z.pgrb2a.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                    
-            if int(final_forecast_hour) > 240:
-                for i in range(start, int(final_forecast_hour) + 6, 6):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t00z.pgrb2a.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-        
-    else:
-        if url == today_18z:
-            for aa in m:
-                for i in range(0, stop, step):
-                    if i < 10:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t18z.pgrb2a.0p50.f00{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    else:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t18z.pgrb2a.0p50.f0{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                    urls.append(url)  
-                if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                                f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t18z.pgrb2a.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-                if int(final_forecast_hour) > 240:
-                    for i in range(start, int(final_forecast_hour) + 6, 6):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                                f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t18z.pgrb2a.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-        elif url == today_12z:
-            for aa in m:
-                for i in range(0, stop, step):
-                    if i < 10:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t12z.pgrb2a.0p50.f00{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    else:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t12z.pgrb2a.0p50.f0{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                    urls.append(url)
-                    
-                if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                                f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t12z.pgrb2a.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-                if int(final_forecast_hour) > 240:
-                    for i in range(start, int(final_forecast_hour) + 6, 6):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                                f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t12z.pgrb2a.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-        elif url == today_06z:
-            for aa in m:
-                for i in range(0, stop, step):
-                    if i < 10:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t06z.pgrb2a.0p50.f00{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    else:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t06z.pgrb2a.0p50.f0{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                    urls.append(url)
-                    
-                if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                                f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t06z.pgrb2a.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-                if int(final_forecast_hour) > 240:
-                    for i in range(start, int(final_forecast_hour) + 6, 6):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                                f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t06z.pgrb2a.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-        elif url == today_00z:
-            for aa in m:
-                for i in range(0, stop, step):
-                    if i < 10:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t00z.pgrb2a.0p50.f00{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    else:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t00z.pgrb2a.0p50.f0{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                    urls.append(url)
-                    
-                if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                                f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t00z.pgrb2a.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-                if int(final_forecast_hour) > 240:
-                    for i in range(start, int(final_forecast_hour) + 6, 6):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                                f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t00z.pgrb2a.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-        elif url == yd_18z:
-            for aa in m:
-                for i in range(0, stop, step):
-                    if i < 10:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t18z.pgrb2a.0p50.f00{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    else:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t18z.pgrb2a.0p50.f0{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                    urls.append(url)
-                    
-                if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t18z.pgrb2a.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-                if int(final_forecast_hour) > 240:
-                    for i in range(start, int(final_forecast_hour) + 6, 6):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t18z.pgrb2a.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-        elif url == yd_12z:
-                for i in range(0, stop, step):
-                    for aa in m:
-                        if i < 10:
-                            url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t12z.pgrb2a.0p50.f00{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        else:
-                            url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t12z.pgrb2a.0p50.f0{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                            
-                        urls.append(url)
-                    
-                if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        for aa in m:
-                            url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                                    f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t12z.pgrb2a.0p50.f{i}{params}&"
-                                    f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                            
-                            urls.append(url)
-                            
-                if int(final_forecast_hour) > 240:
-                    for i in range(start, int(final_forecast_hour) + 6, 6):
-                        for aa in m:
-                            url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                                    f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t12z.pgrb2a.0p50.f{i}{params}&"
-                                    f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                            
-                            urls.append(url)
-                        
-        elif url == yd_06z:
-            for aa in m:
-                for i in range(0, stop, step):
-                        if i < 10:
-                            url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t06z.pgrb2a.0p50.f00{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        else:
-                            url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t06z.pgrb2a.0p50.f0{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                            
-                        urls.append(url)
-                    
-                if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t06z.pgrb2a.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-                if int(final_forecast_hour) > 240:
-                    for i in range(start, int(final_forecast_hour) + 6, 6):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t06z.pgrb2a.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-        else:
-            for aa in m:
-                for i in range(0, stop, step):
-                    if i < 10:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t00z.pgrb2a.0p50.f00{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    else:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t00z.pgrb2a.0p50.f0{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                    urls.append(url)
-                    
-                if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t00z.pgrb2a.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-                if int(final_forecast_hour) > 240:
-                    for i in range(start, int(final_forecast_hour) + 6, 6):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50a.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2ap5&file=ge{aa}.t00z.pgrb2a.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-        
-    # Extract the filename
-    # Parse the URL
-    filenames = []
-    for url in urls:
-        
-        parsed_url = urlparse(url)
-
-        # Extract the query string
-        query_string = parsed_url.query
-
-        # Parse the query string into a dictionary of parameters
-        query_params = parse_qs(query_string)
-
-        # Access individual parameters
-        filename = query_params.get('file', [''])[0] 
-        
-        filenames.append(filename)
-        
-    
-    return urls, filenames, run
+    return url, filename, run
 
 
 def gefs_0p50_secondary_parameters_url_scanner(cat, 
-                          final_forecast_hour, 
-                          western_bound, 
-                          eastern_bound, 
-                          northern_bound, 
-                          southern_bound, 
-                          proxies, 
-                          step, 
-                          members,
-                          variables):
+                                                final_forecast_hour, 
+                                                proxies, 
+                                                members,
+                                                source):
     
     
     """
@@ -1039,11 +532,15 @@ def gefs_0p50_secondary_parameters_url_scanner(cat,
     
     The model runtime, download URL and server response code.        
     """
-    # Makes the category all lower case for consistency
     cat = cat.lower()
     
-    # Converts the longitude from -180 to 180 into 0 to 360
-    western_bound, eastern_bound = convert_lon(western_bound, eastern_bound)
+    source = source.lower()
+    if source == 'noaa':
+        PREFIX = NCEP_NOMADS_PREFIX
+    elif source == 'aws':
+        PREFIX = AMAZON_AWS_PREFIX
+    else:
+        PREFIX = GOOGLE_CLOUD_PREFIX
     
     m = []
     for member in members:
@@ -1089,56 +586,16 @@ def gefs_0p50_secondary_parameters_url_scanner(cat,
     
     # URLs to scan for the latest file
     
-    today_18z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{now.strftime('%Y%m%d')}/18/atmos/pgrb2bp5/")
-    today_12z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{now.strftime('%Y%m%d')}/12/atmos/pgrb2bp5/")
-    today_06z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{now.strftime('%Y%m%d')}/06/atmos/pgrb2bp5/")
-    today_00z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{now.strftime('%Y%m%d')}/00/atmos/pgrb2bp5/")
+    today_18z_scan = (f"{PREFIX}gefs.{now.strftime('%Y%m%d')}/18/atmos/pgrb2bp5/")
+    today_12z_scan = (f"{PREFIX}gefs.{now.strftime('%Y%m%d')}/12/atmos/pgrb2bp5/")
+    today_06z_scan = (f"{PREFIX}gefs.{now.strftime('%Y%m%d')}/06/atmos/pgrb2bp5/")
+    today_00z_scan = (f"{PREFIX}gefs.{now.strftime('%Y%m%d')}/00/atmos/pgrb2bp5/")
     
-    yesterday_18z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{yd.strftime('%Y%m%d')}/18/atmos/pgrb2bp5/")
-    yesterday_12z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{yd.strftime('%Y%m%d')}/12/atmos/pgrb2bp5/")
-    yesterday_06z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{yd.strftime('%Y%m%d')}/06/atmos/pgrb2bp5/")
-    yesterday_00z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{yd.strftime('%Y%m%d')}/00/atmos/pgrb2bp5/")
+    yesterday_18z_scan = (f"{PREFIX}gefs.{yd.strftime('%Y%m%d')}/18/atmos/pgrb2bp5/")
+    yesterday_12z_scan = (f"{PREFIX}gefs.{yd.strftime('%Y%m%d')}/12/atmos/pgrb2bp5/")
+    yesterday_06z_scan = (f"{PREFIX}gefs.{yd.strftime('%Y%m%d')}/06/atmos/pgrb2bp5/")
+    yesterday_00z_scan = (f"{PREFIX}gefs.{yd.strftime('%Y%m%d')}/00/atmos/pgrb2bp5/")
         
-    # Gets the variable list in a string format convered to GRIB filter keys
-    
-    keys = key_list(variables)
-    params = result_string(keys)        
-
-    # Today's runs
-    today_18z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t18z.pgrb2b.0p50.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-    
-    today_12z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t12z.pgrb2b.0p50.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-    
-    today_06z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t06z.pgrb2b.0p50.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-    
-    today_00z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t00z.pgrb2b.0p50.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-    
-    # Yesterday's runs
-    yd_18z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t18z.pgrb2b.0p50.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-    
-    yd_12z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t12z.pgrb2b.0p50.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-    
-    yd_06z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t06z.pgrb2b.0p50.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-    
-    yd_00z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t00z.pgrb2b.0p50.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")    
-    
-
     # The filenames for the different run times
     f_18z = f"ge{aa}.t18z.pgrb2b.0p50.f{final_forecast_hour}"
     f_12z = f"ge{aa}.t12z.pgrb2b.0p50.f{final_forecast_hour}"
@@ -1151,41 +608,57 @@ def gefs_0p50_secondary_parameters_url_scanner(cat,
     # This is if the user has proxy servers disabled
     if proxies == None:
         try:
-            t_18 = requests.get(f"{today_18z_scan}{f_18z}", stream=True)
+            t_18 = requests.get(f"{today_18z_scan}{f_18z}", 
+                                stream=True)
             t_18.close()
-            t_12 = requests.get(f"{today_12z_scan}{f_12z}", stream=True)
+            t_12 = requests.get(f"{today_12z_scan}{f_12z}", 
+                                stream=True)
             t_12.close()
-            t_06 = requests.get(f"{today_06z_scan}{f_06z}", stream=True)
+            t_06 = requests.get(f"{today_06z_scan}{f_06z}", 
+                                stream=True)
             t_06.close()
-            t_00 = requests.get(f"{today_00z_scan}{f_00z}", stream=True)
+            t_00 = requests.get(f"{today_00z_scan}{f_00z}", 
+                                stream=True)
             t_00.close()
-            y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", stream=True)
+            y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", 
+                                stream=True)
             y_18.close()
-            y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", stream=True)
+            y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", 
+                                stream=True)
             y_12.close()
-            y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", stream=True)
+            y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", 
+                                stream=True)
             y_06.close()
-            y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", stream=True)
+            y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", 
+                                stream=True)
             y_00.close()
         except Exception as e:
             for i in range(0, 10, 1):
                 time.sleep(30)
                 try:
-                    t_18 = requests.get(f"{today_18z_scan}{f_18z}", stream=True)
+                    t_18 = requests.get(f"{today_18z_scan}{f_18z}", 
+                                        stream=True)
                     t_18.close()
-                    t_12 = requests.get(f"{today_12z_scan}{f_12z}", stream=True)
+                    t_12 = requests.get(f"{today_12z_scan}{f_12z}", 
+                                        stream=True)
                     t_12.close()
-                    t_06 = requests.get(f"{today_06z_scan}{f_06z}", stream=True)
+                    t_06 = requests.get(f"{today_06z_scan}{f_06z}", 
+                                        stream=True)
                     t_06.close()
-                    t_00 = requests.get(f"{today_00z_scan}{f_00z}", stream=True)
+                    t_00 = requests.get(f"{today_00z_scan}{f_00z}", 
+                                        stream=True)
                     t_00.close()
-                    y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", stream=True)
+                    y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", 
+                                        stream=True)
                     y_18.close()
-                    y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", stream=True)
+                    y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", 
+                                        stream=True)
                     y_12.close()
-                    y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", stream=True)
+                    y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", 
+                                        stream=True)
                     y_06.close()
-                    y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", stream=True)
+                    y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", 
+                                        stream=True)
                     y_00.close()   
                     break
                 except Exception as e:
@@ -1194,41 +667,73 @@ def gefs_0p50_secondary_parameters_url_scanner(cat,
     # This is if the user has a VPN/Proxy Server connection enabled
     else:
         try:
-            t_18 = requests.get(f"{today_18z_scan}{f_18z}", stream=True, proxies=proxies)
+            t_18 = requests.get(f"{today_18z_scan}{f_18z}", 
+                                stream=True, 
+                                proxies=proxies)
             t_18.close()
-            t_12 = requests.get(f"{today_12z_scan}{f_12z}", stream=True, proxies=proxies)
+            t_12 = requests.get(f"{today_12z_scan}{f_12z}", 
+                                stream=True, 
+                                proxies=proxies)
             t_12.close()
-            t_06 = requests.get(f"{today_06z_scan}{f_06z}", stream=True, proxies=proxies)
+            t_06 = requests.get(f"{today_06z_scan}{f_06z}", 
+                                stream=True, 
+                                proxies=proxies)
             t_06.close()
-            t_00 = requests.get(f"{today_00z_scan}{f_00z}", stream=True, proxies=proxies)
+            t_00 = requests.get(f"{today_00z_scan}{f_00z}", 
+                                stream=True, 
+                                proxies=proxies)
             t_00.close()
-            y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", stream=True, proxies=proxies)
+            y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", 
+                                stream=True, 
+                                proxies=proxies)
             y_18.close()
-            y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", stream=True, proxies=proxies)
+            y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", 
+                                stream=True, 
+                                proxies=proxies)
             y_12.close()
-            y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", stream=True, proxies=proxies)
+            y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", 
+                                stream=True, 
+                                proxies=proxies)
             y_06.close()
-            y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", stream=True, proxies=proxies)
+            y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", 
+                                stream=True, 
+                                proxies=proxies)
             y_00.close()
         except Exception as e:
             for i in range(0, 10, 1):
                 time.sleep(30)
                 try:
-                    t_18 = requests.get(f"{today_18z_scan}{f_18z}", stream=True, proxies=proxies)
+                    t_18 = requests.get(f"{today_18z_scan}{f_18z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     t_18.close()
-                    t_12 = requests.get(f"{today_12z_scan}{f_12z}", stream=True, proxies=proxies)
+                    t_12 = requests.get(f"{today_12z_scan}{f_12z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     t_12.close()
-                    t_06 = requests.get(f"{today_06z_scan}{f_06z}", stream=True, proxies=proxies)
+                    t_06 = requests.get(f"{today_06z_scan}{f_06z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     t_06.close()
-                    t_00 = requests.get(f"{today_00z_scan}{f_00z}", stream=True, proxies=proxies)
+                    t_00 = requests.get(f"{today_00z_scan}{f_00z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     t_00.close()
-                    y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", stream=True, proxies=proxies)
+                    y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     y_18.close()
-                    y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", stream=True, proxies=proxies)
+                    y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     y_12.close()
-                    y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", stream=True, proxies=proxies)
+                    y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     y_06.close()
-                    y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", stream=True, proxies=proxies)
+                    y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     y_00.close()   
                     break
                 except Exception as e:
@@ -1237,14 +742,14 @@ def gefs_0p50_secondary_parameters_url_scanner(cat,
     # Creates a list of URLs and URL responses to loop through when checking
     
     urls = [
-        today_18z,
-        today_12z,
-        today_06z,
-        today_00z,
-        yd_18z,
-        yd_12z,
-        yd_06z,
-        yd_18z
+        today_18z_scan,
+        today_12z_scan,
+        today_06z_scan,
+        today_00z_scan,
+        yesterday_18z_scan,
+        yesterday_12z_scan,
+        yesterday_06z_scan,
+        yesterday_00z_scan
     ]
     
     responses = [
@@ -1258,11 +763,23 @@ def gefs_0p50_secondary_parameters_url_scanner(cat,
         y_00
     ]
     
+    filenames = [
+        f_18z,
+        f_12z,
+        f_06z,
+        f_00z,
+        f_18z,
+        f_12z,
+        f_06z,
+        f_00z
+    ]
+    
     # Testing the status code and then returning the first link with a status code of 200
-    for response, url in zip(responses, urls):
+    for response, url, filename in zip(responses, urls, filenames):
         if response.status_code == 200:
             url = url
-            run = int(f"{url[121]}{url[122]}")
+            filename = filename
+            run = int(f"{url[-18]}{url[-17]}")
             break      
     
     try:
@@ -1271,545 +788,16 @@ def gefs_0p50_secondary_parameters_url_scanner(cat,
         print(f"Latest forecast data is over 24 hours old. Aborting.....")
         sys.exit(1)
     
-    if step == 6:
-        if int(final_forecast_hour) > 100:
-            step = 6
-            stop = 96 + step
-            start = 102
-        else:
-            step = 6
-            stop = int(final_forecast_hour) + step
-    elif step == 3:
-        if int(final_forecast_hour) > 100:
-            step = 3
-            stop = 99 + step
-            start = 102
-        else:
-            step = 3
-            stop = int(final_forecast_hour) + step
-    else:
-        print("ERROR! User entered an invalid step value\nDefaulting to 6 hourly.")
-        if int(final_forecast_hour) > 100:
-            step = 6
-            stop = 96 + step
-            start = 102
-        else:
-            step = 6
-            stop = int(final_forecast_hour) + step
-        
-        
-    urls = []
-    
-    if cat != 'members' and cat != 'mean' and cat != 'spread':
-    
-        if url == today_18z:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t18z.pgrb2b.0p50.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t18z.pgrb2b.0p50.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                urls.append(url)
-                    
-            if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t18z.pgrb2b.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                    
-            if int(final_forecast_hour) > 240:
-                for i in range(start, int(final_forecast_hour) + 6, 6):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t18z.pgrb2b.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                        
-        elif url == today_12z:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t12z.pgrb2b.0p50.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t12z.pgrb2b.0p50.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                urls.append(url)
-                    
-            if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t12z.pgrb2b.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                    
-            if int(final_forecast_hour) > 240:
-                for i in range(start, int(final_forecast_hour) + 6, 6):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t12z.pgrb2b.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                        
-        elif url == today_06z:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t06z.pgrb2b.0p50.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t06z.pgrb2b.0p50.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                urls.append(url)
-                    
-            if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t06z.pgrb2b.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                    
-            if int(final_forecast_hour) > 240:
-                for i in range(start, int(final_forecast_hour) + 6, 6):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t06z.pgrb2b.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                        
-        elif url == today_00z:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t00z.pgrb2b.0p50.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t00z.pgrb2b.0p50.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                urls.append(url)
-                    
-            if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t00z.pgrb2b.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                    
-            if int(final_forecast_hour) > 240:
-                for i in range(start, int(final_forecast_hour) + 6, 6):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t00z.pgrb2b.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                        
-        elif url == yd_18z:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t18z.pgrb2b.0p50.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t18z.pgrb2b.0p50.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                    
-            if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t18z.pgrb2b.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                    
-            if int(final_forecast_hour) > 240:
-                for i in range(start, int(final_forecast_hour) + 6, 6):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t18z.pgrb2b.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                        
-        elif url == yd_12z:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t12z.pgrb2b.0p50.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t12z.pgrb2b.0p50.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                urls.append(url)
-                    
-            if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t12z.pgrb2b.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                    
-            if int(final_forecast_hour) > 240:
-                for i in range(start, int(final_forecast_hour) + 6, 6):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t12z.pgrb2b.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                        
-        elif url == yd_06z:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t06z.pgrb2b.0p50.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t06z.pgrb2b.0p50.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                urls.append(url)
-                    
-            if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t06z.pgrb2b.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                    
-            if int(final_forecast_hour) > 240:
-                for i in range(start, int(final_forecast_hour) + 6, 6):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t06z.pgrb2b.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                        
-        else:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t00z.pgrb2b.0p50.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t00z.pgrb2b.0p50.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                urls.append(url)
-                    
-            if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t00z.pgrb2b.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                    
-            if int(final_forecast_hour) > 240:
-                for i in range(start, int(final_forecast_hour) + 6, 6):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t00z.pgrb2b.0p50.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-        
-    else:
-        if url == today_18z:
-            for aa in m:
-                for i in range(0, stop, step):
-                    if i < 10:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t18z.pgrb2b.0p50.f00{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    else:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t18z.pgrb2b.0p50.f0{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                    urls.append(url)  
-                if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                                f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t18z.pgrb2b.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-                if int(final_forecast_hour) > 240:
-                    for i in range(start, int(final_forecast_hour) + 6, 6):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                                f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t18z.pgrb2b.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-        elif url == today_12z:
-            for aa in m:
-                for i in range(0, stop, step):
-                    if i < 10:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t12z.pgrb2b.0p50.f00{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    else:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t12z.pgrb2b.0p50.f0{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                    urls.append(url)
-                    
-                if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                                f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t12z.pgrb2b.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-                if int(final_forecast_hour) > 240:
-                    for i in range(start, int(final_forecast_hour) + 6, 6):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                                f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t12z.pgrb2b.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-        elif url == today_06z:
-            for aa in m:
-                for i in range(0, stop, step):
-                    if i < 10:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t06z.pgrb2b.0p50.f00{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    else:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t06z.pgrb2b.0p50.f0{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                    urls.append(url)
-                    
-                if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                                f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t06z.pgrb2b.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-                if int(final_forecast_hour) > 240:
-                    for i in range(start, int(final_forecast_hour) + 6, 6):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                                f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t06z.pgrb2b.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-        elif url == today_00z:
-            for aa in m:
-                for i in range(0, stop, step):
-                    if i < 10:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t00z.pgrb2b.0p50.f00{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    else:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t00z.pgrb2b.0p50.f0{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                    urls.append(url)
-                    
-                if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                                f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t00z.pgrb2b.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-                if int(final_forecast_hour) > 240:
-                    for i in range(start, int(final_forecast_hour) + 6, 6):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                                f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t00z.pgrb2b.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-        elif url == yd_18z:
-            for aa in m:
-                for i in range(0, stop, step):
-                    if i < 10:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t18z.pgrb2b.0p50.f00{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    else:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t18z.pgrb2b.0p50.f0{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                    urls.append(url)
-                    
-                if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t18z.pgrb2b.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-                if int(final_forecast_hour) > 240:
-                    for i in range(start, int(final_forecast_hour) + 6, 6):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t18z.pgrb2b.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-        elif url == yd_12z:
-                for i in range(0, stop, step):
-                    for aa in m:
-                        if i < 10:
-                            url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t12z.pgrb2b.0p50.f00{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        else:
-                            url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t12z.pgrb2b.0p50.f0{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                            
-                        urls.append(url)
-                    
-                if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        for aa in m:
-                            url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                                    f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t12z.pgrb2b.0p50.f{i}{params}&"
-                                    f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                            
-                            urls.append(url)
-                            
-                if int(final_forecast_hour) > 240:
-                    for i in range(start, int(final_forecast_hour) + 6, 6):
-                        for aa in m:
-                            url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                                    f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t12z.pgrb2b.0p50.f{i}{params}&"
-                                    f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                            
-                            urls.append(url)
-                        
-        elif url == yd_06z:
-            for aa in m:
-                for i in range(0, stop, step):
-                        if i < 10:
-                            url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t06z.pgrb2b.0p50.f00{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        else:
-                            url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t06z.pgrb2b.0p50.f0{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                            
-                        urls.append(url)
-                    
-                if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t06z.pgrb2b.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-                if int(final_forecast_hour) > 240:
-                    for i in range(start, int(final_forecast_hour) + 6, 6):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t06z.pgrb2b.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-        else:
-            for aa in m:
-                for i in range(0, stop, step):
-                    if i < 10:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t00z.pgrb2b.0p50.f00{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    else:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t00z.pgrb2b.0p50.f0{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                    urls.append(url)
-                    
-                if int(final_forecast_hour) > 100 and int(final_forecast_hour) <= 240:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t00z.pgrb2b.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-                if int(final_forecast_hour) > 240:
-                    for i in range(start, int(final_forecast_hour) + 6, 6):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p50b.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2bp5&file=ge{aa}.t00z.pgrb2b.0p50.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-        
-    # Extract the filename
-    # Parse the URL
-    filenames = []
-    for url in urls:
-        
-        parsed_url = urlparse(url)
 
-        # Extract the query string
-        query_string = parsed_url.query
-
-        # Parse the query string into a dictionary of parameters
-        query_params = parse_qs(query_string)
-
-        # Access individual parameters
-        filename = query_params.get('file', [''])[0] 
-        
-        filenames.append(filename)
-        
     
-    return urls, filenames, run
+    return url, filename, run
             
 
 def gefs_0p25_url_scanner(cat, 
-                          final_forecast_hour, 
-                          western_bound, 
-                          eastern_bound, 
-                          northern_bound, 
-                          southern_bound, 
-                          proxies, 
-                          step, 
-                          members,
-                          variables):
+                        final_forecast_hour, 
+                        proxies, 
+                        members,
+                        source):
     
     
     """
@@ -1894,11 +882,15 @@ def gefs_0p25_url_scanner(cat,
     
     The model runtime, download URL and server response code.    
     """
-    # Makes the category all lower case for consistency
     cat = cat.lower()
     
-    # Converts the longitude from -180 to 180 into 0 to 360
-    western_bound, eastern_bound = convert_lon(western_bound, eastern_bound)
+    source = source.lower()
+    if source == 'noaa':
+        PREFIX = NCEP_NOMADS_PREFIX
+    elif source == 'aws':
+        PREFIX = AMAZON_AWS_PREFIX
+    else:
+        PREFIX = GOOGLE_CLOUD_PREFIX
     
     m = []
     for member in members:
@@ -1949,56 +941,16 @@ def gefs_0p25_url_scanner(cat,
     # These are the different download URLs for the various runtimes in the past 24 hours
     
     # URLs to scan for the latest file
-    today_18z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{now.strftime('%Y%m%d')}/18/atmos/pgrb2sp25/")
-    today_12z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{now.strftime('%Y%m%d')}/12/atmos/pgrb2sp25/")
-    today_06z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{now.strftime('%Y%m%d')}/06/atmos/pgrb2sp25/")
-    today_00z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{now.strftime('%Y%m%d')}/00/atmos/pgrb2sp25/")
+    today_18z_scan = (f"{PREFIX}gefs.{now.strftime('%Y%m%d')}/18/atmos/pgrb2sp25/")
+    today_12z_scan = (f"{PREFIX}gefs.{now.strftime('%Y%m%d')}/12/atmos/pgrb2sp25/")
+    today_06z_scan = (f"{PREFIX}gefs.{now.strftime('%Y%m%d')}/06/atmos/pgrb2sp25/")
+    today_00z_scan = (f"{PREFIX}gefs.{now.strftime('%Y%m%d')}/00/atmos/pgrb2sp25/")
     
-    yesterday_18z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{yd.strftime('%Y%m%d')}/18/atmos/pgrb2sp25/")
-    yesterday_12z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{yd.strftime('%Y%m%d')}/12/atmos/pgrb2sp25/")
-    yesterday_06z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{yd.strftime('%Y%m%d')}/06/atmos/pgrb2sp25/")
-    yesterday_00z_scan = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.{yd.strftime('%Y%m%d')}/00/atmos/pgrb2sp25/")
+    yesterday_18z_scan = (f"{PREFIX}gefs.{yd.strftime('%Y%m%d')}/18/atmos/pgrb2sp25/")
+    yesterday_12z_scan = (f"{PREFIX}gefs.{yd.strftime('%Y%m%d')}/12/atmos/pgrb2sp25/")
+    yesterday_06z_scan = (f"{PREFIX}gefs.{yd.strftime('%Y%m%d')}/06/atmos/pgrb2sp25/")
+    yesterday_00z_scan = (f"{PREFIX}gefs.{yd.strftime('%Y%m%d')}/00/atmos/pgrb2sp25/")
     
-    # Gets the variable list in a string format convered to GRIB filter keys
-    
-    keys = key_list(variables)
-    params = result_string(keys)
-        
-    # Today's runs
-    today_18z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t18z.pgrb2s.0p25.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-    
-    today_12z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t12z.pgrb2s.0p25.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-    
-    today_06z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t06z.pgrb2s.0p25.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-    
-    today_00z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t00z.pgrb2s.0p25.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-    
-    # Yesterday's runs
-    yd_18z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t18z.pgrb2s.0p25.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-    
-    yd_12z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t12z.pgrb2s.0p25.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-    
-    yd_06z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t06z.pgrb2s.0p25.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-    
-    yd_00z = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t00z.pgrb2s.0p25.f{final_forecast_hour}{params}&"
-        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")    
-    
-
     # The filenames for the different run times
     f_18z = f"ge{aa}.t18z.pgrb2s.0p25.f{final_forecast_hour}"
     f_12z = f"ge{aa}.t12z.pgrb2s.0p25.f{final_forecast_hour}"
@@ -2011,41 +963,57 @@ def gefs_0p25_url_scanner(cat,
     # This is if the user has proxy servers disabled
     if proxies == None:
         try:
-            t_18 = requests.get(f"{today_18z_scan}{f_18z}", stream=True)
+            t_18 = requests.get(f"{today_18z_scan}{f_18z}", 
+                                stream=True)
             t_18.close()
-            t_12 = requests.get(f"{today_12z_scan}{f_12z}", stream=True)
+            t_12 = requests.get(f"{today_12z_scan}{f_12z}", 
+                                stream=True)
             t_12.close()
-            t_06 = requests.get(f"{today_06z_scan}{f_06z}", stream=True)
+            t_06 = requests.get(f"{today_06z_scan}{f_06z}", 
+                                stream=True)
             t_06.close()
-            t_00 = requests.get(f"{today_00z_scan}{f_00z}", stream=True)
+            t_00 = requests.get(f"{today_00z_scan}{f_00z}", 
+                                stream=True)
             t_00.close()
-            y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", stream=True)
+            y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", 
+                                stream=True)
             y_18.close()
-            y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", stream=True)
+            y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", 
+                                stream=True)
             y_12.close()
-            y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", stream=True)
+            y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", 
+                                stream=True)
             y_06.close()
-            y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", stream=True)
+            y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", 
+                                stream=True)
             y_00.close()
         except Exception as e:
             for i in range(0, 10, 1):
                 time.sleep(30)
                 try:
-                    t_18 = requests.get(f"{today_18z_scan}{f_18z}", stream=True)
+                    t_18 = requests.get(f"{today_18z_scan}{f_18z}", 
+                                        stream=True)
                     t_18.close()
-                    t_12 = requests.get(f"{today_12z_scan}{f_12z}", stream=True)
+                    t_12 = requests.get(f"{today_12z_scan}{f_12z}", 
+                                        stream=True)
                     t_12.close()
-                    t_06 = requests.get(f"{today_06z_scan}{f_06z}", stream=True)
+                    t_06 = requests.get(f"{today_06z_scan}{f_06z}", 
+                                        stream=True)
                     t_06.close()
-                    t_00 = requests.get(f"{today_00z_scan}{f_00z}", stream=True)
+                    t_00 = requests.get(f"{today_00z_scan}{f_00z}", 
+                                        stream=True)
                     t_00.close()
-                    y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", stream=True)
+                    y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", 
+                                        stream=True)
                     y_18.close()
-                    y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", stream=True)
+                    y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", 
+                                        stream=True)
                     y_12.close()
-                    y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", stream=True)
+                    y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", 
+                                        stream=True)
                     y_06.close()
-                    y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", stream=True)
+                    y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", 
+                                        stream=True)
                     y_00.close()   
                     break
                 except Exception as e:
@@ -2054,41 +1022,73 @@ def gefs_0p25_url_scanner(cat,
     # This is if the user has a VPN/Proxy Server connection enabled
     else:
         try:
-            t_18 = requests.get(f"{today_18z_scan}{f_18z}", stream=True, proxies=proxies)
+            t_18 = requests.get(f"{today_18z_scan}{f_18z}", 
+                                stream=True, 
+                                proxies=proxies)
             t_18.close()
-            t_12 = requests.get(f"{today_12z_scan}{f_12z}", stream=True, proxies=proxies)
+            t_12 = requests.get(f"{today_12z_scan}{f_12z}", 
+                                stream=True, 
+                                proxies=proxies)
             t_12.close()
-            t_06 = requests.get(f"{today_06z_scan}{f_06z}", stream=True, proxies=proxies)
+            t_06 = requests.get(f"{today_06z_scan}{f_06z}", 
+                                stream=True, 
+                                proxies=proxies)
             t_06.close()
-            t_00 = requests.get(f"{today_00z_scan}{f_00z}", stream=True, proxies=proxies)
+            t_00 = requests.get(f"{today_00z_scan}{f_00z}", 
+                                stream=True, 
+                                proxies=proxies)
             t_00.close()
-            y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", stream=True, proxies=proxies)
+            y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", 
+                                stream=True, 
+                                proxies=proxies)
             y_18.close()
-            y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", stream=True, proxies=proxies)
+            y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", 
+                                stream=True, 
+                                proxies=proxies)
             y_12.close()
-            y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", stream=True, proxies=proxies)
+            y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", 
+                                stream=True, 
+                                proxies=proxies)
             y_06.close()
-            y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", stream=True, proxies=proxies)
+            y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", 
+                                stream=True, 
+                                proxies=proxies)
             y_00.close()
         except Exception as e:
             for i in range(0, 10, 1):
                 time.sleep(30)
                 try:
-                    t_18 = requests.get(f"{today_18z_scan}{f_18z}", stream=True, proxies=proxies)
+                    t_18 = requests.get(f"{today_18z_scan}{f_18z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     t_18.close()
-                    t_12 = requests.get(f"{today_12z_scan}{f_12z}", stream=True, proxies=proxies)
+                    t_12 = requests.get(f"{today_12z_scan}{f_12z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     t_12.close()
-                    t_06 = requests.get(f"{today_06z_scan}{f_06z}", stream=True, proxies=proxies)
+                    t_06 = requests.get(f"{today_06z_scan}{f_06z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     t_06.close()
-                    t_00 = requests.get(f"{today_00z_scan}{f_00z}", stream=True, proxies=proxies)
+                    t_00 = requests.get(f"{today_00z_scan}{f_00z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     t_00.close()
-                    y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", stream=True, proxies=proxies)
+                    y_18 = requests.get(f"{yesterday_18z_scan}{f_18z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     y_18.close()
-                    y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", stream=True, proxies=proxies)
+                    y_12 = requests.get(f"{yesterday_12z_scan}{f_12z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     y_12.close()
-                    y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", stream=True, proxies=proxies)
+                    y_06 = requests.get(f"{yesterday_06z_scan}{f_06z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     y_06.close()
-                    y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", stream=True, proxies=proxies)
+                    y_00 = requests.get(f"{yesterday_00z_scan}{f_00z}", 
+                                        stream=True, 
+                                        proxies=proxies)
                     y_00.close()   
                     break
                 except Exception as e:
@@ -2097,14 +1097,14 @@ def gefs_0p25_url_scanner(cat,
     # Creates a list of URLs and URL responses to loop through when checking
     
     urls = [
-        today_18z,
-        today_12z,
-        today_06z,
-        today_00z,
-        yd_18z,
-        yd_12z,
-        yd_06z,
-        yd_18z
+        today_18z_scan,
+        today_12z_scan,
+        today_06z_scan,
+        today_00z_scan,
+        yesterday_18z_scan,
+        yesterday_12z_scan,
+        yesterday_06z_scan,
+        yesterday_00z_scan
     ]
     
     responses = [
@@ -2118,12 +1118,24 @@ def gefs_0p25_url_scanner(cat,
         y_00
     ]
     
+    filenames = [
+        f_18z,
+        f_12z,
+        f_06z,
+        f_00z,
+        f_18z,
+        f_12z,
+        f_06z,
+        f_00z
+    ]
+    
     # Testing the status code and then returning the first link with a status code of 200
 
-    for response, url in zip(responses, urls):
+    for response, url, filename in zip(responses, urls, filenames):
         if response.status_code == 200:
             url = url
-            run = int(f"{url[122]}{url[123]}")
+            filename = filename
+            run = int(f"{url[-19]}{url[-18]}")
             break      
     
     try:
@@ -2132,401 +1144,5 @@ def gefs_0p25_url_scanner(cat,
         print(f"Latest forecast data is over 24 hours old. Aborting.....")
         sys.exit(1)
     
-    if step == 6:
-        if int(final_forecast_hour) > 100:
-            step = 6
-            stop = 96 + step
-            start = 102
-        else:
-            step = 6
-            stop = int(final_forecast_hour) + step
-    elif step == 3:
-        if int(final_forecast_hour) > 100:
-            step = 3
-            stop = 99 + step
-            start = 102
-        else:
-            step = 3
-            stop = int(final_forecast_hour) + step
-    else:
-        print("ERROR! User entered an invalid step value\nDefaulting to 6 hourly.")
-        if int(final_forecast_hour) > 100:
-            step = 6
-            stop = 96 + step
-            start = 102
-        else:
-            step = 6
-            stop = int(final_forecast_hour) + step
-        
-        
-    urls = []
-    
-    if cat != 'members':
-    
-        if url == today_18z:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t18z.pgrb2s.0p25.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t18z.pgrb2s.0p25.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                urls.append(url)
-                    
-            if int(final_forecast_hour) > 100:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t18z.pgrb2s.0p25.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                        
-        elif url == today_12z:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t12z.pgrb2s.0p25.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t12z.pgrb2s.0p25.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                urls.append(url)
-                    
-            if int(final_forecast_hour) > 100:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t12z.pgrb2s.0p25.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                        
-        elif url == today_06z:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t06z.pgrb2s.0p25.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t06z.pgrb2s.0p25.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                urls.append(url)
-                    
-            if int(final_forecast_hour) > 100:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t06z.pgrb2s.0p25.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                        
-        elif url == today_00z:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t00z.pgrb2s.0p25.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                        f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t00z.pgrb2s.0p25.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                urls.append(url)
-                    
-            if int(final_forecast_hour) > 100:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t00z.pgrb2s.0p25.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                        
-        elif url == yd_18z:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t18z.pgrb2s.0p25.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t18z.pgrb2s.0p25.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                    
-            if int(final_forecast_hour) > 100:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t18z.pgrb2s.0p25.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                        
-        elif url == yd_12z:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t12z.pgrb2s.0p25.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t12z.pgrb2s.0p25.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                urls.append(url)
-                    
-            if int(final_forecast_hour) > 100:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t12z.pgrb2s.0p25.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                        
-        elif url == yd_06z:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t06z.pgrb2s.0p25.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t06z.pgrb2s.0p25.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                urls.append(url)
-                    
-            if int(final_forecast_hour) > 100:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t06z.pgrb2s.0p25.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-                        
-        else:
-            for i in range(0, stop, step):
-                if i < 10:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t00z.pgrb2s.0p25.f00{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                else:
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                        f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t00z.pgrb2s.0p25.f0{i}{params}&"
-                        f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                urls.append(url)
-                    
-            if int(final_forecast_hour) > 100:
-                for i in range(start, int(final_forecast_hour) + step, step):
-                    url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t00z.pgrb2s.0p25.f{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    
-                    urls.append(url)
-        
-    else:
-        if url == today_18z:
-            for aa in m:
-                for i in range(0, stop, step):
-                    if i < 10:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t18z.pgrb2s.0p25.f00{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    else:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t18z.pgrb2s.0p25.f0{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                    urls.append(url)  
-                if int(final_forecast_hour) > 100:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                                f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t18z.pgrb2s.0p25.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-        elif url == today_12z:
-            for aa in m:
-                for i in range(0, stop, step):
-                    if i < 10:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t12z.pgrb2s.0p25.f00{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    else:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t12z.pgrb2s.0p25.f0{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                    urls.append(url)
-                    
-                if int(final_forecast_hour) > 100:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                                f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t12z.pgrb2s.0p25.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-        elif url == today_06z:
-            for aa in m:
-                for i in range(0, stop, step):
-                    if i < 10:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t06z.pgrb2s.0p25.f00{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    else:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t06z.pgrb2s.0p25.f0{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                    urls.append(url)
-                    
-                if int(final_forecast_hour) > 100:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                                f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t06z.pgrb2s.0p25.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-        elif url == today_00z:
-            for aa in m:
-                for i in range(0, stop, step):
-                    if i < 10:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t00z.pgrb2s.0p25.f00{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    else:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                            f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t00z.pgrb2s.0p25.f0{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                    urls.append(url)
-                    
-                if int(final_forecast_hour) > 100:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                                f"?dir=%2Fgefs.{now.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t00z.pgrb2s.0p25.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-        elif url == yd_18z:
-            for aa in m:
-                for i in range(0, stop, step):
-                    if i < 10:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t18z.pgrb2s.0p25.f00{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    else:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t18z.pgrb2s.0p25.f0{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                    urls.append(url)
-                    
-                if int(final_forecast_hour) > 100:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F18%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t18z.pgrb2s.0p25.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-        elif url == yd_12z:
-                for i in range(0, stop, step):
-                    for aa in m:
-                        if i < 10:
-                            url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t12z.pgrb2s.0p25.f00{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        else:
-                            url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t12z.pgrb2s.0p25.f0{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                            
-                        urls.append(url)
-                    
-                if int(final_forecast_hour) > 100:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        for aa in m:
-                            url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                                    f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F12%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t12z.pgrb2s.0p25.f{i}{params}&"
-                                    f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                            
-                            urls.append(url)
-                        
-        elif url == yd_06z:
-            for aa in m:
-                for i in range(0, stop, step):
-                        if i < 10:
-                            url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t06z.pgrb2s.0p25.f00{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        else:
-                            url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t06z.pgrb2s.0p25.f0{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                            
-                        urls.append(url)
-                    
-                if int(final_forecast_hour) > 100:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F06%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t06z.pgrb2s.0p25.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-                        
-        else:
-            for aa in m:
-                for i in range(0, stop, step):
-                    if i < 10:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t00z.pgrb2s.0p25.f00{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                    else:
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                            f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t00z.pgrb2s.0p25.f0{i}{params}&"
-                            f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                    urls.append(url)
-                    
-                if int(final_forecast_hour) > 100:
-                    for i in range(start, int(final_forecast_hour) + step, step):
-                        url = (f"https://nomads.ncep.noaa.gov/cgi-bin/filter_gefs_atmos_0p25s.pl"
-                                f"?dir=%2Fgefs.{yd.strftime('%Y%m%d')}%2F00%2Fatmos%2Fpgrb2sp25&file=ge{aa}.t00z.pgrb2s.0p25.f{i}{params}&"
-                                f"all_lev=on&subregion=&toplat={northern_bound}&leftlon={western_bound}&rightlon={eastern_bound}&bottomlat={southern_bound}")
-                        
-                        urls.append(url)
-        
-    # Extract the filename
-    # Parse the URL
-    filenames = []
-    for url in urls:
-        
-        parsed_url = urlparse(url)
 
-        # Extract the query string
-        query_string = parsed_url.query
-
-        # Parse the query string into a dictionary of parameters
-        query_params = parse_qs(query_string)
-
-        # Access individual parameters
-        filename = query_params.get('file', [''])[0] 
-        
-        filenames.append(filename)
-        
-    
-    return urls, filenames, run
+    return url, filename, run

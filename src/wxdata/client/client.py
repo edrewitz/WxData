@@ -900,9 +900,9 @@ def byte_range_request(grib_url,
         _os.makedirs(f"{path}")
     except Exception as e:
         pass
-    
+
     variables = _key_list(variables)
-    
+
     if proxies == None:
         idx_text = _requests.get(idx_url).text
     else:

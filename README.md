@@ -112,6 +112,7 @@ E2E clients with multiple servers to pull data from can find the different optio
 | ECMWF IFS Wave |N|Y|Y|Y|N|
 | ECMWF IFS Wave Ensemble |N|Y|Y|Y|N|
 | Get NDFD Grids |N|N|Y|N|Y|
+| RTMA |Y|N|Y|N|N|
 
 ---------------------------------------------------------
 

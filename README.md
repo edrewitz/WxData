@@ -31,7 +31,7 @@ A Python package consisting of the following:
 # Table of Contents
 
 1) [Installation Instructions](https://github.com/edrewitz/WxData?tab=readme-ov-file#installation-instructions)
-2) [Server List (For End-To-End Clients That Can Rotate Between Servers)](https://github.com/edrewitz/WxData/blob/development/README.md#server-list)
+2) [Server List (For End-To-End Clients That Can Rotate Between Servers)](https://github.com/edrewitz/WxData/blob/main/README.md#server-list)
 3) [Proxy Server Configuration](https://github.com/edrewitz/WxData?tab=readme-ov-file#proxy-server-configuration)
 4) [What makes WxData unique among various meteorological Python packages?](https://github.com/edrewitz/WxData?tab=readme-ov-file#what-makes-wxdata-unique-among-various-meteorological-python-packages)
 5) [WxData Tutorials](https://github.com/edrewitz/WxData?tab=readme-ov-file#wxdata-tutorials)

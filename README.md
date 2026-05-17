@@ -31,13 +31,14 @@ A Python package consisting of the following:
 # Table of Contents
 
 1) [Installation Instructions](https://github.com/edrewitz/WxData?tab=readme-ov-file#installation-instructions)
-2) [Proxy Server Configuration](https://github.com/edrewitz/WxData?tab=readme-ov-file#proxy-server-configuration)
-3) [What makes WxData unique among various meteorological Python packages?](https://github.com/edrewitz/WxData?tab=readme-ov-file#what-makes-wxdata-unique-among-various-meteorological-python-packages)
-4) [WxData Tutorials](https://github.com/edrewitz/WxData?tab=readme-ov-file#wxdata-tutorials)
-5) [WxData Documentation](https://github.com/edrewitz/WxData?tab=readme-ov-file#wxdata-documentation)
-6) [Importing Functions from WxData](https://github.com/edrewitz/WxData?tab=readme-ov-file#importing-functions-from-wxdata)
-7) [Citations](https://github.com/edrewitz/WxData?tab=readme-ov-file#citations)
-8) [Data Sources](https://github.com/edrewitz/WxData?tab=readme-ov-file#data-sources)
+2) [Server List (For E2E Clients That Can Rotate Between Servers)](https://github.com/edrewitz/WxData/blob/development/README.md#server-list)
+3) [Proxy Server Configuration](https://github.com/edrewitz/WxData?tab=readme-ov-file#proxy-server-configuration)
+4) [What makes WxData unique among various meteorological Python packages?](https://github.com/edrewitz/WxData?tab=readme-ov-file#what-makes-wxdata-unique-among-various-meteorological-python-packages)
+5) [WxData Tutorials](https://github.com/edrewitz/WxData?tab=readme-ov-file#wxdata-tutorials)
+6) [WxData Documentation](https://github.com/edrewitz/WxData?tab=readme-ov-file#wxdata-documentation)
+7) [Importing Functions from WxData](https://github.com/edrewitz/WxData?tab=readme-ov-file#importing-functions-from-wxdata)
+8) [Citations](https://github.com/edrewitz/WxData?tab=readme-ov-file#citations)
+9) [Data Sources](https://github.com/edrewitz/WxData?tab=readme-ov-file#data-sources)
 
 
 ## Installation Instructions
@@ -85,7 +86,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 ---------------------------------------------------------
 ## Server List
 
-Clients with multiple servers to pull data from can find the different options for `source` by the table below
+E2E clients with multiple servers to pull data from can find the different options for `source` by the table below
 
 `source='noaa' - NOAA/NCEP/NOMADS OR NOAA/NWS/FTP`
 

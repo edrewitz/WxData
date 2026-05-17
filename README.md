@@ -86,7 +86,11 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 ---------------------------------------------------------
 ## Server List
 
-E2E clients with multiple servers to pull data from can find the different options for `source` by the table below
+
+
+<img src="https://github.com/edrewitz/WxData/blob/main/icons/noaa_rotation.png?raw=true" width="200" alt="Alt text" /> <img src="https://github.com/edrewitz/WxData/blob/main/icons/ecmwf_rotation.png?raw=true" width="200" alt="Alt text" />
+
+End-To-End clients with multiple servers to pull data from can find the different options for `source` by the table below
 
 `source='noaa' - NOAA/NCEP/NOMADS OR NOAA/NWS/FTP`
 

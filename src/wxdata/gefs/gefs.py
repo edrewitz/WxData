@@ -281,25 +281,13 @@ def _gefs_0p50_client(cat='mean',
     '10m_u_wind_component'
     '10m_v_wind_component'
     'precipitable_water'
-    'mixed_layer_cape'
-    'mixed_layer_cin'
+    'convective_available_potential_energy'
+    'convective_inhibition'
     'geopotential_height'
     'air_temperature'
     'relative_humidity'
     'u_wind_component'
     'v_wind_component'
-    'wind_speed'
-    'absolute_vortcity'
-    'curvature_vorticity'
-    'divergence'
-    'dew_point'
-    'temperature_advection'
-    'vorticity_advection'
-    'precipitable_water_advection'
-    'humidity_advection'
-    'potential_temperature'
-    'mixing_ratio'
-    'dry_lapse_rate'
     
     """
     if clear_recycle_bin == True:
@@ -464,7 +452,6 @@ def _gefs_0p50_client(cat='mean',
         
         else:
             pass        
-        
     
     download = _local_file_scanner(paths[-1], 
                                         filename,
@@ -473,6 +460,11 @@ def _gefs_0p50_client(cat='mean',
     
     if download == True:
         print(f"Downloading GEFS0P50 {cat.upper()}...")
+        
+        if run < 10:
+            run = f"0{run}"
+        else:
+            run = run
         
         _clear_old_ensemble_data(paths)
         cont = False
@@ -940,7 +932,7 @@ def _gefs_0p50_secondary_parameters_client(cat='mean',
     Variables
     ---------
     
-    'surface_temperature'
+    'temperature'
     'surface_visibility'
     'surface_wind_gust'
     'haines_index'
@@ -958,8 +950,6 @@ def _gefs_0p50_secondary_parameters_client(cat='mean',
     'land_sea_mask'
     'sea_ice_area_fraction'
     'orography'
-    'surface_cape'
-    'surface_cin'
     'convective_precipitation_rate'
     'precipitation_rate'
     'total_convective_precipitation'
@@ -975,12 +965,9 @@ def _gefs_0p50_secondary_parameters_client(cat='mean',
     'clear_sky_uv_b_downward_solar_flux'
     'average_surface_albedo'
     'mslp'
-    'mslp_eta_reduction'
-    'boundary_layer_u_wind_component'
-    'boundary_layer_v_wind_component'
-    'ventilation_rate' 
+    'mslp_eta_reduction'  
+    'ventilation_rate'
     'geopotential_height'
-    'air_temperature' 
     'vertical_velocity'
     'u_wind_component'
     'v_wind_component'
@@ -996,59 +983,27 @@ def _gefs_0p50_secondary_parameters_client(cat='mean',
     '2m_specific_humidity'
     '2m_dew_point'
     '2m_apparent_temperature'
-    '80m_specific_humidity'
-    '80m_air_pressure'
-    '80m_u_wind_component'
-    '80m_v_wind_component'
-    'atmosphere_single_layer_relative_humidity'
+    'specific_humidity'
+    'pressure'
     'cloud_water'
     'total_ozone'
-    'cloud_ceiling_height'
     'brightness_temperature'
     '3km_helicity'
     'u_component_of_storm_motion'
     'v_component_of_storm_motion'
-    'tropopause_height'
     'tropopause_pressure'
     'tropopause_standard_atmosphere_reference_height'
-    'tropopause_u_wind_component'
-    'tropopause_v_wind_component'
-    'tropopause_temperature'
     'tropopause_vertical_speed_shear'
-    'max_wind_u_component'
-    'max_wind_v_component'
-    'zero_deg_c_isotherm_geopotential_height'
-    'zero_deg_c_isotherm_relative_humidity'
-    'highest_tropospheric_freezing_level_geopotential_height'
-    'highest_tropospheric_freezing_level_relative_humidity'
-    '995_sigma_relative_humdity'
-    '995_sigma_temperature'
     '995_sigma_theta'
-    '995_u_wind_component'
-    '995_v_wind_component'
-    '995_vertical_velocity'
     'potential_vorticity'
-    'theta_level_u_wind_component'
-    'theta_level_v_wind_component'
-    'theta_level_temperature'
     'theta_level_montgomery_potential'
-    'potential_vorticity_level_u_wind_component'
-    'potential_vorticity_level_v_wind_component'
-    'potential_vorticity_level_temperature'
-    'potential_vorticity_level_geopotential_height'
-    'potential_vorticity_level_air_pressure'
     'potential_vorticity_level_vertical_speed_shear'
-    'mixed_layer_air_temperature'
-    'mixed_layer_relative_humidity'
-    'mixed_layer_specific_humidity'
-    'mixed_layer_u_wind_component'
-    'mixed_layer_v_wind_component'
     'mixed_layer_dew_point'
     'mixed_layer_precipitable_water'
     'parcel_lifted_index_to_500hPa'
-    'mixed_layer_cape'
-    'mixed_layer_cin'
-    'pressure_level_from_which_a_parcel_was_lifted' 
+    'convective_available_potential_energy'
+    'convective_inhibition'
+    'pressure_level_from_which_a_parcel_was_lifted'
        
     """
     if clear_recycle_bin == True:
@@ -1220,6 +1175,11 @@ def _gefs_0p50_secondary_parameters_client(cat='mean',
     
     if download == True:
         print(f"Downloading GEFS0P50 {cat.upper()}...")
+        
+        if run < 10:
+            run = f"0{run}"
+        else:
+            run = run
         
         _clear_old_ensemble_data(paths)
         cont = False
@@ -1623,15 +1583,14 @@ def _gefs_0p25_client(cat='mean',
     'surface_visibility'
     'surface_wind_gust'
     'percent_frozen_precipitation'
-    'surface_cape'
-    'surface_cin'
+    'convective_available_potential_energy'
+    'convective_inhibition'
     'mslp'
     'soil_temperature'
     'volumetric_soil_moisture_content'
     '2m_temperature'
     '2m_relative_humidity'
     '2m_dew_point'
-    '2m_dew_point_depression'
     'maximum_temperature'
     'minimum_temperature'
     '10m_u_wind_component'
@@ -1811,6 +1770,11 @@ def _gefs_0p25_client(cat='mean',
     
     if download == True:
         print(f"Downloading GEFS0P25 {cat.upper()}...")
+        
+        if run < 10:
+            run = f"0{run}"
+        else:
+            run = run
 
         _clear_old_ensemble_data(paths)
         
@@ -2194,36 +2158,17 @@ def gefs_0p50(cat='mean',
     '10m_u_wind_component'
     '10m_v_wind_component'
     'precipitable_water'
-    'mixed_layer_cape'
-    'mixed_layer_cin'
+    'convective_available_potential_energy'
+    'convective_inhibition'
     'geopotential_height'
     'air_temperature'
     'relative_humidity'
     'u_wind_component'
     'v_wind_component'
-    'wind_speed'
-    'absolute_vortcity'
-    'curvature_vorticity'
-    'divergence'
-    'dew_point'
-    'temperature_advection'
-    'vorticity_advection'
-    'precipitable_water_advection'
-    'humidity_advection'
-    'potential_temperature'
-    'mixing_ratio'
-    'dry_lapse_rate'
     
     """
     
     source = source.lower()
-    
-    if source == 'ecmwf':
-        server = "ECMWF Open-Data Server"
-    elif source == 'aws':
-        server = "Amazon AWS Server"
-    else:
-        server = 'Google Cloud Server'
     
     try:
         ds = _gefs_0p50_client(cat=cat, 
@@ -2671,7 +2616,7 @@ def gefs_0p50_secondary_parameters(cat='control',
     Variables
     ---------
     
-    'surface_temperature'
+    'temperature'
     'surface_visibility'
     'surface_wind_gust'
     'haines_index'
@@ -2689,8 +2634,6 @@ def gefs_0p50_secondary_parameters(cat='control',
     'land_sea_mask'
     'sea_ice_area_fraction'
     'orography'
-    'surface_cape'
-    'surface_cin'
     'convective_precipitation_rate'
     'precipitation_rate'
     'total_convective_precipitation'
@@ -2706,12 +2649,9 @@ def gefs_0p50_secondary_parameters(cat='control',
     'clear_sky_uv_b_downward_solar_flux'
     'average_surface_albedo'
     'mslp'
-    'mslp_eta_reduction'
-    'boundary_layer_u_wind_component'
-    'boundary_layer_v_wind_component'
-    'ventilation_rate' 
+    'mslp_eta_reduction'  
+    'ventilation_rate'
     'geopotential_height'
-    'air_temperature' 
     'vertical_velocity'
     'u_wind_component'
     'v_wind_component'
@@ -2727,70 +2667,31 @@ def gefs_0p50_secondary_parameters(cat='control',
     '2m_specific_humidity'
     '2m_dew_point'
     '2m_apparent_temperature'
-    '80m_specific_humidity'
-    '80m_air_pressure'
-    '80m_u_wind_component'
-    '80m_v_wind_component'
-    'atmosphere_single_layer_relative_humidity'
+    'specific_humidity'
+    'pressure'
     'cloud_water'
     'total_ozone'
-    'cloud_ceiling_height'
     'brightness_temperature'
     '3km_helicity'
     'u_component_of_storm_motion'
     'v_component_of_storm_motion'
-    'tropopause_height'
     'tropopause_pressure'
     'tropopause_standard_atmosphere_reference_height'
-    'tropopause_u_wind_component'
-    'tropopause_v_wind_component'
-    'tropopause_temperature'
     'tropopause_vertical_speed_shear'
-    'max_wind_u_component'
-    'max_wind_v_component'
-    'zero_deg_c_isotherm_geopotential_height'
-    'zero_deg_c_isotherm_relative_humidity'
-    'highest_tropospheric_freezing_level_geopotential_height'
-    'highest_tropospheric_freezing_level_relative_humidity'
-    '995_sigma_relative_humdity'
-    '995_sigma_temperature'
     '995_sigma_theta'
-    '995_u_wind_component'
-    '995_v_wind_component'
-    '995_vertical_velocity'
     'potential_vorticity'
-    'theta_level_u_wind_component'
-    'theta_level_v_wind_component'
-    'theta_level_temperature'
     'theta_level_montgomery_potential'
-    'potential_vorticity_level_u_wind_component'
-    'potential_vorticity_level_v_wind_component'
-    'potential_vorticity_level_temperature'
-    'potential_vorticity_level_geopotential_height'
-    'potential_vorticity_level_air_pressure'
     'potential_vorticity_level_vertical_speed_shear'
-    'mixed_layer_air_temperature'
-    'mixed_layer_relative_humidity'
-    'mixed_layer_specific_humidity'
-    'mixed_layer_u_wind_component'
-    'mixed_layer_v_wind_component'
     'mixed_layer_dew_point'
     'mixed_layer_precipitable_water'
     'parcel_lifted_index_to_500hPa'
-    'mixed_layer_cape'
-    'mixed_layer_cin'
-    'pressure_level_from_which_a_parcel_was_lifted' 
+    'convective_available_potential_energy'
+    'convective_inhibition'
+    'pressure_level_from_which_a_parcel_was_lifted'
        
     """
     
     source = source.lower()
-    
-    if source == 'ecmwf':
-        server = "ECMWF Open-Data Server"
-    elif source == 'aws':
-        server = "Amazon AWS Server"
-    else:
-        server = 'Google Cloud Server'
     
     try:
         ds = _gefs_0p50_secondary_parameters_client(cat=cat, 
@@ -3207,15 +3108,14 @@ def gefs_0p25(cat='mean',
     'surface_visibility'
     'surface_wind_gust'
     'percent_frozen_precipitation'
-    'surface_cape'
-    'surface_cin'
+    'convective_available_potential_energy'
+    'convective_inhibition'
     'mslp'
     'soil_temperature'
     'volumetric_soil_moisture_content'
     '2m_temperature'
     '2m_relative_humidity'
     '2m_dew_point'
-    '2m_dew_point_depression'
     'maximum_temperature'
     'minimum_temperature'
     '10m_u_wind_component'
@@ -3229,15 +3129,6 @@ def gefs_0p25(cat='mean',
     
     if final_forecast_hour > 240:
         final_forecast_hour = 240
-    
-    source = source.lower()
-    
-    if source == 'ecmwf':
-        server = "ECMWF Open-Data Server"
-    elif source == 'aws':
-        server = "Amazon AWS Server"
-    else:
-        server = 'Google Cloud Server'
     
     try:
         ds = _gefs_0p25_client(cat=cat, 

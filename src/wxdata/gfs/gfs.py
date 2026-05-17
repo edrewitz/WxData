@@ -7,7 +7,7 @@ This file hosts the functions the user interacts with to download GFS data.
 
 (C) Eric J. Drewitz 2025-2026
 """
-
+import sys as _sys
 import wxdata.client.client as _client
 import os as _os
 import warnings as _warnings
@@ -133,7 +133,21 @@ def gfs_0p25(final_forecast_hour=384,
             convert_to='celsius',
             chunk_size=8192,
             notifications='off',
-            clear_data=False):
+            clear_data=False,
+            source='noaa',
+            level_type='pressure',
+            levels=[1000,
+                    925,
+                    850,
+                    700,
+                    500,
+                    400,
+                    300,
+                    250,
+                    200,
+                    100,
+                    50,
+                    10]):
     
     """
     This function downloads GFS0P25 data and saves it to a folder. 
@@ -411,17 +425,121 @@ def gfs_0p25(final_forecast_hour=384,
     else:
         pass
         
-    urls, filenames, run = _gfs_0p25_url_scanner(final_forecast_hour,
-                                            western_bound, 
-                                            eastern_bound, 
-                                            northern_bound, 
-                                            southern_bound, 
-                                            proxies, 
-                                            step, 
-                                            variables)
+    if source == 'noaa':
+        try:
+            url, filename, run = _gfs_0p50_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    source)
+        except Exception as e:
+            filename = None
+            
+        if filename == None:
+            print("NCEP/NOMADS Server Is Down.")
+            print("Rotating to Amazon AWS Server.")
+            try:
+                url, filename, run = _gfs_0p50_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    'aws')
+                print("Amazon AWS Server Online - Connected.")
+            except Exception as e:
+                filename = None
+                
+            if filename == None:
+                print("Amazon AWS Server Is Down.")
+                print("Rotating to Google Cloud Server.")
+                try:
+                    url, filename, run = _gfs_0p50_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    'google')
+                    print("Google Cloud Server Online - Connected.")
+                except Exception as e:
+                    print("Error: All Servers Appear Down.")
+                    print("System Exit")
+                    _sys.exit(1)
+            else:
+                pass
+        
+        else:
+            pass
+        
+    if source == 'aws':
+        try:
+            url, filename, run = _gfs_0p50_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    source)
+        except Exception as e:
+            filename = None
+            
+        if filename == None:
+            print("NCEP/NOMADS Server Is Down.")
+            print("Rotating to NCEP/NOMADS Server.")
+            try:
+                url, filename, run = _gfs_0p50_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    'noaa')
+                print("NCEP/NOMADS Server Online - Connected.")
+            except Exception as e:
+                filename = None
+                
+            if filename == None:
+                print("Amazon NCEP/NOMADS Is Down.")
+                print("Rotating to Google Cloud Server.")
+                try:
+                    url, filename, run = _gfs_0p50_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    'google')
+                    print("Google Cloud Server Online - Connected.")
+                except Exception as e:
+                    print("Error: All Servers Appear Down.")
+                    print("System Exit")
+                    _sys.exit(1)
+            else:
+                pass
+        
+        else:
+            pass
+        
+    
+    if source == 'google':
+        try:
+            url, filename, run = _gfs_0p50_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    source)
+        except Exception as e:
+            filename = None
+            
+        if filename == None:
+            print("Google Cloud Server Is Down.")
+            print("Rotating to NCEP/NOMADS Server.")
+            try:
+                url, filename, run = _gfs_0p50_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    'noaa')
+                print("Google Cloud Server Online - Connected.")
+            except Exception as e:
+                filename = None
+                
+            if filename == None:
+                print("Amazon NCEP/NOMADS Is Down.")
+                print("Rotating to Amazon AWS Server.")
+                try:
+                    url, filename, run = _gfs_0p50_url_scanner(final_forecast_hour,
+                                                    proxies, 
+                                                    'aws')
+                    print("Amazon AWS Server Online - Connected.")
+                except Exception as e:
+                    print("Error: All Servers Appear Down.")
+                    print("System Exit")
+                    _sys.exit(1)
+            else:
+                pass
+        
+        else:
+            pass        
+        
     
     download = _local_file_scanner(path, 
-                                    filenames[-1],
+                                    filename,
                                     'nomads',
                                     run)   
     
@@ -430,13 +548,67 @@ def gfs_0p25(final_forecast_hour=384,
         
         _clear_old_data(path)
         
-        for url, filename in zip(urls, filenames):
-            _client.get_gridded_data(f"{url}",
-                        path,
-                        f"{filename}.grib2",
-                        proxies=proxies,
-                        chunk_size=chunk_size,
-                        notifications=notifications)  
+        cont = False
+
+        for i in range(0, final_forecast_hour + step, step):
+            if i < 10:
+                _client.byte_range_request(f"gfs.t{run}z.pgrb2.0p25.f00{i}",
+                                            f"{url}gfs.t{run}z.pgrb2.0p25.f00{i}.idx",
+                                            variables,
+                                            levels,
+                                            level_type,
+                                            path,
+                                            f"gfs.t{run}z.pgrb2.0p25.f00{i}.grib2",
+                                            proxies=proxies,
+                                            chunk_size=chunk_size,
+                                            notifications=notifications,
+                                            clear_recycle_bin=clear_recycle_bin) 
+                
+            elif i >= 10 and i < (99 + step):
+                _client.byte_range_request(f"gfs.t{run}z.pgrb2.0p25.f0{i}",
+                                            f"{url}gfs.t{run}z.pgrb2.0p25.f0{i}.idx",
+                                            variables,
+                                            levels,
+                                            level_type,
+                                            path,
+                                            f"gfs.t{run}z.pgrb2.0p25.f0{i}.grib2",
+                                            proxies=proxies,
+                                            chunk_size=chunk_size,
+                                            notifications=notifications,
+                                            clear_recycle_bin=clear_recycle_bin)   
+                
+            elif i >= 102 and i < (240 + step):
+                _client.byte_range_request(f"gfs.t{run}z.pgrb2.0p25.f{i}",
+                                            f"{url}gfs.t{run}z.pgrb2.0p25.f{i}.idx",
+                                            variables,
+                                            levels,
+                                            level_type,
+                                            path,
+                                            f"gfs.t{run}z.pgrb2.0p25.f{i}.grib2",
+                                            proxies=proxies,
+                                            chunk_size=chunk_size,
+                                            notifications=notifications,
+                                            clear_recycle_bin=clear_recycle_bin)    
+                
+            else:
+                cont = True
+                break
+            
+        if cont == True:
+            for i in range(240, final_forecast_hour + 6, 6):
+                _client.byte_range_request(f"gfs.t{run}z.pgrb2.0p25.f{i}",
+                                            f"{url}gfs.t{run}z.pgrb2.0p25.f{i}.idx",
+                                            variables,
+                                            levels,
+                                            level_type,
+                                            path,
+                                            f"gfs.t{run}z.pgrb2.0p25.f{i}.grib2",
+                                            proxies=proxies,
+                                            chunk_size=chunk_size,
+                                            notifications=notifications,
+                                            clear_recycle_bin=clear_recycle_bin) 
+        else:
+            pass      
         
         print("GFS0P25 Download Complete") 
             
@@ -446,7 +618,11 @@ def gfs_0p25(final_forecast_hour=384,
     if process_data == True:
         print(f"GFS0P25 Data Processing...")
         
-        ds = _gfs_post_processing.primary_gfs_post_processing(path)
+        ds = _gfs_post_processing.primary_gfs_post_processing(path,
+                                                              western_bound,
+                                                              eastern_bound,
+                                                              southern_bound,
+                                                              northern_bound)
         
         if convert_temperature == True:
                 ds = _convert_temperature_units(ds, 

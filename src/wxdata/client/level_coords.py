@@ -79,7 +79,7 @@ def get_level_suffix(level_type):
         'highest tropospheric freezing level':'highest tropospheric freezing level',
         'sigma layer':'sigma layer',
         'sigma level':'sigma level',
-        'potential vorticity surface':'PV=2e-06 (Km^2/kg/s) surface',
+        'potential vorticity surface':'(Km^2/kg/s) surface',
         'reserved':'reserved',
         'top of atmosphere':'top of atmosphere',
         'high cloud top level':'high cloud top level',

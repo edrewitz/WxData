@@ -11,18 +11,9 @@ import sys
 import numpy as np
 import time
 
-from urllib.parse import urlparse, parse_qs
-from wxdata.utils.coords import convert_lon
-from wxdata.gefs.exception_messages import(
-    
+from wxdata.gefs.exception_messages import(    
     gefs0p50,
     gefs0p25
-)
-
-from wxdata.utils.nomads_gribfilter import(
-    
-    result_string,
-    key_list
 )
 
 # Exception handling for Python >= 3.13 and Python < 3.13
@@ -72,61 +63,24 @@ def gefs_0p50_url_scanner(cat,
     2) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The GEFS0P50
     goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
     384 by the nereast increment of 3 hours. 
-    
-    3) western_bound (Float or Integer) - The western bound of the data needed. 
 
-    4) eastern_bound (Float or Integer) - The eastern bound of the data needed.
-
-    5) northern_bound (Float or Integer) - The northern bound of the data needed.
-
-    6) southern_bound (Float or Integer) - The southern bound of the data needed.
-
-    7) proxies (dict or None) - If the user is using proxy server(s), the user must change the following:
+    3) proxies (dict or None) - If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
-                        
-    8) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
+                            
+    4) members (List) The individual ensemble members. There are 30 members in this ensemble.  
     
-    9) members (List) The individual ensemble members. There are 30 members in this ensemble.  
+    5) source (String) - Default='noaa'. The data server the user wants to connect the client to.
     
-    10) variables (List) - A list of variable names the user wants to download in plain language. 
-    
-        Variable Name List for GEFS0P50
-        -------------------------------
+        Server List
+        -----------
         
-			'total precipitation'
-            'convective available potential energy'
-            'categorical freezing rain'
-            'categorical ice pellets'
-            'categorical rain'
-            'categorical snow'
-            'convective inhibition'
-            'downward longwave radiation flux'
-            'downward shortwave radiation flux'
-            'geopotential height'
-            'ice thickness'
-            'latent heat net flux'
-            'pressure'
-            'mean sea level pressure'
-            'precipitable water'
-            'relative humidity'
-            'sensible heat net flux'
-            'snow depth'
-            'volumetric soil moisture content'
-            'total cloud cover'
-            'maximum temperature'
-            'minimum temperature'
-            'temperature'
-            'soil temperature'
-            'u-component of wind'
-            'upward longwave radiation flux'
-            'upward shortwave radiation flux'
-            'v-component of wind'
-            'vertical velocity'
-            'water equivalent of accumulated snow depth'
+        1) NOAA/NCEP/NOMADS - source='noaa'
+        2) Amazon AWS - source='aws'
+        3) Google Cloud - source='google'
     
     Optional Arguments: None
     
@@ -427,102 +381,24 @@ def gefs_0p50_secondary_parameters_url_scanner(cat,
     2) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The GEFS0P50 SECONDARY PARAMETERS
     goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
     384 by the nereast increment of 3 hours. 
-    
-    3) western_bound (Float or Integer) - The western bound of the data needed. 
 
-    4) eastern_bound (Float or Integer) - The eastern bound of the data needed.
-
-    5) northern_bound (Float or Integer) - The northern bound of the data needed.
-
-    6) southern_bound (Float or Integer) - The southern bound of the data needed.
-
-    7) proxies (dict or None) - If the user is using proxy server(s), the user must change the following:
+    3) proxies (dict or None) - If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
-                        
-    8) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
+                            
+    4) members (List) The individual ensemble members. There are 30 members in this ensemble.  
     
-    9) members (List) The individual ensemble members. There are 30 members in this ensemble.  
+    5) source (String) - Default='noaa'. The data server the user wants to connect the client to.
     
-    10) variables (List) - A list of variable names the user wants to download in plain language. 
-    
-        Variable Name List for GEFS0P50 SECONDARY PARAMETERS
-        ----------------------------------------------------
+        Server List
+        -----------
         
-        'best lifted index'
-        '5 wave geopotential height'
-        'absolute vorticity'
-        'temperature'
-        'dew point'
-        'convective precipitation'
-        'albedo'
-        'apparent temperature'
-        'brightness temperature'
-        'convective available potential energy'
-        'clear sky uv-b downward solar flux'
-        'convective inhibition'
-        'cloud mixing ratio'
-        'plant canopy surface water'
-        'percent frozen precipitaion'
-        'convective precipitation rate'
-        'cloud water'
-        'cloud work function'
-        'uv-b downward solar flux'
-        'field capacity'
-        'surface friction velocity'
-        'ground heat flux'
-        'wind gust'
-        'geopotential height'
-        'haines index'
-        'storm relative helicity'
-        'planetary boundary layer height'
-        'icao standard atmosphere reference height'
-        'ice cover'
-        'icing'
-        'icing severity'
-        'land cover'
-        'surface lifted index'
-        'montgomery stream function'
-        'mslp (eta model reduction)'
-        'large scale non-convective precipitation'
-        'ozone mixing ratio'
-        'potential evaporation rate'
-        'parcel lifted index (to 500mb)'
-        'pressure level from which parcel was lifted'
-        'potential temperature'
-        'precipitation rate'
-        'pressure'
-        'potential vorticity'
-        'precipitable water'
-        'relative humidity'
-        'surface roughness'
-        'snow phase-change heat flux'
-        'snow cover'
-        'liquid volumetric soil moisture (non-frozen)'
-        'volumetric soil moisture content'
-        'specific humidity'
-        'sunshine duration'
-        'total cloud cover'
-        'total ozone'
-        'soil temperature'
-        'momentum flux (u-component)'
-        'u-component of wind'
-        'zonal flux of gravity wave stress'
-        'u-component of storm motion'
-        'upward shortwave radiation flux'
-        'momentum flux (v-component)'
-        'v-component of wind'
-        'meridional flux of gravity wave stress'
-        'visibility'
-        'ventilation rate'
-        'v-component of storm motion'
-        'vertical velocity'
-        'vertical speed shear'
-        'water runoff'
-        'wilting point'
+        1) NOAA/NCEP/NOMADS - source='noaa'
+        2) Amazon AWS - source='aws'
+        3) Google Cloud - source='google'
     
     Optional Arguments: None
     
@@ -818,61 +694,24 @@ def gefs_0p25_url_scanner(cat,
     2) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The GEFS0P25
     goes out to 240 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
     240 by the nereast increment of 3 hours. 
-    
-    3) western_bound (Float or Integer) - The western bound of the data needed. 
 
-    4) eastern_bound (Float or Integer) - The eastern bound of the data needed.
-
-    5) northern_bound (Float or Integer) - The northern bound of the data needed.
-
-    6) southern_bound (Float or Integer) - The southern bound of the data needed.
-
-    7) proxies (dict or None) - If the user is using proxy server(s), the user must change the following:
+    3) proxies (dict or None) - If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
-                        
-    8) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
+                            
+    4) members (List) The individual ensemble members. There are 30 members in this ensemble.  
     
-    9) members (List) The individual ensemble members. There are 30 members in this ensemble.  
+    5) source (String) - Default='noaa'. The data server the user wants to connect the client to.
     
-    10) variables (List) - A list of variable names the user wants to download in plain language. 
-    
-        Variable Name List for GEFS0P25
-        -------------------------------
+        Server List
+        -----------
         
-			'total precipitation'
-            'convective available potential energy'
-            'categorical freezing rain'
-            'categorical ice pellets'
-            'categorical rain'
-            'categorical snow'
-            'convective inhibition'
-            'downward longwave radiation flux'
-            'downward shortwave radiation flux'
-            'geopotential height'
-            'ice thickness'
-            'latent heat net flux'
-            'pressure'
-            'mean sea level pressure'
-            'precipitable water'
-            'relative humidity'
-            'sensible heat net flux'
-            'snow depth'
-            'volumetric soil moisture content'
-            'total cloud cover'
-            'maximum temperature'
-            'minimum temperature'
-            'temperature'
-            'soil temperature'
-            'u-component of wind'
-            'upward longwave radiation flux'
-            'upward shortwave radiation flux'
-            'v-component of wind'
-            'vertical velocity'
-            'water equivalent of accumulated snow depth'
+        1) NOAA/NCEP/NOMADS - source='noaa'
+        2) Amazon AWS - source='aws'
+        3) Google Cloud - source='google'
     
     Optional Arguments: None
     

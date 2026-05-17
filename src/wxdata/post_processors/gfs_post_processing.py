@@ -17,12 +17,19 @@ from wxdata.utils.file_funcs import(
     sorted_paths as _sorted_paths
 )
 from wxdata.utils.exceptions import eccodes_error_message as _eccodes_error_message
-from wxdata.utils.coords import shift_longitude as _shift_longitude
+from wxdata.utils.coords import(
+    shift_longitude as _shift_longitude,
+    convert_lon as _convert_lon
+)
 
 _sys.tracebacklimit = 0
 _logging.disable()
 
-def primary_gfs_post_processing(path):
+def primary_gfs_post_processing(path,
+                                western_bound,
+                                eastern_bound,
+                                southern_bound,
+                                northern_bound):
     
     """
     This function post-processes the GFS0P25 and GFS0P50 GRIB Primary Variable Keys into Plain-Language Variable Keys
@@ -233,6 +240,8 @@ def primary_gfs_post_processing(path):
     'potential_vorticity_level_air_pressure'
     'potential_vorticity_level_vertical_speed_shear'
     """
+    western_bound = eastern_bound = _convert_lon(western_bound, 
+                                                 eastern_bound)
     
     _clear_idx_files_in_path(path)
     files = _sorted_paths(path)
@@ -245,699 +254,12 @@ def primary_gfs_post_processing(path):
                             engine='cfgrib', 
                             compat='override', 
                             decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'meanSea'})
+                            backend_kwargs={"indexpath": ""}).sel(longitude=slice(western_bound, eastern_bound, 1), 
+                                                                                                    latitude=slice(northern_bound, southern_bound, 1))
         
         ds = _shift_longitude(ds)
     except Exception as e:
         pass
-    
-    try:
-        ds1 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'hybrid'})
-        
-        ds1 = _shift_longitude(ds1)
-    except Exception as e:
-        pass
-    
-    try:
-        ds2 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'hybrid', 'shortName':'refd'})
-        
-        ds2 = _shift_longitude(ds2)
-    except Exception as e:
-        pass
-    
-    try:
-        ds3 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'atmosphere'})
-        
-        ds3 = _shift_longitude(ds3)
-    except Exception as e:
-        pass
-    
-
-    try:
-        ds4 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'surface'})
-        
-        ds4 = _shift_longitude(ds4)
-    except Exception as e:
-        pass
-    
-    try:
-        ds5 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'planetaryBoundaryLayer'})
-        
-        ds5 = _shift_longitude(ds5)
-    except Exception as e:
-        pass
-    
-    try:
-        ds6 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'isobaricInhPa'})
-        
-        ds6 = _shift_longitude(ds6)
-    except Exception as e:
-        pass
-    
-    try:
-        ds7 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'tcc'})
-        
-        ds7 = _shift_longitude(ds7)
-    except Exception as e:
-        pass
-    
-    try:
-        ds8 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'clwmr'})
-        
-        ds8 = _shift_longitude(ds8)
-    except Exception as e:
-        pass
-    
-    try:
-        ds9 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'icmr'})
-        
-        ds9 = _shift_longitude(ds9)
-    except Exception as e:
-        pass
-    
-    try:
-        ds10 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'rwmr'})
-        
-        ds10 = _shift_longitude(ds10)
-    except Exception as e:
-        pass
-    
-    try:
-        ds11 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'snmr'})
-        ds11 = _shift_longitude(ds11)
-    except Exception as e:
-        pass
-    
-    try:
-        ds12 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'isobaricInhPa', 'shortName':'grle'})
-        
-        ds12 = _shift_longitude(ds12)
-    except Exception as e:
-        pass
-    
-    
-    try:
-        ds13 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'heightAboveGround'})
-        
-        ds13 = _shift_longitude(ds13)
-    except Exception as e:
-        pass
-    
-    try:
-        ds14 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':167})
-        
-        ds14 = _shift_longitude(ds14)
-    except Exception as e:
-        pass
-    
-    try:
-        ds15 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':174096})
-        
-        ds15 = _shift_longitude(ds15)
-    except Exception as e:
-        pass
-    
-    try:
-        ds16 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':168})
-        
-        ds16 = _shift_longitude(ds16)
-    except Exception as e:
-        pass
-    
-    try:
-        ds17 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':260242})
-        
-        ds17 = _shift_longitude(ds17)
-    except Exception as e:
-        pass
-    
-    try:
-        ds18 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':165})
-        
-        ds18 = _shift_longitude(ds18)
-    except Exception as e:
-        pass
-    
-    try:
-        ds19 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':166})
-        
-        ds19 = _shift_longitude(ds19)
-    except Exception as e:
-        pass
-    
-    try:
-        ds20 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':131})
-        
-        ds20 = _shift_longitude(ds20)
-    except Exception as e:
-        pass
-    
-    try:
-        ds21 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':132})
-        
-        ds21 = _shift_longitude(ds21)
-    except Exception as e:
-        pass
-    
-    try:
-        ds22 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':130})
-        
-        ds22 = _shift_longitude(ds22)
-    except Exception as e:
-        pass
-    
-    try:
-        ds23 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':133})
-        
-        ds23 = _shift_longitude(ds23)
-    except Exception as e:
-        pass
-    
-    try:
-        ds24 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':54})
-        
-        ds24 = _shift_longitude(ds24)
-    except Exception as e:
-        pass
-    
-    try:
-        ds25 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':228246})
-        
-        ds25 = _shift_longitude(ds25)
-    except Exception as e:
-        pass
-    
-    try:
-        ds26 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'heightAboveGround','paramId':228247})
-        
-        ds26 = _shift_longitude(ds26)
-    except Exception as e:
-        pass
-    
-    try:
-        ds27 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'depthBelowLandLayer'})
-        
-        ds27 = _shift_longitude(ds27)
-    except Exception as e:
-        pass
-    
-    try:
-        ds28 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'heightAboveSea','paramId':130})
-        
-        ds28 = _shift_longitude(ds28)
-    except Exception as e:
-        pass
-    
-    try:
-        ds29 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'heightAboveSea','paramId':131})
-        
-        ds29 = _shift_longitude(ds29)
-    except Exception as e:
-        pass
-    
-    try:
-        ds30 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'heightAboveSea','paramId':132})
-        
-        ds30 = _shift_longitude(ds30)
-    except Exception as e:
-        pass
-    
-    try:
-        ds31 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'atmosphereSingleLayer'})
-        
-        ds31 = _shift_longitude(ds31)
-    except Exception as e:
-        pass
-    
-    try:
-        ds32 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'lowCloudLayer'})
-        
-        ds32 = _shift_longitude(ds32)
-    except Exception as e:
-        pass
-    
-    try:
-        ds33 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'middleCloudLayer'})
-        
-        ds33 = _shift_longitude(ds33)
-    except Exception as e:
-        pass
-    
-    try:
-        ds34 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'highCloudLayer'})
-        
-        ds34 = _shift_longitude(ds34)
-    except Exception as e:
-        pass
-    
-    try:
-        ds35 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'cloudCeiling'})
-        
-        ds35 = _shift_longitude(ds35)
-    except Exception as e:
-        pass
-    
-    try:
-        ds36 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'heightAboveGroundLayer'})
-        
-        ds36 = _shift_longitude(ds36)
-    except Exception as e:
-        pass
-    
-    try:
-        ds37 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'heightAboveGroundLayer','paramId':260070})
-        
-        ds37 = _shift_longitude(ds37)
-    except Exception as e:
-        pass
-    
-    try:
-        ds38 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'heightAboveGroundLayer','paramId':260071})
-        
-        ds38 = _shift_longitude(ds38)
-    except Exception as e:
-        pass
-    
-    try:
-        ds39 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'tropopause'})
-        
-        ds39 = _shift_longitude(ds39)
-    except Exception as e:
-        pass
-    
-    try:
-        ds40 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'maxWind'})
-        
-        ds40 = _shift_longitude(ds40)
-    except Exception as e:
-        pass
-    
-    try:
-        ds41 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'isothermZero'})
-        
-        ds41 = _shift_longitude(ds41)
-    except Exception as e:
-        pass
-    
-    try:
-        ds42 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'highestTroposphericFreezing'})
-        
-        ds42 = _shift_longitude(ds42)
-    except Exception as e:
-        pass
-    
-    try:
-        ds43 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer'})
-        
-        ds43 = _shift_longitude(ds43)
-    except Exception as e:
-        pass
-    
-    try:
-        ds44 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer','paramId':59})
-        
-        ds44 = _shift_longitude(ds44)
-    except Exception as e:
-        pass
-    
-    try:
-        ds45 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer','paramId':228001})
-        
-        ds45 = _shift_longitude(ds45)
-    except Exception as e:
-        pass
-    
-    try:
-        ds46 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer','paramId':260325})
-        
-        ds46 = _shift_longitude(ds46)
-    except Exception as e:
-        pass
-    
-    try:
-        ds47 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'sigmaLayer'})
-        
-        ds47 = _shift_longitude(ds47)
-    except Exception as e:
-        pass
-    
-    try:
-        ds48 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'sigma'})
-        
-        ds48 = _shift_longitude(ds48)
-    except Exception as e:
-        pass
-    
-    try:
-        ds49 = _xr.open_mfdataset(files, 
-                            concat_dim='step', 
-                            combine='nested', 
-                            coords='minimal', 
-                            engine='cfgrib', 
-                            compat='override', 
-                            decode_timedelta=False,
-                            filter_by_keys={'typeOfLevel': 'potentialVorticity'})
-        
-        ds49 = _shift_longitude(ds49)
-    except Exception as e:
-        pass
-    
     
     try:     
         ds['mslp'] = ds['prmsl']
@@ -952,307 +274,368 @@ def primary_gfs_post_processing(path):
         pass   
     
     try:        
-        ds['hybrid_level_cloud_mixing_ratio'] = ds1['clwmr']
+        ds['cloud_mixing_ratio'] = ds['clwmr']
+        ds = ds.drop_vars('clwmr')
     except Exception as e:
         pass      
     
     try:
-        ds['hybrid_level_ice_water_mixing_ratio'] = ds1['icmr']  
+        ds['ice_water_mixing_ratio'] = ds['icmr']  
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['hybrid_level_rain_mixing_ratio'] = ds1['rwmr']
+        ds['rain_mixing_ratio'] = ds['rwmr']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['hybrid_level_snow_mixing_ratio'] = ds1['snmr']
+        ds['snow_mixing_ratio'] = ds['snmr']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['hybrid_level_graupel'] = ds1['grle']
+        ds['graupel'] = ds['grle']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['hybrid_level_derived_radar_reflectivity'] = ds2['refd']
+        ds['derived_radar_reflectivity'] = ds['refd']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
         
     try:
-        ds['maximum_composite_reflectivity'] = ds3['refc']
+        ds['maximum_composite_reflectivity'] = ds['refc']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
         
     try:
-        ds['entire_atmosphere_total_cloud_cover'] = ds3['tcc']
+        ds['total_cloud_cover'] = ds['tcc']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
         
     try:
-        ds['surface_visibility'] = ds4['vis']
+        ds['visibility'] = ds['vis']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
         
     try:
-        ds['surface_wind_gust'] = ds4['gust']
+        ds['wind_gust'] = ds['gust']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
         
     try:
-        ds['haines_index'] = ds4['hindex']
+        ds['haines_index'] = ds['hindex']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
         
     try:
         ds['surface_pressure'] = ds['sp']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
         
     try:
-        ds['orography'] = ds4['orog']
+        ds['orography'] = ds['orog']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
         
     try:
-        ds['surface_temperature'] = ds4['t']
+        ds['temperature'] = ds['t']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['plant_canopy_surface_water'] = ds4['cnwat']
+        ds['plant_canopy_surface_water'] = ds['cnwat']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['water_equivalent_of_accumulated_snow_depth'] = ds4['sdwe']
+        ds['water_equivalent_of_accumulated_snow_depth'] = ds['sdwe']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:     
-        ds['snow_depth'] = ds4['sde']
+        ds['snow_depth'] = ds['sde']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass  
     
     try:     
-        ds['sea_ice_thickness'] = ds4['sithick']
+        ds['sea_ice_thickness'] = ds['sithick']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass   
     
     try:        
-        ds['percent_frozen_precipitation'] = ds4['cpofp']
+        ds['percent_frozen_precipitation'] = ds['cpofp']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass  
     
     try:        
-        ds['precipitation_rate'] = ds4['prate']
+        ds['precipitation_rate'] = ds['prate']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass     
     
     try: 
-        ds['categorical_snow'] = ds4['csnow']
+        ds['categorical_snow'] = ds['csnow']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass  
     
     try:
-        ds['categorical_ice_pellets'] = ds4['cicep']
+        ds['categorical_ice_pellets'] = ds['cicep']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try: 
-        ds['categorical_freezing_rain'] = ds4['cfrzr']
+        ds['categorical_freezing_rain'] = ds['cfrzr']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass  
     
     try: 
-        ds['categorical_rain'] = ds4['crain']
+        ds['categorical_rain'] = ds['crain']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass  
     
     try:        
-        ds['surface_roughness'] = ds4['fsr']
+        ds['surface_roughness'] = ds['fsr']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass        
     
     try:        
-        ds['frictional_velocity'] = ds4['fricv']
+        ds['frictional_velocity'] = ds['fricv']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass      
         
     try:
-        ds['vegetation'] = ds4['veg']
+        ds['vegetation'] = ds['veg']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['soil_type'] = ds4['slt']
+        ds['soil_type'] = ds['slt']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:        
-        ds['wilting_point'] = ds4['wilt']
+        ds['wilting_point'] = ds['wilt']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass        
     
     try:        
-        ds['field_capacity'] = ds4['fldcp']
+        ds['field_capacity'] = ds['fldcp']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass       
      
     try:        
-        ds['sunshine_duration'] = ds4['SUNSD']
+        ds['sunshine_duration'] = ds['SUNSD']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass     
        
     try:        
-        ds['surface_lifted_index'] = ds4['lftx']
+        ds['surface_lifted_index'] = ds['lftx']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass   
          
     try:        
-        ds['best_4_layer_lifted_index'] = ds4['lftx4']
+        ds['best_4_layer_lifted_index'] = ds['lftx4']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass    
     
     try:        
-        ds['surface_cape'] = ds4['cape']
+        ds['surface_cape'] = ds['cape']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass    
         
     try:        
-        ds['surface_cin'] = ds4['cin']
+        ds['surface_cin'] = ds['cin']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass 
     
     try:        
-        ds['sea_ice_area_fraction'] = ds4['siconc']
+        ds['sea_ice_area_fraction'] = ds['siconc']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass        
     
     try:
-        ds['sea_ice_temperature'] = ds4['sit']
+        ds['sea_ice_temperature'] = ds['sit']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['boundary_layer_wind_u_component'] = ds5['u']
+        ds['boundary_layer_wind_u_component'] = ds['u']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['boundary_layer_wind_v_component'] = ds5['v']
+        ds['boundary_layer_wind_v_component'] = ds['v']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['ventilation_rate'] = ds5['VRATE']
+        ds['ventilation_rate'] = ds['VRATE']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['geopotential_height'] = ds6['gh']
+        ds['geopotential_height'] = ds['gh']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['air_temperature'] = ds6['t']
+        ds['air_temperature'] = ds['t']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['relative_humidity'] = ds6['r']
+        ds['relative_humidity'] = ds['r']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['specific_humidity'] = ds6['q']
+        ds['specific_humidity'] = ds['q']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['vertical_velocity'] = ds6['w']
+        ds['vertical_velocity'] = ds['w']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['geometric_vertical_velocity'] = ds6['wz']
+        ds['geometric_vertical_velocity'] = ds['wz']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['u_wind_component'] = ds6['u']
+        ds['u_wind_component'] = ds['u']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
 
     try:
-        ds['v_wind_component'] = ds6['v']
+        ds['v_wind_component'] = ds['v']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['absolute_vorticity'] = ds6['absv']
+        ds['absolute_vorticity'] = ds['absv']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['ozone_mixing_ratio'] = ds6['o3mr']
+        ds['ozone_mixing_ratio'] = ds['o3mr']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['total_cloud_cover'] = ds7['tcc']
+        ds['total_cloud_cover'] = ds['tcc']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['ice_water_mixing_ratio'] = ds8['clwmr']  
+        ds['ice_water_mixing_ratio'] = ds['clwmr']  
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['rain_mixing_ratio'] = ds9['icmr']
+        ds['rain_mixing_ratio'] = ds['icmr']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:        
-        ds['cloud_mixing_ratio'] = ds10['rwmr']
+        ds['cloud_mixing_ratio'] = ds['rwmr']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass      
     
     try:
-        ds['snow_mixing_ratio'] = ds11['snmr']
+        ds['snow_mixing_ratio'] = ds['snmr']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['graupel'] = ds12['grle']
+        ds['graupel'] = ds['grle']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['derived_radar_reflectivity'] = ds13['refd']
+        ds['derived_radar_reflectivity'] = ds['refd']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['2m_temperature'] = ds14['t2m']
+        ds['2m_temperature'] = ds['t2m']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['2m_specific_humidity'] = ds15['sh2']
+        ds['2m_specific_humidity'] = ds['sh2']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['2m_dew_point'] = ds16['d2m']
+        ds['2m_dew_point'] = ds['d2m']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['2m_relative_humidity'] = ds17['r2']
+        ds['2m_relative_humidity'] = ds['r2']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
@@ -1262,302 +645,348 @@ def primary_gfs_post_processing(path):
         pass
     
     try:
-        ds['10m_u_wind_component'] = ds18['u10']
+        ds['10m_u_wind_component'] = ds['u10']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['10m_v_wind_component'] = ds19['v10']
+        ds['10m_v_wind_component'] = ds['v10']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['low_level_u_wind_component'] = ds20['u']
+        ds['low_level_u_wind_component'] = ds['u']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['low_level_v_wind_component'] = ds21['v']
+        ds['low_level_v_wind_component'] = ds['v']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['low_level_temperature'] = ds22['t']
+        ds['low_level_temperature'] = ds['t']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['low_level_specific_humidity'] = ds23['q']
+        ds['low_level_specific_humidity'] = ds['q']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['pressure_height_above_ground'] = ds24['pres']
+        ds['pressure_height_above_ground'] = ds['pres']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['100m_u_wind_component'] = ds25['u100']
+        ds['100m_u_wind_component'] = ds['u100']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['100m_v_wind_component'] = ds26['v100']
+        ds['100m_v_wind_component'] = ds['v100']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['soil_temperature'] = ds27['st']
+        ds['soil_temperature'] = ds['st']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:        
-        ds['volumetric_soil_moisture_content'] = ds27['soilw']
+        ds['volumetric_soil_moisture_content'] = ds['soilw']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:        
-        ds['liquid_volumetric_soil_moisture_non_frozen'] = ds27['soill']
+        ds['liquid_volumetric_soil_moisture_non_frozen'] = ds['soill']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass    
     
     try:
-        ds['temperature_height_above_sea'] = ds28['t']
+        ds['temperature_height_above_sea'] = ds['t']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['u_wind_component_height_above_sea'] = ds29['u']
+        ds['u_wind_component_height_above_sea'] = ds['u']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['v_wind_component_height_above_sea'] = ds30['v']
+        ds['v_wind_component_height_above_sea'] = ds['v']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['precipitable_water'] = ds31['pwat']
+        ds['precipitable_water'] = ds['pwat']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['cloud_water'] = ds31['cwat']
+        ds['cloud_water'] = ds['cwat']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['entire_atmosphere_relative_humidity'] = ds31['r']
+        ds['entire_atmosphere_relative_humidity'] = ds['r']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['total_ozone'] = ds31['tozne']
+        ds['total_ozone'] = ds['tozne']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['low_cloud_cover'] = ds32['lcc']
+        ds['low_cloud_cover'] = ds['lcc']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['middle_cloud_cover'] = ds33['mcc']
+        ds['middle_cloud_cover'] = ds['mcc']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
         
     try:
-        ds['high_cloud_cover'] = ds34['hcc']
+        ds['high_cloud_cover'] = ds['hcc']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['cloud_ceiling_height'] = ds35['gh']
+        ds['cloud_ceiling_height'] = ds['gh']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['storm_relative_helicity'] = ds36['hlcy']
+        ds['storm_relative_helicity'] = ds['hlcy']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:        
-        ds['u_component_of_storm_motion'] = ds37['ustm']
+        ds['u_component_of_storm_motion'] = ds['ustm']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass     
        
     try:        
-        ds['v_component_of_storm_motion'] = ds38['vstm']
+        ds['v_component_of_storm_motion'] = ds['vstm']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass      
     
     try:
-        ds['tropopause_pressure'] = ds39['trpp']
+        ds['tropopause_pressure'] = ds['trpp']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['tropopause_standard_atmosphere_reference_height'] = ds39['icaht']
+        ds['tropopause_standard_atmosphere_reference_height'] = ds['icaht']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['tropopause_height'] = ds39['gh']
+        ds['tropopause_height'] = ds['gh']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:        
-        ds['tropopause_u_wind_component'] = ds39['u']
+        ds['tropopause_u_wind_component'] = ds['u']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass        
     
     try:        
-        ds['tropopause_v_wind_component'] = ds39['v']
+        ds['tropopause_v_wind_component'] = ds['v']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass      
             
     try:        
-        ds['tropopause_temperature'] = ds39['t']
+        ds['tropopause_temperature'] = ds['t']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass    
               
     try:        
-        ds['tropopause_vertical_speed_shear'] = ds39['vwsh']
+        ds['tropopause_vertical_speed_shear'] = ds['vwsh']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass  
                 
     try:        
-        ds['max_wind_u_component'] = ds40['u']
+        ds['max_wind_u_component'] = ds['u']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass  
                 
     try:        
-        ds['max_wind_v_component'] = ds40['v']
+        ds['max_wind_v_component'] = ds['v']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass   
     
     try:        
-        ds['zero_deg_c_isotherm_geopotential_height'] = ds41['gh']
+        ds['zero_deg_c_isotherm_geopotential_height'] = ds['gh']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass       
            
     try:        
-        ds['zero_deg_c_isotherm_relative_humidity'] = ds41['r']
+        ds['zero_deg_c_isotherm_relative_humidity'] = ds['r']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass  
     
     try:        
-        ds['highest_tropospheric_freezing_level_geopotential_height'] = ds42['gh']
+        ds['highest_tropospheric_freezing_level_geopotential_height'] = ds['gh']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass   
                
     try:        
-        ds['highest_tropospheric_freezing_level_relative_humidity'] = ds42['r']
+        ds['highest_tropospheric_freezing_level_relative_humidity'] = ds['r']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass  
     
     try:
-        ds['mixed_layer_temperature'] = ds43['t']
+        ds['mixed_layer_temperature'] = ds['t']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['mixed_layer_relative_humidity'] = ds43['r']
+        ds['mixed_layer_relative_humidity'] = ds['r']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['mixed_layer_specific_humidity'] = ds43['q']
+        ds['mixed_layer_specific_humidity'] = ds['q']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['mixed_layer_u_wind_component'] = ds43['u']
+        ds['mixed_layer_u_wind_component'] = ds['u']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['mixed_layer_v_wind_component'] = ds43['v']
+        ds['mixed_layer_v_wind_component'] = ds['v']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['mixed_layer_cape'] = ds44['cape']
+        ds['mixed_layer_cape'] = ds['cape']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['mixed_layer_cin'] = ds45['cin']
+        ds['mixed_layer_cin'] = ds['cin']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['pressure_level_from_which_a_parcel_was_lifted'] = ds46['plpl']
+        ds['pressure_level_from_which_a_parcel_was_lifted'] = ds['plpl']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:
-        ds['sigma_layer_relative_humidity'] = ds47['r']
+        ds['sigma_layer_relative_humidity'] = ds['r']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass
     
     try:        
-        ds['995_sigma_temperature'] = ds48['t']
+        ds['995_sigma_temperature'] = ds['t']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass  
                 
     try:        
-        ds['995_sigma_theta'] = ds48['pt']
+        ds['995_sigma_theta'] = ds['pt']
+        ds = ds.drop_vars('icmr')
     except Exception as e:
         pass   
     
     try:        
-        ds['995_sigma_relative_humdity'] = ds48['r']
+        ds['995_sigma_relative_humdity'] = ds['r']
     except Exception as e:
         pass       
     
     try:        
-        ds['995_u_wind_component'] = ds48['u']
+        ds['995_u_wind_component'] = ds['u']
     except Exception as e:
         pass     
              
     try:        
-        ds['995_v_wind_component'] = ds48['v']
+        ds['995_v_wind_component'] = ds['v']
     except Exception as e:
         pass    
               
     try:        
-        ds['995_vertical_velocity'] = ds48['w']
+        ds['995_vertical_velocity'] = ds['w']
     except Exception as e:
         pass 
     
     try:        
-        ds['potential_vorticity_level_u_wind_component'] = ds49['u']
+        ds['potential_vorticity_level_u_wind_component'] = ds['u']
     except Exception as e:
         pass       
            
     try:        
-        ds['potential_vorticity_level_v_wind_component'] = ds49['v']
+        ds['potential_vorticity_level_v_wind_component'] = ds['v']
     except Exception as e:
         pass            
-      
-    try:        
-        ds['potential_vorticity_level_temperature'] = ds49['t']
-    except Exception as e:
-        pass        
+        
             
     try:        
-        ds['potential_vorticity_level_geopotential_height'] = ds49['gh']
+        ds['potential_vorticity_level_geopotential_height'] = ds['gh']
     except Exception as e:
         pass      
       
     try:        
-        ds['potential_vorticity_level_air_pressure'] = ds49['pres']
+        ds['potential_vorticity_level_air_pressure'] = ds['pres']
     except Exception as e:
         pass       
      
     try:        
-        ds['potential_vorticity_level_vertical_speed_shear'] = ds49['vwsh']
+        ds['potential_vorticity_level_vertical_speed_shear'] = ds['vwsh']
     except Exception as e:
         pass    
     
@@ -1566,8 +995,7 @@ def primary_gfs_post_processing(path):
     try:    
         ds = ds.sortby('step')
     except Exception as e:
-        _eccodes_error_message()
-        _sys.exit(1)
+        pass
     
     return ds
 

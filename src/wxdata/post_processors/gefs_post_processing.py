@@ -84,8 +84,8 @@ def primary_gefs_post_processing(paths,
     '10m_u_wind_component'
     '10m_v_wind_component'
     'precipitable_water'
-    'mixed_layer_cape'
-    'mixed_layer_cin'
+    'convective_available_potential_energy'
+    'convective_inhibition'
     'geopotential_height'
     'air_temperature'
     'relative_humidity'
@@ -114,8 +114,8 @@ def primary_gefs_post_processing(paths,
     'surface_visibility'
     'surface_wind_gust'
     'percent_frozen_precipitation'
-    'surface_cape'
-    'surface_cin'
+    'convective_available_potential_energy'
+    'convective_inhibition'
     'mslp'
     'soil_temperature'
     'volumetric_soil_moisture_content'
@@ -296,18 +296,7 @@ def primary_gefs_post_processing(paths,
         ds['percent_frozen_precipitation'] = ds['cpofp']
         ds = ds.drop_vars('cpofp')
     except Exception as e:
-        pass   
-    
-    try:        
-        ds['surface_cape'] = ds['cape']
-        ds = ds.drop_vars('cape')
-    except Exception as e:
         pass        
-    try:        
-        ds['surface_cin'] = ds['cin']
-        ds = ds.drop_vars('cin')
-    except Exception as e:
-        pass 
     
     try:     
         ds['mslp'] = ds['prmsl']
@@ -345,6 +334,11 @@ def primary_gefs_post_processing(paths,
         pass
     
     try:
+        ds['2m_dew_point_depression'] = ds['2m_temperature'] - ds['2m_dew_point']
+    except Exception as e:
+        pass
+    
+    try:
         ds['maximum_temperature'] = ds['tmax']
         ds = ds.drop_vars('tmax')
     except Exception as e:
@@ -375,13 +369,13 @@ def primary_gefs_post_processing(paths,
         pass
     
     try:
-        ds['mixed_layer_cape'] = ds['cape']
+        ds['convective_available_potential_energy'] = ds['cape']
         ds = ds.drop_vars('cape')
     except Exception as e:
         pass
     
     try:
-        ds['mixed_layer_cin'] = ds['cin']
+        ds['convective_inhibition'] = ds['cin']
         ds = ds.drop_vars('cin')
     except Exception as e:
         pass
@@ -393,7 +387,7 @@ def primary_gefs_post_processing(paths,
         pass
     
     try:
-        ds['air_temperature'] = ds['t']
+        ds['temperature'] = ds['t']
         ds = ds.drop_vars('t')
     except Exception as e:
         pass
@@ -462,115 +456,78 @@ def secondary_gefs_post_processing(paths,
     New Variable Keys After Post-Processing (Decrypted GRIB Keys Into Plain Language)
     --------------------------------------------------------------------------------
     
-        'surface_temperature'
-        'surface_visibility'
-        'surface_wind_gust'
-        'haines_index'
-        'plant_canopy_surface_water'
-        'snow_cover'
-        'percent_frozen_precipitation'
-        'snow_phase_change_heat_flux'
-        'surface_roughness'
-        'frictional_velocity'
-        'wilting_point'
-        'field_capacity'
-        'sunshine_duration'
-        'surface_lifted_index'
-        'best_4_layer_lifted_index'
-        'land_sea_mask'
-        'sea_ice_area_fraction'
-        'orography'
-        'surface_cape'
-        'surface_cin'
-        'convective_precipitation_rate'
-        'precipitation_rate'
-        'total_convective_precipitation'
-        'total_non_convective_precipitation'
-        'total_precipitation'
-        'water_runoff'
-        'ground_heat_flux'
-        'time_mean_u_component_of_atmospheric_surface_momentum_flux'
-        'time_mean_v_component_of_atmospheric_surface_momentum_flux'
-        'instantaneous_eastward_gravity_wave_surface_flux'
-        'instantaneous_northward_gravity_wave_surface_flux'
-        'uv_b_downward_solar_flux'
-        'clear_sky_uv_b_downward_solar_flux'
-        'average_surface_albedo'
-        'mslp'
-        'mslp_eta_reduction'
-        'boundary_layer_u_wind_component'
-        'boundary_layer_v_wind_component'
-        'ventilation_rate' 
-        'geopotential_height'
-        'air_temperature' 
-        'vertical_velocity'
-        'u_wind_component'
-        'v_wind_component'
-        'ozone_mixing_ratio'
-        'absolute_vorticity'
-        'cloud_mixing_ratio'
-        'icing_severity'
-        'total_cloud_cover'
-        'relative_humidity'
-        'liquid_volumetric_soil_moisture_non_frozen'
-        'soil_temperature'
-        'volumetric_soil_moisture_content'
-        '2m_specific_humidity'
-        '2m_dew_point'
-        '2m_apparent_temperature'
-        '80m_specific_humidity'
-        '80m_air_pressure'
-        '80m_u_wind_component'
-        '80m_v_wind_component'
-        'atmosphere_single_layer_relative_humidity'
-        'cloud_water'
-        'total_ozone'
-        'cloud_ceiling_height'
-        'brightness_temperature'
-        '3km_helicity'
-        'u_component_of_storm_motion'
-        'v_component_of_storm_motion'
-        'tropopause_height'
-        'tropopause_pressure'
-        'tropopause_standard_atmosphere_reference_height'
-        'tropopause_u_wind_component'
-        'tropopause_v_wind_component'
-        'tropopause_temperature'
-        'tropopause_vertical_speed_shear'
-        'max_wind_u_component'
-        'max_wind_v_component'
-        'zero_deg_c_isotherm_geopotential_height'
-        'zero_deg_c_isotherm_relative_humidity'
-        'highest_tropospheric_freezing_level_geopotential_height'
-        'highest_tropospheric_freezing_level_relative_humidity'
-        '995_sigma_relative_humdity'
-        '995_sigma_temperature'
-        '995_sigma_theta'
-        '995_u_wind_component'
-        '995_v_wind_component'
-        '995_vertical_velocity'
-        'potential_vorticity'
-        'theta_level_u_wind_component'
-        'theta_level_v_wind_component'
-        'theta_level_temperature'
-        'theta_level_montgomery_potential'
-        'potential_vorticity_level_u_wind_component'
-        'potential_vorticity_level_v_wind_component'
-        'potential_vorticity_level_temperature'
-        'potential_vorticity_level_geopotential_height'
-        'potential_vorticity_level_air_pressure'
-        'potential_vorticity_level_vertical_speed_shear'
-        'mixed_layer_air_temperature'
-        'mixed_layer_relative_humidity'
-        'mixed_layer_specific_humidity'
-        'mixed_layer_u_wind_component'
-        'mixed_layer_v_wind_component'
-        'mixed_layer_dew_point'
-        'mixed_layer_precipitable_water'
-        'parcel_lifted_index_to_500hPa'
-        'mixed_layer_cape'
-        'mixed_layer_cin'
-        'pressure_level_from_which_a_parcel_was_lifted' 
+    'temperature'
+    'surface_visibility'
+    'surface_wind_gust'
+    'haines_index'
+    'plant_canopy_surface_water'
+    'snow_cover'
+    'percent_frozen_precipitation'
+    'snow_phase_change_heat_flux'
+    'surface_roughness'
+    'frictional_velocity'
+    'wilting_point'
+    'field_capacity'
+    'sunshine_duration'
+    'surface_lifted_index'
+    'best_4_layer_lifted_index'
+    'land_sea_mask'
+    'sea_ice_area_fraction'
+    'orography'
+    'convective_precipitation_rate'
+    'precipitation_rate'
+    'total_convective_precipitation'
+    'total_non_convective_precipitation'
+    'total_precipitation'
+    'water_runoff'
+    'ground_heat_flux'
+    'time_mean_u_component_of_atmospheric_surface_momentum_flux'
+    'time_mean_v_component_of_atmospheric_surface_momentum_flux'
+    'instantaneous_eastward_gravity_wave_surface_flux'
+    'instantaneous_northward_gravity_wave_surface_flux'
+    'uv_b_downward_solar_flux'
+    'clear_sky_uv_b_downward_solar_flux'
+    'average_surface_albedo'
+    'mslp'
+    'mslp_eta_reduction'  
+    'ventilation_rate'
+    'geopotential_height'
+    'vertical_velocity'
+    'u_wind_component'
+    'v_wind_component'
+    'ozone_mixing_ratio'
+    'absolute_vorticity'
+    'cloud_mixing_ratio'
+    'icing_severity'
+    'total_cloud_cover'
+    'relative_humidity'
+    'liquid_volumetric_soil_moisture_non_frozen'
+    'soil_temperature'
+    'volumetric_soil_moisture_content'
+    '2m_specific_humidity'
+    '2m_dew_point'
+    '2m_apparent_temperature'
+    'specific_humidity'
+    'pressure'
+    'cloud_water'
+    'total_ozone'
+    'brightness_temperature'
+    '3km_helicity'
+    'u_component_of_storm_motion'
+    'v_component_of_storm_motion'
+    'tropopause_pressure'
+    'tropopause_standard_atmosphere_reference_height'
+    'tropopause_vertical_speed_shear'
+    '995_sigma_theta'
+    'potential_vorticity'
+    'theta_level_montgomery_potential'
+    'potential_vorticity_level_vertical_speed_shear'
+    'mixed_layer_dew_point'
+    'mixed_layer_precipitable_water'
+    'parcel_lifted_index_to_500hPa'
+    'convective_available_potential_energy'
+    'convective_inhibition'
+    'pressure_level_from_which_a_parcel_was_lifted'
     
     """
 
@@ -627,7 +584,7 @@ def secondary_gefs_post_processing(paths,
             pass                       
         
     try:
-        ds['surface_temperature'] = ds['t']
+        ds['temperature'] = ds['t']
         ds = ds.drop_vars('t')
     except Exception as e:
         pass
@@ -716,16 +673,7 @@ def secondary_gefs_post_processing(paths,
         ds = ds.drop_vars('orog')
     except Exception as e:
         pass        
-    try:        
-        ds['surface_cape'] = ds['cape']
-        ds = ds.drop_vars('cape')
-    except Exception as e:
-        pass        
-    try:        
-        ds['surface_cin'] = ds['cin']
-        ds = ds.drop_vars('cin')
-    except Exception as e:
-        pass        
+        
     try:        
         ds['convective_precipitation_rate'] = ds['cpr']
         ds = ds.drop_vars('cpr')
@@ -804,17 +752,7 @@ def secondary_gefs_post_processing(paths,
         ds['mslp_eta_reduction'] = ds['mslet']  
         ds = ds.drop_vars('mslet')
     except Exception as e:
-        pass        
-    try:        
-        ds['boundary_layer_u_wind_component'] = ds['u']
-        ds = ds.drop_vars('u')
-    except Exception as e:
-        pass        
-    try:        
-        ds['boundary_layer_v_wind_component'] = ds['v']
-        ds = ds.drop_vars('v')
-    except Exception as e:
-        pass        
+        pass              
     try:        
         ds['ventilation_rate'] = ds['VRATE']   
         ds = ds.drop_vars('VRATE')
@@ -825,11 +763,7 @@ def secondary_gefs_post_processing(paths,
         ds = ds.drop_vars('gh')
     except Exception as e:
         pass        
-    try:        
-        ds['air_temperature'] = ds['t']
-        ds = ds.drop_vars('t')
-    except Exception as e:
-        pass        
+      
     try:        
         ds['vertical_velocity'] = ds['w']
         ds = ds.drop_vars('w')
@@ -862,258 +796,162 @@ def secondary_gefs_post_processing(paths,
         pass        
     try:        
         ds['icing_severity'] = ds['ICSEV']
+        ds = ds.drop_vars('ICSEV')
     except Exception as e:
         pass        
     try:        
         ds['total_cloud_cover'] = ds['tcc']
+        ds = ds.drop_vars('tcc')
     except Exception as e:
         pass        
     try:        
         ds['relative_humidity'] = ds['r']
+        ds = ds.drop_vars('r')
     except Exception as e:
         pass        
     try:        
         ds['liquid_volumetric_soil_moisture_non_frozen'] = ds['soill']
+        ds = ds.drop_vars('soill')
     except Exception as e:
         pass        
     try:        
         ds['soil_temperature'] = ds['st']
+        ds = ds.drop_vars('st')
     except Exception as e:
         pass        
     try:        
         ds['volumetric_soil_moisture_content'] = ds['soilw']
+        ds = ds.drop_vars('soilw')
     except Exception as e:
         pass        
     try:        
         ds['2m_specific_humidity'] = ds['sh2']
+        ds = ds.drop_vars('sh2')
     except Exception as e:
         pass        
+    
     try:        
         ds['2m_dew_point'] = ds['d2m']
+        ds = ds.drop_vars('d2m')
     except Exception as e:
         pass        
     try:        
         ds['2m_apparent_temperature'] = ds['aptmp']
+        ds = ds.drop_vars('aptmp')
     except Exception as e:
         pass        
     try:        
-        ds['80m_specific_humidity'] = ds['q']
+        ds['specific_humidity'] = ds['q']
+        ds = ds.drop_vars('q')
     except Exception as e:
-        pass        
+        pass          
     try:        
-        ds['80m_and_100m_temperature'] = ds['t']
+        ds['pressure'] = ds['pres']
+        ds = ds.drop_vars('pres')
     except Exception as e:
-        pass        
-    try:        
-        ds['80m_air_pressure'] = ds['pres']
-    except Exception as e:
-        pass        
-    try:        
-        ds['80m_u_wind_component'] = ds['u']
-    except Exception as e:
-        pass        
-    try:        
-        ds['80m_v_wind_component'] = ds['v']
-    except Exception as e:
-        pass        
-    try:        
-        ds['atmosphere_single_layer_relative_humidity'] = ds['r']
-    except Exception as e:
-        pass        
+        pass             
+   
     try:        
         ds['cloud_water'] = ds['cwat']
+        ds = ds.drop_vars('cwat')
     except Exception as e:
         pass        
     try:        
         ds['total_ozone'] = ds['tozne']
+        ds = ds.drop_vars('tozne')
     except Exception as e:
         pass        
-    try:        
-        ds['cloud_ceiling_height'] = ds['gh']
-    except Exception as e:
-        pass        
+   
     try:        
         ds['brightness_temperature'] = ds['btmp']
+        ds = ds.drop_vars('btmp')
     except Exception as e:
         pass        
     try:        
-        ds['3km_helicity'] = ds['hlcy'] 
+        ds['3km_helicity'] = ds['hlcy']
+        ds = ds.drop_vars('hlcy') 
     except Exception as e:
         pass        
     try:        
         ds['u_component_of_storm_motion'] = ds['ustm']
+        ds = ds.drop_vars('ustm')
     except Exception as e:
         pass        
     try:        
         ds['v_component_of_storm_motion'] = ds['vstm']
+        ds = ds.drop_vars('vstm')
     except Exception as e:
         pass        
-    try:        
-        ds['tropopause_height'] = ds['gh']
-    except Exception as e:
-        pass        
+    
     try:        
         ds['tropopause_pressure'] = ds['trpp']
+        ds = ds.drop_vars('trpp')
     except Exception as e:
         pass        
     try:        
         ds['tropopause_standard_atmosphere_reference_height'] = ds['icaht']
+        ds = ds.drop_vars('icaht')
     except Exception as e:
         pass        
-    try:        
-        ds['tropopause_u_wind_component'] = ds['u']
-    except Exception as e:
-        pass        
-    try:        
-        ds['tropopause_v_wind_component'] = ds['v']
-    except Exception as e:
-        pass              
-    try:        
-        ds['tropopause_temperature'] = ds['t']
-    except Exception as e:
-        pass              
+                       
     try:        
         ds['tropopause_vertical_speed_shear'] = ds['vwsh']
+        ds = ds.drop_vars('vwsh')
     except Exception as e:
-        pass              
-    try:        
-        ds['max_wind_u_component'] = ds['u']
-    except Exception as e:
-        pass              
-    try:        
-        ds['max_wind_v_component'] = ds['v']
-    except Exception as e:
-        pass              
-    try:        
-        ds['zero_deg_c_isotherm_geopotential_height'] = ds['gh']
-    except Exception as e:
-        pass              
-    try:        
-        ds['zero_deg_c_isotherm_relative_humidity'] = ds['r']
-    except Exception as e:
-        pass              
-    try:        
-        ds['highest_tropospheric_freezing_level_geopotential_height'] = ds['gh']
-    except Exception as e:
-        pass              
-    try:        
-        ds['highest_tropospheric_freezing_level_relative_humidity'] = ds['r']
-    except Exception as e:
-        pass              
-    try:        
-        ds['relative_humdity_by_sigma_layer'] = ds['r']
-    except Exception as e:
-        pass              
-    try:        
-        ds['995_sigma_relative_humdity'] = ds['r']
-    except Exception as e:
-        pass              
-    try:        
-        ds['995_sigma_temperature'] = ds['t']
-    except Exception as e:
-        pass              
+        pass                           
+                          
     try:        
         ds['995_sigma_theta'] = ds['pt']
+        ds = ds.drop_vars('pt')
     except Exception as e:
         pass              
-    try:        
-        ds['995_sigma_u_wind_component'] = ds['u']
-    except Exception as e:
-        pass              
-    try:        
-        ds['995_sigma_v_wind_component'] = ds['v']
-    except Exception as e:
-        pass              
-    try:        
-        ds['995_sigma_vertical_velocity'] = ds['w']
-    except Exception as e:
-        pass              
+               
     try:        
         ds['potential_vorticity'] = ds['pv']
+        ds = ds.drop_vars('pv')
     except Exception as e:
-        pass              
-    try:        
-        ds['theta_level_u_wind_component'] = ds['u']
-    except Exception as e:
-        pass              
-    try:        
-        ds['theta_level_v_wind_component'] = ds['v']
-    except Exception as e:
-        pass              
-    try:        
-        ds['theta_level_temperature'] = ds['t']
-    except Exception as e:
-        pass              
+        pass                          
+          
     try:        
         ds['theta_level_montgomery_potential'] = ds['mont']
+        ds = ds.drop_vars('mont')
     except Exception as e:
-        pass              
-    try:        
-        ds['potential_vorticity_level_u_wind_component'] = ds['u']
-    except Exception as e:
-        pass              
-    try:        
-        ds['potential_vorticity_level_v_wind_component'] = ds['v']
-    except Exception as e:
-        pass              
-    try:        
-        ds['potential_vorticity_level_temperature'] = ds['t']
-    except Exception as e:
-        pass                
-    try:        
-        ds['potential_vorticity_level_geopotential_height'] = ds['gh']
-    except Exception as e:
-        pass        
-    try:        
-        ds['potential_vorticity_level_air_pressure'] = ds['pres']
-    except Exception as e:
-        pass        
+        pass                         
+    
     try:        
         ds['potential_vorticity_level_vertical_speed_shear'] = ds['vwsh']
+        ds = ds.drop_vars('vwsh')
     except Exception as e:
         pass        
-    try:        
-        ds['mixed_layer_air_temperature'] = ds['t']
-    except Exception as e:
-        pass        
-    try:        
-        ds['mixed_layer_relative_humidity'] = ds['r']
-    except Exception as e:
-        pass        
-    try:        
-        ds['mixed_layer_specific_humidity'] = ds['q']
-    except Exception as e:
-        pass        
-    try:        
-        ds['mixed_layer_u_wind_component'] = ds['u']
-    except Exception as e:
-        pass        
-    try:        
-        ds['mixed_layer_v_wind_component'] = ds['v']
-    except Exception as e:
-        pass        
+              
     try:        
         ds['mixed_layer_dew_point'] = ds['dpt']
+        ds = ds.drop_vars('dpt')
     except Exception as e:
         pass        
     try:        
         ds['mixed_layer_precipitable_water'] = ds['pwat']
+        ds = ds.drop_vars('pwat')
     except Exception as e:
         pass        
     try:        
         ds['parcel_lifted_index_to_500hPa'] = ds['pli']
+        ds = ds.drop_vars('pli')
     except Exception as e:
         pass        
     try:        
-        ds['mixed_layer_cape'] = ds['cape']
+        ds['convective_available_potential_energy'] = ds['cape']
+        ds = ds.drop_vars('cape')
     except Exception as e:
         pass        
     try:        
-        ds['mixed_layer_cin'] = ds['cin']
+        ds['convective_inhibition'] = ds['cin']
+        ds = ds.drop_vars('cin')
     except Exception as e:
         pass        
     try:        
         ds['pressure_level_from_which_a_parcel_was_lifted'] = ds['plpl']
+        ds = ds.drop_vars('plpl')
     except Exception as e:
         pass   
 

@@ -16,7 +16,6 @@ _warnings.filterwarnings('ignore')
 
 from wxdata.gfs.paths import build_directory as _build_directory
 from wxdata.gfs.url_scanners import(
-    
     gfs_0p50_url_scanner as _gfs_0p50_url_scanner,
     gfs_0p25_url_scanner as _gfs_0p25_url_scanner,
     gfs_0p25_secondary_parameters_url_scanner as _gfs_0p25_secondary_parameters_url_scanner

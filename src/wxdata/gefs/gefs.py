@@ -14,14 +14,12 @@ import wxdata.post_processors.gefs_post_processing as _gefs_post_processing
 _warnings.filterwarnings('ignore')
 
 from wxdata.gefs.file_funcs import(
-    
     build_directory as _build_directory,
     clear_idx_files as _clear_idx_files,
     clear_empty_files as _clear_empty_files
     
 )
 from wxdata.gefs.url_scanners import(
-    
     gefs_0p50_url_scanner as _gefs_0p50_url_scanner,
     gefs_0p50_secondary_parameters_url_scanner as _gefs_0p50_secondary_parameters_url_scanner,
     gefs_0p25_url_scanner as _gefs_0p25_url_scanner

@@ -69,7 +69,7 @@ def hgefs_mean_spread_post_processing(path,
     '2m_temperature'
     'total_precipitation'
     """
-    
+    _eccodes_error_message()
     western_bound, eastern_bound = _convert_lon(western_bound, 
                                                     eastern_bound) 
     
@@ -187,7 +187,6 @@ def hgefs_mean_spread_post_processing(path,
     try:    
         ds = ds.sortby('step')
     except Exception as e:
-        _eccodes_error_message()
-        _sys.exit(1)
+        pass
     
     return ds

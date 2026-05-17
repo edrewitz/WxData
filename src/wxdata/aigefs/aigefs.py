@@ -56,7 +56,25 @@ def aigefs_pressure_members(final_forecast_hour=384,
             custom_directory=None,
             chunk_size=8192,
             notifications='off',
-            clear_data=False):
+            clear_data=False,
+            variables=['geopotential height',
+                       'specific humidity',
+                       'temperature',
+                       'u-component of wind',
+                       'v-component of wind',
+                       'vertical velocity (pressure)'],
+            levels=[1000,
+                    925,
+                    850,
+                    700,
+                    600,
+                    500,
+                    400,
+                    300,
+                    250,
+                    150,
+                    100,
+                    50]):
     
     """
     This function downloads, pre-processes and post-processes the latest pressure parameter dataset of the AIGEFS and bins the files to specific folders based on ensemble number.
@@ -116,7 +134,27 @@ def aigefs_pressure_members(final_forecast_hour=384,
     
     17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
-    
+        
+    18) variables (String List) Default=['geopotential height',
+                                        'specific humidity',
+                                        'temperature',
+                                        'u-component of wind',
+                                        'v-component of wind',
+                                        'vertical velocity (pressure)']
+                       
+        
+    19) levels (Integer List) - Default=[1000,
+                                        925,
+                                        850,
+                                        700,
+                                        600,
+                                        500,
+                                        400,
+                                        300,
+                                        250,
+                                        150,
+                                        100,
+                                        50]
     
     Returns
     -------
@@ -174,26 +212,41 @@ def aigefs_pressure_members(final_forecast_hour=384,
         for path, url in zip(paths, urls):
             for i in range(0, stop, 6):
                 if i < 10:
-                    _client.get_gridded_data(f"{url}/aigefs.t{run}z.pres.f00{i}.grib2",
-                                path,
-                                f"aigefs.t{run}z.pres.f00{i}.grib2",
-                                proxies=proxies,
-                                chunk_size=chunk_size,
-                                notifications=notifications)  
+                    _client.byte_range_request(f"{url}/aigefs.t{run}z.pres.f00{i}.grib2",
+                                                f"{url}/aigefs.t{run}z.pres.f00{i}.grib2.idx",
+                                                variables,
+                                                levels,
+                                                'pressure',
+                                                path,
+                                                f"aigefs.t{run}z.pres.f00{i}.grib2",
+                                                proxies=proxies,
+                                                chunk_size=chunk_size,
+                                                notifications=notifications,
+                                                clear_recycle_bin=clear_recycle_bin)
                 elif i >= 10 and i < 100:
-                    _client.get_gridded_data(f"{url}/aigefs.t{run}z.pres.f0{i}.grib2",
-                                path,
-                                f"aigefs.t{run}z.pres.f0{i}.grib2",
-                                proxies=proxies,
-                                chunk_size=chunk_size,
-                                notifications=notifications)  
+                    _client.byte_range_request(f"{url}/aigefs.t{run}z.pres.f0{i}.grib2",
+                                                f"{url}/aigefs.t{run}z.pres.f0{i}.grib2.idx",
+                                                variables,
+                                                levels,
+                                                'pressure',
+                                                path,
+                                                f"aigefs.t{run}z.pres.f0{i}.grib2",
+                                                proxies=proxies,
+                                                chunk_size=chunk_size,
+                                                notifications=notifications,
+                                                clear_recycle_bin=clear_recycle_bin)
                 else:
-                    _client.get_gridded_data(f"{url}/aigefs.t{run}z.pres.f{i}.grib2",
-                                path,
-                                f"aigefs.t{run}z.pres.f{i}.grib2",
-                                proxies=proxies,
-                                chunk_size=chunk_size,
-                                notifications=notifications)     
+                    _client.byte_range_request(f"{url}/aigefs.t{run}z.pres.f{i}.grib2",
+                                                f"{url}/aigefs.t{run}z.pres.f{i}.grib2.idx",
+                                                variables,
+                                                levels,
+                                                'pressure',
+                                                path,
+                                                f"aigefs.t{run}z.pres.f{i}.grib2",
+                                                proxies=proxies,
+                                                chunk_size=chunk_size,
+                                                notifications=notifications,
+                                                clear_recycle_bin=clear_recycle_bin)   
     else:
         print(f"User has latest AIGEFS Pressure Parameter Files\nSkipping Download...")  
         
@@ -411,8 +464,26 @@ def aigefs_single(final_forecast_hour=384,
                     chunk_size=8192,
                     notifications='off',
                     cat='mean',
-                    type_of_level='pressure',
-                    clear_data=False):                   
+                    level_type='pressure',
+                    clear_data=False,
+            variables=['geopotential height',
+                       'specific humidity',
+                       'temperature',
+                       'u-component of wind',
+                       'v-component of wind',
+                       'vertical velocity (pressure)'],
+            levels=[1000,
+                    925,
+                    850,
+                    700,
+                    600,
+                    500,
+                    400,
+                    300,
+                    250,
+                    150,
+                    100,
+                    50]):                   
     
     """
     This function downloads, pre-processes and post-processes the latest AIGEFS Ensemble Mean or Ensemble Spread for either the Pressure or Surface Parameters. 
@@ -476,7 +547,7 @@ def aigefs_single(final_forecast_hour=384,
         1) mean
         2) spread
         
-    17) type_of_level (String) - Default='pressure'. The type of level the data is in.
+    17) level_type (String) - Default='pressure'. The type of level the data is in.
     
         Types of Levels
         ---------------
@@ -487,6 +558,32 @@ def aigefs_single(final_forecast_hour=384,
     18) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
+    
+    19) variables (String List) **level_type='pressure'** - Default=['geopotential height',
+                                                                        'specific humidity',
+                                                                        'temperature',
+                                                                        'u-component of wind',
+                                                                        'v-component of wind',
+                                                                        'vertical velocity (pressure)']
+                       
+        When the level_type = 'pressure', the user can filter by variable to the variable they want. (Surface level files are very small 
+        compared to pressure level files).
+        
+    20) levels (Integer List) **level_type='pressure'** - Default=[1000,
+                                                                        925,
+                                                                        850,
+                                                                        700,
+                                                                        600,
+                                                                        500,
+                                                                        400,
+                                                                        300,
+                                                                        250,
+                                                                        150,
+                                                                        100,
+                                                                        50]
+                                                                        
+        When the level_type = 'pressure', the user can filter by level to the level they want. (Surface level files are very small 
+        compared to pressure level files).
     
     Returns
     -------
@@ -512,14 +609,14 @@ def aigefs_single(final_forecast_hour=384,
     '2m_temperature'
     """
     cat = cat.lower()
-    type_of_level = type_of_level.lower()
+    level_type = level_type.lower()
     
     if cat == 'mean':
         cat = 'avg'
     else:
         cat = 'spr'
         
-    if type_of_level == 'pressure':
+    if level_type == 'pressure':
         level = 'pres'
     else:
         level = 'sfc'
@@ -532,7 +629,7 @@ def aigefs_single(final_forecast_hour=384,
         pass    
     
     if custom_directory == None:
-        path = _build_aigefs_single_directory(type_of_level,
+        path = _build_aigefs_single_directory(level_type,
                                   cat)
     else:
         path = _custom_branch(custom_directory)
@@ -545,7 +642,7 @@ def aigefs_single(final_forecast_hour=384,
     url, file, run = _aigefs_single_url_scanner(final_forecast_hour,
                                                         proxies,
                                                         cat,
-                                                        type_of_level)
+                                                        level_type)
     
     download = _local_file_scanner(path, 
                                     file,
@@ -554,7 +651,7 @@ def aigefs_single(final_forecast_hour=384,
                                     model='aigefs')  
     
     if download == True:
-        print(f"Downloading AIGEFS {type_of_level.upper()} {cat.upper()} Files...")
+        print(f"Downloading AIGEFS {level_type.upper()} {cat.upper()} Files...")
         
         _clear_old_data(path)
         
@@ -564,34 +661,73 @@ def aigefs_single(final_forecast_hour=384,
             run = f"{run}"        
         stop = final_forecast_hour + 6
         
+        
         for i in range(0, stop, 6):
-            if i < 10:
-                _client.get_gridded_data(f"{url}aigefs.t{run}z.{level}.{cat}.f00{i}.grib2",
-                            path,
-                            f"aigefs.t{run}z.{level}.{cat}.f00{i}.grib2",
-                            proxies=proxies,
-                            chunk_size=chunk_size,
-                            notifications=notifications)  
-            elif i >= 10 and i < 100:
-                _client.get_gridded_data(f"{url}aigefs.t{run}z.{level}.{cat}.f0{i}.grib2",
-                            path,
-                            f"aigefs.t{run}z.{level}.{cat}.f0{i}.grib2",
-                            proxies=proxies,
-                            chunk_size=chunk_size,
-                            notifications=notifications)  
+            if level_type == 'surface':
+                if i < 10:
+                    _client.get_gridded_data(f"{url}aigefs.t{run}z.{level}.{cat}.f00{i}.grib2",
+                                path,
+                                f"aigefs.t{run}z.{level}.{cat}.f00{i}.grib2",
+                                proxies=proxies,
+                                chunk_size=chunk_size,
+                                notifications=notifications)  
+                elif i >= 10 and i < 100:
+                    _client.get_gridded_data(f"{url}aigefs.t{run}z.{level}.{cat}.f0{i}.grib2",
+                                path,
+                                f"aigefs.t{run}z.{level}.{cat}.f0{i}.grib2",
+                                proxies=proxies,
+                                chunk_size=chunk_size,
+                                notifications=notifications)  
+                else:
+                    _client.get_gridded_data(f"{url}aigefs.t{run}z.{level}.{cat}.f{i}.grib2",
+                                path,
+                                f"aigefs.t{run}z.{level}.{cat}.f{i}.grib2",
+                                proxies=proxies,
+                                chunk_size=chunk_size,
+                                notifications=notifications) 
             else:
-                _client.get_gridded_data(f"{url}aigefs.t{run}z.{level}.{cat}.f{i}.grib2",
-                            path,
-                            f"aigefs.t{run}z.{level}.{cat}.f{i}.grib2",
-                            proxies=proxies,
-                            chunk_size=chunk_size,
-                            notifications=notifications)    
+                if i < 10:
+                    _client.byte_range_request(f"{url}aigefs.t{run}z.{level}.{cat}.f00{i}.grib2",
+                                                    f"{url}aigefs.t{run}z.{level}.{cat}.f00{i}.grib2.idx",
+                                                    variables,
+                                                    levels,
+                                                    'pressure',
+                                                    path,
+                                                    f"aigefs.t{run}z.pres.f00{i}.grib2",
+                                                    proxies=proxies,
+                                                    chunk_size=chunk_size,
+                                                    notifications=notifications,
+                                                    clear_recycle_bin=clear_recycle_bin)
+                elif i >= 10 and i < 100:
+                    _client.byte_range_request(f"{url}aigefs.t{run}z.{level}.{cat}.f0{i}.grib2",
+                                                f"{url}aigefs.t{run}z.{level}.{cat}.f0{i}.grib2.idx",
+                                                variables,
+                                                levels,
+                                                'pressure',
+                                                path,
+                                                f"aigefs.t{run}z.pres.f0{i}.grib2",
+                                                proxies=proxies,
+                                                chunk_size=chunk_size,
+                                                notifications=notifications,
+                                                clear_recycle_bin=clear_recycle_bin)
+                else:
+                    _client.byte_range_request(f"{url}aigefs.t{run}z.{level}.{cat}.f{i}.grib2",
+                                                f"{url}aigefs.t{run}z.{level}.{cat}.f{i}.grib2.idx",
+                                                variables,
+                                                levels,
+                                                'pressure',
+                                                path,
+                                                f"aigefs.t{run}z.pres.f{i}.grib2",
+                                                proxies=proxies,
+                                                chunk_size=chunk_size,
+                                                notifications=notifications,
+                                                clear_recycle_bin=clear_recycle_bin)    
                     
     else:
-        print(f"User has latest AIGEFS {type_of_level.upper()} {cat.upper()} Files\nSkipping Download...")  
+        print(f"User has latest AIGEFS {level_type.upper()} {cat.upper()} Files\nSkipping Download...")  
             
     if process_data == True:
-        print(f"AIGEFS {type_of_level.upper()} {cat.upper()} Data Processing...")    
+        print(f"AIGEFS {level_type.upper()} {cat.upper()} Data Processing...")    
         
         ds = _aigefs_post_processing.aigefs_single_post_processing(path,
                                                                     western_bound,
@@ -605,7 +741,7 @@ def aigefs_single(final_forecast_hour=384,
                                            cat='mean')
                 
         
-        print(f"AIGEFS {type_of_level.upper()} {cat.upper()} Data Processing Complete.")
+        print(f"AIGEFS {level_type.upper()} {cat.upper()} Data Processing Complete.")
         return ds
     else:
         pass       

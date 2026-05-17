@@ -81,9 +81,11 @@ def _rows_and_cols(model):
     
     return dims[model][0], dims[model][1]
 
-def process_rtma_data(filename, 
+def process_rtma_data(
+                     path,
+                     filename, 
                      model,
-                     directory):
+                     ):
     
     """
     This function post-processes RTMA Data and returns an xarray data array of the data.
@@ -134,191 +136,537 @@ def process_rtma_data(filename,
     '10m_wind_gust'
         
     """
+    _eccodes_error_message()
     model = model.upper()
     
-    _clear_idx_files_in_path(directory)
-    
-    filepath = f"{directory}/{filename}"
+    _clear_idx_files_in_path(path)
 
     try:
-        ds = _xr.open_dataset(f"{filepath}", engine='cfgrib')
+        ds = _xr.open_dataset(f"{path}/{filename}", engine='cfgrib',
+                              backend_kwargs={"indexpath": ""})
     except Exception as e:
-        _eccodes_error_message()
-        _sys.exit(1)
+        pass
     
-    ds['orography'] = ds['orog']
-    ds['surface_pressure'] = ds['sp']
-    ds['2m_temperature'] = ds['t2m']
-    ds['2m_dew_point'] = ds['d2m']
-    ds['2m_relative_humidity'] = _relative_humidity(ds['2m_temperature'], ds['2m_dew_point'])
-    ds['2m_specific_humidity'] = ds['sh2']
-    ds['surface_visibility'] = ds['vis']
-    ds['cloud_ceiling_height'] = ds['ceil']
-    ds['total_cloud_cover'] = ds['tcc']
+    try:
+        ds['orography'] = ds['orog']
+        ds = ds.drop_vars('orog')
+    except Exception as e:
+        pass
     
-    ds = ds.drop_vars(
-        
-        ['orog',
-         'sp',
-         't2m',
-         'd2m',
-         'sh2',
-         'vis',
-         'ceil',
-         'tcc']
-    )
+    try:
+        ds['surface_pressure'] = ds['sp']
+        ds = ds.drop_vars('sp')
+    except Exception as e:
+        pass
     
-    ds1 = _xr.open_dataset(f"{filepath}", 
-                        engine='cfgrib', 
-                        decode_timedelta=False, 
-                        filter_by_keys={'typeOfLevel': 'heightAboveGround','shortName':'10u'})
-    ds['10m_u_wind_component'] = ds1['u10']
+    try:
+        ds['2m_temperature'] = ds['t2m']
+        ds = ds.drop_vars('t2m')
+    except Exception as e:
+        pass
     
-    ds2 = _xr.open_dataset(f"{filepath}", 
-                          engine='cfgrib', 
-                          decode_timedelta=False, 
-                          filter_by_keys={'typeOfLevel': 'heightAboveGround','shortName':'10v'})
-    ds['10m_v_wind_component'] = ds2['v10']    
+    try:
+        ds['2m_dew_point'] = ds['d2m']
+        ds = ds.drop_vars('d2m')
+    except Exception as e:
+        pass
     
-
-    ds3 = _xr.open_dataset(f"{filepath}", 
-                          engine='cfgrib', 
-                          decode_timedelta=False, 
-                          filter_by_keys={'typeOfLevel': 'heightAboveGround','shortName':'10wdir'})
-    ds['10m_wind_direction'] = ds3['wdir10']
+    try:
+        ds['2m_relative_humidity'] = _relative_humidity(ds['2m_temperature'], ds['2m_dew_point'])
+    except Exception as e:
+        pass
     
-
-    ds4 = _xr.open_dataset(f"{filepath}", 
-                          engine='cfgrib', 
-                          decode_timedelta=False, 
-                          filter_by_keys={'typeOfLevel': 'heightAboveGround','shortName':'10si'})
-    ds['10m_wind_speed'] = ds4['si10']
+    try:
+        ds['2m_specific_humidity'] = ds['sh2']
+        ds = ds.drop_vars('sh2')
+    except Exception as e:
+        pass
+    try:
+        ds['surface_visibility'] = ds['vis']
+        ds = ds.drop_vars('vis')
+    except Exception as e:
+        pass
     
-
-    ds5 = _xr.open_dataset(f"{filepath}",
-                          engine='cfgrib',
-                          decode_timedelta=False, 
-                          filter_by_keys={'typeOfLevel': 'heightAboveGround','shortName':'i10fg'})
-    ds['10m_wind_gust'] = ds5['i10fg']
+    try:
+        ds['cloud_ceiling_height'] = ds['ceil']
+        ds = ds.drop_vars('ceil')
+    except Exception as e:
+        pass
+    
+    try:
+        ds['total_cloud_cover'] = ds['tcc']
+        ds = ds.drop_vars('tcc')
+    except Exception as e:
+        pass
+    
+    try:
+        ds1 = _xr.open_dataset(f"{path}/{filename}", 
+                            engine='cfgrib', 
+                            decode_timedelta=False, 
+                            filter_by_keys={'typeOfLevel': 'heightAboveGround','shortName':'10u'},
+                            backend_kwargs={"indexpath": ""})
+        ds['10m_u_wind_component'] = ds1['u10']
+    except Exception as e:
+        pass
+    
+    try:
+        ds2 = _xr.open_dataset(f"{path}/{filename}", 
+                            engine='cfgrib', 
+                            decode_timedelta=False, 
+                            filter_by_keys={'typeOfLevel': 'heightAboveGround','shortName':'10v'},
+                            backend_kwargs={"indexpath": ""})
+        ds['10m_v_wind_component'] = ds2['v10']   
+    except Exception as e:
+        pass 
+    
+    try:
+        ds3 = _xr.open_dataset(f"{path}/{filename}", 
+                            engine='cfgrib', 
+                            decode_timedelta=False, 
+                            filter_by_keys={'typeOfLevel': 'heightAboveGround','shortName':'10wdir'},
+                            backend_kwargs={"indexpath": ""})
+        ds['10m_wind_direction'] = ds3['wdir10']
+    except Exception as e:
+        pass
+    
+    try:
+        ds4 = _xr.open_dataset(f"{path}/{filename}", 
+                            engine='cfgrib', 
+                            decode_timedelta=False, 
+                            filter_by_keys={'typeOfLevel': 'heightAboveGround','shortName':'10si'},
+                            backend_kwargs={"indexpath": ""})
+        ds['10m_wind_speed'] = ds4['si10']
+    except Exception as e:
+        pass
+    
+    try:
+        ds5 = _xr.open_dataset(f"{path}/{filename}",
+                            engine='cfgrib',
+                            decode_timedelta=False, 
+                            filter_by_keys={'typeOfLevel': 'heightAboveGround','shortName':'i10fg'},
+                            backend_kwargs={"indexpath": ""})
+        ds['10m_wind_gust'] = ds5['i10fg']
+    except Exception as e:
+        pass
     
     if model == 'HI RTMA' or model == 'GU RTMA' or model == 'PR RTMA':
         
         nrows, ncols = _rows_and_cols(model)
         
-        orog = ds['orography'].values
-        pressure = ds['surface_pressure'].values
-        temp = ds['2m_temperature'].values
-        dwpt = ds['2m_dew_point'].values
-        rh = ds['2m_relative_humidity'].values
-        sh = ds['2m_specific_humidity'].values
-        vis = ds['surface_visibility'].values
-        ceil = ds['cloud_ceiling_height'].values
-        tcc = ds['total_cloud_cover'].values
-        u = ds['10m_u_wind_component'].values
-        v = ds['10m_v_wind_component'].values
-        wdir = ds['10m_wind_direction'].values
-        ws = ds['10m_wind_speed'].values
-        wgust = ds['10m_wind_gust'].values
-        lat = ds['latitude'].values
-        lon = ds['longitude'].values
-        time = ds['time'].values
-
-        orog_2d = _np.empty([nrows,ncols])
-        pressure_2d = _np.empty([nrows,ncols])
-        temp_2d = _np.empty([nrows,ncols])
-        dwpt_2d = _np.empty([nrows,ncols])
-        rh_2d = _np.empty([nrows,ncols])
-        sh_2d = _np.empty([nrows,ncols])
-        vis_2d = _np.empty([nrows,ncols])
-        ceil_2d = _np.empty([nrows,ncols])
-        tcc_2d = _np.empty([nrows,ncols])
-        u_2d = _np.empty([nrows,ncols])
-        v_2d = _np.empty([nrows,ncols])
-        wdir_2d = _np.empty([nrows,ncols])
-        ws_2d = _np.empty([nrows,ncols])
-        wgust_2d = _np.empty([nrows,ncols])
-        lat_2d = _np.empty([nrows,ncols])
-        lon_2d = _np.empty([nrows,ncols])    
+        try:
+            orog = ds['orography'].values
+        except Exception as e:
+            pass
+        try:
+            pressure = ds['surface_pressure'].values
+        except Exception as e:
+            pass           
+        try:    
+            temp = ds['2m_temperature'].values
+        except Exception as e:
+            pass        
+        try:
+            dwpt = ds['2m_dew_point'].values
+        except Exception as e:
+            pass        
+        try:
+            rh = ds['2m_relative_humidity'].values
+        except Exception as e:
+            pass        
+        try:
+            sh = ds['2m_specific_humidity'].values
+        except Exception as e:
+            pass        
+        try:
+            vis = ds['surface_visibility'].values
+        except Exception as e:
+            pass        
+        try:
+            ceil = ds['cloud_ceiling_height'].values
+        except Exception as e:
+            pass        
+        try:
+            tcc = ds['total_cloud_cover'].values
+        except Exception as e:
+            pass        
+        try:
+            u = ds['10m_u_wind_component'].values
+        except Exception as e:
+            pass        
+        try:
+            v = ds['10m_v_wind_component'].values
+        except Exception as e:
+            pass        
+        try:
+            wdir = ds['10m_wind_direction'].values
+        except Exception as e:
+            pass        
+        try:
+            ws = ds['10m_wind_speed'].values
+        except Exception as e:
+            pass        
+        try:
+            wgust = ds['10m_wind_gust'].values
+        except Exception as e:
+            pass        
+        try:
+            lat = ds['latitude'].values
+        except Exception as e:
+            pass        
+        try:
+            lon = ds['longitude'].values
+        except Exception as e:
+            pass        
+        try:
+            time = ds['time'].values
+        except Exception as e:
+            pass            
+            
+        try:
+            orog_2d = _np.empty([nrows,ncols])
+        except Exception as e:
+            pass        
+        try:
+            pressure_2d = _np.empty([nrows,ncols])
+        except Exception as e:
+            pass        
+        try:
+            temp_2d = _np.empty([nrows,ncols])
+        except Exception as e:
+            pass        
+        try:
+            dwpt_2d = _np.empty([nrows,ncols])
+        except Exception as e:
+            pass        
+        try:
+            rh_2d = _np.empty([nrows,ncols])
+        except Exception as e:
+            pass        
+        try:
+            sh_2d = _np.empty([nrows,ncols])
+        except Exception as e:
+            pass        
+        try:
+            vis_2d = _np.empty([nrows,ncols])
+        except Exception as e:
+            pass        
+        try:
+            ceil_2d = _np.empty([nrows,ncols])
+        except Exception as e:
+            pass        
+        try:
+            tcc_2d = _np.empty([nrows,ncols])
+        except Exception as e:
+            pass        
+        try:
+            u_2d = _np.empty([nrows,ncols])
+        except Exception as e:
+            pass        
+        try:
+            v_2d = _np.empty([nrows,ncols])
+        except Exception as e:
+            pass        
+        try:
+            wdir_2d = _np.empty([nrows,ncols])
+        except Exception as e:
+            pass        
+        try:
+            ws_2d = _np.empty([nrows,ncols])
+        except Exception as e:
+            pass        
+        try:
+            wgust_2d = _np.empty([nrows,ncols])
+        except Exception as e:
+            pass        
+        try:
+            lat_2d = _np.empty([nrows,ncols])
+        except Exception as e:
+            pass        
+        try:
+            lon_2d = _np.empty([nrows,ncols])    
+        except Exception as e:
+            pass        
+        
         
         for i in range(0,nrows):
             start = i*ncols
             end = start+ncols
 
-            orog_2d[i,:] = orog[start:end]
-            pressure_2d[i,:] = pressure[start:end]
-            temp_2d[i,:] = temp[start:end]
-            dwpt_2d[i,:] = dwpt[start:end]
-            rh_2d[i,:] = rh[start:end]
-            sh_2d[i,:] = sh[start:end]
-            vis_2d[i,:] = vis[start:end]
-            ceil_2d[i,:] = ceil[start:end]
-            tcc_2d[i,:] = tcc[start:end]
-            u_2d[i,:] = u[start:end]
-            v_2d[i,:] = v[start:end]
-            wdir_2d[i,:] = wdir[start:end]
-            ws_2d[i,:] = ws[start:end]
-            wgust_2d[i,:] = wgust[start:end]
+            try:
+                orog_2d[i,:] = orog[start:end]
+            except Exception as e:
+                pass            
+            try:
+                pressure_2d[i,:] = pressure[start:end]
+            except Exception as e:
+                pass              
+            try:
+                temp_2d[i,:] = temp[start:end]
+            except Exception as e:
+                pass              
+            try:
+                dwpt_2d[i,:] = dwpt[start:end]
+            except Exception as e:
+                pass              
+            try:
+                rh_2d[i,:] = rh[start:end]
+            except Exception as e:
+                pass              
+            try:
+                sh_2d[i,:] = sh[start:end]
+            except Exception as e:
+                pass              
+            try:
+                vis_2d[i,:] = vis[start:end]
+            except Exception as e:
+                pass              
+            try:
+                ceil_2d[i,:] = ceil[start:end]
+            except Exception as e:
+                pass              
+            try:
+                tcc_2d[i,:] = tcc[start:end]
+            except Exception as e:
+                pass              
+            try:
+                u_2d[i,:] = u[start:end]
+            except Exception as e:
+                pass              
+            try:
+                v_2d[i,:] = v[start:end]
+            except Exception as e:
+                pass              
+            try:
+                wdir_2d[i,:] = wdir[start:end]
+            except Exception as e:
+                pass              
+            try:
+                ws_2d[i,:] = ws[start:end]
+            except Exception as e:
+                pass              
+            try:
+                wgust_2d[i,:] = wgust[start:end]
+            except Exception as e:
+                pass  
+            try:
+                lat_2d[i,:] = lat[start:end]
+            except Exception as e:
+                pass              
+            try:
+                lon_2d[i,:] = lon[start:end]
+            except Exception as e:
+                pass  
 
-
-            lat_2d[i,:] = lat[start:end]
-            lon_2d[i,:] = lon[start:end]
-
-        lon1d = lon_2d[0,:]
-        lat1d = lat_2d[:,0]  
-        
+        try:
+            lon1d = lon_2d[0,:]
+        except Exception as e:
+            pass          
+        try:
+            lat1d = lat_2d[:,0]  
+        except Exception as e:
+            pass        
         dims = ("latitude", "longitude")
         coords = {
             "time":time,
             "latitude": lat1d,  
             "longitude": lon1d,  
         }
+        try:
+            ds1 = _xr.DataArray(orog_2d, 
+                                coords=coords, 
+                                dims=dims)
+        except Exception as e:
+            pass            
+        try:    
+            ds2 = _xr.DataArray(pressure_2d, 
+                                coords=coords, 
+                                dims=dims)
+        except Exception as e:
+            pass            
+        try:    
+            ds3 = _xr.DataArray(temp_2d, 
+                                coords=coords, 
+                                dims=dims)
+        except Exception as e:
+            pass            
+        try:    
+            ds4 = _xr.DataArray(dwpt_2d, 
+                                coords=coords, 
+                                dims=dims)
+        except Exception as e:
+            pass            
+        try:    
+            ds5 = _xr.DataArray(rh_2d, 
+                                coords=coords, 
+                                dims=dims)
+        except Exception as e:
+            pass            
+        try:    
+            ds6 = _xr.DataArray(sh_2d, 
+                                coords=coords, 
+                                dims=dims)
+        except Exception as e:
+            pass            
+        try:    
+            ds7 = _xr.DataArray(vis_2d, 
+                                coords=coords, 
+                                dims=dims)
+        except Exception as e:
+            pass            
+        try:    
+            ds8 = _xr.DataArray(ceil_2d, 
+                                coords=coords, 
+                                dims=dims)
+        except Exception as e:
+            pass            
+        try:    
+            ds9 = _xr.DataArray(tcc_2d, 
+                                coords=coords, 
+                                dims=dims)
+        except Exception as e:
+            pass            
+        try:    
+            ds10 = _xr.DataArray(u_2d, 
+                                coords=coords, 
+                                dims=dims)
+        except Exception as e:
+            pass            
+        try:    
+            ds11 = _xr.DataArray(v_2d, 
+                                coords=coords, 
+                                dims=dims)
+        except Exception as e:
+            pass            
+        try:    
+            ds12 = _xr.DataArray(wdir_2d, 
+                                coords=coords, 
+                                dims=dims)
+        except Exception as e:
+            pass            
+        try:    
+            ds13 = _xr.DataArray(ws_2d, 
+                                coords=coords, 
+                                dims=dims)
+        except Exception as e:
+            pass            
+        try:    
+            ds14 = _xr.DataArray(wgust_2d, 
+                                coords=coords, 
+                                dims=dims)
+        except Exception as e:
+            pass            
+            
+        try:    
+            ds1['orography'] = ds1
+        except Exception as e:
+            pass            
+        try:    
+            ds1['surface_pressure'] = ds2
+        except Exception as e:
+            pass            
+        try:    
+            ds1['2m_temperature'] = ds3
+        except Exception as e:
+            pass            
+        try:    
+            ds1['2m_dew_point'] = ds4
+        except Exception as e:
+            pass            
+        try:    
+            ds1['2m_relative_humidity'] = ds5
+        except Exception as e:
+            pass            
+        try:    
+            ds1['2m_specific_humidity'] = ds6
+        except Exception as e:
+            pass            
+        try:    
+            ds1['surface_visibility'] = ds7
+        except Exception as e:
+            pass            
+        try:    
+            ds1['cloud_ceiling_height'] = ds8
+        except Exception as e:
+            pass            
+        try:    
+            ds1['total_cloud_cover'] = ds9
+        except Exception as e:
+            pass            
+        try:    
+            ds1['10m_u_wind_component'] = ds10
+        except Exception as e:
+            pass            
+        try:    
+            ds1['10m_v_wind_component'] = ds11
+        except Exception as e:
+            pass            
+        try:    
+            ds1['10m_wind_direction'] = ds12
+        except Exception as e:
+            pass            
+        try:    
+            ds1['10m_wind_speed'] = ds13
+        except Exception as e:
+            pass            
+        try:    
+            ds1['10m_wind_gust'] = ds14
+        except Exception as e:
+            pass            
+            
+        try:    
+            ds1['surface_pressure'] = _mpcalc.smooth_gaussian(ds1['surface_pressure'], n=8)
+        except Exception as e:
+            pass            
+        try:    
+            ds1['2m_temperature'] = _mpcalc.smooth_gaussian(ds1['2m_temperature'], n=8)
+        except Exception as e:
+            pass            
+        try:    
+            ds1['2m_dew_point'] = _mpcalc.smooth_gaussian(ds1['2m_dew_point'], n=8)
+        except Exception as e:
+            pass            
+        try:    
+            ds1['2m_relative_humidity'] = _mpcalc.smooth_gaussian(ds1['2m_relative_humidity'], n=8)
+        except Exception as e:
+            pass            
+        try:    
+            ds1['2m_specific_humidity'] = _mpcalc.smooth_gaussian(ds1['2m_specific_humidity'], n=8)
+        except Exception as e:
+            pass            
+        try:    
+            ds1['surface_visibility'] = _mpcalc.smooth_gaussian(ds1['surface_visibility'], n=8)
+        except Exception as e:
+            pass            
+        try:    
+            ds1['cloud_ceiling_height'] = _mpcalc.smooth_gaussian(ds1['cloud_ceiling_height'], n=8)
+        except Exception as e:
+            pass            
+        try:    
+            ds1['total_cloud_cover'] = _mpcalc.smooth_gaussian(ds1['total_cloud_cover'], n=8)
+        except Exception as e:
+            pass            
+        try:    
+            ds1['10m_u_wind_component'] = _mpcalc.smooth_gaussian(ds1['10m_u_wind_component'], n=8)
+        except Exception as e:
+            pass            
+        try:    
+            ds1['10m_v_wind_component'] = _mpcalc.smooth_gaussian(ds1['10m_v_wind_component'], n=8)
+        except Exception as e:
+            pass            
+        try:    
+            ds1['10m_wind_direction'] = _mpcalc.smooth_gaussian(ds1['10m_wind_direction'], n=8)
+        except Exception as e:
+            pass            
+        try:    
+            ds1['10m_wind_speed'] = _mpcalc.smooth_gaussian(ds1['10m_wind_speed'], n=8)
+        except Exception as e:
+            pass            
+        try:    
+            ds1['10m_wind_gust'] = _mpcalc.smooth_gaussian(ds1['10m_wind_gust'], n=8)
+        except Exception as e:
+            pass        
         
-        ds1 = _xr.DataArray(orog_2d, coords=coords, dims=dims)
-        ds2 = _xr.DataArray(pressure_2d, coords=coords, dims=dims)
-        ds3 = _xr.DataArray(temp_2d, coords=coords, dims=dims)
-        ds4 = _xr.DataArray(dwpt_2d, coords=coords, dims=dims)
-        ds5 = _xr.DataArray(rh_2d, coords=coords, dims=dims)
-        ds6 = _xr.DataArray(sh_2d, coords=coords, dims=dims)
-        ds7 = _xr.DataArray(vis_2d, coords=coords, dims=dims)
-        ds8 = _xr.DataArray(ceil_2d, coords=coords, dims=dims)
-        ds9 = _xr.DataArray(tcc_2d, coords=coords, dims=dims)
-        ds10 = _xr.DataArray(u_2d, coords=coords, dims=dims)
-        ds11 = _xr.DataArray(v_2d, coords=coords, dims=dims)
-        ds12 = _xr.DataArray(wdir_2d, coords=coords, dims=dims)
-        ds13 = _xr.DataArray(ws_2d, coords=coords, dims=dims)
-        ds14 = _xr.DataArray(wgust_2d, coords=coords, dims=dims)
-        
-        ds1['orography'] = ds1
-        ds1['surface_pressure'] = ds2
-        ds1['2m_temperature'] = ds3
-        ds1['2m_dew_point'] = ds4
-        ds1['2m_relative_humidity'] = ds5
-        ds1['2m_specific_humidity'] = ds6
-        ds1['surface_visibility'] = ds7
-        ds1['cloud_ceiling_height'] = ds8
-        ds1['total_cloud_cover'] = ds9
-        ds1['10m_u_wind_component'] = ds10
-        ds1['10m_v_wind_component'] = ds11
-        ds1['10m_wind_direction'] = ds12
-        ds1['10m_wind_speed'] = ds13
-        ds1['10m_wind_gust'] = ds14
-        
-        ds1['surface_pressure'] = _mpcalc.smooth_gaussian(ds1['surface_pressure'], n=8)
-        ds1['2m_temperature'] = _mpcalc.smooth_gaussian(ds1['2m_temperature'], n=8)
-        ds1['2m_dew_point'] = _mpcalc.smooth_gaussian(ds1['2m_dew_point'], n=8)
-        ds1['2m_relative_humidity'] = _mpcalc.smooth_gaussian(ds1['2m_relative_humidity'], n=8)
-        ds1['2m_specific_humidity'] = _mpcalc.smooth_gaussian(ds1['2m_specific_humidity'], n=8)
-        ds1['surface_visibility'] = _mpcalc.smooth_gaussian(ds1['surface_visibility'], n=8)
-        ds1['cloud_ceiling_height'] = _mpcalc.smooth_gaussian(ds1['cloud_ceiling_height'], n=8)
-        ds1['total_cloud_cover'] = _mpcalc.smooth_gaussian(ds1['total_cloud_cover'], n=8)
-        ds1['10m_u_wind_component'] = _mpcalc.smooth_gaussian(ds1['10m_u_wind_component'], n=8)
-        ds1['10m_v_wind_component'] = _mpcalc.smooth_gaussian(ds1['10m_v_wind_component'], n=8)
-        ds1['10m_wind_direction'] = _mpcalc.smooth_gaussian(ds1['10m_wind_direction'], n=8)
-        ds1['10m_wind_speed'] = _mpcalc.smooth_gaussian(ds1['10m_wind_speed'], n=8)
-        ds1['10m_wind_gust'] = _mpcalc.smooth_gaussian(ds1['10m_wind_gust'], n=8)
-        
-        _clear_idx_files_in_path(directory)
-        
+                
         ds1 = _shift_longitude_regrid(ds1)
         
         return ds1
@@ -326,7 +674,5 @@ def process_rtma_data(filename,
     else:
         
         ds = _shift_longitude(ds)
-        
-        _clear_idx_files_in_path(directory)
-    
+            
         return ds

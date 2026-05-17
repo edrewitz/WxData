@@ -45,10 +45,12 @@ def fetch_range(url,
     if proxies == None:
         response = requests.get(url, 
                          headers=headers,
+                         allow_redirects=True,
                          stream=True)
     else:
         response = requests.get(url, 
                          headers=headers,
+                         allow_redirects=True,
                          proxies=proxies,
                          stream=True)
     
@@ -57,10 +59,12 @@ def fetch_range(url,
     
     if len(response.content) == 0:
         if proxies == None:
-            response = requests.get(url, 
+            response = requests.get(url,
+                            allow_redirects=True, 
                             headers=headers)
         else:
-            response = requests.get(url, 
+            response = requests.get(url,
+                            allow_redirects=True, 
                             headers=headers,
                             proxies=proxies)
     else:

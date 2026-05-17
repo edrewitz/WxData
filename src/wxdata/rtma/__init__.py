@@ -1,4 +1,4 @@
 from wxdata.rtma.rtma import(
-    rtma,
+    rtma, 
     rtma_comparison
 )

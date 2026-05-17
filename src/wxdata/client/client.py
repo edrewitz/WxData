@@ -881,9 +881,8 @@ def byte_range_request(grib_url,
     
     3) notifications (String) - Default='on'. Notification when a file is downloaded and saved to {path}
     
-    4) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
+    4) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin 
+    will be deleted with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
         
     Returns
     -------
@@ -901,9 +900,9 @@ def byte_range_request(grib_url,
         _os.makedirs(f"{path}")
     except Exception as e:
         pass
-    
+
     variables = _key_list(variables)
-    
+
     if proxies == None:
         idx_text = _requests.get(idx_url).text
     else:
@@ -924,7 +923,7 @@ def byte_range_request(grib_url,
         })
         
     req_levels, levels = _get_level_expression(levels,
-                                level_type)
+                                                level_type)
     
     if levels is not None:
         reqs = list(_itertools.product(variables, req_levels))
@@ -933,7 +932,7 @@ def byte_range_request(grib_url,
         for v in variables:
             req = (v, req_levels)
             reqs.append(req)
-            
+
     ranges = {}
     for v, l in reqs:
         matches = [r for r in records if r["var"] == v and r["lev"] == l]

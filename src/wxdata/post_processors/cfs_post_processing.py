@@ -124,6 +124,7 @@ def cfs_flux_post_processing(path):
         '995_sigma_u_wind_component'
         '995_sigma_geopotential_height'
     """
+    _eccodes_error_message()
     
     files = _sorted_paths(path)
     
@@ -934,8 +935,7 @@ def cfs_flux_post_processing(path):
     try:    
         ds = ds.sortby('step')
     except Exception as e:
-        _eccodes_error_message()
-        _sys.exit(1)
+        pass
     
     return ds
 
@@ -1037,6 +1037,7 @@ def cfs_pressure_post_processing(path):
             'potential_vorticity_level_vertical_speed_shear'
     
     """
+    _eccodes_error_message()
     
     files = _sorted_paths(path)
     
@@ -1755,7 +1756,6 @@ def cfs_pressure_post_processing(path):
     try:    
         ds = ds.sortby('step')
     except Exception as e:
-        _eccodes_error_message()
-        _sys.exit(1)
+        pass
     
     return ds

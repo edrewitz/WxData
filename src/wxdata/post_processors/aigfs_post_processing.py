@@ -68,7 +68,7 @@ def aigfs_post_processing(path,
     'mslp'
     '2m_temperature'
     """
-    
+    _eccodes_error_message()
     western_bound, eastern_bound = _convert_lon(western_bound, 
                                                     eastern_bound) 
     
@@ -179,6 +179,5 @@ def aigfs_post_processing(path,
     try:    
         ds = ds.sortby('step')
     except Exception as e:
-        _eccodes_error_message()
-        _sys.exit(1)
+        pass
     return ds

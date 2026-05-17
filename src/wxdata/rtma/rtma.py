@@ -7,6 +7,7 @@ This file hosts the function that downloads and returns RTMA Data from the NCEP/
 (C) Eric J. Drewitz 2025-2026
 """
 import os as _os
+import sys as _sys
 import warnings as _warnings
 import wxdata.client.client as _client
 _warnings.filterwarnings('ignore')
@@ -23,59 +24,27 @@ from wxdata.rtma.url_scanners import(
 
 from wxdata.utils.file_funcs import custom_branch as _custom_branch
 from wxdata.calc.derived_fields import rtma_derived_fields as _rtma_derived_fields
-from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
+from wxdata.rtma.file_scanner import local_file_scanner as _local_file_scanner
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
-from wxdata.rtma.process import process_rtma_data as _process_rtma_data
+from wxdata.post_processors.rtma_post_processing import process_rtma_data as _process_rtma_data
 from wxdata.utils.recycle_bin import(
     clear_recycle_bin_windows as _clear_recycle_bin_windows,
     clear_trash_bin_mac as _clear_trash_bin_mac,
     clear_trash_bin_linux as _clear_trash_bin_linux
 )
 
-def _bounds(model):
-    
-    """
-    This function determines the boundaries for the data based on the region.
-    
-    Required Arguments: 
-    
-    1) model (String) - The RTMA model being used. 
-    
-    Optional Arguments: None
-    
-    Returns
-    -------
-    
-    The bounding box for the data.     
-    """
-    
-    models = {
-        
-        'RTMA':[-125, -65, 20, 50],
-        'HI RTMA':[-180, 180, -90, 90],
-        'PR RTMA':[-68, -65, 17, 19],
-        'GU RTMA':[-180, 180, -90, 90],
-        'AK RTMA':[-180, -120, 45, 75]
-        
-    }
-    
-    return models[model][0], models[model][1], models[model][2], models[model][3]
-
 def rtma(model='rtma', 
          cat='analysis', 
          proxies=None,
          process_data=True,
          clear_recycle_bin=False,
-         western_bound=None,
-         eastern_bound=None,
-         southern_bound=None,
-         northern_bound=None,
          convert_temperature=True,
          convert_to='fahrenheit',
          custom_directory=None,
          clear_data=False,
          chunk_size=8192,
-         notifications='off'):
+         notifications='off',
+         source='noaa'):
     
     """
     This function downloads the latest RTMA Dataset and returns it as an xarray data array. 
@@ -118,26 +87,31 @@ def rtma(model='rtma',
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
         This setting is to help preserve memory on the machine. 
         
-    6) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
-
-    7) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
-
-    8) southern_bound (Float or Integer) - Default=-90. The northern bound of the data needed.
-
-    9) northern_bound (Float or Integer) - Default=90. The southern bound of the data needed.
+    6) clear_data (Boolean) - Default=False. When set to True, the current data in the folder is deleted
+        and new data is downloaded automatically with each run. 
     
-    10) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+    7) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
         
-    11) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+    8) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    12) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
-        Default = f:ECMWF/IFS/WAVE
+    9) custom_directory (String or None) - Default=None. The directory path where the RTMA files will be saved to.
         
-    13) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    10) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
-    14) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    11) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}.
+    
+    12) source (String) - Default='noaa'. The data server the client will try first.
+    
+        Server List
+        -----------
+        
+        1) NCEP/NOMADS - source='noaa'
+        2) Amazon AWS - source='aws'
+        
+    **If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.**
     
     Returns
     -------
@@ -181,14 +155,6 @@ def rtma(model='rtma',
         path = _custom_branch(custom_directory)
     
     _clear_idx_files(path)
-    
-    if western_bound == None and eastern_bound == None and southern_bound == None and northern_bound == None:
-        western_bound, eastern_bound, southern_bound, northern_bound = _bounds(model)
-    else:
-        western_bound = western_bound
-        eastern_bound = eastern_bound 
-        southern_bound = southern_bound 
-        northern_bound = northern_bound
             
     try:
         files = []
@@ -202,18 +168,50 @@ def rtma(model='rtma',
     except Exception as e:
         pass
     
-    url, filename, run = _rtma_url_scanner(model, 
-                    cat,
-                    western_bound, 
-                    eastern_bound, 
-                    northern_bound, 
-                    southern_bound, 
-                    proxies)
+    try:
+        url, filename, _, run = _rtma_url_scanner(model, 
+                                                cat,
+                                                proxies,
+                                                source)
+    except Exception as e:
+        filename = None
+    
+    if filename == None:
+        if source == 'noaa':
+            print("NOAA/NCEP/NOMADS Server Is Down.")
+            print("Rotating to Amazon AWS Server..")
+            try:
+                url, filename, _, run = _rtma_url_scanner(model, 
+                                                    cat,
+                                                    proxies,
+                                                    'aws')
+                
+                print("Amazon AWS Server Online - Connected.")
+            except Exception as e:
+                print("Error: Both Servers Appear Down")
+                print("System Exit")
+                _sys.exit(1)
+        else:
+            print("Amazon AWS Server Is Down.")
+            print("Rotating to NOAA/NCEP/NOMADS")
+            try:
+                url, filename, _, run = _rtma_url_scanner(model, 
+                                                    cat,
+                                                    proxies,
+                                                    'noaa')
+                
+                print("NOAA/NCEP/NOMADS Server Online - Connected.")
+            except Exception as e:
+                print("Error: Both Servers Appear Down")
+                print("System Exit")
+                _sys.exit(1)
+    else:
+        pass
+    
     
     download = _local_file_scanner(path, 
-                                filename,
-                                'nomads',
-                                run) 
+                                    filename,
+                                    run)
     
     if clear_data == True:
         download = True
@@ -229,7 +227,7 @@ def rtma(model='rtma',
         except Exception as e:
             pass
 
-        _client.get_gridded_data(f"{url}", 
+        _client.get_gridded_data(f"{url}/{filename}", 
                     path,
                     f"{filename}.grib2",
                     proxies=proxies,
@@ -272,7 +270,6 @@ def rtma(model='rtma',
     
     else:
         pass
-        
     
 def rtma_comparison(model='rtma', 
          cat='analysis', 
@@ -280,16 +277,13 @@ def rtma_comparison(model='rtma',
          proxies=None,
          process_data=True,
          clear_recycle_bin=False,
-         western_bound=None,
-         eastern_bound=None,
-         southern_bound=None,
-         northern_bound=None,
          clear_data=False,
          convert_temperature=True,
          convert_to='fahrenheit',
          custom_directory=None,
          chunk_size=8192,
-         notifications='off'):
+         notifications='off',
+         source='noaa'):
     
     """
     This function downloads the latest RTMA Dataset and the RTMA dataset from 24 hours prior to the current RTMA dataset and returns it as two xarray data arrays. 
@@ -332,31 +326,33 @@ def rtma_comparison(model='rtma',
     6) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
         This setting is to help preserve memory on the machine. 
-        
-    7) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
-
-    8) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
-
-    9) southern_bound (Float or Integer) - Default=-90. The northern bound of the data needed.
-
-    10) northern_bound (Float or Integer) - Default=90. The southern bound of the data needed.
     
-    11) clear_data (Boolean) - Default=False. When set to True, the current data in the folder is deleted
+    7) clear_data (Boolean) - Default=False. When set to True, the current data in the folder is deleted
         and new data is downloaded automatically with each run. 
         This setting is recommended for users who wish to use a medley of different comparisons. 
         
-    12) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+    8) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
         
-    13) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+    9) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    14) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
-        Default = f:ECMWF/IFS/WAVE
+    10 custom_directory (String or None) - Default=None. The directory path where the RTMA files will be saved to.
         
-    15) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    11) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
-    16) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    12) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    
+    13) source (String) - Default='noaa'. The data server the client will try first.
+    
+        Server List
+        -----------
+        
+        1) NCEP/NOMADS - source='noaa'
+        2) Amazon AWS - source='aws'
+        
+        **If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.**
     
     Returns
     -------
@@ -417,27 +413,54 @@ def rtma_comparison(model='rtma',
     except Exception as e:
         pass
     
-    if western_bound == None and eastern_bound == None and southern_bound == None and northern_bound == None:
-        western_bound, eastern_bound, southern_bound, northern_bound = _bounds(model)
+    
+    try:
+        url, url_dt, filename, filename_dt, run = _rtma_comparison_url_scanner(model, 
+                                                                                cat,
+                                                                                proxies,
+                                                                                hours,
+                                                                                source)
+    except Exception as e:
+        filename = None
+    
+    if filename == None:
+        if source == 'noaa':
+            print("NOAA/NCEP/NOMADS Server Is Down.")
+            print("Rotating to Amazon AWS Server..")
+            try:
+                url, url_dt, filename, filename_dt, run = _rtma_comparison_url_scanner(model, 
+                                                                                        cat,
+                                                                                        proxies,
+                                                                                        hours,
+                                                                                        'aws')
+                
+                print("Amazon AWS Server Online - Connected.")
+            except Exception as e:
+                print("Error: Both Servers Appear Down")
+                print("System Exit")
+                _sys.exit(1)
+        else:
+            print("Amazon AWS Server Is Down.")
+            print("Rotating to NOAA/NCEP/NOMADS")
+            try:
+                url, url_dt, filename, filename_dt, run = _rtma_comparison_url_scanner(model, 
+                                                                                        cat,
+                                                                                        proxies,
+                                                                                        hours,
+                                                                                        'noaa')
+                
+                print("NOAA/NCEP/NOMADS Server Online - Connected.")
+            except Exception as e:
+                print("Error: Both Servers Appear Down")
+                print("System Exit")
+                _sys.exit(1)
     else:
-        western_bound = western_bound
-        eastern_bound = eastern_bound 
-        southern_bound = southern_bound 
-        northern_bound = northern_bound
+        pass
     
-    url, url_dt, filename, filename_dt, run = _rtma_comparison_url_scanner(model, 
-                    cat,
-                    western_bound, 
-                    eastern_bound, 
-                    northern_bound, 
-                    southern_bound, 
-                    proxies,
-                    hours)
-    
+
     download = _local_file_scanner(path, 
-                                filename,
-                                source='nomads',
-                                run=run) 
+                                    filename,
+                                    run)
     
     if clear_data == True:
         download = True
@@ -453,16 +476,16 @@ def rtma_comparison(model='rtma',
             pass
         
         print(f"Current {model.upper()} Data Downloading...")
-        _client.get_gridded_data(f"{url}", 
+        _client.get_gridded_data(f"{url}{filename}", 
                     path,
                     f"{filename}.grib2",
                     proxies=proxies,
                     chunk_size=chunk_size,
                     notifications=notifications)
         print(f"Comparison {model.upper()} Data Downloading...")
-        _client.get_gridded_data(f"{url_dt}", 
+        _client.get_gridded_data(f"{url_dt}{filename_dt}", 
                     path,
-                    f"{filename_dt}.grib2",
+                    f"{filename_dt}_dt.grib2",
                     proxies=proxies,
                     chunk_size=chunk_size,
                     notifications=notifications)
@@ -477,7 +500,7 @@ def rtma_comparison(model='rtma',
                                 filename, 
                                 model)
         
-        filename_dt = f"{filename_dt}.grib2"
+        filename_dt = f"{filename_dt}_dt.grib2"
         ds_dt = _process_rtma_data(path, 
                                 filename_dt, 
                                 model)

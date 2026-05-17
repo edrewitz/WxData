@@ -136,8 +136,8 @@ from wxdata.fems.meta_data import(
 )
 
 # Real-Time Mesoscale Analysis (RTMA)
-# - RTMA Latest
-# - RTMA Comparison Between Two Times
+# - RTMA Latest 
+# - RTMA Comparison Between Two Times 
 from wxdata.rtma.rtma import(
     rtma, 
     rtma_comparison

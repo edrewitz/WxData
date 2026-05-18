@@ -13,42 +13,27 @@
                       21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
              process_data=True,
              clear_recycle_bin=False,
-             variables=['total precipitation',
-                        'convective available potential energy',
-                        'categorical freezing rain',
-                        'categorical ice pellets',
-                        'categorical rain',
-                        'categorical snow',
-                        'convective inhibition',
-                        'downward longwave radiation flux',
-                        'downward shortwave radiation flux',
-                        'geopotential height',
-                        'ice thickness',
-                        'latent heat net flux',
-                        'pressure',
-                        'mean sea level pressure',
-                        'precipitable water',
-                        'relative humidity',
-                        'sensible heat net flux',
-                        'snow depth',
-                        'volumetric soil moisture content',
-                        'total cloud cover',
-                        'maximum temperature',
-                        'minimum temperature',
-                        'temperature',
-                        'soil temperature',
-                        'u-component of wind',
-                        'upward longwave radiation flux',
-                        'upward shortwave radiation flux',
-                        'v-component of wind',
-                        'vertical velocity',
-                        'water equivalent of accumulated snow depth'],
+             variables=['geopotential height'],
             convert_temperature=True,
             convert_to='celsius',
             custom_directory=None,
             chunk_size=8192,
             notifications='off',
-            clear_data=False):***
+            clear_data=False,
+            source='noaa',
+            level_type='pressure',
+            levels=[1000,
+                    925,
+                    850,
+                    700,
+                    500,
+                    400,
+                    300,
+                    250,
+                    200,
+                    100,
+                    50,
+                    10]):***
 
     This function downloads the latest GEFS0P50 data for a region specified by the user
     
@@ -96,7 +81,9 @@
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
         This setting is to help preserve memory on the machine. 
         
-    12) variables (List) - A list of variable names the user wants to download in plain language. 
+    12) variables (List) - Default=['geopotential height'].
+    
+        A list of variable names the user wants to download in plain language. 
     
         Variable Name List for GEFS0P50
         -------------------------------
@@ -145,8 +132,7 @@
     16) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    17) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
-        Default = f:ECMWF/IFS/WAVE
+    17) custom_directory (String or None) - Default=None. The directory path where the GEFS0P50 files will be saved to.
         
     18) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
@@ -155,6 +141,44 @@
     20) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
+    21) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+    
+        Server List
+        -----------
+        
+        1) NOAA/NCEP/NOMADS - source='noaa'
+        2) Amazon AWS - source='aws'
+        3) Google Cloud - source='google'
+        
+    22) level_type (String) - Default='pressure'. The type of level for the variable.
+    
+        Level Types
+        -----------
+        
+        'pressure'
+        'height below ground'
+        'surface'
+        'height above ground'
+        'top of atmosphere'
+        'pressure above ground'
+        'mean sea level'
+        
+        
+        
+    23) levels (String, Integer or Float List) - Default==[1000,
+                                                            925,
+                                                            850,
+                                                            700,
+                                                            500,
+                                                            400,
+                                                            300,
+                                                            250,
+                                                            200,
+                                                            100,
+                                                            50,
+                                                            10]  
+                                                            
+        The pressure, height or depth levels.
     
     Returns
     -------
@@ -192,23 +216,11 @@
     '10m_u_wind_component'
     '10m_v_wind_component'
     'precipitable_water'
-    'mixed_layer_cape'
-    'mixed_layer_cin'
+    'convective_available_potential_energy'
+    'convective_inhibition'
     'geopotential_height'
     'air_temperature'
     'relative_humidity'
     'u_wind_component'
     'v_wind_component'
-    'wind_speed'
-    'absolute_vortcity'
-    'curvature_vorticity'
-    'divergence'
-    'dew_point'
-    'temperature_advection'
-    'vorticity_advection'
-    'precipitable_water_advection'
-    'humidity_advection'
-    'potential_temperature'
-    'mixing_ratio'
-    'dry_lapse_rate'
     

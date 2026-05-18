@@ -1,6 +1,10 @@
 # Secondary GFS Variables Post-Processing
 
-***def secondary_gfs_post_processing(path):***
+***def secondary_gfs_post_processing(path,
+                                western_bound,
+                                eastern_bound,
+                                southern_bound,
+                                northern_bound):***
 
     This function post-processes the GFS0P25 and GFS0P50 GRIB Primary Variable Keys into Plain-Language Variable Keys
     
@@ -20,15 +24,16 @@
     
     'u_wind_component'
     'v_wind_component'
-    'air_temperature'
+    'temperature'
     'relative_humidity'
     'absolute_vorticity'
     'geopotential_height'
+    'vertical_speed_shear'
     'ozone_mixing_ratio'
     'total_cloud_cover'
     'cloud_mixing_ratio'
     'ice_water_mixing_ratio'
-    'rain_water_mixing_ratio'
+    'rain_mixing_ratio'
     'snow_mixing_ratio'
     'graupel'
     'vertical_velocity'
@@ -36,17 +41,5 @@
     'liquid_volumetric_soil_moisture_non_frozen'
     'plant_canopy_surface_water'
     'sea_ice_thickness'
-    'temperature_height_above_sea'
-    'u_wind_component_height_above_sea'
-    'v_wind_component_height_above_sea'
-    'mixed_layer_temperature'
-    'mixed_layer_relative_humidity'
-    'mixed_layer_specific_humidity'
-    'mixed_layer_u_wind_component'
-    'mixed_layer_v_wind_component'
-    'potential_vorticity_level_u_wind_component'
-    'potential_vorticity_level_v_wind_component'
-    'potential_vorticity_level_temperature'
-    'potential_vorticity_level_geopotential_height'
-    'potential_vorticity_level_air_pressure'
-    'potential_vorticity_level_vertical_speed_shear' 
+    'specific_humidity'
+    'pressure'

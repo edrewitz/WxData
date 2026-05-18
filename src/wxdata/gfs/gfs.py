@@ -1791,6 +1791,7 @@ def gfs_0p25(final_forecast_hour=384,
         'surface lifted index'
         'latent heat net flux'
         'middle cloud cover'
+        'mean sea level pressure'
         'mslp (eta model reduction)'
         'ozone mixing ratio'
         'potential evaporation rate'

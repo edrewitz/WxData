@@ -1,12 +1,24 @@
 # Primary GEFS Variables Post-Processing
 
-***def primary_gefs_post_processing(paths):***
+***def primary_gefs_post_processing(paths,
+                                 western_bound,
+                                 eastern_bound,
+                                 southern_bound,
+                                 northern_bound):***
 
     This function post-processes the GEFS (Primary) Parameters for GEFS0P50 and GEFS0P25. 
     
     Required Arguments: 
     
     1) paths (List) - A list of file paths to the GEFS0P50 or GEFS0P25 files. 
+    
+    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+
+    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+
+    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+
+    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
     
     Returns
     -------
@@ -46,8 +58,8 @@
     '10m_u_wind_component'
     '10m_v_wind_component'
     'precipitable_water'
-    'mixed_layer_cape'
-    'mixed_layer_cin'
+    'convective_available_potential_energy'
+    'convective_inhibition'
     'geopotential_height'
     'air_temperature'
     'relative_humidity'
@@ -76,8 +88,8 @@
     'surface_visibility'
     'surface_wind_gust'
     'percent_frozen_precipitation'
-    'surface_cape'
-    'surface_cin'
+    'convective_available_potential_energy'
+    'convective_inhibition'
     'mslp'
     'soil_temperature'
     'volumetric_soil_moisture_content'

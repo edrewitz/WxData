@@ -176,7 +176,13 @@ End-To-End clients with multiple servers to pull data from can find the differen
 
 5) Consists of both observational and model data.
 
-6) Has additional tools to assist querying data, resolving gaps in data and automating your Python workflow. 
+6) Has additional tools to assist querying data, resolving gaps in data and automating your Python workflow.
+
+7) Utilizes byte-range requests to subset and speed up download times.
+
+8) Several end-to-end clients have the ability to pull from multiple servers (NOAA/NCEP/NOMADS, ECMWF Open-Data, Amazon Web Services (AWS), Google Cloud and NOAA/NWS/FTP).
+
+9) Clients can automatically rotate to a new server when experiencing connectivity issues to the initial server. 
 
 -----------------------------------------------
     

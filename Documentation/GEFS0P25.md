@@ -13,46 +13,16 @@
                       21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
              process_data=True,
              clear_recycle_bin=False,
-             variables=['total precipitation',
-                        'convective available potential energy',
-                        'categorical freezing rain',
-                        'categorical ice pellets',
-                        'convective inhibition',
-                        'percent frozen precipitaion',
-                        'categorical rain',
-                        'categorical snow',
-                        'downward longwave radiation flux',
-                        'downward shortwave radiation flux',
-                        'dew point',
-                        'wind gust',
-                        'geopotential height',
-                        'storm relative helicity',
-                        'ice thickness',
-                        'latent heat net flux',
-                        'pressure',
-                        'mean sea level pressure',
-                        'precipitable water',
-                        'relative humidity',
-                        'sensible heat net flux',
-                        'snow depth',
-                        'volumetric soil moisture content',
-                        'total cloud cover',
-                        'maximum temperature',
-                        'minimum temperature',
-                        'temperature',
-                        'soil temperature',
-                        'u-component of wind',
-                        'upward longwave radiation flux',
-                        'upward shortwave radiation flux',
-                        'v-component of wind',
-                        'visibility',
-                        'water equivalent of accumulated snow depth'],
+             variables=['temperature'],
              convert_temperature=True,
              convert_to='celsius',
              custom_directory=None,
              chunk_size=8192,
              notifications='off',
-             clear_data=False):***
+             clear_data=False,
+            source='noaa',
+            level_type='height above ground',
+            levels=[2]):***
 
     This function downloads the latest GEFS0P25 data for a region specified by the user
     
@@ -96,11 +66,10 @@
     10) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
        
-    11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
+    11) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
+        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
         
-    12) variables (List) - A list of variable names the user wants to download in plain language. 
+    12) variables (List) - Default=['temperature']. A list of variable names the user wants to download in plain language. 
     
         Variable Name List for GEFS0P25
         -------------------------------
@@ -144,8 +113,9 @@
         the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
         be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
     
-    14) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    14) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
         
     15) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
@@ -153,15 +123,41 @@
     16) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    17) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
-        Default = f:ECMWF/IFS/WAVE
+    17) custom_directory (String or None) - Default=None. The directory path where the GEFS0P25 files will be saved to.
         
     18) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
     19) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
-
+    
     20) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+    
+    21) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+    
+        Server List
+        -----------
+        
+        1) NOAA/NCEP/NOMADS - source='noaa'
+        2) Amazon AWS - source='aws'
+        3) Google Cloud - source='google'
+        
+    22) level_type (String) - Default='height above ground'. The type of level for the variable.
+    
+        Level Types
+        -----------
+        
+        'surface'
+        'mean sea level'
+        'height above ground'
+        'height below ground'
+        'entire atmosphere (considered as a single layer)'
+        'cloud ceiling'
+        'pressure above ground'
+        
+    23) levels (String, Integer or Float List) - Default=[2] 
+                                                            
+        The pressure, height or depth levels.
+    
     
     Returns
     -------
@@ -192,15 +188,14 @@
     'surface_visibility'
     'surface_wind_gust'
     'percent_frozen_precipitation'
-    'surface_cape'
-    'surface_cin'
+    'convective_available_potential_energy'
+    'convective_inhibition'
     'mslp'
     'soil_temperature'
     'volumetric_soil_moisture_content'
     '2m_temperature'
     '2m_relative_humidity'
     '2m_dew_point'
-    '2m_dew_point_depression'
     'maximum_temperature'
     'minimum_temperature'
     '10m_u_wind_component'

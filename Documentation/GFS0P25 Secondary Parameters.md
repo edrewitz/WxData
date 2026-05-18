@@ -1,66 +1,58 @@
 # GFS 0.25x0.25 Degree Secondary Parameters
 
-***def gfs_0p25_secondary_parameters(final_forecast_hour=384, 
-            western_bound=-180, 
-            eastern_bound=180, 
-            northern_bound=90, 
-            southern_bound=-90, 
-            step=3,
-            process_data=True,
-            proxies=None, 
-            variables=['absolute vorticity',
-                       'clear sky uv-b downward solar flux',
-                       'cloud mixing ratio',
-                       'plant canopy surface water',
-                       'uv-b downward solar flux',
-                       'vertical velocity (height)',
-                       'graupel',
-                       'geopotential height',
-                       'ice thickness',
-                       'ice water mixing ratio',
-                       'ozone mixing ratio',
-                       'pressure',
-                       'relative humidity',
-                       'rain mixing ratio',
-                       'snow mixing ratio',
-                       'liquid volumetric soil moisture (non-frozen)',
-                       'specific humidity',
-                       'total cloud cover',
-                       'temperature',
-                       'u-component of wind',
-                       'v-component of wind',
-                       'vertical velocity (pressure)',
-                       'vertical speed shear'],
+***def gefs_0p50_secondary_parameters(cat='control', 
+             final_forecast_hour=384, 
+             western_bound=-180, 
+             eastern_bound=180, 
+             northern_bound=90, 
+             southern_bound=-90, 
+             proxies=None, 
+             step=3, 
+             members=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                      11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+                      21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+             process_data=True,
+             clear_recycle_bin=False,
+             variables=['pressure'],
+             convert_temperature=True,
+             convert_to='celsius',
             custom_directory=None,
-            clear_recycle_bin=False,
-            convert_temperature=True,
-            convert_to='celsius',
             chunk_size=8192,
             notifications='off',
-            clear_data=False):***
+            clear_data=False,
+            source='noaa',
+            level_type='mean sea level',
+            levels=None):***
 
-    This function downloads GFS0P25 SECONDARY PARAMETERS data and saves it to a folder. 
+    This function downloads the latest GEFS0P50 SECONDARY PARAMETERS data for a region specified by the user
     
-    Required Argumemnts: None
+    Required Arguments: None
     
     Optional Arguments:
     
-    1) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The GFS0P25
+    1) cat (string) - Default='control'. The category of the ensemble data. 
+    
+    Valid categories
+    -----------------
+    
+    1) mean
+    2) members
+    3) spread
+    4) control
+    
+    2) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The GEFS0P50 SECONDARY PARAMETERS
     goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    384 by the nereast increment of 6 hours. 
+    384 by the nereast increment of 3 hours. 
     
-    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+    3) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
-    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+    4) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
 
-    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+    5) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
 
-    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+    6) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
     
-    6) step (Integer) - Default=3. Set to 3 for 3hr increments and 6 for 6hrly increments.
-    
-    7) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
-       data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
+    7) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
 
     8) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
@@ -68,97 +60,233 @@
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
-       
-    9) variables (String List) - The variables the user wishes to query.
     
-        Variables
-        ---------
+    9) members (List) - Default=All 30 ensemble members. The individual ensemble members. There are 30 members in this ensemble.  
+    
+    10) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
+       data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
+       
+    11) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
+        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
         
+    12) variables (List) - Default=['pressure']. A list of variable names the user wants to download in plain language. 
+    
+        Variable Name List for GEFS0P50 SECONDARY PARAMETERS
+        ----------------------------------------------------
+        
+        'best lifted index'
+        '5 wave geopotential height'
         'absolute vorticity'
+        'temperature'
+        'dew point'
+        'convective precipitation'
+        'albedo'
+        'apparent temperature'
+        'brightness temperature'
+        'convective available potential energy'
         'clear sky uv-b downward solar flux'
+        'convective inhibition'
         'cloud mixing ratio'
         'plant canopy surface water'
+        'percent frozen precipitaion'
+        'convective precipitation rate'
+        'cloud water'
+        'cloud work function'
         'uv-b downward solar flux'
-        'vertical velocity (height)'
-        'graupel'
+        'field capacity'
+        'surface friction velocity'
+        'ground heat flux'
+        'wind gust'
         'geopotential height'
-        'ice thickness'
-        'ice water mixing ratio'
+        'haines index'
+        'storm relative helicity'
+        'planetary boundary layer height'
+        'icao standard atmosphere reference height'
+        'ice cover'
+        'icing'
+        'icing severity'
+        'land cover'
+        'surface lifted index'
+        'montgomery stream function'
+        'mslp (eta model reduction)'
+        'large scale non-convective precipitation'
         'ozone mixing ratio'
+        'potential evaporation rate'
+        'parcel lifted index (to 500mb)'
+        'pressure level from which parcel was lifted'
+        'potential temperature'
+        'precipitation rate'
         'pressure'
+        'potential vorticity'
+        'precipitable water'
         'relative humidity'
-        'rain mixing ratio'
-        'snow mixing ratio'
+        'surface roughness'
+        'snow phase-change heat flux'
+        'snow cover'
         'liquid volumetric soil moisture (non-frozen)'
+        'volumetric soil moisture content'
         'specific humidity'
+        'sunshine duration'
         'total cloud cover'
-        'temperature'
+        'total ozone'
+        'soil temperature'
+        'momentum flux (u-component)'
         'u-component of wind'
+        'zonal flux of gravity wave stress'
+        'u-component of storm motion'
+        'upward shortwave radiation flux'
+        'momentum flux (v-component)'
         'v-component of wind'
-        'vertical velocity (pressure)'
-        'vertical speed shear'      
-    
-    10) custom_directory (String or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
+        'meridional flux of gravity wave stress'
+        'visibility'
+        'ventilation rate'
+        'v-component of storm motion'
+        'vertical velocity'
+        'vertical speed shear'
+        'water runoff'
+        'wilting point'
+        
+    13) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
         the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
-        be used. 
+        be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
     
-    11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+    14) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
         This setting is to help preserve memory on the machine. 
         
-    12) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+    15) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
         
-    13) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+    16) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    14) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
+    17) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
         Default = f:ECMWF/IFS/WAVE
         
-    15) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    18) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
-    16) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
-
-    17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+    19) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    
+    20) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+    
+    21) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+    
+        Server List
+        -----------
+        
+        1) NOAA/NCEP/NOMADS - source='noaa'
+        2) Amazon AWS - source='aws'
+        3) Google Cloud - source='google'
+        
+    22) level_type (String) - Default='mean sea level'. The type of level for the variable.
+    
+        Level Types
+        -----------
+        
+        'mean sea level'
+        'hybrid'
+        'surface'
+        'boundary layer'
+        'pressure'
+        'height below ground'
+        'height above ground'
+        'entire atmosphere (considered as a single layer)'
+        'cloud ceiling'
+        'top of atmosphere'
+        'tropopause'
+        'max wind'
+        'height above sea level'
+        'isothermal'
+        'highest tropospheric freezing level'
+        'sigma layer'
+        'sigma level'
+        'isentropic level'
+        'potential vorticity surface'
+        
+    23) levels (String, Integer or Float List or None) - Default=None. 
+                                                            
+        The pressure, height or depth levels. Set to None when the level_type only has one level (i.e. 'surface').
     
     Returns
     -------
     
-    An xarray.array dataset of the most recent GFS0P25 run. 
+    An xarray data array of the GEFS0P50 SECONDARY PARAMETERS data specified to the coordinate boundaries and variable list the user specifies. 
     
-    Post-processed Variable Key List
-    --------------------------------
+    GEFS0P50 SECONDARY PARAMETERS files are saved to f:GEFS0P50 SECONDARY PARAMETERS/{cat} or in the case of ensemble members f:GEFS0P50 SECONDARY PARAMETERS/{cat}/{member}
     
+    Variables
+    ---------
+    
+    'temperature'
+    'surface_visibility'
+    'surface_wind_gust'
+    'haines_index'
+    'plant_canopy_surface_water'
+    'snow_cover'
+    'percent_frozen_precipitation'
+    'snow_phase_change_heat_flux'
+    'surface_roughness'
+    'frictional_velocity'
+    'wilting_point'
+    'field_capacity'
+    'sunshine_duration'
+    'surface_lifted_index'
+    'best_4_layer_lifted_index'
+    'land_sea_mask'
+    'sea_ice_area_fraction'
+    'orography'
+    'convective_precipitation_rate'
+    'precipitation_rate'
+    'total_convective_precipitation'
+    'total_non_convective_precipitation'
+    'total_precipitation'
+    'water_runoff'
+    'ground_heat_flux'
+    'time_mean_u_component_of_atmospheric_surface_momentum_flux'
+    'time_mean_v_component_of_atmospheric_surface_momentum_flux'
+    'instantaneous_eastward_gravity_wave_surface_flux'
+    'instantaneous_northward_gravity_wave_surface_flux'
+    'uv_b_downward_solar_flux'
+    'clear_sky_uv_b_downward_solar_flux'
+    'average_surface_albedo'
+    'mslp'
+    'mslp_eta_reduction'  
+    'ventilation_rate'
+    'geopotential_height'
+    'vertical_velocity'
     'u_wind_component'
     'v_wind_component'
-    'air_temperature'
-    'relative_humidity'
-    'absolute_vorticity'
-    'geopotential_height'
     'ozone_mixing_ratio'
-    'total_cloud_cover'
+    'absolute_vorticity'
     'cloud_mixing_ratio'
-    'ice_water_mixing_ratio'
-    'rain_water_mixing_ratio'
-    'snow_mixing_ratio'
-    'graupel'
-    'vertical_velocity'
-    'geometric_vertical_velocity'
+    'icing_severity'
+    'total_cloud_cover'
+    'relative_humidity'
     'liquid_volumetric_soil_moisture_non_frozen'
-    'plant_canopy_surface_water'
-    'sea_ice_thickness'
-    'temperature_height_above_sea'
-    'u_wind_component_height_above_sea'
-    'v_wind_component_height_above_sea'
-    'mixed_layer_temperature'
-    'mixed_layer_relative_humidity'
-    'mixed_layer_specific_humidity'
-    'mixed_layer_u_wind_component'
-    'mixed_layer_v_wind_component'
-    'potential_vorticity_level_u_wind_component'
-    'potential_vorticity_level_v_wind_component'
-    'potential_vorticity_level_temperature'
-    'potential_vorticity_level_geopotential_height'
-    'potential_vorticity_level_air_pressure'
-    'potential_vorticity_level_vertical_speed_shear' 
+    'soil_temperature'
+    'volumetric_soil_moisture_content'
+    '2m_specific_humidity'
+    '2m_dew_point'
+    '2m_apparent_temperature'
+    'specific_humidity'
+    'pressure'
+    'cloud_water'
+    'total_ozone'
+    'brightness_temperature'
+    '3km_helicity'
+    'u_component_of_storm_motion'
+    'v_component_of_storm_motion'
+    'pressure'
+    'tropopause_standard_atmosphere_reference_height'
+    '995_sigma_theta'
+    'potential_vorticity'
+    'vertical_speed_shear'
+    'theta_level_montgomery_potential'
+    'potential_vorticity_level_vertical_speed_shear'
+    'mixed_layer_dew_point'
+    'mixed_layer_precipitable_water'
+    'parcel_lifted_index_to_500hPa'
+    'convective_available_potential_energy'
+    'convective_inhibition'
+    'pressure_level_from_which_a_parcel_was_lifted'

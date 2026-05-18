@@ -61,8 +61,17 @@
                             100, 
                             50]):***
 
-    This function scans for the latest ECMWF AIFS dataset. If the dataset on the computer is old, 
-    the old data will be deleted and the new data will be downloaded. 
+    This function scans for the latest ECMWF AIFS dataset. If the dataset on the computer is old, the old data will be deleted
+    and the new data will be downloaded. 
+    
+    These ECMWF end-to-end clients can download ECMWF data from the following sources: 
+    
+            1) ECMWF Open-Data Server
+            2) Amazon AWS Server
+            3) Google Cloud Server
+            
+    ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
+    ***If the client cannot connect to any of the servers, the system will exit.***
     
     1) final_forecast_hour (Integer) - Default = 360.
 
@@ -71,7 +80,6 @@
         
         6-hourly increments from hour 0 to hour 360.
         
-    
     2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
     3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
@@ -104,8 +112,14 @@
     
     13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    14) source (String) - Default='ecmwf'. The data server choice. When set to 'ecmwf' data is pulled from ecmwf-opendata.
-        To switch to Amazon AWS, switch source='aws'. 
+    14) source (String) - Default='ecmwf'. The data server choice. 
+    
+        Data Sources
+        ------------
+        
+        - ECMWF Open-Data Server = 'ecmwf'
+        - Amazon AWS Server = 'aws'
+        - Google Cloud Server = 'google'
         
     15) level_type (String) - Default='surface'. The level of the parameters being queried. 
     
@@ -204,3 +218,4 @@
     'total_column_water'
     'total_cloud_cover'
     'mslp'
+    

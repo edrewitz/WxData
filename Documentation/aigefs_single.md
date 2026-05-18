@@ -1,6 +1,6 @@
 ## AIGEFS Ensemble Mean & Ensemble Spread
 
-***aigefs_single(final_forecast_hour=384, 
+***def aigefs_single(final_forecast_hour=384, 
                     western_bound=-180, 
                     eastern_bound=180, 
                     northern_bound=90, 
@@ -14,7 +14,26 @@
                     chunk_size=8192,
                     notifications='off',
                     cat='mean',
-                    type_of_level='pressure'):***
+                    level_type='pressure',
+                    clear_data=False,
+            variables=['geopotential height',
+                       'specific humidity',
+                       'temperature',
+                       'u-component of wind',
+                       'v-component of wind',
+                       'vertical velocity (pressure)'],
+            levels=[1000,
+                    925,
+                    850,
+                    700,
+                    600,
+                    500,
+                    400,
+                    300,
+                    250,
+                    150,
+                    100,
+                    50]):***
 
     This function downloads, pre-processes and post-processes the latest AIGEFS Ensemble Mean or Ensemble Spread for either the Pressure or Surface Parameters. 
     Users can also enter a list of paths for custom_directory if they do not wish to use the default directory.
@@ -25,7 +44,7 @@
     
     1) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The AIGEFS
     goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    384 by the nereast increment of 6 hours. 
+    384 by the nereast increment of 3 hours. 
     
     2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
@@ -77,14 +96,43 @@
         1) mean
         2) spread
         
-    17) type_of_level (String) - Default='pressure'. The type of level the data is in.
+    17) level_type (String) - Default='pressure'. The type of level the data is in.
     
         Types of Levels
         ---------------
         
         1) pressure
         2) surface
+        
+    18) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
+    
+    19) variables (String List) **level_type='pressure'** - Default=['geopotential height',
+                                                                        'specific humidity',
+                                                                        'temperature',
+                                                                        'u-component of wind',
+                                                                        'v-component of wind',
+                                                                        'vertical velocity (pressure)']
+                       
+        When the level_type = 'pressure', the user can filter by variable to the variable they want. (Surface level files are very small 
+        compared to pressure level files).
+        
+    20) levels (Integer List) **level_type='pressure'** - Default=[1000,
+                                                                        925,
+                                                                        850,
+                                                                        700,
+                                                                        600,
+                                                                        500,
+                                                                        400,
+                                                                        300,
+                                                                        250,
+                                                                        150,
+                                                                        100,
+                                                                        50]
+                                                                        
+        When the level_type = 'pressure', the user can filter by level to the level they want. (Surface level files are very small 
+        compared to pressure level files).
     
     Returns
     -------

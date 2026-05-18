@@ -1,6 +1,6 @@
 # Global Ensemble Forecast System 0.50 X 0.50 DEGREE SECONDARY PARAMETERS (GEFS0P50 SECONDARY PARAMETERS)
 
-***def gefs_0p50_secondary_parameters(cat='mean', 
+***def gefs_0p50_secondary_parameters(cat='control', 
              final_forecast_hour=384, 
              western_bound=-180, 
              eastern_bound=180, 
@@ -13,83 +13,16 @@
                       21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
              process_data=True,
              clear_recycle_bin=False,
-             variables=['best lifted index',
-                        '5 wave geopotential height',
-                        'absolute vorticity',
-                        'temperature',
-                        'dew point',
-                        'convective precipitation',
-                        'albedo',
-                        'apparent temperature',
-                        'brightness temperature',
-                        'convective available potential energy',
-                        'clear sky uv-b downward solar flux',
-                        'convective inhibition',
-                        'cloud mixing ratio',
-                        'plant canopy surface water',
-                        'percent frozen precipitaion',
-                        'convective precipitation rate',
-                        'cloud water',
-                        'cloud work function',
-                        'uv-b downward solar flux',
-                        'field capacity',
-                        'surface friction velocity',
-                        'ground heat flux',
-                        'wind gust',
-                        'geopotential height',
-                        'haines index',
-                        'storm relative helicity',
-                        'planetary boundary layer height',
-                        'icao standard atmosphere reference height',
-                        'ice cover',
-                        'icing',
-                        'icing severity',
-                        'land cover',
-                        'surface lifted index',
-                        'montgomery stream function',
-                        'mslp (eta model reduction)',
-                        'large scale non-convective precipitation',
-                        'ozone mixing ratio',
-                        'potential evaporation rate',
-                        'parcel lifted index (to 500mb)',
-                        'pressure level from which parcel was lifted',
-                        'potential temperature',
-                        'precipitation rate',
-                        'pressure',
-                        'potential vorticity',
-                        'precipitable water',
-                        'relative humidity',
-                        'surface roughness',
-                        'snow phase-change heat flux',
-                        'snow cover',
-                        'liquid volumetric soil moisture (non-frozen)',
-                        'volumetric soil moisture content',
-                        'specific humidity',
-                        'sunshine duration',
-                        'total cloud cover',
-                        'total ozone',
-                        'soil temperature',
-                        'momentum flux (u-component)',
-                        'u-component of wind',
-                        'zonal flux of gravity wave stress',
-                        'u-component of storm motion',
-                        'upward shortwave radiation flux',
-                        'momentum flux (v-component)',
-                        'v-component of wind',
-                        'meridional flux of gravity wave stress',
-                        'visibility',
-                        'ventilation rate',
-                        'v-component of storm motion',
-                        'vertical velocity',
-                        'vertical speed shear',
-                        'water runoff',
-                        'wilting point'],
+             variables=['pressure'],
              convert_temperature=True,
              convert_to='celsius',
             custom_directory=None,
             chunk_size=8192,
             notifications='off',
-            clear_data=False):***
+            clear_data=False,
+            source='noaa',
+            level_type='mean sea level',
+            levels=None):***
 
     This function downloads the latest GEFS0P50 SECONDARY PARAMETERS data for a region specified by the user
     
@@ -124,20 +57,19 @@
     8) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
-                           'http':'http://url',
-                           'https':'https://url'
-                        }
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
     9) members (List) - Default=All 30 ensemble members. The individual ensemble members. There are 30 members in this ensemble.  
     
     10) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
        
-    11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
+    11) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
+        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
         
-    12) variables (List) - A list of variable names the user wants to download in plain language. 
+    12) variables (List) - Default=['pressure']. A list of variable names the user wants to download in plain language. 
     
         Variable Name List for GEFS0P50 SECONDARY PARAMETERS
         ----------------------------------------------------
@@ -218,8 +150,9 @@
         the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
         be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
     
-    14) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    14) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
         
     15) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
@@ -233,9 +166,47 @@
     18) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
     19) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
-
+    
     20) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+    
+    21) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+    
+        Server List
+        -----------
+        
+        1) NOAA/NCEP/NOMADS - source='noaa'
+        2) Amazon AWS - source='aws'
+        3) Google Cloud - source='google'
+        
+    22) level_type (String) - Default='mean sea level'. The type of level for the variable.
+    
+        Level Types
+        -----------
+        
+        'mean sea level'
+        'hybrid'
+        'surface'
+        'boundary layer'
+        'pressure'
+        'height below ground'
+        'height above ground'
+        'entire atmosphere (considered as a single layer)'
+        'cloud ceiling'
+        'top of atmosphere'
+        'tropopause'
+        'max wind'
+        'height above sea level'
+        'isothermal'
+        'highest tropospheric freezing level'
+        'sigma layer'
+        'sigma level'
+        'isentropic level'
+        'potential vorticity surface'
+        
+    23) levels (String, Integer or Float List or None) - Default=None. 
+                                                            
+        The pressure, height or depth levels. Set to None when the level_type only has one level (i.e. 'surface').
     
     Returns
     -------
@@ -247,7 +218,7 @@
     Variables
     ---------
     
-    'surface_temperature'
+    'temperature'
     'surface_visibility'
     'surface_wind_gust'
     'haines_index'
@@ -265,8 +236,6 @@
     'land_sea_mask'
     'sea_ice_area_fraction'
     'orography'
-    'surface_cape'
-    'surface_cin'
     'convective_precipitation_rate'
     'precipitation_rate'
     'total_convective_precipitation'
@@ -282,12 +251,9 @@
     'clear_sky_uv_b_downward_solar_flux'
     'average_surface_albedo'
     'mslp'
-    'mslp_eta_reduction'
-    'boundary_layer_u_wind_component'
-    'boundary_layer_v_wind_component'
-    'ventilation_rate' 
+    'mslp_eta_reduction'  
+    'ventilation_rate'
     'geopotential_height'
-    'air_temperature' 
     'vertical_velocity'
     'u_wind_component'
     'v_wind_component'
@@ -303,56 +269,24 @@
     '2m_specific_humidity'
     '2m_dew_point'
     '2m_apparent_temperature'
-    '80m_specific_humidity'
-    '80m_air_pressure'
-    '80m_u_wind_component'
-    '80m_v_wind_component'
-    'atmosphere_single_layer_relative_humidity'
+    'specific_humidity'
+    'pressure'
     'cloud_water'
     'total_ozone'
-    'cloud_ceiling_height'
     'brightness_temperature'
     '3km_helicity'
     'u_component_of_storm_motion'
     'v_component_of_storm_motion'
-    'tropopause_height'
-    'tropopause_pressure'
+    'pressure'
     'tropopause_standard_atmosphere_reference_height'
-    'tropopause_u_wind_component'
-    'tropopause_v_wind_component'
-    'tropopause_temperature'
-    'tropopause_vertical_speed_shear'
-    'max_wind_u_component'
-    'max_wind_v_component'
-    'zero_deg_c_isotherm_geopotential_height'
-    'zero_deg_c_isotherm_relative_humidity'
-    'highest_tropospheric_freezing_level_geopotential_height'
-    'highest_tropospheric_freezing_level_relative_humidity'
-    '995_sigma_relative_humdity'
-    '995_sigma_temperature'
     '995_sigma_theta'
-    '995_u_wind_component'
-    '995_v_wind_component'
-    '995_vertical_velocity'
     'potential_vorticity'
-    'theta_level_u_wind_component'
-    'theta_level_v_wind_component'
-    'theta_level_temperature'
+    'vertical_speed_shear'
     'theta_level_montgomery_potential'
-    'potential_vorticity_level_u_wind_component'
-    'potential_vorticity_level_v_wind_component'
-    'potential_vorticity_level_temperature'
-    'potential_vorticity_level_geopotential_height'
-    'potential_vorticity_level_air_pressure'
     'potential_vorticity_level_vertical_speed_shear'
-    'mixed_layer_air_temperature'
-    'mixed_layer_relative_humidity'
-    'mixed_layer_specific_humidity'
-    'mixed_layer_u_wind_component'
-    'mixed_layer_v_wind_component'
     'mixed_layer_dew_point'
     'mixed_layer_precipitable_water'
     'parcel_lifted_index_to_500hPa'
-    'mixed_layer_cape'
-    'mixed_layer_cin'
-    'pressure_level_from_which_a_parcel_was_lifted' 
+    'convective_available_potential_energy'
+    'convective_inhibition'
+    'pressure_level_from_which_a_parcel_was_lifted'

@@ -6,6 +6,7 @@ GRIB variable keys will be post-processed into Plain Language variable keys.
 (C) Eric J. Drewitz 2025-2026
 """
 import xarray as _xr
+import os as _os
 import sys as _sys
 import logging as _logging
 import warnings as _warnings
@@ -80,6 +81,8 @@ def aigefs_members_post_processing(paths,
             ds_list_1 = []
             
             for path in paths:
+                # Sort alphabetically
+                path = sorted(path)
                 ds1 = _xr.open_mfdataset(path, 
                                         concat_dim='step', 
                                         combine='nested', 
@@ -98,6 +101,7 @@ def aigefs_members_post_processing(paths,
             ds_list_2 = []
             
             for path in paths:
+                path = sorted(path)
                 ds2 = _xr.open_mfdataset(path, 
                                         concat_dim='step', 
                                         combine='nested', 

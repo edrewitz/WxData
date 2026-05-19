@@ -13,6 +13,8 @@ import os as _os
 import warnings as _warnings
 _warnings.filterwarnings('ignore')
 
+from time import sleep as _sleep
+from concurrent.futures import ThreadPoolExecutor as _ThreadPoolExecutor
 from wxdata.cfs.url_scanners import(
     cfs_flux_url_scanner as _cfs_flux_url_scanner,
     cfs_pressure_url_scanner as _cfs_pressure_url_scanner
@@ -24,6 +26,83 @@ from wxdata.utils.recycle_bin import(
     clear_trash_bin_mac as _clear_trash_bin_mac,
     clear_trash_bin_linux as _clear_trash_bin_linux
 )
+
+MAX_WORKERS = 2
+
+def _download_data(url,
+                    path,
+                    filename,
+                    proxies=None,
+                    chunk_size=8192,
+                    notifications='off'):
+    
+    """
+    Wrapping the get_gridded_data() client into this function to be used in multi-threading.
+    
+    This function is the client that retrieves CFS files. 
+    This client supports VPN/PROXY connections. 
+    
+    Required Arguments:
+    
+    1) url (String) - The download URL to the file. 
+    
+    2) path (String) - The directory where the file is saved to. 
+    
+    3) filename (String) - The name the user wishes to save the file as. 
+    
+    Optional Arguments:
+    
+    1) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
+                        
+    2) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    
+    3) notifications (String) - Default='on'. Notification when a file is downloaded and saved to {path}
+    
+    Returns
+    -------
+    
+    CFS data files (GRIB2 or NETCDF) saved to {path}   
+    
+    """
+    
+    _client.get_gridded_data(url,
+                                path,
+                                filename,
+                                proxies=proxies,
+                                chunk_size=chunk_size,
+                                notifications=notifications)
+    
+def _multi_thread_download(urls,
+                            path,
+                            filenames,
+                            proxies=None,
+                            chunk_size=8192,
+                            notifications='off'):
+    
+    """
+    This is the function that wraps _download_data into multi-threading.
+    
+    Rate-Frequency = 120 Requests/Min 
+    
+    """
+    
+    with _ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        for url, filename in zip(urls, filenames):
+            # Submit the job immediately
+            executor.submit(_download_data, 
+                                           url,
+                                            path,
+                                            filename,
+                                            proxies,
+                                            chunk_size,
+                                            notifications)            
+            # Pause the main loop for 1 second before submitting the next job
+            _sleep(1) 
 
 def cfs_flux(western_bound=-180, 
             eastern_bound=180, 
@@ -143,7 +222,7 @@ def cfs_flux(western_bound=-180,
     
     10) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    11) path (String) - Default="CFS/PRESSURE". The path of the local directory where the files will be stored.
+    11) path (String) - Default="CFS/FLUX". The path of the local directory where the files will be stored.
     
     12) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
@@ -360,14 +439,12 @@ def cfs_flux(western_bound=-180,
         
         print(f"Downloading Latest CFS Flux Data")
         
-        for url, filename in zip(urls, files):    
-        
-            _client.get_gridded_data(url,
-                                     path,
-                                     filename,
-                                     proxies=proxies,
-                                     chunk_size=chunk_size,
-                                     notifications=notifications)
+        _multi_thread_download(urls,
+                                path,
+                                files,
+                                proxies=proxies,
+                                chunk_size=chunk_size,
+                                notifications=notifications)
     else:
         print(f"Data in local directory is current. Skipping Download")
         
@@ -660,14 +737,12 @@ def cfs_pressure(western_bound=-180,
         
         print(f"Downloading Latest CFS Pressure Data")
         
-        for url, filename in zip(urls, files):    
-        
-            _client.get_gridded_data(url,
-                                     path,
-                                     filename,
-                                     proxies=proxies,
-                                     chunk_size=chunk_size,
-                                     notifications=notifications)
+        _multi_thread_download(urls,
+                                path,
+                                files,
+                                proxies=proxies,
+                                chunk_size=chunk_size,
+                                notifications=notifications)
     else:
         print(f"Data in local directory is current. Skipping Download")
         

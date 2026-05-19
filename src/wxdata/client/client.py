@@ -129,12 +129,8 @@ def get_gridded_data(url,
                 pass
         except _requests.exceptions.RequestException as e:
             for i in range(0, 10, 1):
-                if i < 3:
-                    print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
-                    _time.sleep(30)
-                else:
-                    print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
-                    _time.sleep(60)  
+                print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
+                _time.sleep(60)  
                     
                 try:
                     with _requests.get(url, stream=True) as r:
@@ -170,12 +166,8 @@ def get_gridded_data(url,
                 pass
         except _requests.exceptions.RequestException as e:
             for i in range(0, 10, 1):
-                if i < 3:
-                    print(f"Alert: Network connection unstable.\nWaiting 30 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
-                    _time.sleep(30)
-                else:
-                    print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
-                    _time.sleep(60)  
+                print(f"Alert: Network connection unstable.\nWaiting 60 seconds then automatically trying again.\nAttempts remaining: {10 - i}")
+                _time.sleep(60)  
                     
                 try:
                     with _requests.get(url, stream=True, proxies=proxies) as r:

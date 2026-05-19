@@ -31,6 +31,7 @@ from wxdata.utils.file_funcs import(
     clear_old_ensemble_data as _clear_old_ensemble_data
 )
 
+from wxdata.aigefs.multi_threading import download_ensemble_members as _download_ensemble_members
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
 from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
 from wxdata.utils.recycle_bin import(
@@ -55,7 +56,6 @@ def aigefs_pressure_members(final_forecast_hour=384,
             convert_to='celsius',
             custom_directory=None,
             chunk_size=8192,
-            notifications='off',
             clear_data=False,
             variables=['geopotential height',
                        'specific humidity',
@@ -129,13 +129,11 @@ def aigefs_pressure_members(final_forecast_hour=384,
         Default = f:ECMWF/IFS/WAVE
         
     15) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
-    
-    16) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
-    
-    17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        
+    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
         
-    18) variables (String List) Default=['geopotential height',
+    17) variables (String List) Default=['geopotential height',
                                         'specific humidity',
                                         'temperature',
                                         'u-component of wind',
@@ -143,7 +141,7 @@ def aigefs_pressure_members(final_forecast_hour=384,
                                         'vertical velocity (pressure)']
                        
         
-    19) levels (Integer List) - Default=[1000,
+    18) levels (Integer List) - Default=[1000,
                                         925,
                                         850,
                                         700,
@@ -204,49 +202,14 @@ def aigefs_pressure_members(final_forecast_hour=384,
         
         _clear_old_ensemble_data(paths)
          
-        if run < 10:
-            run = f"0{run}"
-        else:
-            run = f"{run}"        
-        stop = final_forecast_hour + 6
-        for path, url in zip(paths, urls):
-            for i in range(0, stop, 6):
-                if i < 10:
-                    _client.byte_range_request(f"{url}/aigefs.t{run}z.pres.f00{i}.grib2",
-                                                f"{url}/aigefs.t{run}z.pres.f00{i}.grib2.idx",
-                                                variables,
-                                                levels,
-                                                'pressure',
-                                                path,
-                                                f"aigefs.t{run}z.pres.f00{i}.grib2",
-                                                proxies=proxies,
-                                                chunk_size=chunk_size,
-                                                notifications=notifications,
-                                                clear_recycle_bin=clear_recycle_bin)
-                elif i >= 10 and i < 100:
-                    _client.byte_range_request(f"{url}/aigefs.t{run}z.pres.f0{i}.grib2",
-                                                f"{url}/aigefs.t{run}z.pres.f0{i}.grib2.idx",
-                                                variables,
-                                                levels,
-                                                'pressure',
-                                                path,
-                                                f"aigefs.t{run}z.pres.f0{i}.grib2",
-                                                proxies=proxies,
-                                                chunk_size=chunk_size,
-                                                notifications=notifications,
-                                                clear_recycle_bin=clear_recycle_bin)
-                else:
-                    _client.byte_range_request(f"{url}/aigefs.t{run}z.pres.f{i}.grib2",
-                                                f"{url}/aigefs.t{run}z.pres.f{i}.grib2.idx",
-                                                variables,
-                                                levels,
-                                                'pressure',
-                                                path,
-                                                f"aigefs.t{run}z.pres.f{i}.grib2",
-                                                proxies=proxies,
-                                                chunk_size=chunk_size,
-                                                notifications=notifications,
-                                                clear_recycle_bin=clear_recycle_bin)   
+        _download_ensemble_members(urls,
+                      variables,
+                      levels,
+                      paths,
+                      run,
+                      final_forecast_hour,
+                      proxies=proxies,
+                      chunk_size=chunk_size)
     else:
         print(f"User has latest AIGEFS Pressure Parameter Files\nSkipping Download...")  
         

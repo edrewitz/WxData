@@ -6,7 +6,32 @@ This file hosts the function that fetches the byte-range for a variable.
 
 import requests
 
-from tqdm.auto import tqdm
+def is_notebook():
+
+    """
+    This function checks to see if the user is running code in a Jupyter Notebook
+    """
+    
+    try:
+        from IPython import get_ipython
+        shell = get_ipython().__class__.__name__
+        if shell == 'ZMQInteractiveShell':
+            return True   # Jupyter notebook or qtconsole
+        elif shell == 'TerminalInteractiveShell':
+            return False  # Terminal running IPython
+        else:
+            return False  # Other type (standard Python interpreter)
+    except NameError:
+        return False      # Probably standard Python interpreter
+    except ImportError:
+        return False   
+    
+NOTEBOOK = is_notebook()
+
+if NOTEBOOK == False:
+    from tqdm.auto import tqdm
+else:
+    from tqdm.notebook import tqdm
 
 
 def fetch_range(url, 

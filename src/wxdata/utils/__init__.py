@@ -1,7 +1,6 @@
 # (C) Eric J. Drewitz 2025-2026
 
 from wxdata.utils.recycle_bin import(
-    
     clear_trash_bin_mac,
     clear_trash_bin_linux,
     clear_recycle_bin_windows

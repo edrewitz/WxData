@@ -1151,6 +1151,13 @@ def ecmwf_aifs_post_processing(path,
         pass
     
     try:
+        ds1['geopotential_height'] = ds1['gh']
+        ds1 = ds1.drop_vars('gh')
+        ds1_list.append(ds1)
+    except Exception as e:
+        pass
+    
+    try:
         ds1['specific_humidity'] = ds1['q']
         ds1 = ds1.drop_vars('q')
         ds1_list.append(ds1)
@@ -1492,6 +1499,10 @@ def ecmwf_aifs_post_processing(path,
             pass
         try:
             ds = ds.drop_vars('z')
+        except Exception as e:
+            pass
+        try:
+            ds = ds.drop_vars('gh')
         except Exception as e:
             pass
         try:

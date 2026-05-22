@@ -238,6 +238,7 @@ def aifs_var_keys(var_list):
     
     aifs_keys = {
         'geopotential':'z',
+        'geopotential height':'gh',
         'total column water':'tcw',
         'mean sea level pressure':'msl',
         'standard deviation of sub-gridscale orography':'sdor',

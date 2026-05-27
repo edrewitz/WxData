@@ -6,35 +6,7 @@ This file hosts the function that fetches the byte-range for a variable.
 
 import requests
 
-import sys
-
-def is_jupyter_notebook() -> bool:
-    """
-    Checks if the code is running within a Jupyter Notebook environment.
-    
-    Returns:
-    --------
-    bool
-        True if running in a Jupyter Notebook/Lab, False otherwise.
-    """
-    # 1. Quick check for the ipykernel module in active memory
-    if 'ipykernel' not in sys.modules:
-        return False
-        
-    # 2. Confirm by checking the active IPython shell type
-    try:
-        from IPython import get_ipython
-        shell = get_ipython().__class__.__name__
-        return shell == 'ZMQInteractiveShell'
-    except (ImportError, NameError):
-        return False   # Probably standard Python interpreter
-    
-NOTEBOOK = is_jupyter_notebook()
-
-if NOTEBOOK == False:
-    from tqdm.auto import tqdm
-else:
-    from tqdm.notebook import tqdm
+from tqdm.auto import tqdm
 
 
 def fetch_range(url, 

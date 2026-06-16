@@ -1,4 +1,4 @@
-# Real-Time Mesoscale Analysis (RTMA) Hour Comparison
+# Real-Time Mesoscale Analysis (RTMA) Comparison
 
 ***def rtma_comparison(model='rtma', 
          cat='analysis', 

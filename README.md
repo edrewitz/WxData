@@ -266,7 +266,7 @@ End-To-End clients with multiple servers to pull data from can find the differen
    
 ***Real-Time Mesoscale Analysis (RTMA)***
 1. [RTMA](https://github.com/edrewitz/wxdata/blob/main/Documentation/rtma.md#real-time-mesoscale-analysis-rtma)
-2. [RTMA Comparison](https://github.com/edrewitz/WxData/blob/main/Documentation/rtma%20comparison.md#real-time-mesoscale-analysis-rtma-hour-comparison)
+2. [RTMA Comparison](https://github.com/edrewitz/WxData/blob/main/Documentation/rtma%20comparison.md#real-time-mesoscale-analysis-rtma-comparison)
 
 ***NOAA Storm Prediction Center Outlooks/Climate Prediction Center Outlooks/National Weather Service Forecasts***
 1. [Get NDFD Grids](https://github.com/edrewitz/wxdata/blob/main/Documentation/noaa.md#noaa-get-storm-prediction-center-outlooks-and-national-weather-service-forecasts-ndfd-grids)

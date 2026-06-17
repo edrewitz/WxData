@@ -13,9 +13,9 @@ import warnings as _warnings
 _warnings.filterwarnings('ignore')
 
 from wxdata.utils.exceptions import eccodes_error_message as _eccodes_error_message
-from wxdata.calc.thermodynamics import relative_humidity as _relative_humidity
 from wxdata.utils.file_funcs import clear_idx_files_in_path as _clear_idx_files_in_path
 from wxdata.utils.coords import shift_longitude as _shift_longitude_regrid
+from metpy.units import units
 
 _sys.tracebacklimit = 0
 _logging.disable()
@@ -81,11 +81,11 @@ def _rows_and_cols(model):
     
     return dims[model][0], dims[model][1]
 
+
 def process_rtma_data(
                      path,
                      filename, 
-                     model,
-                     ):
+                     model):
     
     """
     This function post-processes RTMA Data and returns an xarray data array of the data.
@@ -97,6 +97,8 @@ def process_rtma_data(
     
     1) path (String) - The path to the file that has the RTMA Data. 
     
+    2) filename (String) - The name of the RTMA GRIB file.
+    
     2) model (String) - Default='rtma'. The RTMA model being used:
     
     RTMA Models
@@ -107,9 +109,7 @@ def process_rtma_data(
     Hawaii = 'hi rtma'
     Puerto Rico = 'pr rtma'
     Guam = 'gu rtma'
-    
-    3) directory (String) - The directory path where the RTMA files are saved to. 
-    
+        
     Optional Arguments: None
     
     Returns
@@ -172,7 +172,10 @@ def process_rtma_data(
         pass
     
     try:
-        ds['2m_relative_humidity'] = _relative_humidity(ds['2m_temperature'], ds['2m_dew_point'])
+        ds['2m_relative_humidity'] = (_mpcalc.relative_humidity_from_dewpoint(ds['2m_temperature'] * units('degK'),
+                                                                             ds['2m_dew_point'] * units('degK'))) * 100
+        
+        ds = ds.metpy.dequantify()
     except Exception as e:
         pass
     

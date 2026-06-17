@@ -1,8 +1,8 @@
 # Real Time Mesoscale Analysis (RTMA) Post-Processing
 
-***def process_rtma_data(filename, 
-                     model,
-                     directory):***
+***def process_rtma_data(path,
+                     filename, 
+                     model):***
 
     This function post-processes RTMA Data and returns an xarray data array of the data.
     
@@ -12,6 +12,8 @@
     Required Arguments: 
     
     1) path (String) - The path to the file that has the RTMA Data. 
+    
+    2) filename (String) - The name of the RTMA GRIB file.
     
     2) model (String) - Default='rtma'. The RTMA model being used:
     
@@ -23,9 +25,7 @@
     Hawaii = 'hi rtma'
     Puerto Rico = 'pr rtma'
     Guam = 'gu rtma'
-    
-    3) directory (String) - The directory path where the RTMA files are saved to. 
-    
+        
     Optional Arguments: None
     
     Returns

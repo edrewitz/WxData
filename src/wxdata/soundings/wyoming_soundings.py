@@ -14,7 +14,6 @@ import metpy.calc as _mpcalc
 import sys as _sys
 import wxdata.soundings._exceptions as _exceptions
 
-from wxdata.calc.thermodynamics import relative_humidity as _relative_humidity
 from wxdata.calc.kinematics import get_u_and_v as _get_u_and_v
 from metpy.units import units as _units
 from bs4 import BeautifulSoup as _BeautifulSoup
@@ -43,6 +42,129 @@ try:
 except Exception as e:
     now = _datetime.utcnow()
 
+
+def _parse_sounding_text(data, usecols, names, widths=None):
+    """
+    Parse the fixed-width Wyoming sounding text response while preserving the first
+    pressure level row. The text includes header lines that should not be treated as
+    data rows.
+    
+    Required Arguments:
+    
+    1) data (Bytes) - The sounding data in bytes format.
+    
+    2) usecols (Integer List) - The list of columns to be used.
+    
+    3) names (String List) - Column names.
+    
+    Optional Arguments:
+    
+    1) widths - Width of columns. 
+    
+    Returns
+    -------
+    
+    A Pandas.DataFrame of the sounding data.
+    """
+    if widths is None:
+        widths = [7] * 8
+
+    if hasattr(data, "readlines"):
+        lines = data.readlines()
+    else:
+        lines = data.splitlines()
+
+    cleaned_lines = [line.rstrip("\n") for line in lines]
+    start_idx = None
+
+    for idx, line in enumerate(cleaned_lines):
+        stripped = line.strip()
+        if not stripped:
+            continue
+
+        parts = stripped.split()
+        if not parts:
+            continue
+
+        first_token = parts[0]
+        if first_token.replace(".", "", 1).replace("-", "", 1).replace("+", "", 1).isdigit():
+            start_idx = idx
+            break
+
+    if start_idx is None:
+        raise ValueError("No sounding data rows found")
+
+    return _pd.read_fwf(
+        _StringIO("\n".join(cleaned_lines[start_idx:])),
+        widths=widths,
+        usecols=usecols,
+        names=names,
+    )
+
+
+def _url_scanner(date,
+                 station_number,
+                 proxies):
+    
+    """
+    Scans URLs for a 200 response. 
+    
+    Required Arguments:
+    
+    1) date (datetime) - The date and time of the observation.
+    
+    2) station_number (Integer) - The number corresponding to the site.
+    
+    3) proxies (String) - Default = None. If the user is requesting the data on a machine using a proxy server,
+    the user must set proxy='proxy_url'. The default setting assumes the user is not using a proxy server conenction.
+    
+        proxies=None ---> proxies={
+                                'http':'http://your-proxy-address:port',
+                                'https':'http://your-proxy-address:port'
+                                }
+                                
+    Optional Arguments: None
+    
+    Returns
+    -------
+    
+    The URL for data access. 
+    
+    """
+
+    bufr = f"https://weather.uwyo.edu/wsgi/sounding?datetime={date.strftime('%Y-%m-%d')}%20{date.hour}:00:00&id={station_number}&src=BUFR&type=TEXT:LIST"
+    fm35 = f"https://weather.uwyo.edu/wsgi/sounding?datetime={date.strftime('%Y-%m-%d')}%20{date.hour}:00:00&id={station_number}&src=FM35&type=TEXT:LIST"
+    fm37 = f"https://weather.uwyo.edu/wsgi/sounding?datetime={date.strftime('%Y-%m-%d')}%20{date.hour}:00:00&id={station_number}&src=FM37&type=TEXT:LIST"
+    
+    if proxies == None:
+        bufr_response = _requests.get(bufr)
+        fm35_response = _requests.get(fm35)
+        fm37_response = _requests.get(fm37)
+        
+    else:
+        bufr_response = _requests.get(bufr,
+                                      proxies=proxies)
+        fm35_response = _requests.get(fm35,
+                                      proxies=proxies)
+        fm37_response = _requests.get(fm37,
+                                      proxies=proxies)
+        
+    urls = []
+    urls.append(bufr)
+    urls.append(fm35)
+    urls.append(fm37)
+    
+    responses = []
+    responses.append(bufr_response)
+    responses.append(fm35_response)
+    responses.append(fm37_response)
+    
+    for r, url in zip(responses, urls):
+        if r.status_code == 200:
+            url = url
+            break
+        
+    return url
 
 def _station_ids(station_id):
 
@@ -408,7 +530,7 @@ def get_observed_sounding_data(station_id,
         if current == True:
             date = now
             if date.hour <= 12:
-                hour = 00
+                hour = 0
             else:
                 hour = 12
     
@@ -427,15 +549,9 @@ def get_observed_sounding_data(station_id,
             except Exception as e:
                 _exceptions.date_format_exception(date)
     
-    
-        if hour == 0:  
-            url = (f"http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&TYPE=TEXT%3ALIST"
-                    f"&YEAR={date.strftime('%Y')}&MONTH={date.strftime('%m')}&FROM={date.strftime('%d')}0{hour}&TO={date.strftime('%d')}0{hour}"
-                    f"&STNM={station_number}")
-        else:
-            url = (f"http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&TYPE=TEXT%3ALIST"
-                    f"&YEAR={date.strftime('%Y')}&MONTH={date.strftime('%m')}&FROM={date.strftime('%d')}{hour}&TO={date.strftime('%d')}{hour}"
-                    f"&STNM={station_number}")
+        url = _url_scanner(date,
+                           station_number,
+                           proxies)
     
         max_retries = 5
         retry = 0
@@ -469,14 +585,9 @@ def get_observed_sounding_data(station_id,
             date = date - _timedelta(hours=12)
             hour = date.hour
     
-            if hour == 0:  
-                url = (f"http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&TYPE=TEXT%3ALIST"
-                        f"&YEAR={date.strftime('%Y')}&MONTH={date.strftime('%m')}&FROM={date.strftime('%d')}0{hour}&TO={date.strftime('%d')}0{hour}"
-                        f"&STNM={station_number}")
-            else:
-                url = (f"http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&TYPE=TEXT%3ALIST"
-                        f"&YEAR={date.strftime('%Y')}&MONTH={date.strftime('%m')}&FROM={date.strftime('%d')}{hour}&TO={date.strftime('%d')}{hour}"
-                        f"&STNM={station_number}")
+            url = _url_scanner(date,
+                           station_number,
+                           proxies)
         
             max_retries = 5
             retry = 0
@@ -513,13 +624,17 @@ def get_observed_sounding_data(station_id,
         col_names = ['PRES', 'HGHT', 'TEMP', 'DWPT', 'RELH', 'MIXR', 'DRCT', 'SKNT', 'THTA', 'THTE', 'THTV']
         
         try:
-            df = _pd.read_fwf(data, widths=[7] * 8, skiprows=5,
-                                usecols=[0, 1, 2, 3, 6, 7], names=col_names)
+            df = _parse_sounding_text(
+                data,
+                usecols=[0, 1, 2, 3, 4, 5, 6, 7],
+                names=col_names,
+                widths=[7] * 8,
+            )
         except Exception as e:
             _exceptions.station_id_exception(station_id)
             
         df['U-WIND'], df['V-WIND'] = _get_u_and_v(df['SKNT'], df['DRCT'])
-        df['RH'] = _relative_humidity(df['TEMP'], df['DWPT'])
+        df = df.rename(columns={'RELH': 'RH'})
         pressure = df['PRES'].values * _units('hPa')
         temperature = df['TEMP'].values * _units('degC')
         dewpoint = df['DWPT'].values * _units('degC')
@@ -538,7 +653,7 @@ def get_observed_sounding_data(station_id,
         if current == True:
             date = now
             if date.hour <= 12:
-                hour = 00
+                hour = 0
             else:
                 hour = 12
     
@@ -559,24 +674,14 @@ def get_observed_sounding_data(station_id,
             
         date_24 = date - _timedelta(hours=24)
     
-        if hour == 0:  
-            url = (f"http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&TYPE=TEXT%3ALIST"
-                    f"&YEAR={date.strftime('%Y')}&MONTH={date.strftime('%m')}&FROM={date.strftime('%d')}0{hour}&TO={date.strftime('%d')}0{hour}"
-                    f"&STNM={station_number}")
+        url = _url_scanner(date,
+                        station_number,
+                        proxies)
 
-            url_24 = (f"http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&TYPE=TEXT%3ALIST"
-                    f"&YEAR={date.strftime('%Y')}&MONTH={date_24.strftime('%m')}&FROM={date_24.strftime('%d')}0{hour}&TO={date_24.strftime('%d')}0{hour}"
-                    f"&STNM={station_number}")
-            
-        else:
-            url = (f"http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&TYPE=TEXT%3ALIST"
-                    f"&YEAR={date.strftime('%Y')}&MONTH={date.strftime('%m')}&FROM={date.strftime('%d')}{hour}&TO={date.strftime('%d')}{hour}"
-                    f"&STNM={station_number}")
-
-            url_24 = (f"http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&TYPE=TEXT%3ALIST"
-                    f"&YEAR={date_24.strftime('%Y')}&MONTH={date_24.strftime('%m')}&FROM={date_24.strftime('%d')}{hour}&TO={date_24.strftime('%d')}{hour}"
-                    f"&STNM={station_number}")
-
+        url_24 = _url_scanner(date_24,
+                        station_number,
+                        proxies)
+        
         max_retries = 5
         retry = 0
         if proxies == None:
@@ -621,23 +726,13 @@ def get_observed_sounding_data(station_id,
             date_24 = date - _timedelta(hours=24)
             hour = date.hour
     
-            if hour == 0:  
-                url = (f"http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&TYPE=TEXT%3ALIST"
-                        f"&YEAR={date.strftime('%Y')}&MONTH={date.strftime('%m')}&FROM={date.strftime('%d')}0{hour}&TO={date.strftime('%d')}0{hour}"
-                        f"&STNM={station_number}")
-    
-                url_24 = (f"http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&TYPE=TEXT%3ALIST"
-                        f"&YEAR={date.strftime('%Y')}&MONTH={date_24.strftime('%m')}&FROM={date_24.strftime('%d')}0{hour}&TO={date_24.strftime('%d')}0{hour}"
-                        f"&STNM={station_number}")
-                
-            else:
-                url = (f"http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&TYPE=TEXT%3ALIST"
-                        f"&YEAR={date.strftime('%Y')}&MONTH={date.strftime('%m')}&FROM={date.strftime('%d')}{hour}&TO={date.strftime('%d')}{hour}"
-                        f"&STNM={station_number}")
-    
-                url_24 = (f"http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&TYPE=TEXT%3ALIST"
-                        f"&YEAR={date_24.strftime('%Y')}&MONTH={date_24.strftime('%m')}&FROM={date_24.strftime('%d')}{hour}&TO={date_24.strftime('%d')}{hour}"
-                        f"&STNM={station_number}")
+            url = _url_scanner(date,
+                        station_number,
+                        proxies)
+
+            url_24 = _url_scanner(date_24,
+                            station_number,
+                            proxies)
         
             max_retries = 5
             retry = 0
@@ -684,13 +779,17 @@ def get_observed_sounding_data(station_id,
         col_names = ['PRES', 'HGHT', 'TEMP', 'DWPT', 'RELH', 'MIXR', 'DRCT', 'SKNT', 'THTA', 'THTE', 'THTV']
         
         try:
-            df = _pd.read_fwf(data, widths=[7] * 8, skiprows=5,
-                                usecols=[0, 1, 2, 3, 6, 7], names=col_names)
+            df = _parse_sounding_text(
+                data,
+                usecols=[0, 1, 2, 3, 4, 5, 6, 7],
+                names=col_names,
+                widths=[7] * 8,
+            )
         except Exception as e:
             _exceptions.station_id_exception(station_id)
         
         df['U-WIND'], df['V-WIND'] = _get_u_and_v(df['SKNT'], df['DRCT'])
-        df['RH'] = _relative_humidity(df['TEMP'], df['DWPT'])
+        df = df.rename(columns={'RELH': 'RH'})
         pressure = df['PRES'].values * _units('hPa')
         temperature = df['TEMP'].values * _units('degC')
         dewpoint = df['DWPT'].values * _units('degC')
@@ -701,13 +800,17 @@ def get_observed_sounding_data(station_id,
         df['WET-BULB'] = _mpcalc.wet_bulb_temperature(pressure, temperature, dewpoint)
 
         try:
-            df_24 = _pd.read_fwf(data_24, widths=[7] * 8, skiprows=5,
-                                usecols=[0, 1, 2, 3, 6, 7], names=col_names)
+            df_24 = _parse_sounding_text(
+                data_24,
+                usecols=[0, 1, 2, 3, 4, 5, 6, 7],
+                names=col_names,
+                widths=[7] * 8,
+            )
         except Exception as e:
             _exceptions.station_id_exception(station_id)
         
         df_24['U-WIND'], df_24['V-WIND'] = _get_u_and_v(df_24['SKNT'], df_24['DRCT'])
-        df_24['RH'] = _relative_humidity(df_24['TEMP'], df_24['DWPT'])
+        df_24 = df_24.rename(columns={'RELH': 'RH'})
         pressure_24 = df_24['PRES'].values * _units('hPa')
         temperature_24 = df_24['TEMP'].values * _units('degC')
         dewpoint_24 = df_24['DWPT'].values * _units('degC')
@@ -724,20 +827,3 @@ def get_observed_sounding_data(station_id,
         df_24.dropna(axis=0, inplace=True)
     
         return df, df_24, date, date_24
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                               

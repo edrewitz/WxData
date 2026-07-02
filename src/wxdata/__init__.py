@@ -257,4 +257,4 @@ This section hosts the various Python interfaces for the Open-Meteo API.
 """
 
 # - GFS
-import wxdata.open_meteo_api.gfs as gfs_api
+import wxdata.open_meteo_api.noaa as open_meteo_api_noaa

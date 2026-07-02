@@ -251,3 +251,10 @@ These clients can be easily configured to work on VPN/PROXY connections.
 #  - get_aws_open_data()
 #  - byte_range_request()
 import wxdata.client.client as client
+
+"""
+This section hosts the various Python interfaces for the Open-Meteo API.
+"""
+
+# - GFS
+import wxdata.open_meteo_api.gfs as gfs_api

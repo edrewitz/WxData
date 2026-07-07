@@ -251,3 +251,20 @@ These clients can be easily configured to work on VPN/PROXY connections.
 #  - get_aws_open_data()
 #  - byte_range_request()
 import wxdata.client.client as client
+
+"""
+This section hosts the various Python interfaces for the Open-Meteo API.
+"""
+
+# - NOAA/NCEP Models
+# - ECMWF Models
+# - DWD Models
+# - Meteo-France Models
+# - CMC Models
+# - Current Weather (Model Mosaic)
+import wxdata.open_meteo_api.noaa as open_meteo_api_noaa
+import wxdata.open_meteo_api.ecmwf as open_meteo_api_ecmwf
+import wxdata.open_meteo_api.dwd as open_meteo_api_dwd
+import wxdata.open_meteo_api.meteo_france as open_meteo_api_meteo_france
+import wxdata.open_meteo_api.cmc as open_meteo_api_cmc
+import wxdata.open_meteo_api.current_weather as open_meteo_api_current_weather

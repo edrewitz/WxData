@@ -1,1 +1,2 @@
 import wxdata.open_meteo_api.noaa as open_meteo_api_noaa
+import wxdata.open_meteo_api.ecmwf as open_meteo_api_ecmwf

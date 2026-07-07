@@ -26,6 +26,9 @@ def server_response(response):
     
     if response.status_code == 200:
         pass
+    elif response.status_code == 400:
+        print(f"Error: Bad Request.\nThis likely means you had an invalid entry in your variables list.")
+        _sys.exit(1)
     else:
         print("Error: https://open-meteo.com/ is down.\nPlease try again later.")
         _sys.exit(1)

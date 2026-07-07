@@ -71,7 +71,8 @@ def _flatten_json_arrays(data,
             
     return items
 
-def json_to_pandas(data):
+def json_to_pandas(data,
+                   field='hourly'):
     
     """
     This function creates a Pandas.DataFrame from a flattened JSON object.
@@ -80,7 +81,9 @@ def json_to_pandas(data):
     
     1) data (JSON) - The flattened JSON object.
     
-    Optional Arguments: None
+    Optional Arguments: 
+    
+    1) field (String) - Default='hourly'. The json field to extract. 
     
     Returns
     -------
@@ -88,7 +91,7 @@ def json_to_pandas(data):
     A Pandas.DataFrame of the data retrieved from the Open-Meteo API.     
     """
     
-    flattened_data = _flatten_json_arrays(data['hourly'])
+    flattened_data = _flatten_json_arrays(data[field])
     df = _pd.DataFrame(flattened_data)
     
     return df

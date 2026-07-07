@@ -5,6 +5,31 @@ This file has helper functions to assist with extracting and parsing data from t
 """
 
 import pandas as _pd
+import sys as _sys
+
+def server_response(response):
+    
+    """
+    Checks to see if the server response status code is 200 and if response status code != 200 return an error.
+    
+    Required Arguments: 
+    
+    1) response (http object)
+    
+    Optional Arguments: None
+    
+    Returns
+    -------
+    
+    An error message if response status code != 200    
+    """
+    
+    if response.status_code == 200:
+        pass
+    else:
+        print("Error: https://open-meteo.com/ is down.\nPlease try again later.")
+        _sys.exit(1)
+
 
 def _flatten_json_arrays(data, 
                         parent_key='', 

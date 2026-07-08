@@ -9,7 +9,7 @@ from wxdata.open_meteo_api.utils import(
     server_response as _server_response
 )
 
-def arpege_data(latitude,
+def arpege_point_forecast(latitude,
             longitude,
             days=4,
             temperature_units='fahrenheit',

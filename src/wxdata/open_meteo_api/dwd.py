@@ -9,7 +9,7 @@ from wxdata.open_meteo_api.utils import(
     server_response as _server_response
 )
 
-def icon_data(latitude,
+def icon_point_forecast(latitude,
             longitude,
             days=7,
             temperature_units='fahrenheit',
@@ -406,7 +406,7 @@ def icon_data(latitude,
     
     return df
 
-def icon_eps_data(latitude,
+def icon_eps_point_forecast(latitude,
             longitude,
             days=7,
             temperature_units='fahrenheit',

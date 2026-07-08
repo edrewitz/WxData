@@ -9,7 +9,7 @@ from wxdata.open_meteo_api.utils import(
     server_response as _server_response
 )
 
-def gem_data(latitude,
+def gem_point_forecast(latitude,
             longitude,
             days=7,
             temperature_units='fahrenheit',

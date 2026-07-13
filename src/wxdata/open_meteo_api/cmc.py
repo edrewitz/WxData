@@ -6,7 +6,8 @@ This file hosts the interface for the Open-Meteo API for CMC data.
 import requests as _requests
 from wxdata.open_meteo_api.utils import(
     json_to_pandas as _json_to_pandas,
-    server_response as _server_response
+    server_response as _server_response,
+    df_to_csv as _df_to_csv
 )
 
 def gem_point_forecast(latitude,
@@ -158,7 +159,10 @@ def gem_point_forecast(latitude,
                         'cloud_cover_30hPa',
                         'cloud_cover_20hPa',
                         'cloud_cover_10hPa'],
-            proxies=None):
+            proxies=None,
+            to_csv=False,
+            path=f"Open Meteo Data/CMC/GEM",
+            filename=f"GEM_Data.csv"):
     
     """
     This function retrieves CMC GEM time series forecast from the Open-Meteo API for a given point of latitude/longitude.
@@ -352,7 +356,12 @@ def gem_point_forecast(latitude,
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
-                        
+    
+    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} wth {filename}
+    
+    8) path (String) - The path where the CSV file is saved to.
+    
+    9) filename (String) - The filename for the CSV file.                     
                     
     Returns
     -------
@@ -389,4 +398,11 @@ def gem_point_forecast(latitude,
     
     df = _json_to_pandas(data)
     
+    if to_csv == True:
+        _df_to_csv(df,
+                   path,
+                   filename)
+    
     return df
+
+

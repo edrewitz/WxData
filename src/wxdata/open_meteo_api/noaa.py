@@ -6,7 +6,8 @@ This file hosts the interface for the Open-Meteo API for NOAA data.
 import requests as _requests
 from wxdata.open_meteo_api.utils import(
     json_to_pandas as _json_to_pandas,
-    server_response as _server_response
+    server_response as _server_response,
+    df_to_csv as _df_to_csv
 )
 
 def gfs_point_forecast(latitude,
@@ -185,7 +186,10 @@ def gfs_point_forecast(latitude,
                         'vertical_velocity_30hPa',
                         'vertical_velocity_20hPa',
                         'vertical_velocity_10hPa'],
-            proxies=None):
+            proxies=None,
+            to_csv=False,
+            path=f"Open Meteo Data/NOAA/GFS",
+            filename=f"GFS_Data.csv"):
     
     """
     This function retrieves GFS time series forecast from the Open-Meteo API for a given point of latitude/longitude.
@@ -406,7 +410,12 @@ def gfs_point_forecast(latitude,
                                'https':'http://your-proxy-address:port'
                                }
                         
-                    
+    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} wth {filename}
+    
+    8) path (String) - The path where the CSV file is saved to.
+    
+    9) filename (String) - The filename for the CSV file.  
+            
     Returns
     -------
     
@@ -441,6 +450,11 @@ def gfs_point_forecast(latitude,
     data = response.json()
     
     df = _json_to_pandas(data)
+    
+    if to_csv == True:
+        _df_to_csv(df,
+                   path,
+                   filename)
     
     return df
 
@@ -549,7 +563,10 @@ def aigfs_point_forecast(latitude,
                         'geopotential_height_150hPa',
                         'geopotential_height_100hPa',
                         'geopotential_height_50hPa'],
-            proxies=None):
+            proxies=None,
+            to_csv=False,
+            path=f"Open Meteo Data/NOAA/AIGFS",
+            filename=f"AIGFS_Data.csv"):
     
     """
     This function retrieves AI GFS time series forecast from the Open-Meteo API for a given point of latitude/longitude.
@@ -697,7 +714,12 @@ def aigfs_point_forecast(latitude,
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
-                        
+    
+    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} wth {filename}
+    
+    8) path (String) - The path where the CSV file is saved to.
+    
+    9) filename (String) - The filename for the CSV file.                      
                     
     Returns
     -------
@@ -732,6 +754,11 @@ def aigfs_point_forecast(latitude,
     data = response.json()
     
     df = _json_to_pandas(data)
+    
+    if to_csv == True:
+        _df_to_csv(df,
+                   path,
+                   filename)
     
     return df
 
@@ -839,7 +866,10 @@ def hgefs_point_forecast(latitude,
                         'geopotential_height_150hPa',
                         'geopotential_height_100hPa',
                         'geopotential_height_50hPa'],
-            proxies=None):
+            proxies=None,
+            to_csv=False,
+            path=f"Open Meteo Data/NOAA/HGEFS",
+            filename=f"HGEFS_Data.csv"):
     
     """
     This function retrieves HGEFS time series forecast from the Open-Meteo API for a given point of latitude/longitude.
@@ -987,7 +1017,12 @@ def hgefs_point_forecast(latitude,
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
-                        
+    
+    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} wth {filename}
+    
+    8) path (String) - The path where the CSV file is saved to.
+    
+    9) filename (String) - The filename for the CSV file.                      
                     
     Returns
     -------
@@ -1022,6 +1057,11 @@ def hgefs_point_forecast(latitude,
     
     df = _json_to_pandas(data)
     
+    if to_csv == True:
+        _df_to_csv(df,
+                   path,
+                   filename)
+    
     return df
 
 def nbm_point_forecast(latitude,
@@ -1040,7 +1080,10 @@ def nbm_point_forecast(latitude,
                         'wind_speed_80m',
                         'wind_direction_10m',
                         'wind_direction_80m'],
-            proxies=None):
+            proxies=None,
+            to_csv=False,
+            path=f"Open Meteo Data/NOAA/NBM",
+            filename=f"NBM_Data.csv"):
     
     """
     This function retrieves NBM time series forecast from the Open-Meteo API for a given point of latitude/longitude.
@@ -1100,7 +1143,12 @@ def nbm_point_forecast(latitude,
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
-                        
+    
+    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} wth {filename}
+    
+    8) path (String) - The path where the CSV file is saved to.
+    
+    9) filename (String) - The filename for the CSV file.                      
                     
     Returns
     -------
@@ -1134,6 +1182,11 @@ def nbm_point_forecast(latitude,
     data = response.json()
     
     df = _json_to_pandas(data)
+    
+    if to_csv == True:
+        _df_to_csv(df,
+                   path,
+                   filename)
     
     return df
     

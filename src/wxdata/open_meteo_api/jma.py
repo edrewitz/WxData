@@ -371,7 +371,7 @@ def jma_point_forecast(latitude,
     Returns
     -------
     
-    A Pandas.DataFrame of the DWD ICON time series forecast for a given point of latitude/longitude. 
+    A Pandas.DataFrame of the JMA time series forecast for a given point of latitude/longitude. 
     """
     
     if days > 11:

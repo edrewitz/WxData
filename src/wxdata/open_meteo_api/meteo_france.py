@@ -6,7 +6,8 @@ This file hosts the interface for the Open-Meteo API for Meteo-France data.
 import requests as _requests
 from wxdata.open_meteo_api.utils import(
     json_to_pandas as _json_to_pandas,
-    server_response as _server_response
+    server_response as _server_response,
+    df_to_csv as _df_to_csv
 )
 
 def arpege_point_forecast(latitude,
@@ -252,7 +253,10 @@ def arpege_point_forecast(latitude,
                         'geopotential_height_30hPa',
                         'geopotential_height_20hPa',
                         'geopotential_height_10hPa'],
-            proxies=None):
+            proxies=None,
+            to_csv=False,
+            path=f"Open Meteo Data/Meteo France/ARPEGE",
+            filename=f"ARPEGE_Data.csv"):
     
     """
     This function retrieves Meteo-France ARPEGE time series forecast from the Open-Meteo API for a given point of latitude/longitude.
@@ -539,7 +543,12 @@ def arpege_point_forecast(latitude,
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
-                        
+    
+    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} wth {filename}
+    
+    8) path (String) - The path where the CSV file is saved to.
+    
+    9) filename (String) - The filename for the CSV file.                     
                     
     Returns
     -------
@@ -575,5 +584,10 @@ def arpege_point_forecast(latitude,
     data = response.json()
     
     df = _json_to_pandas(data)
+    
+    if to_csv == True:
+        _df_to_csv(df,
+                   path,
+                   filename)
     
     return df

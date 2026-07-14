@@ -6,7 +6,8 @@ This file hosts the interface for the Open-Meteo API for ECMWF data.
 import requests as _requests
 from wxdata.open_meteo_api.utils import(
     json_to_pandas as _json_to_pandas,
-    server_response as _server_response
+    server_response as _server_response,
+    df_to_csv as _df_to_csv
 )
 
 def ifs_point_forecast(latitude,
@@ -146,7 +147,10 @@ def ifs_point_forecast(latitude,
                         'geopotential_height_150hPa',
                         'geopotential_height_100hPa',
                         'geopotential_height_50hPa'],
-            proxies=None):
+            proxies=None,
+            to_csv=False,
+            path=f"Open Meteo Data/ECMWF/IFS",
+            filename=f"IFS_Data.csv"):
     
     """
     This function retrieves ECMWF IFS time series forecast from the Open-Meteo API for a given point of latitude/longitude.
@@ -327,7 +331,12 @@ def ifs_point_forecast(latitude,
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
-                        
+    
+    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} wth {filename}
+    
+    8) path (String) - The path where the CSV file is saved to.
+    
+    9) filename (String) - The filename for the CSV file.                     
                     
     Returns
     -------
@@ -363,6 +372,11 @@ def ifs_point_forecast(latitude,
     data = response.json()
     
     df = _json_to_pandas(data)
+    
+    if to_csv == True:
+        _df_to_csv(df,
+                   path,
+                   filename)
     
     return df
 
@@ -503,7 +517,10 @@ def aifs_point_forecast(latitude,
                         'geopotential_height_150hPa',
                         'geopotential_height_100hPa',
                         'geopotential_height_50hPa'],
-            proxies=None):
+            proxies=None,
+            to_csv=False,
+            path=f"Open Meteo Data/ECMWF/AIFS",
+            filename=f"AIFS_Data.csv"):
     
     """
     This function retrieves ECMWF AIFS time series forecast from the Open-Meteo API for a given point of latitude/longitude.
@@ -684,7 +701,12 @@ def aifs_point_forecast(latitude,
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
-                        
+    
+    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} wth {filename}
+    
+    8) path (String) - The path where the CSV file is saved to.
+    
+    9) filename (String) - The filename for the CSV file.                     
                     
     Returns
     -------
@@ -720,6 +742,11 @@ def aifs_point_forecast(latitude,
     data = response.json()
     
     df = _json_to_pandas(data)
+    
+    if to_csv == True:
+        _df_to_csv(df,
+                   path,
+                   filename)
     
     return df
 
@@ -860,7 +887,10 @@ def ifs_hres_point_forecast(latitude,
                         'geopotential_height_150hPa',
                         'geopotential_height_100hPa',
                         'geopotential_height_50hPa'],
-            proxies=None):
+            proxies=None,
+            to_csv=False,
+            path=f"Open Meteo Data/ECMWF/IFS HRES",
+            filename=f"IFS_HRES_Data.csv"):
     
     """
     This function retrieves ECMWF IFS Medium-range Control forecast time series forecast from the Open-Meteo API for a given point of latitude/longitude.
@@ -1041,7 +1071,12 @@ def ifs_hres_point_forecast(latitude,
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
-                        
+    
+    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} wth {filename}
+    
+    8) path (String) - The path where the CSV file is saved to.
+    
+    9) filename (String) - The filename for the CSV file.                     
                     
     Returns
     -------
@@ -1077,5 +1112,10 @@ def ifs_hres_point_forecast(latitude,
     data = response.json()
     
     df = _json_to_pandas(data)
+    
+    if to_csv == True:
+        _df_to_csv(df,
+                   path,
+                   filename)
     
     return df

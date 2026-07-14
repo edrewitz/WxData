@@ -3,4 +3,5 @@ import wxdata.open_meteo_api.ecmwf as open_meteo_api_ecmwf
 import wxdata.open_meteo_api.dwd as open_meteo_api_dwd
 import wxdata.open_meteo_api.meteo_france as open_meteo_api_meteo_france
 import wxdata.open_meteo_api.cmc as open_meteo_api_cmc
+import wxdata.open_meteo_api.jma as open_meteo_api_jma
 import wxdata.open_meteo_api.current_weather as open_meteo_api_current_weather

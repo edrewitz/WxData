@@ -3,7 +3,7 @@ This file has helper functions to assist with extracting and parsing data from t
 
 (C) Eric J. Drewitz 2025-2026
 """
-
+import os as _os
 import pandas as _pd
 import sys as _sys
 
@@ -95,3 +95,33 @@ def json_to_pandas(data,
     df = _pd.DataFrame(flattened_data)
     
     return df
+
+def df_to_csv(df,
+              path,
+              filename):
+    
+    """
+    This function saves the dataframe to a CSV at a specified path
+    
+    Required Arguments:
+    
+    1) df (Pandas.DataFrame) - The data from the API.
+    
+    2) path (String) - The path where the file will save to.
+    
+    3) filename (String) - The filename.
+    
+    Optional Arguments: None
+    
+    Returns
+    -------
+    
+    A CSV file with {filename} saved to {path}    
+    """
+    
+    try:
+        _os.makedirs(f"{path}")
+    except Exception as e:
+        pass
+    
+    df.to_csv(f"{path}/{filename}")

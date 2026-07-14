@@ -254,7 +254,12 @@ import wxdata.client.client as client
 
 """
 This section hosts the various Python interfaces for the Open-Meteo API.
+
+This API can be found at: https://open-meteo.com/
 """
+#############################
+### Weather Forecast Data ###
+#############################
 
 # - NOAA/NCEP Models
 # - ECMWF Models
@@ -263,10 +268,10 @@ This section hosts the various Python interfaces for the Open-Meteo API.
 # - CMC Models
 # - Japan Meteorological Agency (JMA) Models
 # - Current Weather (Model Mosaic)
-import wxdata.open_meteo_api.noaa as open_meteo_api_noaa
-import wxdata.open_meteo_api.ecmwf as open_meteo_api_ecmwf
-import wxdata.open_meteo_api.dwd as open_meteo_api_dwd
-import wxdata.open_meteo_api.meteo_france as open_meteo_api_meteo_france
-import wxdata.open_meteo_api.cmc as open_meteo_api_cmc
-import wxdata.open_meteo_api.jma as open_meteo_api_jma
-import wxdata.open_meteo_api.current_weather as open_meteo_api_current_weather
+import wxdata.open_meteo_api.weather_forecasts.noaa as open_meteo_api_noaa
+import wxdata.open_meteo_api.weather_forecasts.ecmwf as open_meteo_api_ecmwf
+import wxdata.open_meteo_api.weather_forecasts.dwd as open_meteo_api_dwd
+import wxdata.open_meteo_api.weather_forecasts.meteo_france as open_meteo_api_meteo_france
+import wxdata.open_meteo_api.weather_forecasts.cmc as open_meteo_api_cmc
+import wxdata.open_meteo_api.weather_forecasts.jma as open_meteo_api_jma
+import wxdata.open_meteo_api.weather_forecasts.current_weather as open_meteo_api_current_weather

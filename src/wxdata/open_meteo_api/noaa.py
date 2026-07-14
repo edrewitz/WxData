@@ -10,7 +10,7 @@ from wxdata.open_meteo_api.utils import(
     df_to_csv as _df_to_csv
 )
 
-def gfs_point_forecast(latitude,
+def gfs_hourly_point_forecast(latitude,
             longitude,
             days=7,
             temperature_units='fahrenheit',
@@ -459,7 +459,7 @@ def gfs_point_forecast(latitude,
     return df
 
 
-def aigfs_point_forecast(latitude,
+def aigfs_hourly_point_forecast(latitude,
             longitude,
             days=7,
             temperature_units='fahrenheit',
@@ -762,7 +762,7 @@ def aigfs_point_forecast(latitude,
     
     return df
 
-def hgefs_point_forecast(latitude,
+def hgefs_hourly_point_forecast(latitude,
             longitude,
             days=7,
             temperature_units='fahrenheit',
@@ -1064,7 +1064,7 @@ def hgefs_point_forecast(latitude,
     
     return df
 
-def nbm_point_forecast(latitude,
+def nbm_hourly_point_forecast(latitude,
             longitude,
             days=7,
             temperature_units='fahrenheit',
@@ -1191,7 +1191,7 @@ def nbm_point_forecast(latitude,
     return df
 
 
-def gefs_point_forecast(latitude,
+def gefs_hourly_point_forecast(latitude,
             longitude,
             days=7,
             temperature_units='fahrenheit',
@@ -1575,7 +1575,7 @@ def gefs_point_forecast(latitude,
     
     return df
 
-def aigefs_point_forecast(latitude,
+def aigefs_hourly_point_forecast(latitude,
             longitude,
             days=7,
             temperature_units='fahrenheit',

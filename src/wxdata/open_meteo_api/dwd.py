@@ -10,7 +10,7 @@ from wxdata.open_meteo_api.utils import(
     df_to_csv as _df_to_csv
 )
 
-def icon_point_forecast(latitude,
+def icon_hourly_point_forecast(latitude,
             longitude,
             days=7,
             temperature_units='fahrenheit',

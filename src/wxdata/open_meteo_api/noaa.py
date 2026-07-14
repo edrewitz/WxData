@@ -1538,7 +1538,7 @@ def gefs_point_forecast(latitude,
     Returns
     -------
     
-    A Pandas.DataFrame of the NBM time series forecast for a given point of latitude/longitude. 
+    A Pandas.DataFrame of the GEFS time series forecast for a given point of latitude/longitude. 
     """
     
     if days > 36:
@@ -1900,7 +1900,7 @@ def aigefs_point_forecast(latitude,
     Returns
     -------
     
-    A Pandas.DataFrame of the NBM time series forecast for a given point of latitude/longitude. 
+    A Pandas.DataFrame of the AIGEFS time series forecast for a given point of latitude/longitude. 
     """
     
     if days > 36:

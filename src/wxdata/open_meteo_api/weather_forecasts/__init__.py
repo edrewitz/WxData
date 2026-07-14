@@ -4,4 +4,5 @@ import wxdata.open_meteo_api.weather_forecasts.dwd as open_meteo_api_dwd
 import wxdata.open_meteo_api.weather_forecasts.meteo_france as open_meteo_api_meteo_france
 import wxdata.open_meteo_api.weather_forecasts.cmc as open_meteo_api_cmc
 import wxdata.open_meteo_api.weather_forecasts.jma as open_meteo_api_jma
+import wxdata.open_meteo_api.weather_forecasts.ukmo as open_meteo_api_ukmo
 import wxdata.open_meteo_api.weather_forecasts.current_weather as open_meteo_api_current_weather

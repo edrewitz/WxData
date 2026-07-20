@@ -210,6 +210,7 @@ End-To-End clients with multiple servers to pull data from can find the differen
 19) [Downloading Current RAWS Data and Plotting Current Energy Release Components (ERCs) Observations Across California and Nevada](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/observed_erc_map.ipynb)
 20) [Downloading NEXRAD II Radar Data and then plotting it in Py-ART](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/NEXRADII.ipynb)
 21) [Downloading 30 Days of 6hrly CFS Data and plotting the 30-Day time-mean for mean sea level pressure across the Northern Hemisphere](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/cfs.ipynb)
+22) [Download all 50 Ensemble Members of the ECMWF IFS Ensemble for 2-Meter Temperature Using the Open-Meteo API and Make an Ensemble Spaghetti Plot](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/ecmwf_ifs_ens_spaghetti.ipynb)
 
 *Advanced Users*
 1) [Using the `client` module to download the latest HadCRUT5 Analysis netCDF file and open this dataset in xarray](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/hadcrut5.ipynb)

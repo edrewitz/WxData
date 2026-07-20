@@ -18,7 +18,6 @@ import warnings as _warnings
 import time as _time
 import sys as _sys
 import wxdata.post_processors.ecmwf_post_processing as _ecmwf_post_processing
-_warnings.filterwarnings('ignore')
 
 from ecmwf.opendata import Client as _Client
 from wxdata.ecmwf.url_scanners import(
@@ -59,6 +58,7 @@ from wxdata.utils.recycle_bin import(
 )
 
 _eccodes_warning()
+_warnings.filterwarnings('ignore')
 original_stdout = _sys.stdout
 
 def _check_forecast_hour(stream,

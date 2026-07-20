@@ -21,7 +21,10 @@ from wxdata.gfs.url_scanners import(
     gfs_0p25_secondary_parameters_url_scanner as _gfs_0p25_secondary_parameters_url_scanner
 )
 
-from wxdata.utils.warnings import eccodes_warning as _eccodes_warning
+from wxdata.utils.warnings import(
+    eccodes_warning as _eccodes_warning,
+    version_warning as _version_warning
+)
 from wxdata.utils.file_funcs import clear_old_data as _clear_old_data
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
 from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
@@ -2173,6 +2176,7 @@ def gfs_0p25(final_forecast_hour=384,
                 rotate = False
             except Exception as e:
                 print("Client cannot connect to any server.")
+                _version_warning()
                 print("System Exit.")
                 _sys.exit(1)
     
@@ -2765,6 +2769,7 @@ def gfs_0p50(final_forecast_hour=384,
                 rotate = False
             except Exception as e:
                 print("Client cannot connect to any server.")
+                _version_warning()
                 print("System Exit.")
                 _sys.exit(1)
     
@@ -3199,6 +3204,7 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
                 rotate = False
             except Exception as e:
                 print("Client cannot connect to any server.")
+                _version_warning()
                 print("System Exit.")
                 _sys.exit(1)
     

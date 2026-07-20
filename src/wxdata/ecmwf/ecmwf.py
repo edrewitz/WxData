@@ -15,6 +15,7 @@ import os as _os
 import contextlib as _contextlib
 import io as _io
 import warnings as _warnings
+_warnings.filterwarnings('ignore')
 import time as _time
 import sys as _sys
 import wxdata.post_processors.ecmwf_post_processing as _ecmwf_post_processing
@@ -41,7 +42,10 @@ from wxdata.ecmwf.keys import(
     aifs_var_keys as _aifs_var_keys
 )
 
-from wxdata.utils.warnings import eccodes_warning as _eccodes_warning
+from wxdata.utils.warnings import(
+    eccodes_warning as _eccodes_warning,
+    version_warning as _version_warning
+)
 from wxdata.ecmwf.parsers import parse_date as _parse_date
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
 from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
@@ -58,7 +62,7 @@ from wxdata.utils.recycle_bin import(
 )
 
 _eccodes_warning()
-_warnings.filterwarnings('ignore')
+
 original_stdout = _sys.stdout
 
 def _check_forecast_hour(stream,
@@ -4110,6 +4114,7 @@ def ecmwf_ifs(final_forecast_hour=144,
                 return ds
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
+                _version_warning()
                 print("System Exit.")
                 _sys.exit(1)  
                 
@@ -4138,6 +4143,7 @@ def ecmwf_ifs(final_forecast_hour=144,
                 return ds
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
+                _version_warning()
                 print("System Exit.")
                 _sys.exit(1)  
                 
@@ -4166,6 +4172,7 @@ def ecmwf_ifs(final_forecast_hour=144,
                 return ds
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
+                _version_warning()
                 print("System Exit.")
                 _sys.exit(1)       
             
@@ -4627,6 +4634,7 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
                 return ds
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
+                _version_warning()
                 print("System Exit.")
                 _sys.exit(1)  
                 
@@ -4656,6 +4664,7 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
                 return ds
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
+                _version_warning()
                 print("System Exit.")
                 _sys.exit(1)  
                 
@@ -4685,6 +4694,7 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
                 return ds
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
+                _version_warning()
                 print("System Exit.")
                 _sys.exit(1)       
             
@@ -5055,6 +5065,7 @@ def ecmwf_aifs(final_forecast_hour=360,
                 return ds
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
+                _version_warning()
                 print("System Exit.")
                 _sys.exit(1)  
                 
@@ -5082,6 +5093,7 @@ def ecmwf_aifs(final_forecast_hour=360,
                 return ds
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
+                _version_warning()
                 print("System Exit.")
                 _sys.exit(1)  
                 
@@ -5109,6 +5121,7 @@ def ecmwf_aifs(final_forecast_hour=360,
                 return ds
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
+                _version_warning()
                 print("System Exit.")
                 _sys.exit(1)       
             
@@ -5511,6 +5524,7 @@ def ecmwf_aifs_ens(final_forecast_hour=360,
                 return ds
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
+                _version_warning()
                 print("System Exit.")
                 _sys.exit(1)  
                 
@@ -5540,6 +5554,7 @@ def ecmwf_aifs_ens(final_forecast_hour=360,
                 return ds
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
+                _version_warning()
                 print("System Exit.")
                 _sys.exit(1)  
                 
@@ -5569,6 +5584,7 @@ def ecmwf_aifs_ens(final_forecast_hour=360,
                 return ds
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
+                _version_warning()
                 print("System Exit.")
                 _sys.exit(1)       
             
@@ -5817,6 +5833,7 @@ def ecmwf_ifs_wave(final_forecast_hour=144,
                 return ds
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
+                _version_warning()
                 print("System Exit.")
                 _sys.exit(1)  
                 
@@ -5841,6 +5858,7 @@ def ecmwf_ifs_wave(final_forecast_hour=144,
                 return ds
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
+                _version_warning()
                 print("System Exit.")
                 _sys.exit(1)  
                 
@@ -5865,6 +5883,7 @@ def ecmwf_ifs_wave(final_forecast_hour=144,
                 return ds
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
+                _version_warning()
                 print("System Exit.")
                 _sys.exit(1)       
             
@@ -6124,6 +6143,7 @@ def ecmwf_ifs_wave_ens(final_forecast_hour=144,
                 return ds
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
+                _version_warning()
                 print("System Exit.")
                 _sys.exit(1)  
                 
@@ -6174,6 +6194,7 @@ def ecmwf_ifs_wave_ens(final_forecast_hour=144,
                 return ds
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
+                _version_warning()
                 print("System Exit.")
                 _sys.exit(1)       
             

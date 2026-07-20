@@ -30,6 +30,16 @@ def eccodes_warning():
     package_exists = _import_util.find_spec(package_name) is not None
 
     if package_exists:
-        print("Eccodes found")
+        pass
     else:
         _eccodes_warning_text()
+        
+        
+def version_warning():
+    
+    """
+    Warning for versions of Python not compatible with eccodes.
+    """
+    
+    print("If the data has downloaded and the client tried re-downloading the data the issue is not likely due to connection issues.")
+    print(f"The issue is most likely due to the version of eccodes not being compiled for Python == {VERSION}")

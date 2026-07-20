@@ -42,6 +42,7 @@ from wxdata.ecmwf.keys import(
     aifs_var_keys as _aifs_var_keys
 )
 
+from wxdata.utils.warnings import eccodes_warning as _eccodes_warning
 from wxdata.ecmwf.parsers import parse_date as _parse_date
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
 from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
@@ -57,6 +58,7 @@ from wxdata.utils.recycle_bin import(
         clear_trash_bin_linux as _clear_trash_bin_linux
 )
 
+_eccodes_warning()
 original_stdout = _sys.stdout
 
 def _check_forecast_hour(stream,

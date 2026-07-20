@@ -16,12 +16,15 @@ from wxdata.utils.file_funcs import(
     clear_idx_files_in_path as _clear_idx_files_in_path,
     sorted_paths as _sorted_paths
 )
+
+from wxdata.utils.warnings import eccodes_warning as _eccodes_warning
 from wxdata.utils.exceptions import eccodes_error_message as _eccodes_error_message
 from wxdata.utils.coords import(
     shift_longitude as _shift_longitude,
     convert_lon as _convert_lon
 )
 
+_eccodes_warning()
 _sys.tracebacklimit = 0
 _logging.disable()
 

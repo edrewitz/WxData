@@ -4,11 +4,6 @@ This file hosts all of the functions in the WxData Python library that directly 
 (C) Eric J. Drewitz 2025-2026
 """
 
-# Importing this module generates an eccodes warning when eccodes is not found.
-# This is due to eccodes not being compiled for the latest versions of Python
-
-import wxdata.utils.warnings
-
 
 """
 This section of functions are for users who want full wxdata functionality.

@@ -12,6 +12,7 @@ import logging as _logging
 import warnings as _warnings
 _warnings.filterwarnings('ignore')
 
+from wxdata.utils.warnings import eccodes_warning as _eccodes_warning
 from wxdata.utils.exceptions import eccodes_error_message as _eccodes_error_message
 from wxdata.utils.file_funcs import file_paths_for_xarray as _file_paths_for_xarray
 from wxdata.utils.coords import(
@@ -19,6 +20,7 @@ from wxdata.utils.coords import(
     convert_lon as _convert_lon
 )
 
+_eccodes_warning()
 _sys.tracebacklimit = 0
 _logging.disable()
 

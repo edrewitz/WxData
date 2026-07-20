@@ -21,6 +21,7 @@ from wxdata.gfs.url_scanners import(
     gfs_0p25_secondary_parameters_url_scanner as _gfs_0p25_secondary_parameters_url_scanner
 )
 
+from wxdata.utils.warnings import eccodes_warning as _eccodes_warning
 from wxdata.utils.file_funcs import clear_old_data as _clear_old_data
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
 from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
@@ -30,6 +31,7 @@ from wxdata.utils.recycle_bin import(
     clear_trash_bin_linux as _clear_trash_bin_linux
 )
 
+_eccodes_warning()
 
 def _gfs_0p25_client(final_forecast_hour=384, 
             western_bound=-180, 

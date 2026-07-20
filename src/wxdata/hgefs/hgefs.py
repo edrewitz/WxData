@@ -20,6 +20,7 @@ from wxdata.utils.file_funcs import(
     clear_old_data as _clear_old_data
 )
 
+from wxdata.utils.warnings import eccodes_warning as _eccodes_warning
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
 from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
 from wxdata.utils.recycle_bin import(
@@ -28,6 +29,8 @@ from wxdata.utils.recycle_bin import(
     clear_trash_bin_mac as _clear_trash_bin_mac,
     clear_trash_bin_linux as _clear_trash_bin_linux
 )
+
+_eccodes_warning()
 
 def hgefs_mean_spread(final_forecast_hour=240, 
                     western_bound=-180, 

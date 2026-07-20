@@ -22,6 +22,7 @@ from wxdata.rtma.url_scanners import(
     rtma_comparison_url_scanner as _rtma_comparison_url_scanner
 )
 
+from wxdata.utils.warnings import eccodes_warning as _eccodes_warning
 from wxdata.utils.file_funcs import custom_branch as _custom_branch
 from wxdata.calc.derived_fields import rtma_derived_fields as _rtma_derived_fields
 from wxdata.rtma.file_scanner import local_file_scanner as _local_file_scanner
@@ -32,6 +33,8 @@ from wxdata.utils.recycle_bin import(
     clear_trash_bin_mac as _clear_trash_bin_mac,
     clear_trash_bin_linux as _clear_trash_bin_linux
 )
+
+_eccodes_warning()
 
 def rtma(model='rtma', 
          cat='analysis', 

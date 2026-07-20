@@ -11,6 +11,7 @@ import logging as _logging
 import warnings as _warnings
 _warnings.filterwarnings('ignore')
 
+from wxdata.utils.warnings import eccodes_warning as _eccodes_warning
 from wxdata.utils.exceptions import eccodes_error_message as _eccodes_error_message
 from wxdata.calc.thermodynamics import relative_humidity as _relative_humidity
 from wxdata.utils.file_funcs import(
@@ -18,6 +19,7 @@ from wxdata.utils.file_funcs import(
     sorted_paths as _sorted_paths
 )
 
+_eccodes_warning()
 _sys.tracebacklimit = 0
 _logging.disable()
 

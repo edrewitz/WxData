@@ -12,10 +12,12 @@ import logging as _logging
 import warnings as _warnings
 _warnings.filterwarnings('ignore')
 
+from wxdata.utils.warnings import eccodes_warning as _eccodes_warning
 from wxdata.utils.file_funcs import sorted_paths as _sorted_paths
 from wxdata.utils.exceptions import eccodes_error_message as _eccodes_error_message
 from wxdata.utils.coords import shift_longitude as _shift_longitude
 
+_eccodes_warning()
 _sys.tracebacklimit = 0
 _logging.disable()
 

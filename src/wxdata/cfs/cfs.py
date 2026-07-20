@@ -17,6 +17,7 @@ from wxdata.cfs.url_scanners import(
     cfs_flux_url_scanner as _cfs_flux_url_scanner,
     cfs_pressure_url_scanner as _cfs_pressure_url_scanner
 )
+from wxdata.utils.warnings import eccodes_warning as _eccodes_warning
 from wxdata.cfs.file_scanner import cfs_file_scanner as _cfs_file_scanner
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
 from wxdata.utils.recycle_bin import(
@@ -24,6 +25,8 @@ from wxdata.utils.recycle_bin import(
     clear_trash_bin_mac as _clear_trash_bin_mac,
     clear_trash_bin_linux as _clear_trash_bin_linux
 )
+
+_eccodes_warning()
 
 def cfs_flux(western_bound=-180, 
             eastern_bound=180, 

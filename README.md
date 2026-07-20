@@ -228,7 +228,7 @@ End-To-End clients with multiple servers to pull data from can find the differen
 4. [Data Querying Tools](https://github.com/edrewitz/WxData?tab=readme-ov-file#data-querying-tools)
 5. [Data Transformation & Gap Filling Tools](https://github.com/edrewitz/WxData?tab=readme-ov-file#data-transformation--gap-filling-tools)
 6. [Automated Python Workflow Tools](https://github.com/edrewitz/WxData?tab=readme-ov-file#automated-python-workflow-tools)
-7. [Open-Meteo API]()
+7. [Open-Meteo API](https://github.com/edrewitz/WxData/blob/main/README.md#open-meteo-api)
 
 ### End-To-End Data Clients
 

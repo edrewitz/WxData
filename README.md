@@ -228,6 +228,7 @@ End-To-End clients with multiple servers to pull data from can find the differen
 4. [Data Querying Tools](https://github.com/edrewitz/WxData?tab=readme-ov-file#data-querying-tools)
 5. [Data Transformation & Gap Filling Tools](https://github.com/edrewitz/WxData?tab=readme-ov-file#data-transformation--gap-filling-tools)
 6. [Automated Python Workflow Tools](https://github.com/edrewitz/WxData?tab=readme-ov-file#automated-python-workflow-tools)
+7. [Open-Meteo API]()
 
 ### End-To-End Data Clients
 
@@ -384,6 +385,45 @@ End-To-End clients with multiple servers to pull data from can find the differen
 ***Running External Python Scripts In Your Workflow***
 
 1 [run_external_scripts](https://github.com/edrewitz/WxData/blob/main/Documentation/run_external_scripts.md)
+
+---------------------------------------
+
+### Open-Meteo API
+
+***Current Weather***
+1. [Current Weather](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20current%20weather.md#open-meteo-api-current-weather)
+
+***National Oceanic and Atmospheric Administrationn (NOAA)***
+1. [GFS](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20noaa%20gfs.md#open-meteo-api-gfs)
+2. [GEFS](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20noaa%20gefs.md#open-meteo-api-gefs)
+3. [AIGFS](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20noaa%20aigfs.md#open-meteo-api-aigfs)
+4. [AIGEFS](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20noaa%20aigefs.md#open-meteo-api-aigefs)
+5. [HGEFS](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20noaa%20hgefs.md#open-meteo-api-hgefs)
+6. [NBM](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20noaa%20nbm.md#open-meteo-api-nbm)
+
+***European Centre for Medium-Range Weather Forecasts (ECMWF)***
+1. [IFS](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20ecmwf%20ifs.md#open-meteo-api-ecmwf-ifs)
+2. [AIFS](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20ecmwf%20aifs.md#open-meteo-api-ecmwf-aifs)
+3. [IFS HRES](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20ecmwf%20ifs%20hres.md#open-meteo-api-ecmwf-ifs-hres)
+4. [IFS Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20ecmwf%20ifs%20ens.md#open-meteo-api-ecmwf-ifs-ensemble)
+5. [AIFS Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20ecmwf%20aifs%20ens.md#open-meteo-api-ecmwf-aifs-ensemble)
+
+***Canadian Meteorological Centre (CMC)***
+1. [GEM](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20cmc%20gem.md#open-meteo-api-cmc-gem)
+2. [GEM Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20cmc%20gem%20ens.md#open-meteo-api-gem-ensemble)
+
+***Deutscher Wetterdienst (DWD)***
+1. [ICON](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20dwd%20icon.md#open-meteo-api-dwd-icon)
+2. [ICON EPS](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20dwd%20icon%20eps.md#open-meteo-api-dwd-icon-eps)
+
+***Meteo-France***
+1. [ARPEGE](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20meteo%20france%20arpege.md#open-meteo-api-meteo-france-arpege)
+
+***Japan Meteorological Agency (JMA)***
+1. [JMA](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20jma%20jma.md#open-meteo-api-jma)
+
+***UK Met Office (UKMO)***
+1. [UKMO Global Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20ukmo%20global%20ens.md#open-meteo-api-ukmo-global-ensemble)
 
 ---------------------------------------
 

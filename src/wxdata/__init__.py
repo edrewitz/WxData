@@ -253,9 +253,11 @@ These clients can be easily configured to work on VPN/PROXY connections.
 import wxdata.client.client as client
 
 """
+***************************************************************************
 This section hosts the various Python interfaces for the Open-Meteo API.
 
 This API can be found at: https://open-meteo.com/
+***************************************************************************
 """
 #############################
 ### Weather Forecast Data ###

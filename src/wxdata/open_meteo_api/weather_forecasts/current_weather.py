@@ -4,6 +4,7 @@ This file hosts the interface for the Open-Meteo API for Current Weather data.
 (C) Eric J. Drewitz 2025-2026
 """
 import requests as _requests
+import pandas as _pd
 from wxdata.open_meteo_api.utils import(
     json_to_pandas as _json_to_pandas,
     server_response as _server_response
@@ -117,6 +118,8 @@ def point_data(latitude,
     
     df = _json_to_pandas(data,
                          field='current')
+    
+    df['time'] = _pd.to_datetime(df['time'])
     
     df = df.drop(columns='interval')
     

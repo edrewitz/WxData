@@ -4,6 +4,7 @@ This file hosts the interface for the Open-Meteo API for ECMWF data.
 (C) Eric J. Drewitz 2025-2026
 """
 import requests as _requests
+import pandas as _pd
 from wxdata.open_meteo_api.utils import(
     json_to_pandas as _json_to_pandas,
     server_response as _server_response,
@@ -372,6 +373,8 @@ def ifs_hourly_point_forecast(latitude,
     data = response.json()
     
     df = _json_to_pandas(data)
+    
+    df['time'] = _pd.to_datetime(df['time'])
     
     if to_csv == True:
         _df_to_csv(df,
@@ -743,6 +746,8 @@ def aifs_hourly_point_forecast(latitude,
     
     df = _json_to_pandas(data)
     
+    df['time'] = _pd.to_datetime(df['time'])
+    
     if to_csv == True:
         _df_to_csv(df,
                    path,
@@ -1112,6 +1117,8 @@ def ifs_hourly_hres_point_forecast(latitude,
     data = response.json()
     
     df = _json_to_pandas(data)
+    
+    df['time'] = _pd.to_datetime(df['time'])
     
     if to_csv == True:
         _df_to_csv(df,
@@ -1489,6 +1496,8 @@ def ifs_hourly_ensemble_point_forecast(latitude,
     
     df = _json_to_pandas(data)
     
+    df['time'] = _pd.to_datetime(df['time'])
+    
     if to_csv == True:
         _df_to_csv(df,
                    path,
@@ -1849,6 +1858,8 @@ def aifs_hourly_ensemble_point_forecast(latitude,
     data = response.json()
     
     df = _json_to_pandas(data)
+    
+    df['time'] = _pd.to_datetime(df['time'])
     
     if to_csv == True:
         _df_to_csv(df,

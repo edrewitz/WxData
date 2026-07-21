@@ -27,6 +27,7 @@ A Python package consisting of the following:
 2) Raw data clients with VPN/PROXY support
 3) Data processors that decode variable keys from GRIB format into a plain-language format
 4) Various tools for assisting Python automated workflows, querying meteorological datasets and filling gaps in meteorological data.
+5) Has interfaces with various weather APIs. 
 
 # Table of Contents
 

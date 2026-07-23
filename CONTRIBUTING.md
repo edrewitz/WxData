@@ -6,7 +6,7 @@ In order for your pull request to be accepted, you must comply with the followin
 
 1) Your addition must work on VPN/PROXY server connections and allow users to pass in their PROXY settings. The `requests` package is recommended for this.
 2) Your addition must have a scanner to prevent repetative downloads.
-3) Your addition shall only download PUBLICLY available data. Nothing that requires API Keys or Passwords will be accepted.
+3) If creating an API interface that requires an API Key, DO NOT include the API Key in your code. Make a variable called API Key in the function and have the user pass in their own API Key. Anything related to API Keys and passwords are considered secrets and are not allowed in code. If you submit a PR with secrets in it, your PR will be rejected until those secrets are removed. 
 4) Your addition must pre-process and post-process data.
 5) Do not plagerize anyone else's work.
 6) You are not allowed to use packages that are not available on BOTH Anaconda and PYPI (pip) (i.e. pygrib is not allowed and users must use xarray with cfgrib for post-processing)

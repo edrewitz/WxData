@@ -216,7 +216,7 @@ def get_data_bounding_box(api_key,
     Returns
     -------
     
-    A Pandas.DataFrame of all the current air quality observations within the bounding box.     
+    A Pandas.DataFrame of all the air quality observations within the bounding box and time bounds.     
     """
     
     

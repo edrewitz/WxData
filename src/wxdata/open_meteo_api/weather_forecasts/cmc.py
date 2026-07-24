@@ -507,7 +507,7 @@ def gem_hourly_ensemble_point_forecast(latitude,
                                'https':'http://your-proxy-address:port'
                                }
     
-    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} wth {filename}
+    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} with {filename}
     
     8) path (String) - The path where the CSV file is saved to.
     

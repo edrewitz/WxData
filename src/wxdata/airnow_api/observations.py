@@ -75,6 +75,37 @@ def get_current_data_bounding_box(api_key,
         
     Optional Arguments:
     
+    1) parameter (String) - Default='pm25'.
+    
+        Parameters
+        ----------
+        
+        'pm25' - PM 2.5
+        'pm10' - PM 10
+        'ozone' - Ozone (O3)
+        'no2' - Nitrogen Dioxide (NO2)
+        'co' - Carbon Monoxide (CO)
+        'so2' - Sulfur Dioxide (SO2)
+        
+    2) western_bound (Float or Integer) - Default=-124.205070. 
+    
+    3) eastern_bound (Float or Integer) - Default=-75.337882. 
+    
+    4) southern_bound (Float or Integer) - Default=28.716781. 
+    
+    5) northern_bound (Float or Integer) - Default=45.419415. 
+    
+    6) proxies (dict or None) - Default=None. If the user is using a proxy server, the user must change the following:
+
+        proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
+    
+    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} wth {filename}
+    
+    8) path (String) - The path where the CSV file is saved to.
+    
     """
     
     
@@ -107,7 +138,7 @@ def get_current_data_bounding_box(api_key,
             
             return df
         else:
-            print(f"Another exception occurred\nHTTP Status Code: {response.status_code}")
+            print(f"Another exception occurred\nHTTP Status Code: {response.status_code} Reason: {response.reason}")
             _sys.exit(1)
     else:
         pass

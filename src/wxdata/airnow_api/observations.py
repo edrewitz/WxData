@@ -106,6 +106,10 @@ def get_current_data_bounding_box(api_key,
     
     8) path (String) - The path where the CSV file is saved to.
     
+    Returns
+    -------
+    
+    A Pandas.DataFrame of all the current air quality observations within the bounding box.     
     """
     
     

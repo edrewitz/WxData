@@ -115,13 +115,13 @@ def get_current_data_bounding_box(api_key,
     
     if proxies == None:
         response = _requests.get(f"https://www.airnowapi.org/aq/data/?"
-                                 f"startDate={t1_hour.strftime('%Y-%m-%d')}T{t1_hr}&endDate={now.strftime('%Y-%m-%d')}T{now_hour}"
+                                 f"startDate={now.strftime('%Y-%m-%d')}T{now_hour}&endDate={now.strftime('%Y-%m-%d')}T{now_hour}"
                                  f"&parameters={parameter.upper()}"
                                  f"&BBOX={western_bound},{southern_bound},{eastern_bound},{northern_bound}"
                                  f"&dataType=B&format=application/json&API_KEY={api_key}")
     else:
         response = _requests.get(f"https://www.airnowapi.org/aq/data/?"
-                                 f"startDate={t1_hour.strftime('%Y-%m-%d')}T{t1_hr}&endDate={now.strftime('%Y-%m-%d')}T{now_hour}"
+                                 f"startDate={now.strftime('%Y-%m-%d')}T{now_hour}&endDate={now.strftime('%Y-%m-%d')}T{now_hour}"
                                  f"&parameters={parameter.upper()}"
                                  f"&BBOX={western_bound},{southern_bound},{eastern_bound},{northern_bound}"
                                  f"&dataType=B&format=application/json&API_KEY={api_key}",

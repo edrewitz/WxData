@@ -72,6 +72,8 @@ def get_current_data_bounding_box(api_key,
     1) api_key (String) - The API Key to access the data. 
     
         To get an API Key create a free account at: https://docs.airnowapi.org/
+        
+    Optional Arguments:
     
     """
     
@@ -88,7 +90,7 @@ def get_current_data_bounding_box(api_key,
                                  f"&parameters={parameter.upper()}"
                                  f"&BBOX={western_bound},{southern_bound},{eastern_bound},{northern_bound}"
                                  f"&dataType=B&format=application/json&API_KEY={api_key}",
-                                 proxies)
+                                 proxies=proxies)
     if response.status_code != 200:
         if response.status_code == 429:
             _error_message()

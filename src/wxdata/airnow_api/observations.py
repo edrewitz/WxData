@@ -46,7 +46,7 @@ def _error_message():
     print(f"The Air-Now API allows for up to 500 calls per hour.")
     print(f"Please try again later.")
     
-def get_current_data_bounding_box(api_key,
+def get_current_data_bounding_box(api_key_path,
                                   parameter='pm25',
                                   western_bound=-124.205070,
                                   eastern_bound=-75.337882,
@@ -61,7 +61,7 @@ def get_current_data_bounding_box(api_key,
     
     Required Arguments:
     
-    1) api_key (String) - The API Key to access the data. 
+    1) api_key_path (String) - The full path to the text file containing the API Key. 
     
         To get an API Key create a free account at: https://docs.airnowapi.org/
         
@@ -103,6 +103,9 @@ def get_current_data_bounding_box(api_key,
     
     A Pandas.DataFrame of all the current air quality observations within the bounding box.     
     """
+    
+    with open(api_key_path, "r", encoding="utf-8") as file:
+        api_key = file.read()
     
     
     if proxies == None:
@@ -155,7 +158,7 @@ def get_current_data_bounding_box(api_key,
     return df
 
 
-def get_data_bounding_box(api_key,
+def get_data_bounding_box(api_key_path,
                             start,
                             end,
                             parameter='pm25',
@@ -172,7 +175,7 @@ def get_data_bounding_box(api_key,
     
     Required Arguments:
     
-    1) api_key (String) - The API Key to access the data. 
+    1) api_key_path (String) - The full path to the text file containing the API Key. 
     
         To get an API Key create a free account at: https://docs.airnowapi.org/
         
@@ -218,6 +221,9 @@ def get_data_bounding_box(api_key,
     
     A Pandas.DataFrame of all the air quality observations within the bounding box and time bounds.     
     """
+    
+    with open(api_key_path, "r", encoding="utf-8") as file:
+        api_key = file.read()
     
     
     if proxies == None:

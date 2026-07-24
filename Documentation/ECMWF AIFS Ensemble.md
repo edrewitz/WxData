@@ -1,6 +1,7 @@
 # ECMWF AIFS Ensemble
 
-***def ecmwf_aifs_ens(final_forecast_hour=360,
+```python
+def ecmwf_aifs_ens(final_forecast_hour=360,
                     western_bound=-180,
                     eastern_bound=180,
                     northern_bound=90,
@@ -65,88 +66,89 @@
                       11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                       21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
                       31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 
-                      41, 42, 43, 44, 45, 46, 47, 48, 49, 50]):***
+                      41, 42, 43, 44, 45, 46, 47, 48, 49, 50]):
+```
 
-    This function scans for the latest ECMWF AIFS Ensemble dataset. If the dataset on the computer is old, the old data will be deleted
-    and the new data will be downloaded. 
-    
-    These ECMWF end-to-end clients can download ECMWF data from the following sources: 
-    
-            1) ECMWF Open-Data Server
-            2) Amazon AWS Server
-            3) Google Cloud Server
-            
-    ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
-    ***If the client cannot connect to any of the servers, the system will exit.***
-    
-    1) final_forecast_hour (Integer) - Default = 360. The final forecast hour the user wishes to download. The ECMWF IFS
-    goes out to 360 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    360 by the nereast increment of 3 hours. 
-    
-    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+This function scans for the latest ECMWF AIFS Ensemble dataset. If the dataset on the computer is old, the old data will be deleted
+and the new data will be downloaded. 
 
-    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+These ECMWF end-to-end clients can download ECMWF data from the following sources: 
 
-    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+        1) ECMWF Open-Data Server
+        2) Amazon AWS Server
+        3) Google Cloud Server
+        
+***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
+***If the client cannot connect to any of the servers, the system will exit.***
 
-    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
-    
-    6) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
+1) final_forecast_hour (Integer) - Default = 360. The final forecast hour the user wishes to download. The ECMWF IFS
+goes out to 360 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
+360 by the nereast increment of 3 hours. 
 
-    7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
-       proxies=None ---> proxies={
-                           'http':'http://url',
-                           'https':'https://url'
-                        } 
+3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+
+4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+
+5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+
+6) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
+
+7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+         proxies=None ---> proxies={
+                             'http':'http://url',
+                             'https':'https://url'
+                          } 
+
+8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
+   data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
+   
+9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+    the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+    This setting is to help preserve memory on the machine. 
     
-    8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
-       data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
-       
-    9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
-        
-    10) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
-        either Celsius or Fahrenheit. When False, this data remains in Kelvin.
-        
-    11) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
-        Set convert_to='fahrenheit' for Fahrenheit. 
-        
-    12) custom_directory (String or None) - Default=None. The directory path where the ECMWF AIFS Ensemble files will be saved to. 
-        When set to None, the path will be: "ECMWF/AIFS/ENSEMBLE {cat}/"
+10) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+    either Celsius or Fahrenheit. When False, this data remains in Kelvin.
     
-    13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+11) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+    Set convert_to='fahrenheit' for Fahrenheit. 
     
-    14) source (String) - Default='ecmwf'. The data server choice. 
+12) custom_directory (String or None) - Default=None. The directory path where the ECMWF AIFS Ensemble files will be saved to. 
+    When set to None, the path will be: "ECMWF/AIFS/ENSEMBLE {cat}/"
+
+13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+
+14) source (String) - Default='ecmwf'. The data server choice. 
+
+    Data Sources
+    ------------
     
-        Data Sources
-        ------------
-        
-        - ECMWF Open-Data Server = 'ecmwf'
-        - Amazon AWS Server = 'aws'
-        - Google Cloud Server = 'google'
-        
-    15) level_type (String) - Default='surface'. The level of the parameters being queried. 
+    - ECMWF Open-Data Server = 'ecmwf'
+    - Amazon AWS Server = 'aws'
+    - Google Cloud Server = 'google'
     
-        level_types
-        -----------
-        
-        1) 'surface'
-        2) 'pressure'
-        3) 'soil
+15) level_type (String) - Default='surface'. The level of the parameters being queried. 
+
+    level_types
+    -----------
     
-    17) cat (String) - Default='control'. The type of ensemble run. 
+    1) 'surface'
+    2) 'pressure'
+    3) 'soil
+
+17) cat (String) - Default='control'. The type of ensemble run. 
+
+    Control Run - cat='control'
     
-        Control Run - cat='control'
-        
-        Ensemble Members - cat='members'
+    Ensemble Members - cat='members'
+
+18) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+    When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
-    18) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
-        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
-        
-    19) variables (String List) - Default is all variables. The list of variable names in plain-language. 
-    
+19) variables (String List) - Default is all variables. The list of variable names in plain-language. 
+
         variables
         ---------
         
@@ -182,27 +184,26 @@
         'vertical velocity'
         'volumetric soil moisture content'
         'soil temperature'
-        
-    20) levels (Integer List) - Default=[1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50]. 
-        When level_type='pressure', this is the list of the pressure levels. 
-        
-        Example: User wants only the 500 mb level: levels=[500]
-        
-    21) members (Integer List) - Default=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-                                          11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-                                          21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
-                                          31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 
-                                          41, 42, 43, 44, 45, 46, 47, 48, 49, 50]
-                                          
-        The ECMWF IFS Ensemble consists of 50 members. 
-        
-        Example: User wants only the first 5 members: members=[1,2,3,4,5]
-        
-    Returns
-    -------
     
-    An xarray data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
+20) levels (Integer List) - Default=[1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50]. 
+    When level_type='pressure', this is the list of the pressure levels. 
     
+    Example: User wants only the 500 mb level: levels=[500]
+    
+21) members (Integer List) - Default=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                                      11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+                                      21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+                                      31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 
+                                      41, 42, 43, 44, 45, 46, 47, 48, 49, 50]
+                                      
+    The ECMWF IFS Ensemble consists of 50 members. 
+    
+    Example: User wants only the first 5 members: members=[1,2,3,4,5]
+    
+**Returns**
+
+An xarray data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
+
     Plain Language ECMWF AIFS Ensemble Variable Keys (After Post-Processing)
     --------------------------------------------------------------
     

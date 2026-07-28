@@ -66,16 +66,23 @@ data via their own external method, set process_data=False which means the data 
 
 8) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-       proxies=None ---> proxies={
-                               'http':'http://your-proxy-address:port',
-                               'https':'http://your-proxy-address:port'
-                               }
+```python
+proxies=None ---> proxies={
+                   'http':'http://your-proxy-address:port',
+                   'https':'http://your-proxy-address:port'
+                   }
+```
        
-9) variables (String List) - `Default=['geopotential height',
-                                'temperature',
-                                'relative humidity',
-                                'u-component of wind'
-                                'v-component of wind']`
+9) variables (String List)
+
+*Default*
+```python
+variables=['geopotential height',
+        'temperature',
+        'relative humidity',
+        'u-component of wind'
+        'v-component of wind']
+```
                        
 The variables the user wishes to query.
     

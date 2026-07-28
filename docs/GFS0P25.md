@@ -1,6 +1,9 @@
-# GFS 0.25x0.25 Degree
+---
+GFS 0.25x0.25 Degree
+---
 
-***def gfs_0p25(final_forecast_hour=384, 
+```Python
+def gfs_0p25(final_forecast_hour=384, 
             western_bound=-180, 
             eastern_bound=180, 
             northern_bound=90, 
@@ -33,45 +36,46 @@
                     200,
                     100,
                     50,
-                    10]):***
+                    10]):
+```
 
-    This function downloads GFS0P25 data and saves it to a folder. 
-    
-    Required Argumemnts: None
-    
-    Optional Arguments:
-    
-    1) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The GFS0P25
-    goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    384 by the nereast increment of 6 hours. 
-    
-    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+This function downloads GFS0P25 data and saves it to a folder. 
 
-    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+Required Argumemnts: None
 
-    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+Optional Arguments:
 
-    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
-    
-    6) step (Integer) - Default=3. Set to 3 for 3hr increments and 6 for 6hrly increments.
-    
-    7) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
-       data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
+1) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The GFS0P25
+goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
+384 by the nereast increment of 6 hours. 
 
-    8) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+
+3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+
+4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+
+5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+
+6) step (Integer) - Default=3. Set to 3 for 3hr increments and 6 for 6hrly increments.
+
+7) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
+data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
+
+8) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
        
-    9) variables (String List) - Default=['geopotential height',
-                                            'temperature',
-                                            'relative humidity',
-                                            'u-component of wind'
-                                            'v-component of wind']
+9) variables (String List) - `Default=['geopotential height',
+                                'temperature',
+                                'relative humidity',
+                                'u-component of wind'
+                                'v-component of wind']`
                        
-        The variables the user wishes to query.
+The variables the user wishes to query.
     
         Variables
         ---------
@@ -166,31 +170,31 @@
         'water equivalent of accumulated snow depth'
         'wilting point'          
     
-    10) custom_directory (String or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
-        the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
-        be used. 
-    
-    11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
-        
-    12) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
-        either Celsius or Fahrenheit. When False, this data remains in Kelvin.
-        
-    13) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
-        Set convert_to='fahrenheit' for Fahrenheit. 
-        
-    14) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
-        Default = f:ECMWF/IFS/WAVE
-        
-    15) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
-    
-    16) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
-    
-    17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
-        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
-        
-    18) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+10) custom_directory (String or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
+the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
+be used. 
+
+11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+This setting is to help preserve memory on the machine. 
+
+12) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+either Celsius or Fahrenheit. When False, this data remains in Kelvin.
+
+13) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+Set convert_to='fahrenheit' for Fahrenheit. 
+
+14) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
+Default = f:ECMWF/IFS/WAVE
+
+15) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+
+16) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+
+17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+
+18) source (String) - Default='noaa'. The data server the user wants to connect the client to.
     
         Server List
         -----------
@@ -199,7 +203,7 @@
         2) Amazon AWS - source='aws'
         3) Google Cloud - source='google'
         
-    19) level_type (String) - Default='pressure'. The type of level for the variable.
+19) level_type (String) - Default='pressure'. The type of level for the variable.
     
         Level Types
         -----------
@@ -234,7 +238,7 @@
         'pressure above ground'
         'potential vorticity surface'
         
-    20) levels (String, Integer or Float List) - Default=[1000,
+20) levels (String, Integer or Float List) - Default=[1000,
                                                             925,
                                                             850,
                                                             700,
@@ -247,12 +251,11 @@
                                                             50,
                                                             10]   
                                                             
-        The pressure, height or depth levels.
+The pressure, height or depth levels.
     
-    Returns
-    -------
+**Returns**
     
-    An xarray.array dataset of the most recent GFS0P25 run. 
+An xarray.array dataset of the most recent GFS0P25 run. 
     
     Post-processed Variable Key List
     --------------------------------

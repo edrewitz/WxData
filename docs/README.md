@@ -240,7 +240,7 @@ End-To-End clients with multiple servers to pull data from can find the differen
 3. [GFS0P50](https://github.com/edrewitz/WxData/blob/main/Documentation/GEFS0P50.md)
 
 ***AI Global Forecast System (AIGFS)***
-1. [AIGFS](https://github.com/edrewitz/WxData/blob/main/Documentation/aigfs.md)
+1. [AIGFS](https://github.com/edrewitz/WxData/edit/main/docs/aigfs.md)
 
 ***Climate Forecast System (CFS)***
 1. [CFS Pressure](https://github.com/edrewitz/WxData/blob/main/Documentation/cfs_pressure.md#climate-forecast-system-cfs-pressure)

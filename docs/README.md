@@ -235,7 +235,7 @@ End-To-End clients with multiple servers to pull data from can find the differen
 ### End-To-End Data Clients
 
 ***Global Forecast System (GFS)***
-1. [GFS0P25](https://github.com/edrewitz/WxData/blob/main/docs/GFS0P25.md#gfs-025x025-degree)
+1. [GFS0P25](https://github.com/edrewitz/WxData/blob/main/docs/GFS0P25.md)
 2. [GFS0P25 SECONDARY PARAMETERS](https://github.com/edrewitz/WxData/blob/main/Documentation/GFS0P25%20Secondary%20Parameters.md)
 3. [GFS0P50](https://github.com/edrewitz/WxData/blob/main/Documentation/GEFS0P50.md)
 

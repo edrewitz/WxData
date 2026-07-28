@@ -1,6 +1,11 @@
+---
+title: ECMWF IFS Ensemble
+---
+
 # ECMWF IFS Ensemble
 
-***def ecmwf_ifs_ens(final_forecast_hour=144,
+```python
+def ecmwf_ifs_ens(final_forecast_hour=144,
               western_bound=-180,
               eastern_bound=180,
               northern_bound=90,
@@ -88,87 +93,88 @@
                       11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                       21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
                       31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 
-                      41, 42, 43, 44, 45, 46, 47, 48, 49, 50]):***
+                      41, 42, 43, 44, 45, 46, 47, 48, 49, 50]):
+```
+This function scans for the latest ECMWF IFS Ensemble dataset. If the dataset on the computer is old, the old data will be deleted
+and the new data will be downloaded. 
 
-    This function scans for the latest ECMWF IFS Ensemble dataset. If the dataset on the computer is old, the old data will be deleted
-    and the new data will be downloaded. 
-    
-    These ECMWF end-to-end clients can download ECMWF data from the following sources: 
-    
-            1) ECMWF Open-Data Server
-            2) Amazon AWS Server
-            3) Google Cloud Server
-            
-    ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
-    ***If the client cannot connect to any of the servers, the system will exit.***
-    
-    1) final_forecast_hour (Integer) - Default = 144.
+These ECMWF end-to-end clients can download ECMWF data from the following sources: 
+
+        1) ECMWF Open-Data Server
+        2) Amazon AWS Server
+        3) Google Cloud Server
+        
+***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
+***If the client cannot connect to any of the servers, the system will exit.***
+
+1) final_forecast_hour (Integer) - Default = 144.
 
         00z and 12z ECMWF IFS Ensemble Runs
         -----------------------------------
         
         3-Hourly Increments from hour 0 to hour 144.
         6-Hourly Increments from hour 144 to hour 360
-        
+    
         06z and 18z ECMWF IFS Ensemble Runs
         -----------------------------------
         
         3-Hourly Increments from hour 0 to hour 144.
-    
-    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
-    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
-    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
 
-    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
-    
-    6) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
+4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
 
-    7) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
 
-       proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_ifs_ens(proxies=proxies)
+6) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
+
+7) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+   ```python
+   proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_ifs_ens(proxies=proxies)
+   ```
+8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
+   data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
+   
+9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+    the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+    This setting is to help preserve memory on the machine. 
     
-    8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
-       data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
-       
-    9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
-        
-    10) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
-        either Celsius or Fahrenheit. When False, this data remains in Kelvin.
-        
-    11) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
-        Set convert_to='fahrenheit' for Fahrenheit. 
-        
-    12) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Ensemble files will be saved to. 
-        When set to None, the path will be: "ECMWF/IFS/ENSEMBLE/"
+10) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+    either Celsius or Fahrenheit. When False, this data remains in Kelvin.
     
-    13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+11) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+    Set convert_to='fahrenheit' for Fahrenheit. 
     
-    14) source (String) - Default='ecmwf'. The data server choice. 
-    
+12) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Ensemble files will be saved to. 
+    When set to None, the path will be: "ECMWF/IFS/ENSEMBLE/"
+
+13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+
+14) source (String) - Default='ecmwf'. The data server choice. 
+
         Data Sources
         ------------
         
         - ECMWF Open-Data Server = 'ecmwf'
         - Amazon AWS Server = 'aws'
         - Google Cloud Server = 'google'
-        
-    15) level_type (String) - Default='surface'. The level of the parameters being queried. 
     
-        level_types
-        -----------
-        
-        1) 'surface'
-        2) 'pressure'
-        3) 'soil
+15) level_type (String) - Default='surface'. The level of the parameters being queried. 
+
+    level_types
+    -----------
     
-    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
-        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
-        
-    17) variables (String List) - Default is all variables. The list of variable names in plain-language. 
+    1) 'surface'
+    2) 'pressure'
+    3) 'soil
+
+16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+    When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+    
+17) variables (String List) - Default is all variables. The list of variable names in plain-language. 
     
         variables
         ---------
@@ -229,25 +235,24 @@
         'vertical velocity'
         'relative vorticity'
         
-    18) levels (Integer List) - Default=[1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50]. 
-        When level_type='pressure', this is the list of the pressure levels. 
-        
-        Example: User wants only the 500 mb level: levels=[500]
-        
-    19) members (Integer List) - Default=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-                                          11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-                                          21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
-                                          31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 
-                                          41, 42, 43, 44, 45, 46, 47, 48, 49, 50]
-                                          
-        The ECMWF IFS Ensemble consists of 50 members. 
-        
-        Example: User wants only the first 5 members: members=[1,2,3,4,5]
-            
-    Returns
-    -------
+18) levels (Integer List) - Default=[1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50]. 
+    When level_type='pressure', this is the list of the pressure levels. 
     
-    An xarray.data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
+    Example: User wants only the 500 mb level: levels=[500]
+    
+19) members (Integer List) - Default=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                                      11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+                                      21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+                                      31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 
+                                      41, 42, 43, 44, 45, 46, 47, 48, 49, 50]
+                                          
+The ECMWF IFS Ensemble consists of 50 members. 
+
+Example: User wants only the first 5 members: members=[1,2,3,4,5]
+
+**Returns**
+    
+An xarray.data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
     
     Plain Language ECMWF IFS Ensemble Variable Keys (After Post-Processing)
     --------------------------------------------------------------

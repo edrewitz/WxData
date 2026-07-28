@@ -1,3 +1,6 @@
+---
+title: ECMWF AIFS Ensemble
+---
 # ECMWF AIFS Ensemble
 
 ```python
@@ -97,10 +100,12 @@ goes out to 360 hours. For those who wish to have a shorter dataset, they may se
 
 7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-         proxies=None ---> proxies={
-                             'http':'http://url',
-                             'https':'https://url'
-                          } 
+```python
+proxies=None ---> proxies={
+                   'http':'http://url',
+                   'https':'https://url'
+                } 
+```
 
 8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
    data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
@@ -122,21 +127,21 @@ goes out to 360 hours. For those who wish to have a shorter dataset, they may se
 
 14) source (String) - Default='ecmwf'. The data server choice. 
 
-    Data Sources
-    ------------
-    
-    - ECMWF Open-Data Server = 'ecmwf'
-    - Amazon AWS Server = 'aws'
-    - Google Cloud Server = 'google'
+        Data Sources
+        ------------
+        
+        - ECMWF Open-Data Server = 'ecmwf'
+        - Amazon AWS Server = 'aws'
+        - Google Cloud Server = 'google'
     
 15) level_type (String) - Default='surface'. The level of the parameters being queried. 
 
-    level_types
-    -----------
-    
-    1) 'surface'
-    2) 'pressure'
-    3) 'soil
+        level_types
+        -----------
+        
+        1) 'surface'
+        2) 'pressure'
+        3) 'soil
 
 17) cat (String) - Default='control'. The type of ensemble run. 
 

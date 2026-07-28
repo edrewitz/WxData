@@ -1,5 +1,5 @@
 ---
-AI Global Forecast System
+AIGFS
 ---
 
 ```Python

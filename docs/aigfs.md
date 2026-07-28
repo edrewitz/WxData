@@ -1,9 +1,5 @@
 # AIGFS
 
----
-title: AIGFS
----
-
 ***def aigfs(final_forecast_hour=384, 
              western_bound=-180, 
              eastern_bound=180, 

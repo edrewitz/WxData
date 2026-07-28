@@ -2,6 +2,8 @@
 title: GFS 0.25x0.25 Degree
 ---
 
+# GFS 0.25x0.25 Degree
+
 ```Python
 def gfs_0p25(final_forecast_hour=384, 
             western_bound=-180, 

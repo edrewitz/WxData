@@ -5,7 +5,7 @@ This file hosts the interface for the Open-Meteo API for ECMWF data.
 """
 import requests as _requests
 import pandas as _pd
-from wxdata.open_meteo_api.utils import(
+from wxdata.utils.api import(
     json_to_pandas as _json_to_pandas,
     server_response as _server_response,
     df_to_csv as _df_to_csv
@@ -333,7 +333,7 @@ def ifs_hourly_point_forecast(latitude,
                                'https':'http://your-proxy-address:port'
                                }
     
-    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} wth {filename}
+    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} with {filename}
     
     8) path (String) - The path where the CSV file is saved to.
     
@@ -705,7 +705,7 @@ def aifs_hourly_point_forecast(latitude,
                                'https':'http://your-proxy-address:port'
                                }
     
-    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} wth {filename}
+    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} with {filename}
     
     8) path (String) - The path where the CSV file is saved to.
     
@@ -1077,7 +1077,7 @@ def ifs_hourly_hres_point_forecast(latitude,
                                'https':'http://your-proxy-address:port'
                                }
     
-    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} wth {filename}
+    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} with {filename}
     
     8) path (String) - The path where the CSV file is saved to.
     
@@ -1457,7 +1457,7 @@ def ifs_hourly_ensemble_point_forecast(latitude,
                                'https':'http://your-proxy-address:port'
                                }
     
-    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} wth {filename}
+    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} with {filename}
     
     8) path (String) - The path where the CSV file is saved to.
     
@@ -1820,7 +1820,7 @@ def aifs_hourly_ensemble_point_forecast(latitude,
                                'https':'http://your-proxy-address:port'
                                }
     
-    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} wth {filename}
+    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} with {filename}
     
     8) path (String) - The path where the CSV file is saved to.
     

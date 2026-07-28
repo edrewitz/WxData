@@ -7,7 +7,22 @@ import os as _os
 import pandas as _pd
 import sys as _sys
 
-def server_response(response):
+def _api_sources(source):
+    
+    """
+    Returns a URL of the API. 
+    """
+    
+    sources = {
+        
+        'open-meteo':'https://open-meteo.com/',
+        'air-now':'https://docs.airnowapi.org/'
+    }
+    
+    return sources[source]
+
+def server_response(response,
+                    source='open-meteo'):
     
     """
     Checks to see if the server response status code is 200 and if response status code != 200 return an error.
@@ -15,6 +30,8 @@ def server_response(response):
     Required Arguments: 
     
     1) response (http object)
+    
+    2) source (API Website) - Default='open-meteo'. 
     
     Optional Arguments: None
     
@@ -24,13 +41,15 @@ def server_response(response):
     An error message if response status code != 200    
     """
     
+    url = _api_sources(source)
+    
     if response.status_code == 200:
         pass
     elif response.status_code == 400:
         print(f"Error: Bad Request.\nThis likely means you had an invalid entry in your variables list.")
         _sys.exit(1)
     else:
-        print("Error: https://open-meteo.com/ is down.\nPlease try again later.")
+        print(f"Error: {url} is down.\nPlease try again later.")
         _sys.exit(1)
 
 

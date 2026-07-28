@@ -1,6 +1,11 @@
+---
+title: ECMWF IFS
+---
+
 # ECMWF IFS
 
-***def ecmwf_ifs(final_forecast_hour=144,
+```python
+def ecmwf_ifs(final_forecast_hour=144,
               western_bound=-180,
               eastern_bound=180,
               northern_bound=90,
@@ -83,21 +88,22 @@
                       200, 
                       150, 
                       100, 
-                      50]):***
+                      50]):
+```
 
-    This function scans for the latest ECMWF IFS dataset. If the dataset on the computer is old, the old data will be deleted
-    and the new data will be downloaded. 
-    
-    These ECMWF end-to-end clients can download ECMWF data from the following sources: 
-    
-            1) ECMWF Open-Data Server
-            2) Amazon AWS Server
-            3) Google Cloud Server
-            
-    ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
-    ***If the client cannot connect to any of the servers, the system will exit.***
-    
-    1) final_forecast_hour (Integer) - Default = 144.
+This function scans for the latest ECMWF IFS dataset. If the dataset on the computer is old, the old data will be deleted
+and the new data will be downloaded. 
+
+These ECMWF end-to-end clients can download ECMWF data from the following sources: 
+
+        1) ECMWF Open-Data Server
+        2) Amazon AWS Server
+        3) Google Cloud Server
+        
+***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
+***If the client cannot connect to any of the servers, the system will exit.***
+
+1) final_forecast_hour (Integer) - Default = 144.
 
         00z and 12z ECMWF IFS Runs
         --------------------------
@@ -109,61 +115,63 @@
         --------------------------
         
         3-Hourly Increments from hour 0 to hour 144. 
-    
-    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
-    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
-    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
 
-    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
-    
-    6) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
+4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
 
-    7) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
 
-       proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_ifs(proxies=proxies)
+6) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
+
+7) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+  ```python
+   proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_ifs(proxies=proxies)
+  ```
+
+8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
+   data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
+   
+9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+    the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+    This setting is to help preserve memory on the machine. 
     
-    8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
-       data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
-       
-    9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
-        
-    10) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
-        either Celsius or Fahrenheit. When False, this data remains in Kelvin.
-        
-    11) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
-        Set convert_to='fahrenheit' for Fahrenheit. 
-        
-    12) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS files will be saved to. 
-        When set to None, the path will be: "ECMWF/IFS/OPERATIONAL/"
+10) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+    either Celsius or Fahrenheit. When False, this data remains in Kelvin.
     
-    13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+11) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+    Set convert_to='fahrenheit' for Fahrenheit. 
     
-    14) source (String) - Default='ecmwf'. The data server choice. 
-    
+12) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS files will be saved to. 
+    When set to None, the path will be: "ECMWF/IFS/OPERATIONAL/"
+
+13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+
+14) source (String) - Default='ecmwf'. The data server choice. 
+
         Data Sources
         ------------
         
         - ECMWF Open-Data Server = 'ecmwf'
         - Amazon AWS Server = 'aws'
         - Google Cloud Server = 'google'
-    
-    15) level_type (String) - Default='surface'. The level of the parameters being queried. 
-    
+
+15) level_type (String) - Default='surface'. The level of the parameters being queried. 
+
         level_types
         -----------
         
         1) 'surface'
         2) 'pressure'
         3) 'soil
+
+16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+    When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
-    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
-        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
-        
-    17) variables (String List) - Default is all variables. The list of variable names in plain-language. 
+17) variables (String List) - Default is all variables. The list of variable names in plain-language. 
     
         variables
         ---------
@@ -224,15 +232,14 @@
         'vertical velocity'
         'relative vorticity'
         
-    18) levels (Integer List) - Default=[1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50]. 
-        When level_type='pressure', this is the list of the pressure levels. 
-        
-        Example: User wants only the 500 mb level: levels=[500]
-        
-    Returns
-    -------
+18) levels (Integer List) - Default=[1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50]. 
+    When level_type='pressure', this is the list of the pressure levels. 
     
-    An xarray.data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
+Example: User wants only the 500 mb level: levels=[500]
+        
+**Returns**
+
+An xarray.data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
     
     Plain Language ECMWF IFS Variable Keys (After Post-Processing)
     --------------------------------------------------------------

@@ -9,6 +9,7 @@ In order to use this web service, you must create a free account at: https://doc
 import requests as _requests
 import pandas as _pd
 import sys as _sys
+import wxdata.airnow_api._errors as _errors
 from io import StringIO as _StringIO
 from time import sleep as _sleep
 
@@ -34,19 +35,9 @@ if now.hour >= 10:
 else:
     now_hour = f"0{now.hour}"
     
-
     
-def _error_message():
-    
-    """
-    Returns an error message when rate limited    
-    """
-    
-    print(f"Error: Too Many Requests")
-    print(f"The Air-Now API allows for up to 500 calls per hour.")
-    print(f"Please try again later.")
-    
-def get_current_data_bounding_box(api_key_path,
+def get_current_data_bounding_box(api_key=None,
+                                  read_in_key_from_path=True,
                                   parameter='pm25',
                                   western_bound=-124.205070,
                                   eastern_bound=-75.337882,
@@ -59,15 +50,32 @@ def get_current_data_bounding_box(api_key_path,
     """
     This function retrieves air-quality data from the airnow API.
     
-    Required Arguments:
-    
-    1) api_key_path (String) - The full path to the text file containing the API Key. 
-    
-        To get an API Key create a free account at: https://docs.airnowapi.org/
+    Required Arguments: None
         
     Optional Arguments:
     
-    1) parameter (String) - Default='pm25'.
+    1) api_key (String) - Default=None. 
+    
+        The user needs to either pass in an API Key or a path to a .txt file where the API Key is stored. 
+        
+        It is strongly recommended to not put the API Key itself in your code. It is recommended to store the key
+        in a file and read that key into the code.
+        
+        The easiest way is to create a text (.txt) file with a single element inside of it that is your API Key for Air Now.
+        
+        If the user wishes to follow this method - set `read_in_key_from_path=True` which is the default setting.
+        The user will then set `api_key={path to api key text file}`
+        
+        If the user wishes to use their own methods of ingesting the API Key, then set `api_key=your_api_key_variable`.
+
+        To get an API Key create a free account at: https://docs.airnowapi.org/
+    
+    2) read_in_key_from_path (Boolean) - Default=True. When set to True, the API Key is read in from a text file (.txt) at
+        the path specified in `api_key`. Set `read_in_key_from_path=False` if the user wishes to use their own method for
+        ingesting their Air Now API Key. 
+
+    
+    3) parameter (String) - Default='pm25'.
     
         Parameters
         ----------
@@ -79,33 +87,45 @@ def get_current_data_bounding_box(api_key_path,
         'co' - Carbon Monoxide (CO)
         'so2' - Sulfur Dioxide (SO2)
         
-    2) western_bound (Float or Integer) - Default=-124.205070. 
+    4) western_bound (Float or Integer) - Default=-124.205070. 
     
-    3) eastern_bound (Float or Integer) - Default=-75.337882. 
+    5) eastern_bound (Float or Integer) - Default=-75.337882. 
     
-    4) southern_bound (Float or Integer) - Default=28.716781. 
+    6) southern_bound (Float or Integer) - Default=28.716781. 
     
-    5) northern_bound (Float or Integer) - Default=45.419415. 
+    7) northern_bound (Float or Integer) - Default=45.419415. 
     
-    6) proxies (dict or None) - Default=None. If the user is using a proxy server, the user must change the following:
+    8) proxies (dict or None) - Default=None. If the user is using a proxy server, the user must change the following:
 
         proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
     
-    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} wth {filename}
+    9) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} wth {filename}
     
-    8) path (String) - The path where the CSV file is saved to.
+    10) path (String) - The path where the CSV file is saved to.
     
     Returns
     -------
     
     A Pandas.DataFrame of all the current air quality observations within the bounding box.     
-    """
-    
-    with open(api_key_path, "r", encoding="utf-8") as file:
-        api_key = file.read()
+    """    
+    try:
+        if read_in_key_from_path == True:
+            with open(api_key, "r", encoding="utf-8") as file:
+                api_key = file.read()
+        else:
+            api_key = api_key
+            
+            if api_key == None:
+               _errors.missing_api_key()
+               _sys.exit(1) 
+            else:
+                pass
+    except Exception as e:
+        _errors.missing_api_key()
+        _sys.exit(1)
     
     
     if proxies == None:
@@ -123,7 +143,7 @@ def get_current_data_bounding_box(api_key_path,
                                  proxies=proxies)
     if response.status_code != 200:
         if response.status_code == 429:
-            _error_message()
+            _errors.rate_limit_error_message()
             _sleep(3600)
             df = get_current_data_bounding_box(api_key,
                                   parameter=parameter,
@@ -158,9 +178,10 @@ def get_current_data_bounding_box(api_key_path,
     return df
 
 
-def get_data_bounding_box(api_key_path,
-                            start,
+def get_data_bounding_box(start,
                             end,
+                            api_key=None,
+                            read_in_key_from_path=True,
                             parameter='pm25',
                             western_bound=-124.205070,
                             eastern_bound=-75.337882,
@@ -174,18 +195,34 @@ def get_data_bounding_box(api_key_path,
     This function retrieves air-quality data from the airnow API.
     
     Required Arguments:
-    
-    1) api_key_path (String) - The full path to the text file containing the API Key. 
-    
-        To get an API Key create a free account at: https://docs.airnowapi.org/
         
-    2) start (String) - The start time in the following format: 'YYYY-mm-ddTHH'
+    1) start (String) - The start time in the following format: 'YYYY-mm-ddTHH'
     
     2) end (String) - The end time in the following format: 'YYYY-mm-ddTHH'
         
     Optional Arguments:
     
-    1) parameter (String) - Default='pm25'.
+    1) api_key (String) - Default=None. 
+    
+        The user needs to either pass in an API Key or a path to a .txt file where the API Key is stored. 
+        
+        It is strongly recommended to not put the API Key itself in your code. It is recommended to store the key
+        in a file and read that key into the code.
+        
+        The easiest way is to create a text (.txt) file with a single element inside of it that is your API Key for Air Now.
+        
+        If the user wishes to follow this method - set `read_in_key_from_path=True` which is the default setting.
+        The user will then set `api_key={path to api key text file}`
+        
+        If the user wishes to use their own methods of ingesting the API Key, then set `api_key=your_api_key_variable`.
+
+        To get an API Key create a free account at: https://docs.airnowapi.org/
+    
+    2) read_in_key_from_path (Boolean) - Default=True. When set to True, the API Key is read in from a text file (.txt) at
+        the path specified in `api_key`. Set `read_in_key_from_path=False` if the user wishes to use their own method for
+        ingesting their Air Now API Key. 
+    
+    3) parameter (String) - Default='pm25'.
     
         Parameters
         ----------
@@ -197,24 +234,24 @@ def get_data_bounding_box(api_key_path,
         'co' - Carbon Monoxide (CO)
         'so2' - Sulfur Dioxide (SO2)
         
-    2) western_bound (Float or Integer) - Default=-124.205070. 
+    4) western_bound (Float or Integer) - Default=-124.205070. 
     
-    3) eastern_bound (Float or Integer) - Default=-75.337882. 
+    5) eastern_bound (Float or Integer) - Default=-75.337882. 
     
-    4) southern_bound (Float or Integer) - Default=28.716781. 
+    6) southern_bound (Float or Integer) - Default=28.716781. 
     
-    5) northern_bound (Float or Integer) - Default=45.419415. 
+    7) northern_bound (Float or Integer) - Default=45.419415. 
     
-    6) proxies (dict or None) - Default=None. If the user is using a proxy server, the user must change the following:
+    8) proxies (dict or None) - Default=None. If the user is using a proxy server, the user must change the following:
 
         proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
     
-    7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} wth {filename}
+    9) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} wth {filename}
     
-    8) path (String) - The path where the CSV file is saved to.
+    10) path (String) - The path where the CSV file is saved to.
     
     Returns
     -------
@@ -222,8 +259,21 @@ def get_data_bounding_box(api_key_path,
     A Pandas.DataFrame of all the air quality observations within the bounding box and time bounds.     
     """
     
-    with open(api_key_path, "r", encoding="utf-8") as file:
-        api_key = file.read()
+    try:
+        if read_in_key_from_path == True:
+            with open(api_key, "r", encoding="utf-8") as file:
+                api_key = file.read()
+        else:
+            api_key = api_key
+            
+            if api_key == None:
+               _errors.missing_api_key()
+               _sys.exit(1) 
+            else:
+                pass
+    except Exception as e:
+        _errors.missing_api_key()
+        _sys.exit(1)
     
     
     if proxies == None:
@@ -241,7 +291,7 @@ def get_data_bounding_box(api_key_path,
                                  proxies=proxies)
     if response.status_code != 200:
         if response.status_code == 429:
-            _error_message()
+            _errors.rate_limit_error_message()
             _sleep(3600)
             df = get_data_bounding_box(api_key,
                                         start,

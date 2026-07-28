@@ -1,5 +1,5 @@
 ---
-title: GFS 0.25x0.25 Degree
+GFS 0.25x0.25 Degree
 ---
 
 ```Python

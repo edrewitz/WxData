@@ -11,7 +11,7 @@ from wxdata.utils.api import(
     df_to_csv as _df_to_csv
 )
 
-def ec46_seas5_daily_point_forecast(latitude,
+def ec46_seas5_daily_point_forecast_all_members(latitude,
             longitude,
             days=46,
             temperature_units='fahrenheit',
@@ -83,7 +83,7 @@ def ec46_seas5_daily_point_forecast(latitude,
             filename=f"EC46_SEAS5_Data.csv"):
     
     """
-    This function retrieves ECMWF Seasonal Forecast (EC46 + SEAS5) time series forecast from the Open-Meteo API for a given point of latitude/longitude.
+    This function retrieves ECMWF Seasonal Forecast (EC46 + SEAS5) time series all ensemble members forecast from the Open-Meteo API for a given point of latitude/longitude.
     
     Required Arguments:
     
@@ -243,7 +243,7 @@ def ec46_seas5_daily_point_forecast(latitude,
     
     return df
 
-def ec46_daily_point_forecast(latitude,
+def ec46_daily_point_forecast_all_members(latitude,
             longitude,
             days=46,
             temperature_units='fahrenheit',
@@ -315,7 +315,7 @@ def ec46_daily_point_forecast(latitude,
             filename=f"EC46_SEAS5_Data.csv"):
     
     """
-    This function retrieves ECMWF EC46 Seasonal Forecast time series forecast from the Open-Meteo API for a given point of latitude/longitude.
+    This function retrieves ECMWF EC46 Seasonal Forecast time series all ensemble members forecast from the Open-Meteo API for a given point of latitude/longitude.
     
     Required Arguments:
     

@@ -1,5 +1,5 @@
 """
-This file hosts the ECMWF EC46 & SEAS5 Seasonal Froecasts from Open-Meteo API.
+This file hosts the ECMWF EC46 & SEAS5 Seasonal Forecasts at Daily intervals from Open-Meteo API.
 
 (C) Eric J. Drewitz 2025-2026
 """

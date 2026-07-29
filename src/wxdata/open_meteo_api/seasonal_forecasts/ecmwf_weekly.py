@@ -227,6 +227,8 @@ def ec46_mean_anomaly(latitude,
     
     df['time'] = _pd.to_datetime(df['time'])
     
+    df = df.dropna()
+    
     if to_csv == True:
         _df_to_csv(df,
                    path,

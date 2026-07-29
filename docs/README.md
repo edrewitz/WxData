@@ -31,23 +31,23 @@ A Python package consisting of the following:
 
 # Table of Contents
 
-1) [Installation Instructions](https://github.com/edrewitz/WxData?tab=readme-ov-file#installation-instructions)
+1) [Installation Instructions](https://edrewitz.github.io/WxData/#installation-instructions)
 
-2) [Server List (For End-To-End Clients That Can Rotate Between Servers)](https://github.com/edrewitz/WxData/blob/main/README.md#server-list)
+2) [Server List (For End-To-End Clients That Can Rotate Between Servers)](https://edrewitz.github.io/WxData/#server-list)
 
-3) [Proxy Server Configuration](https://github.com/edrewitz/WxData?tab=readme-ov-file#proxy-server-configuration)
+3) [Proxy Server Configuration](https://edrewitz.github.io/WxData/#proxy-server-configuration)
 
-4) [What makes WxData unique among various meteorological Python packages?](https://github.com/edrewitz/WxData?tab=readme-ov-file#what-makes-wxdata-unique-among-various-meteorological-python-packages)
+4) [What makes WxData unique among various meteorological Python packages?](https://edrewitz.github.io/WxData/#what-makes-wxdata-unique-among-various-meteorological-python-packages)
 
-5) [WxData Tutorials](https://github.com/edrewitz/WxData?tab=readme-ov-file#wxdata-tutorials)
+5) [WxData Tutorials](https://edrewitz.github.io/WxData/#wxdata-tutorials)
 
-6) [WxData Documentation](https://github.com/edrewitz/WxData?tab=readme-ov-file#wxdata-documentation)
+6) [WxData Documentation](https://edrewitz.github.io/WxData/#wxdata-documentation)
 
-7) [Importing Functions from WxData](https://github.com/edrewitz/WxData?tab=readme-ov-file#importing-functions-from-wxdata)
+7) [Importing Functions from WxData](https://edrewitz.github.io/WxData/#importing-functions-from-wxdata)
 
-8) [Citations](https://github.com/edrewitz/WxData?tab=readme-ov-file#citations)
+8) [Citations](https://edrewitz.github.io/WxData/#citations)
 
-9) [Data Sources](https://github.com/edrewitz/WxData?tab=readme-ov-file#data-sources)
+9) [Data Sources]()
 
 
 ## Installation Instructions
@@ -206,26 +206,42 @@ End-To-End clients with multiple servers to pull data from can find the differen
 6) [Downloading the SPC Convective Outlook for CONUS](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/spc.ipynb)
 7) [Downloading NWS Maximum Temperature Forecast for Hawaii](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/nws_hi.ipynb)
 8) [Downloading the GFS0P25 then performing pixel and line queries on the data](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/GFS.ipynb)
+
 9) [Downloading various datasets from the Applied Climate Information System (ACIS)](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/xmacis2.ipynb)
+
 10) [Downloading AIGFS Data](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/aigfs.ipynb)
+
 11) [Downloading AIGEFS Data](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/aigefs.ipynb)
+
 12) [Downloading and plotting the Climate Prediction Center 6-10 Day Precipitation Outlook](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/cpc_precip_outlook.ipynb)
+
 13) [Downloading OUN Sounding Data and Using The WxData Linear Anti Aliasing Tool To Interpolate 100 Points Between Each Observed Data Point And Visualize Both Data Sets](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/linear_anti_aliasing.ipynb)
+
 14) [Downloading Subsets Of ECMWF IFS Ensemble and AIFS Ensemble Data](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/ecmwf_ens.ipynb)
+
 15) [Downloading the ECMWF IFS 500 mb Geopotential Height Initial Analysis And Plot A North Pole Stereographic Resolving The Meridian With The WxData Cyclic Point Tool](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/cyclic.ipynb)
+
 16) [Downloading Observed Fuels Data For The Past Year For Acton RAWS and Plotting 1000-HR Dead Fuel Moisture](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/acton_raws.ipynb)
+
 17) [Downloading the 7-Day NFDRS Forecast for Acton RAWS and Plotting Forecast 100-HR Dead Fuel Moisture](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/acton_raws_forecast.ipynb)
+
 18) [Downloading Current RAWS and METAR Data and Plotting Current Relative Humidity Observations Across California and Nevada](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/metar_raws_observed_rh.ipynb)
+
 19) [Downloading Current RAWS Data and Plotting Current Energy Release Components (ERCs) Observations Across California and Nevada](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/observed_erc_map.ipynb)
+
 20) [Downloading NEXRAD II Radar Data and then plotting it in Py-ART](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/NEXRADII.ipynb)
+
 21) [Downloading 30 Days of 6hrly CFS Data and plotting the 30-Day time-mean for mean sea level pressure across the Northern Hemisphere](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/cfs.ipynb)
+
 22) [Download all 50 Ensemble Members of the ECMWF IFS Ensemble for 2-Meter Temperature Using the Open-Meteo API and Make an Ensemble Spaghetti Plot](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/ecmwf_ifs_ens_spaghetti.ipynb)
 
 *Advanced Users*
-1) [Using the `client` module to download the latest HadCRUT5 Analysis netCDF file and open this dataset in xarray](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/hadcrut5.ipynb)
-2) [Downloading the GFS0P25 for temperature fields and using run_external_scripts() to post-process this GFS0P25 dataset in an external Python script](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/external_scripts.ipynb)
-3) [Downloading GFS Data Using Byte-Range Requests](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/bytes_range_request.ipynb)
 
+1) [Using the `client` module to download the latest HadCRUT5 Analysis netCDF file and open this dataset in xarray](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/hadcrut5.ipynb)
+
+2) [Downloading the GFS0P25 for temperature fields and using run_external_scripts() to post-process this GFS0P25 dataset in an external Python script](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/external_scripts.ipynb)
+
+3) [Downloading GFS Data Using Byte-Range Requests](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/bytes_range_request.ipynb)
 ---------------------------------------------------
 
 ## WxData Documentation
@@ -765,14 +781,23 @@ import wxdata.open_meteo_api.weather_forecasts.current_weather as open_meteo_api
 ## Data Sources
 
 1) [National Oceanic and Atmospheric Administration/National Center for Environmental Prediction](https://nomads.ncep.noaa.gov/)
+
 2) [European Centre for Medium-Range Weather Forecasts](https://data.ecmwf.int/forecasts/)
+
 3) [University of Wyoming](http://www.weather.uwyo.edu/upperair/sounding.shtml)
+
 4) [National Oceanic and Atmospheric Administration/National Weather Service](https://tgftp.nws.noaa.gov/)
+
 5) [National Oceanic and Atmospheric Administration/Aviation Weather Center](https://aviationweather.gov/)
+
 6) [National Oceanic and Atmospheric Administration/Climate Prediction Center](https://www.cpc.ncep.noaa.gov/products/GIS/GIS_DATA/us_tempprcpfcst/index.php)
+
 7) [Applied Climate Information System (ACIS)](https://www.rcc-acis.org/docs_webservices.html)
+
 8) [USDA Fire Environment Mapping System](https://fems.fs2c.usda.gov/download)
+
 9) [Amazon AWS Unidata NEXRAD2 Bucket](https://unidata-nexrad-level2.s3.amazonaws.com/index.html)
+
 10) [Open-Meteo API](https://open-meteo.com/)
 
 

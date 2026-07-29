@@ -1,10 +1,6 @@
 ---
 layout: default
 title: My Project Home
-layout: single
-author_profile: true
-sidebar:
-  nav: "sidebar_nav"
 ---
 
 # WxData Main Page

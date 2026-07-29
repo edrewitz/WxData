@@ -774,6 +774,7 @@ import wxdata.open_meteo_api.weather_forecasts.ukmo as open_meteo_api_ukmo
 import wxdata.open_meteo_api.weather_forecasts.current_weather as open_meteo_api_current_weather
 
 ```
+
 -------------------------------------------
 
 ## Citations

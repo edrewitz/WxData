@@ -38,14 +38,6 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
-  # _data/navigation.yml
-sidebar_nav:
-  - title: "Getting Started"
-    children:
-      - title: "Overview"
-        url: /docs/overview/
-      - title: "Installation"
-        url: /docs/installation/
 
   # Deployment job
   deploy:

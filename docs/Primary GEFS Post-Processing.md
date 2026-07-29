@@ -1,30 +1,34 @@
-# Primary GEFS Variables Post-Processing
+---
+title: Primary GEFS Variables Post-Processing
+---
 
-***def primary_gefs_post_processing(paths,
+# Primary GEFS Variables Post-Processing
+```python
+def primary_gefs_post_processing(paths,
                                  western_bound,
                                  eastern_bound,
                                  southern_bound,
-                                 northern_bound):***
+                                 northern_bound):
+```
 
-    This function post-processes the GEFS (Primary) Parameters for GEFS0P50 and GEFS0P25. 
-    
-    Required Arguments: 
-    
-    1) paths (List) - A list of file paths to the GEFS0P50 or GEFS0P25 files. 
-    
-    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+This function post-processes the GEFS (Primary) Parameters for GEFS0P50 and GEFS0P25. 
 
-    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+Required Arguments: 
 
-    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+1) paths (List) - A list of file paths to the GEFS0P50 or GEFS0P25 files. 
 
-    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+
+3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+
+4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+
+5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
     
-    Returns
-    -------
-    
-    An xarray data array of the post-processed GEFS data. 
-    GRIB Keys are converted to Plain Language Keys. 
+**Returns**
+
+An xarray data array of the post-processed GEFS data. 
+GRIB Keys are converted to Plain Language Keys. 
     
     New Variable Keys After Post-Processing (Decrypted GRIB Keys Into Plain Language)
     --------------------------------------------------------------------------------

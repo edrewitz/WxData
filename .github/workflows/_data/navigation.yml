@@ -1,0 +1,7 @@
+sidebar_nav:
+  - title: "Getting Started"
+    children:
+      - title: "Overview"
+        url: /docs/overview/
+      - title: "Installation"
+        url: /docs/installation/

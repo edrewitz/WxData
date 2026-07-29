@@ -60,6 +60,10 @@ Copy and paste either command into your terminal or anaconda prompt:
 
 `conda install wxdata`
 
+OR
+
+`mamba install wxdata`
+
 *Install via pip*
 
 `pip install wxdata`
@@ -73,6 +77,10 @@ Copy and paste either command into your terminal or anaconda prompt:
 ***This is for users who initially installed WxData through Anaconda***
 
 `conda update wxdata`
+
+OR
+
+`mamba update wxdata`
 
 *Update via pip*
 
@@ -821,5 +829,7 @@ import wxdata.open_meteo_api.weather_forecasts.current_weather as open_meteo_api
 9) [Amazon AWS Unidata NEXRAD2 Bucket](https://unidata-nexrad-level2.s3.amazonaws.com/index.html)
 
 10) [Open-Meteo API](https://open-meteo.com/)
+
+11) [Air Now API](https://docs.airnowapi.org/webservices)
 
 

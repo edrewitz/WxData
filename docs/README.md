@@ -1,3 +1,8 @@
+---
+layout: default
+title: My Project Home
+---
+
 # WxData
 
 <img src="https://github.com/edrewitz/WxData/blob/main/icons/weather%20icon.jpg?raw=true" width="200" alt="Alt text" /> <img src="https://github.com/edrewitz/WxData/blob/1be590e9a16033974a592d8cf99f3cd521f95e0b/icons/python%20logo.png?raw=true" width="200" alt="Alt text" />

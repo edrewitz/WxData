@@ -1,10 +1,9 @@
 ---
 title: GFS 0.25x0.25 Degree
 ---
+[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
 
 # GFS 0.25x0.25 Degree
-
-[***Return Home***](https://github.com/edrewitz/WxData/wiki)
 
 ```python
 def gfs_0p25(final_forecast_hour=384, 

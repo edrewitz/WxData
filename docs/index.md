@@ -490,7 +490,7 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 
 ## Importing Functions from WxData
 
-```Python
+```python
 """
 This file hosts all of the functions in the WxData Python library that directly interact with the user. 
 

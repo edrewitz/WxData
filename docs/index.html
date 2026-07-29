@@ -23,5 +23,18 @@
         <p>This is where your main text or content goes.</p>
     </div>
 
+    <script>
+        fetch('README.md')
+            .then(response => response.text())
+            .then(markdown => {
+                // Convert Markdown to HTML and inject it into the div
+                document.getElementById('content').innerHTML = marked.parse(markdown);
+            })
+            .catch(error => {
+                document.getElementById('content').innerHTML = "Error loading content.";
+                console.error(error);
+            });
+    </script>
+
 </body>
 </html>

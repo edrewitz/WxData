@@ -22,14 +22,18 @@
     </div>
 
     <script>
+        // 1. Request the file from your server/folder
         fetch('README.md')
-            .then(response => response.text())
-            .then(markdown => {
-                // Convert Markdown to HTML and inject it into the div
-                document.getElementById('content').innerHTML = marked.parse(markdown);
+            .then(response => {
+                if (!response.ok) throw new Error('File not found');
+                return response.text();
+            })
+            .then(markdownText => {
+                // 2. Parse the file contents into HTML and update the page
+                document.getElementById('markdown-target').innerHTML = marked.parse(markdownText);
             })
             .catch(error => {
-                document.getElementById('content').innerHTML = "Error loading content.";
+                document.getElementById('markdown-target').innerHTML = "Error loading content.";
                 console.error(error);
             });
     </script>

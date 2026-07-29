@@ -145,23 +145,44 @@ End-To-End clients with multiple servers to pull data from can find the differen
 
    All other clients use proxies as a dictionary
 
-                  Example: We want to download the latest Observed Sounding Data for San Diego, CA (NKX)
-         
-                  proxies=None ---> proxies={
-                                         'http':'http://your-proxy-address:port',
-                                         'https':'http://your-proxy-address:port'
-                                         }
-         
-                  sounding_data = get_observed_sounding_data('nkx', proxies=proxies)
-         
-                  Example: We want to download the ECMWF IFS Data:
-         
-                  proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_ifs(proxies=proxies)
+Example: We want to download the latest Observed Sounding Data for San Diego, CA (NKX)
+
+```python
+proxies=None ---> proxies={
+                       'http':'http://your-proxy-address:port',
+                       'https':'http://your-proxy-address:port'
+                       }
+```
+```python
+# Here is our program
+from wxdata import get_observed_sounding_data
+
+proxies={
+        'http':'http://your-proxy-address:port',
+        'https':'http://your-proxy-address:port'
+        }
+
+sounding_data = get_observed_sounding_data('nkx', proxies=proxies)
+```
+
+Example: We want to download the ECMWF IFS Data:
+
+```python
+proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_ifs(proxies=proxies)
+```
+```python
+# Here is our program
+from wxdata import get_observed_sounding_data
+
+proxies="https://your-proxy-address:port"
+
+ds = ecmwf_ifs(proxies=proxies)
+```
 
 <img src="https://github.com/edrewitz/WxData/blob/main/diagrams/proxy.png?raw=true" width="500" alt="Alt text" /> 
 
 
-   For more information on configuring proxies: https://requests.readthedocs.io/en/latest/user/advanced/#proxies
+For more information on configuring proxies: https://requests.readthedocs.io/en/latest/user/advanced/#proxies
 
 ---------------------------------------------------------------------
 

@@ -1,0 +1,1 @@
+import wxdata.open_meteo_api.seasonal_forecasts.ecmwf as ecmwf_seasonal_forecasts

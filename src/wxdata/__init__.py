@@ -286,6 +286,10 @@ import wxdata.open_meteo_api.weather_forecasts.jma as open_meteo_api_jma
 import wxdata.open_meteo_api.weather_forecasts.ukmo as open_meteo_api_ukmo
 import wxdata.open_meteo_api.weather_forecasts.current_weather as open_meteo_api_current_weather
 
+### Seasonal Forecasts ###
+# - ECMWF EC46 & SEAS5
+import wxdata.open_meteo_api.seasonal_forecasts.ecmwf as ecmwf_seasonal_forecasts
+
 ###################
 ### Air-Now API ###
 ###################

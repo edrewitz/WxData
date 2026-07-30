@@ -291,9 +291,12 @@ import wxdata.open_meteo_api.weather_forecasts.current_weather as open_meteo_api
 # - Daily Data (EC46 & SEAS5)
 # - Weekly Data (EC46)
 # - Monthly Data (SEAS5)
-import wxdata.open_meteo_api.seasonal_forecasts.ecmwf_daily as ecmwf_seasonal_forecasts_daily
-import wxdata.open_meteo_api.seasonal_forecasts.ecmwf_weekly as ecmwf_seasonal_forecasts_weekly
-import wxdata.open_meteo_api.seasonal_forecasts.ecmwf_monthly as ecmwf_seasonal_forecasts_monthly
+import wxdata.open_meteo_api.seasonal_forecasts.ecmwf_daily as open_meteo_api_ecmwf_seasonal_forecasts_daily
+import wxdata.open_meteo_api.seasonal_forecasts.ecmwf_weekly as open_meteo_api_ecmwf_seasonal_forecasts_weekly
+import wxdata.open_meteo_api.seasonal_forecasts.ecmwf_monthly as open_meteo_api_ecmwf_seasonal_forecasts_monthly
+
+### Climate Data ###
+import wxdata.open_meteo_api.climate.climate_data as open_meteo_api_climate_data
 
 ###################
 ### Air-Now API ###

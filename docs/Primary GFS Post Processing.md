@@ -1,23 +1,28 @@
+---
+title: Primary GFS Variables Post-Processing
+---
+
 # Primary GFS Variables Post-Processing
 
-***def primary_gfs_post_processing(path,
+```python
+def primary_gfs_post_processing(path,
                                 western_bound,
                                 eastern_bound,
                                 southern_bound,
-                                northern_bound):***
+                                northern_bound):
+```
 
-    This function post-processes the GFS0P25 and GFS0P50 GRIB Primary Variable Keys into Plain-Language Variable Keys
-    
-    Required Arguments:
-    
-    1) path (String) - The path to the files.
-    
-    Optional Arguments: None
-    
-    Returns
-    -------
-    
-    An xarray.array of GFS0P25 data in Plain Language Keys.    
+This function post-processes the GFS0P25 and GFS0P50 GRIB Primary Variable Keys into Plain-Language Variable Keys
+
+Required Arguments:
+
+1) path (String) - The path to the files.
+
+Optional Arguments: None
+
+**Returns**
+
+An xarray.array of GFS0P25 data in Plain Language Keys.    
     
     Post-Process Variable Keys By Model
     -----------------------------------

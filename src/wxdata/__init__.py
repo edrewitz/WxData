@@ -298,6 +298,9 @@ import wxdata.open_meteo_api.seasonal_forecasts.ecmwf_monthly as open_meteo_api_
 ### Climate Data ###
 import wxdata.open_meteo_api.climate.climate_data as open_meteo_api_climate_data
 
+### Air Quality Information ###
+import wxdata.open_meteo_api.air_quality.cams as open_meteo_api_air_quality
+
 ###################
 ### Air-Now API ###
 ###################

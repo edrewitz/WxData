@@ -1,5 +1,5 @@
 """
-This file hosts the ECMWF EC46 & SEAS5 Seasonal Forecasts at Weekly intervals from Open-Meteo API.
+This file hosts the ECMWF EC46 Seasonal Forecasts at Weekly intervals from Open-Meteo API.
 
 (C) Eric J. Drewitz 2025-2026
 """
@@ -192,7 +192,7 @@ def ec46_mean_anomaly(latitude,
     Returns
     -------
     
-    A Pandas.DataFrame of the ECMWF Seasonal Forecast (EC46 + SEAS5) time series forecast for a given point of latitude/longitude. 
+    A Pandas.DataFrame of the ECMWF EC46 Seasonal Forecast weekly time series for a given point of latitude/longitude. 
     """
     
     if days > 46:
@@ -226,9 +226,7 @@ def ec46_mean_anomaly(latitude,
                          field='weekly')
     
     df['time'] = _pd.to_datetime(df['time'])
-    
-    df = df.dropna()
-    
+        
     if to_csv == True:
         _df_to_csv(df,
                    path,

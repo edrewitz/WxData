@@ -288,10 +288,12 @@ import wxdata.open_meteo_api.weather_forecasts.current_weather as open_meteo_api
 
 ### Seasonal Forecasts (ECMWF EC46 & SEAS5) ###
 
-# - Daily Data
-# - Weekly Data
+# - Daily Data (EC46 & SEAS5)
+# - Weekly Data (EC46)
+# - Monthly Data (SEAS5)
 import wxdata.open_meteo_api.seasonal_forecasts.ecmwf_daily as ecmwf_seasonal_forecasts_daily
 import wxdata.open_meteo_api.seasonal_forecasts.ecmwf_weekly as ecmwf_seasonal_forecasts_weekly
+import wxdata.open_meteo_api.seasonal_forecasts.ecmwf_monthly as ecmwf_seasonal_forecasts_monthly
 
 ###################
 ### Air-Now API ###

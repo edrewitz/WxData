@@ -1,37 +1,42 @@
+---
+title: Real Time Mesoscale Analysis (RTMA) Post-Processing
+---
+[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
 # Real Time Mesoscale Analysis (RTMA) Post-Processing
 
-***def process_rtma_data(path,
+```python
+def process_rtma_data(path,
                      filename, 
-                     model):***
+                     model):
+```
 
-    This function post-processes RTMA Data and returns an xarray data array of the data.
+This function post-processes RTMA Data and returns an xarray data array of the data.
+
+This post-processing will convert all variable names into a plain language format. 
+
+
+Required Arguments: 
+
+1) path (String) - The path to the file that has the RTMA Data. 
+
+2) filename (String) - The name of the RTMA GRIB file.
+
+2) model (String) - Default='rtma'. The RTMA model being used:
     
-    This post-processing will convert all variable names into a plain language format. 
-    
-    
-    Required Arguments: 
-    
-    1) path (String) - The path to the file that has the RTMA Data. 
-    
-    2) filename (String) - The name of the RTMA GRIB file.
-    
-    2) model (String) - Default='rtma'. The RTMA model being used:
-    
-    RTMA Models
-    -----------
-    
-    CONUS = 'rtma'
-    Alaska = 'ak rtma'
-    Hawaii = 'hi rtma'
-    Puerto Rico = 'pr rtma'
-    Guam = 'gu rtma'
+        RTMA Models
+        -----------
         
-    Optional Arguments: None
+        CONUS = 'rtma'
+        Alaska = 'ak rtma'
+        Hawaii = 'hi rtma'
+        Puerto Rico = 'pr rtma'
+        Guam = 'gu rtma'
+            
+        Optional Arguments: None
     
-    Returns
-    -------
-    
-    An xarray data array of the RTMA Dataset with variable keys converted from the GRIB format to a Plain Language format. 
+**Returns**
+
+An xarray data array of the RTMA Dataset with variable keys converted from the GRIB format to a Plain Language format. 
     
     Variable Keys
     -------------

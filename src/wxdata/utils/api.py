@@ -49,7 +49,7 @@ def server_response(response,
         print(f"Error: Bad Request.\nThis likely means you had an invalid entry in your variables list.")
         _sys.exit(1)
     elif response.status_code == 429:
-        print(f"Error: Hourly Rate Limit Reached.\Please try again later...")
+        print(f"Error: Hourly or Daily Rate Limit Reached.\Please try again later...")
         _sys.exit(1)
     else:
         print(f"Error: {url} is down.\nPlease try again later.")

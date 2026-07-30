@@ -1,5 +1,5 @@
 """
-This file hosts air quality monitoring and forecast data.
+This file hosts air quality forecast data.
 
 All data comes from the CAMS Model.
 

@@ -1,31 +1,35 @@
-# Secondary GEFS Variables Post-Processing
+---
+title: Secondary GEFS Variables Post-Processing
+---
+[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
 
-***def secondary_gefs_post_processing(paths,
+# Secondary GEFS Variables Post-Processing
+```python
+def secondary_gefs_post_processing(paths,
                                    western_bound,
                                    eastern_bound,
                                    southern_bound,
-                                   northern_bound):***
+                                   northern_bound):
+```
+This function post-processes the GEFS (Secondary) Parameters for GEFS0P50 and GEFS0P25. 
 
-    This function post-processes the GEFS (Secondary) Parameters for GEFS0P50 and GEFS0P25. 
-    
-    Required Arguments: 
-    
-    1) 1) paths (List) - A list of file paths to the GEFS0P50 Secondary Parameters. 
-    
-    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+Required Arguments: 
 
-    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+1) 1) paths (List) - A list of file paths to the GEFS0P50 Secondary Parameters. 
 
-    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
-    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+
+4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+
+5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+
+**Returns**
     
-    Returns
-    -------
-    
-    An xarray data array of the post-processed GEFS data. 
-    GRIB Keys are converted to Plain Language Keys. 
-    
+An xarray data array of the post-processed GEFS data. 
+GRIB Keys are converted to Plain Language Keys. 
+
     New Variable Keys After Post-Processing (Decrypted GRIB Keys Into Plain Language)
     --------------------------------------------------------------------------------
     

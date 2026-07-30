@@ -69,7 +69,7 @@ def cams_forecast(latitude,
     
     Optional Arguments:
     
-    1) days (Integer) - Default=5. Amount of days to go out for the forecast. Maximum is 5.
+    1) days (Integer) - Default=5. Amount of days to go out for the forecast. Maximum is 7.
         
     2) variables (String List) - Default=['pm10',
                                             'pm2_5',

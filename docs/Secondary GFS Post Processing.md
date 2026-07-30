@@ -1,23 +1,35 @@
+---
+title: Secondary GFS Variables Post-Processing
+---
+[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
 # Secondary GFS Variables Post-Processing
-
-***def secondary_gfs_post_processing(path,
+```python
+def secondary_gfs_post_processing(path,
                                 western_bound,
                                 eastern_bound,
                                 southern_bound,
-                                northern_bound):***
+                                northern_bound):
+```
 
-    This function post-processes the GFS0P25 and GFS0P50 GRIB Primary Variable Keys into Plain-Language Variable Keys
-    
-    Required Arguments:
-    
-    1) path (String) - The path to the files.
-    
-    Optional Arguments: None
-    
-    Returns
-    -------
-    
-    An xarray.array of GFS0P25 data in Plain Language Keys.   
+This function post-processes the GFS0P25 and GFS0P50 GRIB Primary Variable Keys into Plain-Language Variable Keys
+
+Required Arguments:
+
+1) path (String) - The path to the files.
+
+2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+
+3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+
+4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+
+5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+
+Optional Arguments: None
+
+**Returns**
+
+An xarray.array of GFS0P25 data in Plain Language Keys.   
     
     Post-processed variable keys
     ----------------------------

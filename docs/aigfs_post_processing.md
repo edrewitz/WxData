@@ -1,31 +1,34 @@
+---
+title: AIGFS Post-Processing
+---
+[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
 # AIGFS Post-Processing
+```python
+def aigfs_post_processing(path,
+                          western_bound,
+                          eastern_bound,
+                          northern_bound,
+                          southern_bound):
+```
+This function post-processes the AIGFS Data into a more user-friendly format.
 
-***aigfs_post_processing(path,
-                            western_bound,
-                            eastern_bound,
-                            northern_bound,
-                            southern_bound):***
+Required Arguments:
 
-    This function post-processes the AIGFS Data into a more user-friendly format.
-    
-    Required Arguments:
-    
-    1) path (String) - The path to the AIGFS Data files.
-    
-    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+1) path (String) - The path to the AIGFS Data files.
 
-    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
-    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
 
-    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
-    
-    Optional Arguments: None
-    
-    Returns
-    -------
-    
-    An xarray.array in a plain language variable key format.     
+4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+
+5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+
+Optional Arguments: None
+
+**Returns**
+
+An xarray.array in a plain language variable key format.     
     
     Pressure-Level Plain Language Variable Keys
     -------------------------------------------

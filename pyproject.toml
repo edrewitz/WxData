@@ -43,5 +43,5 @@ build-backend = "setuptools.build_meta"
 where = ["src"]  # Look for packages in the src directory
 
 [project.urls]
-Documentation = "https://github.com/edrewitz/wxdata/blob/main/Documentation/Landing%20Page.md"
+Documentation = "https://github.com/edrewitz/WxData/wiki"
 Repository = "https://github.com/edrewitz/wxdata/tree/main"

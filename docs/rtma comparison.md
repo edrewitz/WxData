@@ -10,16 +10,13 @@ def rtma_comparison(model='rtma',
          proxies=None,
          process_data=True,
          clear_recycle_bin=False,
-         western_bound=None,
-         eastern_bound=None,
-         southern_bound=None,
-         northern_bound=None,
          clear_data=False,
          convert_temperature=True,
          convert_to='fahrenheit',
          custom_directory=None,
          chunk_size=8192,
-         notifications='off'):
+         notifications='off',
+         source='noaa'):
 ```
 This function downloads the latest RTMA Dataset and the RTMA dataset from 24 hours prior to the current RTMA dataset and returns it as two xarray data arrays. 
 

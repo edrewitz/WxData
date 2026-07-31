@@ -1,19 +1,22 @@
+---
+title: Climate Forecast System (CFS) Pressure Post-Processing
+---
+[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
 # Climate Forecast System (CFS) Pressure Post-Processing
+```python
+def cfs_pressure_post_processing(path):
+```
+This function post-processes all GRIB2 Keys into a Plain Language Format for CFS Pressure Data.
 
-***def cfs_pressure_post_processing(path):***
+Required Arguments:
 
-    This function post-processes all GRIB2 Keys into a Plain Language Format for CFS Pressure Data.
-    
-    Required Arguments:
-    
-    1) path (String) - The path to the files.
-    
-    Optional Arguments: None
-    
-    Returns
-    -------
-    
-    An xarray.array of CFS Pressure Data with variable keys decoded into plain-language.
+1) path (String) - The path to the files.
+
+Optional Arguments: None
+
+**Returns**
+
+An xarray.array of CFS Pressure Data with variable keys decoded into plain-language.
     
     CFS Pressure Data Variables In Plain-Language Format
     ----------------------------------------------------

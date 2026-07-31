@@ -20,6 +20,8 @@ def get_multi_raws_station_fuels_observations(station_ids,
 This function retrieves the observed fuels data for a user-specified list of RAWS stations for a 
 user-specified period of time. 
 
+`{folder_modified}` = Current Working Directory
+
 Required Arguments:
 
 1) station_ids (Integer List) - An integer list of all the RAWS IDs for each RAWS station the user wants in the dataset.

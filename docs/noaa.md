@@ -1,55 +1,60 @@
+---
+title: NOAA Get Storm Prediction Center Outlooks And National Weather Service Forecasts (NDFD Grids)
+---
+[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
 # NOAA: Get Storm Prediction Center Outlooks And National Weather Service Forecasts (NDFD Grids)
-
-***def get_ndfd_grids(parameter, 
+```python
+def get_ndfd_grids(parameter, 
                     state,
                     proxies=None,
                     chunk_size=8192,
                     notifications='on',
                     clear_recycle_bin=False,
                     include_extended_grids=True,
-                    source='noaa'):***
+                    source='noaa'):
+```
 
-    This function retrieves the latest NWS Forecast (NDFD) files from the NWS FTP Server. 
+This function retrieves the latest NWS Forecast (NDFD) files from the NWS FTP Server. 
 
-    Data Source: NOAA/NWS/NDFD (tgftp.nws.noaa.gov)
+Data Source: NOAA/NWS/NDFD (tgftp.nws.noaa.gov)
 
-    Required Arguments: 
+Required Arguments: 
 
-    1) parameter (String) - The parameter that the user wishes to download. 
-    
-    2) state (String) - The two letter state identifier (US States).
-    
-    Optional Arguments:
-    
-    1) proxies (dict or None) - Default=None. If the user is using a proxy server, the user must change the following:
+1) parameter (String) - The parameter that the user wishes to download. 
 
-    proxies=None ---> proxies={
-                               'http':'http://your-proxy-address:port',
-                               'https':'http://your-proxy-address:port'
-                               }
+2) state (String) - The two letter state identifier (US States).
+
+Optional Arguments:
+
+1) proxies (dict or None) - Default=None. If the user is using a proxy server, the user must change the following:
+```python
+proxies=None ---> proxies={
+                           'http':'http://your-proxy-address:port',
+                           'https':'http://your-proxy-address:port'
+                           }
+```
+2) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+
+3) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+
+4) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+    the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+    This setting is to help preserve memory on the machine. 
     
-    2) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+5) include_extended_grids (Boolean) - Default=True. Most NOAA/NWS products have extended grids. However, SPC products do not have extended grids.
+    When downloading SPC plots or if the user does not wish to include the extended grids, set include_extended_grids=False.
     
-    3) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
-    
-    4) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
-        
-    5) include_extended_grids (Boolean) - Default=True. Most NOAA/NWS products have extended grids. However, SPC products do not have extended grids.
-        When downloading SPC plots or if the user does not wish to include the extended grids, set include_extended_grids=False.
-        
-    6) source (String) - Default='noaa'. The data server the client will try first.
-    
+6) source (String) - Default='noaa'. The data server the client will try first.
+
         Server List
         -----------
         
         1) NOAA/NWS/FTP - source='noaa'
         2) Amazon AWS - source='aws'
-        
-    **If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
-        establish a connection there.**
-        
+    
+***If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+    establish a connection there.***
+    
     Parameters
     ----------
     
@@ -92,12 +97,11 @@
     'warnings'
     'weather' 
 
-    Returns
-    -------
-    
-    An xarray.data array of the latest NWS/SPC Forecast data.
-    
-    Variable names are also changed from their origional key value into plain language.
+**Returns**
+
+An xarray.data array of the latest NWS/SPC Forecast data.
+
+Variable names are also changed from their origional key value into plain language.
     
         Plain Language Variable Key List
         --------------------------------

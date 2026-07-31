@@ -84,8 +84,8 @@ Set convert_to='fahrenheit' for Fahrenheit.
          1) NCEP/NOMADS - source='noaa'
          2) Amazon AWS - source='aws'
 
-**If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
-establish a connection there.**
+***If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+establish a connection there.***
 
 **Returns**
 

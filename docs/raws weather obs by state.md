@@ -15,6 +15,8 @@ def get_current_all_raws_station_weather_observations(state='all',
 
 This function retrieves all current weather observations for all RAWS Stations of a given state.
 
+`{folder_modified}` = Current Working Directory
+
 Required Arguments: None
 
 Optional Arguments:

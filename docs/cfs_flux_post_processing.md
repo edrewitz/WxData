@@ -1,19 +1,22 @@
+---
+title: Climate Forecast System (CFS) Flux Post-Processing
+---
+[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
 # Climate Forecast System (CFS) Flux Post-Processing
+```python
+def cfs_flux_post_processing(path):
+```
+This function post-processes all GRIB2 Keys into a Plain Language Format for CFS Flux Data.
 
-***def cfs_flux_post_processing(path):***
+Required Arguments:
 
-    This function post-processes all GRIB2 Keys into a Plain Language Format for CFS Flux Data.
-    
-    Required Arguments:
-    
-    1) path (String) - The path to the files.
-    
-    Optional Arguments: None
-    
-    Returns
-    -------
-    
-    An xarray.array of CFS Flux Data with variable keys decoded into plain-language.
+1) path (String) - The path to the files.
+
+Optional Arguments: None
+
+**Returns**
+
+An xarray.array of CFS Flux Data with variable keys decoded into plain-language.
     
     CFS Flux Data Variables In Plain-Language Format
     ------------------------------------------------

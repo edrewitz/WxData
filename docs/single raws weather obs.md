@@ -14,6 +14,8 @@
     This function retrieves the observed weather data for a user-specified single RAWS station for a 
     user-specified period of time. 
 
+    `{folder_modified}` = Current Working Directory
+
     Required Arguments:
 
     1) station_id (Integer) - The RAWS ID of the station. 

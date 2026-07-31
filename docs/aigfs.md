@@ -58,12 +58,12 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
 5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
 
 6) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
-
-       proxies=None ---> proxies={
-                               'http':'http://your-proxy-address:port',
-                               'https':'http://your-proxy-address:port'
-                               }
-    
+```python
+ proxies=None ---> proxies={
+                         'http':'http://your-proxy-address:port',
+                         'https':'http://your-proxy-address:port'
+                         }
+```
 7) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
    data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
    

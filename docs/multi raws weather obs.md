@@ -18,6 +18,8 @@ def get_multi_raws_station_weather_observations(station_ids,
 This function retrieves the observed weather data for a user-specified list of RAWS stations for a 
 user-specified period of time. 
 
+`{folder_modified}` = Current Working Directory
+
 Required Arguments:
 
 1) station_ids (Integer List) - The list of RAWS station IDs. 

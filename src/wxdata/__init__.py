@@ -271,7 +271,7 @@ import wxdata.client.client as client
 
 # - NOAA/NCEP Models
 # - ECMWF Models
-# - DWD Models
+# - Deutscher Wetterdienst (DWD) Models
 # - Meteo-France Models
 # - CMC Models
 # - Japan Meteorological Agency (JMA) Models
@@ -291,9 +291,25 @@ import wxdata.open_meteo_api.weather_forecasts.current_weather as open_meteo_api
 # - Daily Data (EC46 & SEAS5)
 # - Weekly Data (EC46)
 # - Monthly Data (SEAS5)
-import wxdata.open_meteo_api.seasonal_forecasts.ecmwf_daily as ecmwf_seasonal_forecasts_daily
-import wxdata.open_meteo_api.seasonal_forecasts.ecmwf_weekly as ecmwf_seasonal_forecasts_weekly
-import wxdata.open_meteo_api.seasonal_forecasts.ecmwf_monthly as ecmwf_seasonal_forecasts_monthly
+import wxdata.open_meteo_api.seasonal_forecasts.ecmwf_daily as open_meteo_api_ecmwf_seasonal_forecasts_daily
+import wxdata.open_meteo_api.seasonal_forecasts.ecmwf_weekly as open_meteo_api_ecmwf_seasonal_forecasts_weekly
+import wxdata.open_meteo_api.seasonal_forecasts.ecmwf_monthly as open_meteo_api_ecmwf_seasonal_forecasts_monthly
+
+### Climate Data ###
+import wxdata.open_meteo_api.climate.climate_data as open_meteo_api_climate_data
+
+### Air Quality Information ###
+import wxdata.open_meteo_api.air_quality.cams as open_meteo_api_air_quality
+
+### Marine Forecasts ###
+# - Meteo-France
+# - Deutscher Wetterdienst (DWD)
+# - ECMWF
+# - NOAA
+import wxdata.open_meteo_api.marine_forecasts.meteo_france as open_meteo_api_meteo_france_marine
+import wxdata.open_meteo_api.marine_forecasts.dwd as open_meteo_api_dwd_marine
+import wxdata.open_meteo_api.marine_forecasts.ecmwf as open_meteo_api_ecmwf_marine
+import wxdata.open_meteo_api.marine_forecasts.noaa as open_meteo_api_noaa_marine
 
 ###################
 ### Air-Now API ###

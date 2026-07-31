@@ -1,5 +1,5 @@
 """
-This file hosts the interface for the Open-Meteo API for DWD data.
+This file hosts the interface for the Open-Meteo API for Deutscher Wetterdienst (DWD) data.
 
 (C) Eric J. Drewitz 2025-2026
 """

@@ -6,3 +6,4 @@ import wxdata.open_meteo_api.weather_forecasts.cmc as open_meteo_api_cmc
 import wxdata.open_meteo_api.weather_forecasts.jma as open_meteo_api_jma
 import wxdata.open_meteo_api.weather_forecasts.ukmo as open_meteo_api_ukmo
 import wxdata.open_meteo_api.weather_forecasts.current_weather as open_meteo_api_current_weather
+import wxdata.open_meteo_api.weather_forecasts.google as open_meteo_api_google

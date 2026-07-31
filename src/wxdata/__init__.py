@@ -277,6 +277,7 @@ import wxdata.client.client as client
 # - Japan Meteorological Agency (JMA) Models
 # - UK Met Office (UKMO)
 # - Current Weather (Model Mosaic)
+# - Google (Weather Next 2 Ensemble)
 import wxdata.open_meteo_api.weather_forecasts.noaa as open_meteo_api_noaa
 import wxdata.open_meteo_api.weather_forecasts.ecmwf as open_meteo_api_ecmwf
 import wxdata.open_meteo_api.weather_forecasts.dwd as open_meteo_api_dwd
@@ -285,6 +286,7 @@ import wxdata.open_meteo_api.weather_forecasts.cmc as open_meteo_api_cmc
 import wxdata.open_meteo_api.weather_forecasts.jma as open_meteo_api_jma
 import wxdata.open_meteo_api.weather_forecasts.ukmo as open_meteo_api_ukmo
 import wxdata.open_meteo_api.weather_forecasts.current_weather as open_meteo_api_current_weather
+import wxdata.open_meteo_api.weather_forecasts.google as open_meteo_api_google
 
 ### Seasonal Forecasts (ECMWF EC46 & SEAS5) ###
 

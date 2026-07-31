@@ -1,20 +1,24 @@
+---
+title: Shift Longitude
+---
+[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
 # Shift Longitude
+```python
+def shift_longitude(ds, 
+                    lon_name='longitude'):
+```
 
-***def shift_longitude(ds, 
-                    lon_name='longitude'):***
+Shifts longitude values to ensure continuity across the Prime Meridian.
 
+Required Arguments:
 
-    Shifts longitude values to ensure continuity across the Prime Meridian.
+1) ds (`xarray.data_array`) - The dataset of the model data.
 
-    Required Arguments:
+Optional Arguments:
 
-    1) ds (xarray.dataarray) - The dataset of the model data.
+1) lon_name (String) - Default = longitude. The abbreviation for the longitude key.
 
-    Optional Arguments:
+Returns
+-------
 
-    1) lon_name (String) - Default = longitude. The abbreviation for the longitude key.
-
-    Returns
-    -------
-
-    An xarray.dataarray with longitude coordinates ranging from -180 to 180
+An `xarray.data_array` with longitude coordinates ranging from -180 to 180

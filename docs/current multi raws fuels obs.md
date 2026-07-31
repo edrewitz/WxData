@@ -22,7 +22,8 @@ Required Arguments:
 Optional Arguments:
 
 1) fuel_model (String) - Default = 'Y'. The fuel model being used. 
-        Fuel Models List:
+
+       Fuel Models List:
     
         Y - Timber
         X - Brush
@@ -30,13 +31,13 @@ Optional Arguments:
         V - Grass
         Z - Slash
     
-2) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
+3) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
     with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
     
-3) path (String) - Default=f'{folder_modified}/FEMS Data/Current Multi Station/Observations/Fuels'. 
+4) path (String) - Default=f'{folder_modified}/FEMS Data/Current Multi Station/Observations/Fuels'. 
     The directory the data will be saved to.
     
-4) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+5) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
   ```python
    proxies=None ---> proxies={
                            'http':'http://your-proxy-address:port',

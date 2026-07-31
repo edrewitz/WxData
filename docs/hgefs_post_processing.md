@@ -1,32 +1,36 @@
-# Hybrid Global Ensemble Forecast System (HGEFS) Post-Processing
+---
+title: Hybrid Global Ensemble Forecast System (HGEFS) Post-Processing
+---
+[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
 
-***def hgefs_mean_spread_post_processing(path,
+# Hybrid Global Ensemble Forecast System (HGEFS) Post-Processing
+```python
+def hgefs_mean_spread_post_processing(path,
                                 western_bound,
                                 eastern_bound,
                                 northern_bound,
-                                southern_bound):***
+                                southern_bound):
 
+```
+This function post-processes the HGEFS Data into a more user-friendly format.
 
-    This function post-processes the HGEFS Data into a more user-friendly format.
-    
-    Required Arguments:
-    
-    1) path (String) - The path to the HGEFS Data files.
-    
-    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+Required Arguments:
 
-    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+1) path (String) - The path to the HGEFS Data files.
 
-    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
-    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
-    
-    Optional Arguments: None
-    
-    Returns
-    -------
-    
-    An xarray.array in a plain language variable key format.     
+3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+
+4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+
+5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+
+Optional Arguments: None
+
+**Returns**
+
+An xarray.array in a plain language variable key format.     
     
     Pressure-Level Plain Language Variable Keys
     -------------------------------------------

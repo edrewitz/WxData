@@ -1,5 +1,3 @@
-# WxData
-
 <img src="https://github.com/edrewitz/WxData/blob/main/icons/weather%20icon.jpg?raw=true" width="200" alt="Alt text" /> <img src="https://github.com/edrewitz/WxData/blob/1be590e9a16033974a592d8cf99f3cd521f95e0b/icons/python%20logo.png?raw=true" width="200" alt="Alt text" />
 
 [![Conda Recipe](https://img.shields.io/badge/recipe-wxdata-green.svg)](https://anaconda.org/conda-forge/wxdata) [![Conda Version](https://img.shields.io/conda/vn/conda-forge/wxdata.svg)](https://anaconda.org/conda-forge/wxdata) [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/wxdata.svg)](https://anaconda.org/conda-forge/wxdata) ![PyPI](https://img.shields.io/pypi/v/wxdata?label=pypi%20wxdata) [![Anaconda-Server Badge](https://anaconda.org/conda-forge/wxdata/badges/license.svg)](https://anaconda.org/conda-forge/wxdata) [![Anaconda-Server Badge](https://anaconda.org/conda-forge/wxdata/badges/latest_release_date.svg)](https://anaconda.org/conda-forge/wxdata) 
@@ -170,7 +168,7 @@ proxies={
         'https':'http://your-proxy-address:port'
         }
 
-sounding_data = get_observed_sounding_data('nkx', proxies=proxies)
+data = sounding_data = get_observed_sounding_data('nkx', proxies=proxies)
 ```
 
 Example: We want to download the ECMWF IFS Data:
@@ -184,7 +182,7 @@ from wxdata import get_observed_sounding_data
 
 proxies="https://your-proxy-address:port"
 
-ds = ecmwf_ifs(proxies=proxies)
+data = ecmwf_ifs(proxies=proxies)
 ```
 
 <img src="https://github.com/edrewitz/WxData/blob/main/diagrams/proxy.png?raw=true" width="500" alt="Alt text" /> 
@@ -226,7 +224,7 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
     
 ## WxData Tutorials
 
-*Regular Users*
+### Regular Users
 1) [Downloading METAR Data](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/metars.ipynb)
 2) [Downloading Observed Sounding Data](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/soundings.ipynb)
 3) [Downloading the first 72 hours of the ECMWF IFS and ECMWF AIFS](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/ecmwf.ipynb)
@@ -264,7 +262,7 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 
 22) [Download all 50 Ensemble Members of the ECMWF IFS Ensemble for 2-Meter Temperature Using the Open-Meteo API and Make an Ensemble Spaghetti Plot](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/ecmwf_ifs_ens_spaghetti.ipynb)
 
-*Advanced Users*
+### Advanced Users
 
 1) [Using the `client` module to download the latest HadCRUT5 Analysis netCDF file and open this dataset in xarray](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/hadcrut5.ipynb)
 
@@ -276,7 +274,7 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 
 ## WxData Documentation
 
-***Documentation Sections***
+### Documentation Sections
 
 1. [End-To-End Data Clients](https://github.com/edrewitz/WxData?tab=readme-ov-file#end-to-end-data-clients)
 2. [Raw Data Clients](https://github.com/edrewitz/WxData?tab=readme-ov-file#raw-data-clients)
@@ -286,53 +284,53 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 6. [Automated Python Workflow Tools](https://github.com/edrewitz/WxData?tab=readme-ov-file#automated-python-workflow-tools)
 7. [Open-Meteo API](https://github.com/edrewitz/WxData/blob/main/README.md#open-meteo-api)
 
-### End-To-End Data Clients
+#### End-To-End Data Clients
 
-***Global Forecast System (GFS)***
+##### ***Global Forecast System (GFS)***
 1. [GFS0P25](https://edrewitz.github.io/WxData/GFS0P25)
 2. [GFS0P25 SECONDARY PARAMETERS](https://github.com/edrewitz/WxData/blob/main/Documentation/GFS0P25%20Secondary%20Parameters.md)
 3. [GFS0P50](https://github.com/edrewitz/WxData/blob/main/Documentation/GEFS0P50.md)
 
-***AI Global Forecast System (AIGFS)***
+##### ***AI Global Forecast System (AIGFS)***
 1. [AIGFS](https://github.com/edrewitz/WxData/edit/main/docs/aigfs.md)
 
-***Climate Forecast System (CFS)***
+##### ***Climate Forecast System (CFS)***
 1. [CFS Pressure](https://github.com/edrewitz/WxData/blob/main/Documentation/cfs_pressure.md#climate-forecast-system-cfs-pressure)
 2. [CFS Flux](https://github.com/edrewitz/WxData/blob/main/Documentation/cfs_flux.md#climate-forecast-system-cfs-flux)
 
-***Hybrid Global Ensemble Forecast System (HGEFS)***
+##### ***Hybrid Global Ensemble Forecast System (HGEFS)***
 1. [HGEFS](https://github.com/edrewitz/WxData/blob/main/Documentation/hgefs.md#hybrid-global-ensemble-forecast-system-hgefs)
 
-***Global Ensemble Forecast System (GEFS)***
+##### ***Global Ensemble Forecast System (GEFS)***
 1. [GEFS0P50](https://github.com/edrewitz/wxdata/blob/main/Documentation/GEFS0P50.md#global-ensemble-forecast-system-050-x-050-degree-gefs0p50)
 2. [GEFS0P50 SECONDARY PARAMETERS](https://github.com/edrewitz/wxdata/blob/main/Documentation/GEFS0P50%20Secondary%20Parameters.md#global-ensemble-forecast-system-050-x-050-degree-secondary-parameters-gefs0p50-secondary-parameters)
 3. [GEFS0P25](https://github.com/edrewitz/wxdata/blob/main/Documentation/GEFS0P25.md#global-ensemble-forecast-system-025-x-025-degree-gefs0p25)
 
-***AI Global Ensemble Forecast System (AIGEFS)***
+##### ***AI Global Ensemble Forecast System (AIGEFS)***
 1. [AIGEFS Members (Pressure Parameters)](https://github.com/edrewitz/WxData/blob/main/Documentation/aigefs_pressure_members.md)
 2. [AIGEFS Members (Surface Parameters)](https://github.com/edrewitz/WxData/blob/main/Documentation/aigefs_surface_members.md)
 3. [AIGEFS Ensemble Mean & Ensemble Spread](https://github.com/edrewitz/WxData/blob/main/Documentation/aigefs_single.md)
 
-***ECMWF Open Data***
+##### ***ECMWF Open Data***
 1. [ECMWF IFS](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF_IFS.md)
-2. [ECMWF IFS Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20IFS%20Ensemble.md#ecmwf-ifs-ensemble)
+2. [ECMWF IFS Ensemble](https://github.com/edrewitz/WxData/wiki/ECMWF-AIFS-Ensemble)
 3. [ECMWF AIFS](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF_AIFS.md)
 4. [ECMWF AIFS Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20AIFS%20Ensemble.md#ecmwf-aifs-ensemble)
 5. [ECMWF IFS Wave](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF_IFS_Wave.md)
 6. [ECMWF IFS Wave Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20IFS%20Wave%20Ensemble.md#ecmwf-ifs-wave-ensemble)
    
-***Real-Time Mesoscale Analysis (RTMA)***
+##### ***Real-Time Mesoscale Analysis (RTMA)***
 1. [RTMA](https://github.com/edrewitz/wxdata/blob/main/Documentation/rtma.md#real-time-mesoscale-analysis-rtma)
 2. [RTMA Comparison](https://github.com/edrewitz/WxData/blob/main/Documentation/rtma%20comparison.md#real-time-mesoscale-analysis-rtma-comparison)
 
-***NOAA Storm Prediction Center Outlooks/Climate Prediction Center Outlooks/National Weather Service Forecasts***
+##### ***NOAA Storm Prediction Center Outlooks/Climate Prediction Center Outlooks/National Weather Service Forecasts***
 1. [Get NDFD Grids](https://github.com/edrewitz/wxdata/blob/main/Documentation/noaa.md#noaa-get-storm-prediction-center-outlooks-and-national-weather-service-forecasts-ndfd-grids)
 2. [Climate Prediction Center Outlooks](https://github.com/edrewitz/WxData/blob/main/Documentation/cpc_outlooks.md#noaanws-climate-prediction-center-outlooks)
 
-***METAR Observations***
+##### ***METAR Observations***
 1. [METAR Observations](https://github.com/edrewitz/wxdata/blob/main/Documentation/metars.md#metar-observations)
 
-***FEMS RAWS Network***
+##### ***FEMS RAWS Network***
 1. [Get Single Station Weather Observations](https://github.com/edrewitz/WxData/blob/main/Documentation/single%20raws%20weather%20obs.md#fems-single-raws-station-weather-observations)
 2. [Get Single Station Fuels Observations](https://github.com/edrewitz/WxData/blob/main/Documentation/single%20raws%20fuels%20obs.md#fems-single-raws-station-fuels-observations)
 3. [Get Multi Station Weather Observations](https://github.com/edrewitz/WxData/blob/main/Documentation/multi%20raws%20weather%20obs.md#fems-multi-raws-station-weather-observations)
@@ -348,108 +346,108 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 13. [Get Single Station Meta-Data](https://github.com/edrewitz/WxData/blob/main/Documentation/raws%20single%20station%20meta%20data.md#fems-single-raws-station-meta-data)
 14. [Get Multi Station Meta-Data](https://github.com/edrewitz/WxData/blob/main/Documentation/raws%20multi%20station%20meta%20data.md#fems-multi-raws-station-meta-data)
 
-***Observed Atmospheric Soundings***
+##### ***Observed Atmospheric Soundings***
 1. [University Of Wyoming Soundings](https://github.com/edrewitz/wxdata/blob/main/Documentation/wyoming_soundings.md)
 
-***NEXRAD II Radar Data***
+##### ***NEXRAD II Radar Data***
 1. [Single Site](https://github.com/edrewitz/WxData/blob/main/Documentation/nexrad2_single.md#nexrad-ii-single-radar)
 2. [Multi-Site](https://github.com/edrewitz/WxData/blob/main/Documentation/nexrad2_multi.md#nexrad-ii-multi-radar)
 
 -----------------------------
 
-### Post-Processors
+#### Post-Processors
 
-***GFS Post-Processing***
+##### ***GFS Post-Processing***
 1. [Primary GFS Post-Processing](https://github.com/edrewitz/WxData/blob/main/Documentation/Primary%20GFS%20Post%20Processing.md)
 2. [Secondary GFS Post-Processing](https://github.com/edrewitz/WxData/blob/main/Documentation/Secondary%20GFS%20Post%20Processing.md)
 
-***AIGFS Post-Processing***
+##### ***AIGFS Post-Processing***
 1. [AIGFS Post-Processing](https://github.com/edrewitz/WxData/blob/main/Documentation/aigfs_post_processing.md)
 
-***CFS Post-Processing***
+##### ***CFS Post-Processing***
 1. [CFS Pressure Post-Processing](https://github.com/edrewitz/WxData/blob/main/Documentation/cfs_pressure_post_processing.md#climate-forecast-system-cfs-pressure-post-processing)
 2. [CFS Flux Post-Processing](https://github.com/edrewitz/WxData/blob/main/Documentation/cfs_flux_post_processing.md#climate-forecast-system-cfs-flux-post-processing)
 
-***GEFS Post-Processing***
+##### ***GEFS Post-Processing***
 1. [Primary GEFS Post-Processing](https://github.com/edrewitz/WxData/blob/main/Documentation/Primary%20GEFS%20Post-Processing.md)
 2. [Secondary GEFS Post-Processing](https://github.com/edrewitz/WxData/blob/main/Documentation/Secondary%20GEFS%20Post%20Processing.md)
 
-***AIGEFS Post-Processing***
+##### ***AIGEFS Post-Processing***
 1. [AIGEFS Members Post-Processing](https://github.com/edrewitz/WxData/blob/main/Documentation/aigefs_members_post_processing.md)
 2. [AIGEFS Single Post-Processing](https://github.com/edrewitz/WxData/blob/main/Documentation/aigefs_single_post_processing.md)
 
-***HGEFS Post-Processing***
+##### ***HGEFS Post-Processing***
 1. [HGEFS Post-Processing](https://github.com/edrewitz/WxData/blob/main/Documentation/hgefs_post_processing.md#hybrid-global-ensemble-forecast-system-hgefs-post-processing)
 
-***ECMWF Post-Processing***
+##### ***ECMWF Post-Processing***
 1. [ECMWF IFS and IFS Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20IFS%20Post%20Processing.md#ecmwf-ifs-and-ifs-ensemble-post-processing)
 2. [ECMWF AIFS and AIFS Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20AIFS%20Post%20Processing.md#ecmwf-aifs-and-aifs-ensemble-post-processing)
 3. [ECMWF IFS Wave and IFS Wave Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/ECMWF%20IFS%20Wave%20Post%20Processing.md#ecmwf-ifs-wave-and-ifs-wave-ensemble-post-processing)
 
-***Real-Time Mesoscale Analysis Post-Processing***
+##### ***Real-Time Mesoscale Analysis Post-Processing***
 1. [RTMA](https://github.com/edrewitz/WxData/blob/main/Documentation/RTMA%20Post%20Processing.md)
 
 -----------------------------------------------
 
-### Raw Data Clients
+#### Raw Data Clients
 
-***xmACIS2 Climate Data***
+##### ***xmACIS2 Climate Data***
 1. [xmACIS2 Client](https://github.com/edrewitz/WxData/blob/main/Documentation/xmacis2_client.md)
 
-***Custom Gridded Data***
+##### ***Custom Gridded Data***
 1. [Gridded Data Client](https://github.com/edrewitz/WxData/blob/main/Documentation/get_gridded_data.md#get-gridded-data)
 
-***Custom CSV Data***
+##### ***Custom CSV Data***
 1. [CSV Data Client](https://github.com/edrewitz/WxData/blob/main/Documentation/get_csv_data.md#get-csv-data)
 
-***Custom Excel Data***
+##### ***Custom Excel Data***
 1. [Excel Data Client](https://github.com/edrewitz/WxData/blob/main/Documentation/get_excel_data.md#get-excel-data)
 
-***AWS Open Data***
+##### ***AWS Open Data***
 1. [AWS Open Data](https://github.com/edrewitz/WxData/blob/main/Documentation/get_open_aws_data.md#get-aws-open-data)
 
-***Byte-Range Requests***
+##### ***Byte-Range Requests***
 1. [Byte-Range Requests](https://github.com/edrewitz/WxData/blob/main/Documentation/bytes_range_request.md#bytes-range-request)
 
 ---------------------------------------------------------------
 
-### Data Querying Tools
+#### Data Querying Tools
 
-***Pixel Query***
+##### ***Pixel Query***
 1. [pixel_query](https://github.com/edrewitz/WxData/blob/main/Documentation/pixel_query.md)
 
-***Line Query***
+##### ***Line Query***
 1. [line_query](https://github.com/edrewitz/WxData/blob/main/Documentation/line_query.md)
 
 --------------------------------------------------
 
-### Data Transformation & Gap Filling Tools
+#### Data Transformation & Gap Filling Tools
 
-***Cyclic Points For Hemispheric Plots***
+##### ***Cyclic Points For Hemispheric Plots***
 1. [Cyclic Points](https://github.com/edrewitz/wxdata/blob/main/Documentation/cyclic_point.md#using-wxdata-to-add-cyclic-points-for-hemispheric-plots)
 
-***Shifting Longitude From 0 to 360 --> -180 to 180***
+##### ***Shifting Longitude From 0 to 360 --> -180 to 180***
 1. [shift_longitude](https://github.com/edrewitz/WxData/blob/main/Documentation/shift_longitude.md)
 
-***Linear Anti-Aliasing Between Two Points***
+##### ***Linear Anti-Aliasing Between Two Points***
 1. [linear_anti_aliasing](https://github.com/edrewitz/WxData/blob/main/Documentation/linear_anti_aliasing.md#linear-anti-aliasing-between-points)
 
 ------------------------------------------
 
-### Automated Python Workflow Tools
+#### Automated Python Workflow Tools
 
-***Running External Python Scripts In Your Workflow***
+##### ***Running External Python Scripts In Your Workflow***
 
 1 [run_external_scripts](https://github.com/edrewitz/WxData/blob/main/Documentation/run_external_scripts.md)
 
 ---------------------------------------
 
-### Open-Meteo API
+#### Open-Meteo API
 
-***Current Weather***
+##### ***Current Weather***
 1. [Current Weather](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20current%20weather.md#open-meteo-api-current-weather)
 
-***National Oceanic and Atmospheric Administrationn (NOAA)***
+##### ***National Oceanic and Atmospheric Administrationn (NOAA)***
 1. [GFS](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20noaa%20gfs.md#open-meteo-api-gfs)
 2. [GEFS](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20noaa%20gefs.md#open-meteo-api-gefs)
 3. [AIGFS](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20noaa%20aigfs.md#open-meteo-api-aigfs)
@@ -457,28 +455,28 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 5. [HGEFS](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20noaa%20hgefs.md#open-meteo-api-hgefs)
 6. [NBM](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20noaa%20nbm.md#open-meteo-api-nbm)
 
-***European Centre for Medium-Range Weather Forecasts (ECMWF)***
+##### ***European Centre for Medium-Range Weather Forecasts (ECMWF)***
 1. [IFS](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20ecmwf%20ifs.md#open-meteo-api-ecmwf-ifs)
 2. [AIFS](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20ecmwf%20aifs.md#open-meteo-api-ecmwf-aifs)
 3. [IFS HRES](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20ecmwf%20ifs%20hres.md#open-meteo-api-ecmwf-ifs-hres)
 4. [IFS Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20ecmwf%20ifs%20ens.md#open-meteo-api-ecmwf-ifs-ensemble)
 5. [AIFS Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20ecmwf%20aifs%20ens.md#open-meteo-api-ecmwf-aifs-ensemble)
 
-***Canadian Meteorological Centre (CMC)***
+##### ***Canadian Meteorological Centre (CMC)***
 1. [GEM](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20cmc%20gem.md#open-meteo-api-cmc-gem)
 2. [GEM Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20cmc%20gem%20ens.md#open-meteo-api-gem-ensemble)
 
-***Deutscher Wetterdienst (DWD)***
+##### ***Deutscher Wetterdienst (DWD)***
 1. [ICON](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20dwd%20icon.md#open-meteo-api-dwd-icon)
 2. [ICON EPS](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20dwd%20icon%20eps.md#open-meteo-api-dwd-icon-eps)
 
-***Meteo-France***
+##### ***Meteo-France***
 1. [ARPEGE](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20meteo%20france%20arpege.md#open-meteo-api-meteo-france-arpege)
 
-***Japan Meteorological Agency (JMA)***
+##### ***Japan Meteorological Agency (JMA)***
 1. [JMA](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20jma%20jma.md#open-meteo-api-jma)
 
-***UK Met Office (UKMO)***
+##### ***UK Met Office (UKMO)***
 1. [UKMO Global Ensemble](https://github.com/edrewitz/WxData/blob/main/Documentation/open%20meteo%20api%20ukmo%20global%20ens.md#open-meteo-api-ukmo-global-ensemble)
 
 ---------------------------------------
@@ -831,3 +829,6 @@ import wxdata.open_meteo_api.weather_forecasts.current_weather as open_meteo_api
 10) [Open-Meteo API](https://open-meteo.com/)
 
 11) [Air Now API](https://docs.airnowapi.org/webservices)
+
+
+

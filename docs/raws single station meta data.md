@@ -13,6 +13,8 @@ def get_single_raws_station_meta_data(station_id,
 ```
 This function returns the meta-data for a specific user-defined RAWS station.
 
+`{folder_modified}` = Current Working Directory
+
 Required Arguments:
 
 1) station_id (Integer) - The RAWS ID of the station. 

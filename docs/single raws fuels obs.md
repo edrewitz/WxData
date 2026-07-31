@@ -17,7 +17,9 @@ def get_single_raws_station_fuels_observations(station_id,
                                         sheet_name='Sheet1'):
 ```
 This function retrieves the observed fuels data for a user-specified single RAWS station for a 
-user-specified period of time. 
+user-specified period of time.
+
+`{folder_modified}` = Current Working Directory
 
 Required Arguments:
 

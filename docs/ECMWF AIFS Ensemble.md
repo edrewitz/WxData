@@ -104,10 +104,7 @@ goes out to 360 hours. For those who wish to have a shorter dataset, they may se
 7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
 ```python
-proxies=None ---> proxies={
-                   'http':'http://url',
-                   'https':'https://url'
-                } 
+proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_aifs_ens(proxies=proxies)
 ```
 
 8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 

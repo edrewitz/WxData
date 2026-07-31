@@ -8,7 +8,9 @@
                                         meta_path=f'{folder_modified}/FEMS Data/Station Meta Data',
                                         sheet_name='Sheet1'):***
 
-    This function retrieves the 7-Day weather forecast for a user-specified single RAWS station. 
+    This function retrieves the 7-Day weather forecast for a user-specified single RAWS station.
+
+    `{folder_modified}` = Current Working Directory
 
     Required Arguments:
 

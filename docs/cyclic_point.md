@@ -1,9 +1,13 @@
+---
+title: Using WxData To Add Cyclic Points For Hemispheric Plots
+---
+
 # Using WxData To Add Cyclic Points For Hemispheric Plots
-
-***def cyclic_point(ds, 
+```python
+def cyclic_point(ds, 
                  parameter, 
-                 lon_name='longitude'):***
-
+                 lon_name='longitude'):
+```
 This function returns a data array for the full 360 degree Earth. 
 
 Required Arguments:
@@ -16,7 +20,6 @@ Optional Arguments:
 
 1) lon_name (String) - The name of the longitude variable. Usually is lon or longitude. 
 
-Returns
--------
+**Returns**
 
 An xarray data array that interpolates along 180 degrees longitude.   

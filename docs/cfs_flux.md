@@ -1,6 +1,10 @@
+---
+title: Climate Forecast System (CFS) Flux
+---
+[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
 # Climate Forecast System (CFS) Flux
-
-***def cfs_flux(western_bound=-180, 
+```python
+def cfs_flux(western_bound=-180, 
             eastern_bound=180, 
             northern_bound=90, 
             southern_bound=-90, 
@@ -78,57 +82,59 @@
                         'vegetation type',
                         'meridional flux of gravity wave stress',
                         'water runoff',
-                        'water equivalent of accumulated snow depth']):***
+                        'water equivalent of accumulated snow depth']):
+```
 
-    This function is an end-to-end client that downloads, pre-processes, post-processes CFS Flux data.
-    Post-processing remaps the variable keys from the coded GRIB format into a decoded Plain-Language Format
-    
-    Required Arguments: None.
-    
-    Optional Arguments:
-    
-    1) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+This function is an end-to-end client that downloads, pre-processes, post-processes CFS Flux data.
+Post-processing remaps the variable keys from the coded GRIB format into a decoded Plain-Language Format
 
-    2) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+Required Arguments: None.
 
-    3) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+Optional Arguments:
 
-    4) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+1) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
-    5) final_forecast_hour (Integer) - Default=720 (30-Days). The last forecast timestep the user wishes to download.
-        The CFS outputs 6 hourly data for the span of several months. Note that if the user wishes to download
-        6 hourly data for several months, processing times may be long. Must be a multiple of 6. 
+2) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
 
-    6) proxies (dict or None) - If the user is using proxy server(s), the user must change the following:
+3) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
 
-       proxies=None ---> proxies={
-                               'http':'http://your-proxy-address:port',
-                               'https':'http://your-proxy-address:port'
-                               }
-                               
-        
-    7) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be 
-        deleted with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
-        
-    8) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
-        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
-        
-    9) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
-    
-    10) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
-    
-    11) path (String) - Default="CFS/PRESSURE". The path of the local directory where the files will be stored.
-    
-    12) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
-       data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
-       
-    13) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
-        either Celsius or Fahrenheit. When False, this data remains in Kelvin.
-        
-    14) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
-        Set convert_to='fahrenheit' for Fahrenheit. 
-                                
-    15) variables (List) - A list of variable names the user wants to download in plain language. 
+4) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+
+5) final_forecast_hour (Integer) - Default=720 (30-Days). The last forecast timestep the user wishes to download.
+	The CFS outputs 6 hourly data for the span of several months. Note that if the user wishes to download
+	6 hourly data for several months, processing times may be long. Must be a multiple of 6. 
+
+6) proxies (dict or None) - If the user is using proxy server(s), the user must change the following:
+
+   ```python
+   proxies=None ---> proxies={
+						   'http':'http://your-proxy-address:port',
+						   'https':'http://your-proxy-address:port'
+						   }
+	```						   
+	
+7) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be 
+	deleted with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+	
+8) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+	When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+	
+9) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+
+10) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+
+11) path (String) - Default="CFS/PRESSURE". The path of the local directory where the files will be stored.
+
+12) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
+   data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
+   
+13) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+	either Celsius or Fahrenheit. When False, this data remains in Kelvin.
+	
+14) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+	Set convert_to='fahrenheit' for Fahrenheit. 
+							
+15) variables (List) - A list of variable names the user wants to download in plain language. 
     
         Variable Name List for CFS Flux
         -------------------------------
@@ -199,10 +205,9 @@
             'water runoff'
             'water equivalent of accumulated snow depth'
             
-    Returns
-    -------
-    
-    A post-processes xarray.array where the GRIB variable keys are decoded into a plain-language format.
+**Returns**
+
+A post-processes xarray.array where the GRIB variable keys are decoded into a plain-language format.
     
     CFS Flux Data Variables In Plain-Language Format
     -------------------------------------------------

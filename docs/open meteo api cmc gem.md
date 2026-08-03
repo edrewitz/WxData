@@ -1,5 +1,9 @@
-# Open-Meteo API CMC GEM
+---
+title: Open-Meteo API CMC GEM
+----
 
+# Open-Meteo API CMC GEM
+[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
 ```python
 
 def gem_hourly_point_forecast(latitude,

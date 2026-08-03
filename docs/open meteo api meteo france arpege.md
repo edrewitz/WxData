@@ -1,3 +1,7 @@
+---
+title: Open-Meteo API Meteo-France ARPEGE
+---
+[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
 # Open-Meteo API Meteo-France ARPEGE
 
 ```python

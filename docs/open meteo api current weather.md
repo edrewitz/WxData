@@ -1,3 +1,7 @@
+---
+title: Open-Meteo API Current Weather
+---
+[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
 # Open-Meteo API Current Weather
 
 ```python

@@ -1,3 +1,8 @@
+---
+title: Open-Meteo API DWD ICON
+---
+[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+
 # Open-Meteo API DWD ICON
 
 ```python

@@ -102,7 +102,7 @@ def get_current_data_bounding_box(api_key=None,
                                'https':'http://your-proxy-address:port'
                                }
     
-    9) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} wth {filename}
+    9) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} with {filename}
     
     10) path (String) - The path where the CSV file is saved to.
     

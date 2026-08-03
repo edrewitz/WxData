@@ -313,6 +313,9 @@ import wxdata.open_meteo_api.marine_forecasts.dwd as open_meteo_api_dwd_marine
 import wxdata.open_meteo_api.marine_forecasts.ecmwf as open_meteo_api_ecmwf_marine
 import wxdata.open_meteo_api.marine_forecasts.noaa as open_meteo_api_noaa_marine
 
+### Solar Radiation Forecasts ### 
+import wxdata.open_meteo_api.solar_radiation.solar_radiation as open_meteo_api_solar_radiation
+
 ###################
 ### Air-Now API ###
 ###################

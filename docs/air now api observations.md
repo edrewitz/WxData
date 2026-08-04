@@ -14,10 +14,10 @@ def get_current_data_bounding_box(api_key=None,
                                   northern_bound=45.419415,
                                   proxies=None,
                                   to_csv=False,
-                                  path=f"Air Now Data/{now.strftime('%Y_%m_%d')}_{now_hour}"):
+                                  path=f"Air Now Observations/{now.strftime('%Y_%m_%d')}_{now_hour}"):
 ```
 
-This function retrieves air-quality data from the airnow API.
+This function retrieves air-quality observations from the airnow API.
 
 Required Arguments: None
     
@@ -78,4 +78,4 @@ Optional Arguments:
 
 **Returns**
 
-A `Pandas.DataFrame` of all the current air quality observations within the bounding box.     
+A `Pandas.DataFrame` of all the current air quality observations within the bounding box.  

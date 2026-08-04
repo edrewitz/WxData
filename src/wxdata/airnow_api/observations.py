@@ -164,8 +164,10 @@ def get_current_data_bounding_box(api_key=None,
         pass
                 
     df = _pd.read_json(_StringIO(response.text))
-    
-    df = df.drop('Parameter', axis=1)
+    try:
+        df = df.drop('Parameter', axis=1)
+    except Exception as e:
+        pass
     df = df.rename(columns={'Value':f'{parameter.upper()}'})
     
     df['time'] = _pd.to_datetime(df['UTC'])

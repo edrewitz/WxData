@@ -9,7 +9,8 @@ def get_observed_sounding_data(station_id,
                                custom_time=None, 
                                comparison_24=False, 
                                proxies=None,
-                               clear_recycle_bin=False):
+                               clear_recycle_bin=False,
+                               loop_over_missing_data=False):
 ```
 
 This function scrapes the University of Wyoming Sounding Database and returns the data in a Pandas DataFrame
@@ -45,7 +46,10 @@ the user must set proxy='proxy_url'. The default setting assumes the user is not
 
 5) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
     the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-    This setting is to help preserve memory on the machine. 
+    This setting is to help preserve memory on the machine.
+
+6) loop_over_missing_data (Boolean) - Default=False. When set to True, the program does not close if the data is missing.
+    Setting `loop_over_missing_data=True` is useful for those downloading multiple observations over a period of time. 
 
 **Returns**
 

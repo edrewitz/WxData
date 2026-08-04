@@ -64,15 +64,16 @@ Optional Arguments:
 7) northern_bound (Float or Integer) - Default=45.419415. 
 
 8) proxies (dict or None) - Default=None. If the user is using a proxy server, the user must change the following:
-    ```python
+
+   ```python
     proxies=None ---> proxies={
                            'http':'http://your-proxy-address:port',
                            'https':'http://your-proxy-address:port'
                            }
     ```
-9) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} with {filename}
+10) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} with {filename}
 
-10) path (String) - The path where the CSV file is saved to.
+11) path (String) - The path where the CSV file is saved to.
 
 **Returns**
 

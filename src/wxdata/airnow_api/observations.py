@@ -16,10 +16,14 @@ from time import sleep as _sleep
 try:
     from datetime import(
         datetime as _datetime,
+        timedelta as _timedelta,
         UTC as _UTC
     )
 except Exception as e:
-    from datetime import datetime as _datetime
+    from datetime import(
+        datetime as _datetime,
+        timedelta as _timedelta
+    )
     
 from wxdata.utils.api import df_to_csv as _df_to_csv
 
@@ -34,6 +38,15 @@ if _now.hour >= 10:
     
 else:
     _now_hour = f"0{_now.hour}"
+    
+
+_hr1 = _now - _timedelta(hours=1)
+
+if _now.hour >= 10:
+    _hr1_hour = _hr1.hour
+    
+else:
+    _hr1_hour = f"0{_hr1.hour}"
     
     
 def get_current_data_bounding_box(api_key=None,
@@ -167,7 +180,43 @@ def get_current_data_bounding_box(api_key=None,
     try:
         df = df.drop('Parameter', axis=1)
     except Exception as e:
-        pass
+        if proxies == None:
+            response = _requests.get(f"https://www.airnowapi.org/aq/data/?"
+                                        f"startDate={_hr1.strftime('%Y-%m-%d')}T{_hr1_hour}&endDate={_hr1.strftime('%Y-%m-%d')}T{_hr1_hour}"
+                                        f"&parameters={parameter.upper()}"
+                                        f"&BBOX={western_bound},{southern_bound},{eastern_bound},{northern_bound}"
+                                        f"&dataType=B&format=application/json&API_KEY={api_key}")
+        else:
+            response = _requests.get(f"https://www.airnowapi.org/aq/data/?"
+                                        f"startDate={_hr1.strftime('%Y-%m-%d')}T{_hr1_hour}&endDate={_hr1.strftime('%Y-%m-%d')}T{_hr1_hour}"
+                                        f"&parameters={parameter.upper()}"
+                                        f"&BBOX={western_bound},{southern_bound},{eastern_bound},{northern_bound}"
+                                        f"&dataType=B&format=application/json&API_KEY={api_key}",
+                                        proxies=proxies)
+            if response.status_code != 200:
+                if response.status_code == 429:
+                    _errors.rate_limit_error_message()
+                    _sleep(3600)
+                    df = get_current_data_bounding_box(api_key=api_key,
+                                          read_in_key_from_path=read_in_key_from_path,
+                                          parameter=parameter,
+                                          western_bound=western_bound,
+                                          eastern_bound=eastern_bound,
+                                          southern_bound=southern_bound,
+                                          northern_bound=northern_bound,
+                                          proxies=proxies,
+                                          to_csv=to_csv,
+                                          path=path)
+                    
+                    df = _pd.read_json(_StringIO(response.text))
+                    
+                    return df
+                else:
+                    print(f"Another exception occurred\nHTTP Status Code: {response.status_code} Reason: {response.reason}")
+                    _sys.exit(1)
+            else:
+                pass
+        
     df = df.rename(columns={'Value':f'{parameter.upper()}'})
     
     df['time'] = _pd.to_datetime(df['UTC'])

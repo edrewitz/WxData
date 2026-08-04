@@ -262,6 +262,10 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 
 22) [Download all 50 Ensemble Members of the ECMWF IFS Ensemble for 2-Meter Temperature Using the Open-Meteo API and Make an Ensemble Spaghetti Plot](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/ecmwf_ifs_ens_spaghetti.ipynb)
 
+23) [Download Solar Radiation Forecasts Using Open-Meteo API](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/open_meteo_api_solar_radiation.ipynb)
+
+24) [Download Latest Fine Particulates PM2.5 and Ozone (O3) Observations Using Air Now API](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/air_now_api.ipynb)
+
 ### Advanced Users
 
 1) [Using the `client` module to download the latest HadCRUT5 Analysis netCDF file and open this dataset in xarray](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/hadcrut5.ipynb)
@@ -444,10 +448,11 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 
 #### Open-Meteo API
 
-##### ***Current Weather***
+##### Weather Forecasts 
+###### ***Current Weather***
 1. [Current Weather](https://edrewitz.github.io/WxData/open%20meteo%20api%20current%20weather)
 
-##### ***National Oceanic and Atmospheric Administrationn (NOAA)***
+###### ***National Oceanic and Atmospheric Administrationn (NOAA)***
 1. [GFS](https://edrewitz.github.io/WxData/open%20meteo%20api%20noaa%20gfs)
 2. [GEFS](https://edrewitz.github.io/WxData/open%20meteo%20api%20noaa%20gefs)
 3. [AIGFS](https://edrewitz.github.io/WxData/open%20meteo%20api%20noaa%20aigfs)
@@ -455,29 +460,90 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 5. [HGEFS](https://edrewitz.github.io/WxData/open%20meteo%20api%20noaa%20hgefs)
 6. [NBM](https://edrewitz.github.io/WxData/open%20meteo%20api%20noaa%20nbm)
 
-##### ***European Centre for Medium-Range Weather Forecasts (ECMWF)***
+###### ***European Centre for Medium-Range Weather Forecasts (ECMWF)***
 1. [IFS](https://edrewitz.github.io/WxData/open%20meteo%20api%20ecmwf%20ifs)
 2. [AIFS](https://edrewitz.github.io/WxData/open%20meteo%20api%20ecmwf%20aifs)
 3. [IFS HRES](https://edrewitz.github.io/WxData/open%20meteo%20api%20ecmwf%20ifs%20hres)
 4. [IFS Ensemble](https://edrewitz.github.io/WxData/open%20meteo%20api%20ecmwf%20ifs%20ens)
 5. [AIFS Ensemble](https://edrewitz.github.io/WxData/open%20meteo%20api%20ecmwf%20aifs%20ens)
 
-##### ***Canadian Meteorological Centre (CMC)***
+###### ***Canadian Meteorological Centre (CMC)***
 1. [GEM](https://edrewitz.github.io/WxData/open%20meteo%20api%20cmc%20gem)
 2. [GEM Ensemble](https://edrewitz.github.io/WxData/open%20meteo%20api%20cmc%20gem%20ens)
 
-##### ***Deutscher Wetterdienst (DWD)***
+###### ***Deutscher Wetterdienst (DWD)***
 1. [ICON](https://edrewitz.github.io/WxData/open%20meteo%20api%20dwd%20icon)
 2. [ICON EPS](https://edrewitz.github.io/WxData/open%20meteo%20api%20dwd%20icon%20eps)
 
-##### ***Meteo-France***
+###### ***Meteo-France***
 1. [ARPEGE](https://edrewitz.github.io/WxData/open%20meteo%20api%20meteo%20france%20arpege)
 
-##### ***Japan Meteorological Agency (JMA)***
+###### ***Japan Meteorological Agency (JMA)***
 1. [JMA](https://edrewitz.github.io/WxData/open%20meteo%20api%20jma%20jma)
 
-##### ***UK Met Office (UKMO)***
+###### ***UK Met Office (UKMO)***
 1. [UKMO Global Ensemble](https://edrewitz.github.io/WxData/open%20meteo%20api%20ukmo%20global%20ens)
+
+###### ***Google***
+1. [Weather Next 2 All Ensemble Members](https://edrewitz.github.io/WxData/open%20meteo%20api%20google%20weather%20next%202%20members)
+2. [Weather Next 2 Ensemble Mean](https://edrewitz.github.io/WxData/open%20meteo%20api%20google%20weather%20next%202%20ensemble%20mean)
+
+##### Marine Forecasts
+
+###### ***National Oceanic and Atmospheric Administrationn (NOAA)***
+1. [GFS0P25 Wave Forecasts](https://edrewitz.github.io/WxData/open%20meteo%20api%20gfs0p25%20wave)
+2. [GFS0P16 Wave Forecasts](https://edrewitz.github.io/WxData/open%20meteo%20api%20gfs0p16%20wave)
+
+###### ***European Centre for Medium-Range Weather Forecasts (ECMWF)***
+1. [ECMWF Wave Model](https://edrewitz.github.io/WxData/open%20meteo%20api%20ecmwf%20wam)
+2. [ECMWF Wave Model 0.25 Degree](https://edrewitz.github.io/WxData/open%20meteo%20api%20ecmwf%20wam%200p25)
+
+###### ***Meteo-France***
+1. [Meteo-France Wave Model](https://edrewitz.github.io/WxData/open%20meteo%20api%20meteo%20france%20wave)
+2. [Meteo-France Ocean Currents Model](https://edrewitz.github.io/WxData/open%20meteo%20api%20meteo%20france%20ocean%20currents)
+
+###### ***Deutscher Wetterdienst (DWD)***
+1. [European Domain Wave Model](https://edrewitz.github.io/WxData/open%20meteo%20api%20ewam)
+2. [Global Domian Wave Model](https://edrewitz.github.io/WxData/open%20meteo%20api%20gwam)
+
+##### Seasonal Forecasts
+
+###### ***Daily Forecasts***
+1. [ECMWF EC46 + SEAS5 Ensemble Members](https://edrewitz.github.io/WxData/open%20meteo%20api%20ec46%20seas5%20daily)
+2. [ECMWF EC46 Ensemble Members](https://edrewitz.github.io/WxData/open%20meteo%20api%20ec46%20daily)
+3. [ECMWF SEAS5 Ensemble Members](https://edrewitz.github.io/WxData/open%20meteo%20api%20seas5%20daily)
+4. [ECMWF EC46 + SEAS5 Ensemble Mean](https://edrewitz.github.io/WxData/open%20meteo%20api%20ec46%20seas5%20daily%20ensemble%20mean)
+5. [ECMWF EC46 Ensemble Mean](https://edrewitz.github.io/WxData/open%20meteo%20api%20ec46%20daily%20ensemble%20mean)
+6. [ECMWF SEAS5 Ensemble Mean](https://edrewitz.github.io/WxData/open%20meteo%20api%20seas5%20daily%20ensemble%20mean)
+
+###### ***Weekly Forecasts***
+1. [ECMWF EC46 Mean & Anomaly](https://edrewitz.github.io/WxData/open%20meteo%20api%20ec46%20weekly%20mean%20anomaly)
+
+###### ***Monthly Forecasts***
+1. [ECMWF SEAS5 Mean & Anomaly](https://edrewitz.github.io/WxData/open%20meteo%20api%20seas5%20monthly%20mean%20anomaly)
+
+##### Climate Reanalysis & Forecasts
+1. [CMCC-CM2-VHR4](https://edrewitz.github.io/WxData/open%20meteo%20api%20cmcc_cm2_vhr4%20forecasts)
+2. [FGOALS_f3_H](https://edrewitz.github.io/WxData/open%20meteo%20api%20fgoals_f3_h%20forecasts)
+3. [HiRAM_SIT_HR](https://edrewitz.github.io/WxData/open%20meteo%20api%20hiram_sit_hr%20forecasts)
+4. [MRI_AGCM3_2_S](https://edrewitz.github.io/WxData/open%20meteo%20api%20mri_agcm3_2_s%20forecasts)
+5. [EC_Earth3P_HR](https://edrewitz.github.io/WxData/open%20meteo%20api%20ec_earth3p_hr%20forecasts)
+6. [MPI_ESM1_2_XR](https://edrewitz.github.io/WxData/open%20meteo%20api%20mpi_esm1_2_xr%20forecasts)
+7. [NICAM16_8S](https://edrewitz.github.io/WxData/open%20meteo%20api%20nicam16_8s%20forecasts)
+
+##### Air Quality Forecasts
+1. [CAMS](https://edrewitz.github.io/WxData/open%20meteo%20api%20air%20quality)
+
+##### Solar Radiation Forecasts
+1. [Solar Radiation Forecast](https://edrewitz.github.io/WxData/open%20meteo%20api%20solar%20radiation)
+
+---------------------------------------
+
+#### Air Now API
+
+##### ***Observations***
+1. [Get Current Data Bounding Box](https://edrewitz.github.io/WxData/air%20now%20api%20observations)
+2. [Get Historical Data Bounding Box](https://edrewitz.github.io/WxData/air%20now%20api%20historical%20observations)
 
 ---------------------------------------
 

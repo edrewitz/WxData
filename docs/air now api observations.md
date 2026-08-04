@@ -71,6 +71,7 @@ Optional Arguments:
                            'https':'http://your-proxy-address:port'
                            }
     ```
+   
 10) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} with {filename}
 
 11) path (String) - The path where the CSV file is saved to.

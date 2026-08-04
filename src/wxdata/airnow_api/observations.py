@@ -15,25 +15,25 @@ from time import sleep as _sleep
 
 try:
     from datetime import(
-        datetime,
-        UTC
+        datetime as _datetime,
+        UTC as _UTC
     )
 except Exception as e:
-    from datetime import datetime
+    from datetime import datetime as _datetime
     
 from wxdata.utils.api import df_to_csv as _df_to_csv
 
 try:
-    now = datetime.now(UTC)
+    _now = _datetime.now(_UTC)
 except Exception as e:
-    now = datetime.utcnow()
+    _now = _datetime.utcnow()
     
 
-if now.hour >= 10:
-    now_hour = now.hour
+if _now.hour >= 10:
+    _now_hour = _now.hour
     
 else:
-    now_hour = f"0{now.hour}"
+    _now_hour = f"0{_now.hour}"
     
     
 def get_current_data_bounding_box(api_key=None,
@@ -45,7 +45,7 @@ def get_current_data_bounding_box(api_key=None,
                                   northern_bound=45.419415,
                                   proxies=None,
                                   to_csv=False,
-                                  path=f"Air Now Observations/{now.strftime('%Y_%m_%d')}_{now_hour}"):
+                                  path=f"Air Now Observations/{_now.strftime('%Y_%m_%d')}_{_now_hour}"):
     
     """
     This function retrieves air-quality observations from the airnow API.
@@ -130,13 +130,13 @@ def get_current_data_bounding_box(api_key=None,
     
     if proxies == None:
         response = _requests.get(f"https://www.airnowapi.org/aq/data/?"
-                                 f"startDate={now.strftime('%Y-%m-%d')}T{now_hour}&endDate={now.strftime('%Y-%m-%d')}T{now_hour}"
+                                 f"startDate={_now.strftime('%Y-%m-%d')}T{_now_hour}&endDate={_now.strftime('%Y-%m-%d')}T{_now_hour}"
                                  f"&parameters={parameter.upper()}"
                                  f"&BBOX={western_bound},{southern_bound},{eastern_bound},{northern_bound}"
                                  f"&dataType=B&format=application/json&API_KEY={api_key}")
     else:
         response = _requests.get(f"https://www.airnowapi.org/aq/data/?"
-                                 f"startDate={now.strftime('%Y-%m-%d')}T{now_hour}&endDate={now.strftime('%Y-%m-%d')}T{now_hour}"
+                                 f"startDate={_now.strftime('%Y-%m-%d')}T{_now_hour}&endDate={_now.strftime('%Y-%m-%d')}T{_now_hour}"
                                  f"&parameters={parameter.upper()}"
                                  f"&BBOX={western_bound},{southern_bound},{eastern_bound},{northern_bound}"
                                  f"&dataType=B&format=application/json&API_KEY={api_key}",

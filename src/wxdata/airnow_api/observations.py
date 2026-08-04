@@ -209,7 +209,7 @@ def get_current_data_bounding_box(api_key=None,
                                           path=path)
                     
                     df = _pd.read_json(_StringIO(response.text))
-                    
+                    print(df)
                     return df
                 else:
                     print(f"Another exception occurred\nHTTP Status Code: {response.status_code} Reason: {response.reason}")

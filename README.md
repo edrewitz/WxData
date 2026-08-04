@@ -264,7 +264,7 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 
 23) [Download Solar Radiation Forecasts Using Open-Meteo API](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/open_meteo_api_solar_radiation.ipynb)
 
-24) [Download Latest Fine Particulates PM2.5 and Ozone (O3) Observations Using Air Now API](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/air_now_api.ipynb)
+24) [Download Latest Fine Particulates (PM2.5) and Ozone (O3) Observations Using Air Now API](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/air_now_api.ipynb)
 
 ### Advanced Users
 

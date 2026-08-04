@@ -42,7 +42,7 @@ else:
 
 _hr1 = _now - _timedelta(hours=1)
 
-if _now.hour >= 10:
+if _hr1.hour >= 10:
     _hr1_hour = _hr1.hour
     
 else:

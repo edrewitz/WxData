@@ -145,7 +145,8 @@ def get_current_data_bounding_box(api_key=None,
         if response.status_code == 429:
             _errors.rate_limit_error_message()
             _sleep(3600)
-            df = get_current_data_bounding_box(api_key,
+            df = get_current_data_bounding_box(api_key=api_key,
+                                  read_in_key_from_path=read_in_key_from_path,
                                   parameter=parameter,
                                   western_bound=western_bound,
                                   eastern_bound=eastern_bound,
@@ -189,7 +190,7 @@ def get_data_bounding_box(start,
                             northern_bound=45.419415,
                             proxies=None,
                             to_csv=False,
-                            path=f"Air Now Observations/{now.strftime('%Y_%m_%d')}_{now_hour}"):
+                            path=f"Air Now Observations/Historical/historical_air_quality_data.csv"):
     
     """
     This function retrieves historical air-quality observations from the airnow API.
@@ -293,9 +294,10 @@ def get_data_bounding_box(start,
         if response.status_code == 429:
             _errors.rate_limit_error_message()
             _sleep(3600)
-            df = get_data_bounding_box(api_key,
-                                        start,
+            df = get_data_bounding_box(start,
                                         end,
+                                        api_key=api_key,
+                                        read_in_key_from_path=read_in_key_from_path,
                                         parameter=parameter,
                                         western_bound=western_bound,
                                         eastern_bound=eastern_bound,

@@ -1,5 +1,5 @@
 """
-This file hosts solar radiation data.
+This file hosts solar radiation forecast data client interface with Open-Meteo API.
 
 (C) Eric J. Drewitz 2025-2026
 """
@@ -36,7 +36,7 @@ def solar_radiation_forecast(latitude,
             filename=f"Solar_Radiation_Forecast.csv"):
     
     """
-    This function retrieves the CAMS Air Quality forecast from the Open-Meteo API for a given point of latitude/longitude.
+    This function retrieves the solar radiation forecast from the Open-Meteo API for a given point of latitude/longitude using a given model.
     
     Required Arguments:
     

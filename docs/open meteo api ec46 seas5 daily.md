@@ -178,17 +178,18 @@ Optional Arguments:
                                         'soil_moisture_100_to_255cm_mean']
             
 6) proxies (dict or None) - Default=None. If the user is using a proxy server, the user must change the following:
-    ```python
+
+   ```python
     proxies=None ---> proxies={
                            'http':'http://your-proxy-address:port',
                            'https':'http://your-proxy-address:port'
                            }
     ```
-7) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} with {filename}
+8) to_csv (Boolean) - Default=False. When set to True the data will be saved as a CSV file to {path} with {filename}
 
-8) path (String) - The path where the CSV file is saved to.
+9) path (String) - The path where the CSV file is saved to.
 
-9) filename (String) - The filename for the CSV file.                     
+10) filename (String) - The filename for the CSV file.                     
                 
 **Returns**
 

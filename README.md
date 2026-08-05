@@ -178,7 +178,7 @@ proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_ifs(p
 ```
 ```python
 # Here is our program
-from wxdata import get_observed_sounding_data
+from wxdata import ecmwf_ifs
 
 proxies="https://your-proxy-address:port"
 

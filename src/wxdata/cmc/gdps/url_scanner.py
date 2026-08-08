@@ -217,7 +217,7 @@ def gdps_url_scanner(final_forecast_hour,
         file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_GDPS_{parameter}_NTAtm_LatLon0.15_PT{final_forecast_hour}H.grib2"
         file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_GDPS_{parameter}_NTAtm_LatLon0.15_PT{final_forecast_hour}H.grib2"
         
-        
+    print("Scanning For Latest Files...")    
     if proxies == None:
         
         try:
@@ -384,6 +384,7 @@ def gdps_url_scanner(final_forecast_hour,
             
         try:    
             url = f"{prefix}/{hour}/"
+            print(f"Scan Complete.\n-------------\n")
         except Exception as e:
             _exceptions.invalid_info(has_levels)
             
@@ -463,7 +464,7 @@ def gdps_url_scanner(final_forecast_hour,
             
         files.append(file)
     
-    
+    print(f"Run: {date.strftime('%Y-%m-%d')} {run}z")
     full_urls = []
     
     for u, f in zip(urls, files):
@@ -488,12 +489,14 @@ def gdps_url_scanner(final_forecast_hour,
         url_responses.append(response)
         
     filtered_urls = []
-    
+    print("Organizing URLs...")
     for r, u in zip(url_responses, full_urls):
         if r.status_code == 200:
             filtered_urls.append(u)
         else:
             pass
+        
+    print("URL Organization Complete!")
     
     return filtered_urls
         

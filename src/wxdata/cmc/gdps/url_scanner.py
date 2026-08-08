@@ -224,14 +224,23 @@ def gdps_url_scanner(final_forecast_hour,
             r0 = requests.get(f"{url_12z_today}{file_12z_today}",
                             stream=True)
             
+            r0.close()
+            
             r1 = requests.get(f"{url_00z_today}{file_00z_today}",
                                     stream=True)
+            
+            r1.close()
             
             r2 = requests.get(f"{url_12z_yesterday}{file_12z_yesterday}",
                                     stream=True)
             
+            r2.close()
+            
             r3 = requests.get(f"{url_00z_yesterday}{file_00z_yesterday}",
                                             stream=True)
+            
+            r3.close()
+            
         except Exception as e:
             for i in range(0, 10, 1):
                 time.sleep(60)
@@ -239,14 +248,22 @@ def gdps_url_scanner(final_forecast_hour,
                     r0 = requests.get(f"{url_12z_today}{file_12z_today}",
                                     stream=True)
                     
+                    r0.close()
+                    
                     r1 = requests.get(f"{url_00z_today}{file_00z_today}",
                                             stream=True)
+                    
+                    r1.close()
                     
                     r2 = requests.get(f"{url_12z_yesterday}{file_12z_yesterday}",
                                             stream=True)
                     
+                    r2.close()
+                    
                     r3 = requests.get(f"{url_00z_yesterday}{file_00z_yesterday}",
                                                     stream=True)  
+                    
+                    r3.close()
                     break
                 except Exception as e:
                     i = i
@@ -264,17 +281,26 @@ def gdps_url_scanner(final_forecast_hour,
                         stream=True,
                         proxies=proxies)
             
+            r0.close()
+            
             r1 = requests.get(f"{url_00z_today}{file_00z_today}",
                             stream=True,
                             proxies=proxies)
+            
+            r1.close()
             
             r2 = requests.get(f"{url_12z_yesterday}{file_12z_yesterday}",
                             stream=True,
                             proxies=proxies)
             
+            r2.close()
+            
             r3 = requests.get(f"{url_00z_yesterday}{file_00z_yesterday}",
                             stream=True,
                             proxies=proxies)
+            
+            r3.close()
+            
         except Exception as e:
             for i in range(0, 10, 1):
                 time.sleep(60)
@@ -283,17 +309,26 @@ def gdps_url_scanner(final_forecast_hour,
                                     stream=True,
                                     proxies=proxies)
                     
+                    r0.close()
+                    
                     r1 = requests.get(f"{url_00z_today}{file_00z_today}",
                                     stream=True,
                                     proxies=proxies)
+                    
+                    r1.close()
                     
                     r2 = requests.get(f"{url_12z_yesterday}{file_12z_yesterday}",
                                     stream=True,
                                     proxies=proxies)
                     
+                    r2.close()
+                    
                     r3 = requests.get(f"{url_00z_yesterday}{file_00z_yesterday}",
                                     stream=True,
                                     proxies=proxies)  
+                    
+                    r3.close()
+                    
                     break
                 except Exception as e:
                     i = i
@@ -443,10 +478,12 @@ def gdps_url_scanner(final_forecast_hour,
         if proxies == None:
             response = requests.get(f"{f}",
                                     stream=True)
+            
         else:
             response = requests.get(f"{f}",
                                     stream=True,
                                     proxies=proxies)
+        response.close()
             
         url_responses.append(response)
         

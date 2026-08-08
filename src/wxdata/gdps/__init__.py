@@ -1,1 +1,0 @@
-from wxdata.gdps.url_scanner import gdps_url_scanner

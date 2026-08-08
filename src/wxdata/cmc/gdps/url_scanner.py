@@ -7,7 +7,7 @@ This file hosts the URL Scanner for the GDPS
 import requests
 import sys
 import time
-import wxdata.gdps._exceptions as _exceptions
+import wxdata.cmc.gdps._exceptions as _exceptions
 
 # Exception handling for Python >= 3.13 and Python < 3.13
 try:

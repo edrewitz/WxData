@@ -384,7 +384,6 @@ def gdps_url_scanner(final_forecast_hour,
             
         try:    
             url = f"{prefix}/{hour}/"
-            print(f"Scan Complete.\n-------------\n")
         except Exception as e:
             _exceptions.invalid_info(has_levels)
             
@@ -464,7 +463,7 @@ def gdps_url_scanner(final_forecast_hour,
             
         files.append(file)
     
-    print(f"Run: {date.strftime('%Y-%m-%d')} {run}z")
+    print(f"Scan Complete.\n-------------\nRun: {date}/{run}z")
     full_urls = []
     
     for u, f in zip(urls, files):

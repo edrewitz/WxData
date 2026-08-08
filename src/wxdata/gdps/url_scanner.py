@@ -436,8 +436,29 @@ def gdps_url_scanner(final_forecast_hour,
         full_url = f"{u}{f}"
         
         full_urls.append(full_url)
+        
+    url_responses = []
     
-    return full_urls
+    for f in full_urls:
+        if proxies == None:
+            response = requests.get(f"{f}",
+                                    stream=True)
+        else:
+            response = requests.get(f"{f}",
+                                    stream=True,
+                                    proxies=proxies)
+            
+        url_responses.append(response)
+        
+    filtered_urls = []
+    
+    for r, u in zip(url_responses, full_urls):
+        if r.status_code == 200:
+            filtered_urls.append(u)
+        else:
+            pass
+    
+    return filtered_urls
         
             
         

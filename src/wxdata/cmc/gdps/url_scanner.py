@@ -37,8 +37,9 @@ def gdps_url_scanner(final_forecast_hour,
                                     proxies,
                                     type_of_level,
                                     parameter,
-                                    levels,
-                                    step):
+                                    step,
+                                    level=None,
+                                    levels=None):
     
     """
     This function scans for the latest available GDPS data from https://dd.weather.gc.ca/
@@ -111,22 +112,20 @@ def gdps_url_scanner(final_forecast_hour,
     
     if type_of_level == 'pressure':
         
-        has_levels = True
-        level = levels[0]
-        
+        has_levels = True        
         if level < 10:
-            level = f"000{level}"
+            strlevel = f"000{level}"
         elif level >= 10 and level < 100:
-            level = f"00{level}"
+            strlevel = f"00{level}"
         elif level >= 100 and level < 1000:
-            level = f"0{level}"
+            strlevel = f"0{level}"
         else:
-            level = f"{level}"
+            strlevel = f"{level}"
             
-        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_GDPS_{parameter}_IsbL-{level}_LatLon0.15_PT{final_forecast_hour}H.grib2"
-        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_GDPS_{parameter}_IsbL-{level}_LatLon0.15_PT{final_forecast_hour}H.grib2"
-        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_GDPS_{parameter}_IsbL-{level}_LatLon0.15_PT{final_forecast_hour}H.grib2"
-        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_GDPS_{parameter}_IsbL-{level}_LatLon0.15_PT{final_forecast_hour}H.grib2"
+        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_GDPS_{parameter}_IsbL-{strlevel}_LatLon0.15_PT{final_forecast_hour}H.grib2"
+        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_GDPS_{parameter}_IsbL-{strlevel}_LatLon0.15_PT{final_forecast_hour}H.grib2"
+        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_GDPS_{parameter}_IsbL-{strlevel}_LatLon0.15_PT{final_forecast_hour}H.grib2"
+        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_GDPS_{parameter}_IsbL-{strlevel}_LatLon0.15_PT{final_forecast_hour}H.grib2"
         
     elif type_of_level == 'surface':
         
@@ -138,9 +137,7 @@ def gdps_url_scanner(final_forecast_hour,
         
     elif type_of_level == 'height above ground':
         
-        has_levels = True
-        level = levels[0]
-        
+        has_levels = True        
         file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_GDPS_{parameter}_AGL-{level}m_LatLon0.15_PT{final_forecast_hour}H.grib2"
         file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_GDPS_{parameter}_AGL-{level}m_LatLon0.15_PT{final_forecast_hour}H.grib2"
         file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_GDPS_{parameter}_AGL-{level}m_LatLon0.15_PT{final_forecast_hour}H.grib2"
@@ -179,10 +176,8 @@ def gdps_url_scanner(final_forecast_hour,
     elif type_of_level == 'depth below surface':
         
         has_levels = True
-        
         level_low = levels[0]
         level_high = levels[1]
-        
         file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_GDPS_{parameter}_DBS-{level_low}to{level_high}cm_LatLon0.15_PT{final_forecast_hour}H.grib2"
         file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_GDPS_{parameter}_DBS-{level_low}to{level_high}cm_LatLon0.15_PT{final_forecast_hour}H.grib2"
         file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_GDPS_{parameter}_DBS-{level_low}to{level_high}cm_LatLon0.15_PT{final_forecast_hour}H.grib2"
@@ -191,7 +186,6 @@ def gdps_url_scanner(final_forecast_hour,
     elif type_of_level == 'mean sea level':
         
         has_levels = False
-        
         file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_GDPS_{parameter}_MSL_LatLon0.15_PT{final_forecast_hour}H.grib2"
         file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_GDPS_{parameter}_MSL_LatLon0.15_PT{final_forecast_hour}H.grib2"
         file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_GDPS_{parameter}_MSL_LatLon0.15_PT{final_forecast_hour}H.grib2"
@@ -199,10 +193,7 @@ def gdps_url_scanner(final_forecast_hour,
         
     elif type_of_level == 'potential vorticity surface':
         
-        has_levels = True
-        
-        level = levels[0]
-        
+        has_levels = True        
         file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_GDPS_{parameter}_PVU-{level}_LatLon0.15_PT{final_forecast_hour}H.grib2"
         file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_GDPS_{parameter}_PVU-{level}_LatLon0.15_PT{final_forecast_hour}H.grib2"
         file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_GDPS_{parameter}_PVU-{level}_LatLon0.15_PT{final_forecast_hour}H.grib2"
@@ -211,7 +202,6 @@ def gdps_url_scanner(final_forecast_hour,
     else:
         
         has_levels = False
-        
         file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_GDPS_{parameter}_NTAtm_LatLon0.15_PT{final_forecast_hour}H.grib2"
         file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_GDPS_{parameter}_NTAtm_LatLon0.15_PT{final_forecast_hour}H.grib2"
         file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_GDPS_{parameter}_NTAtm_LatLon0.15_PT{final_forecast_hour}H.grib2"
@@ -392,26 +382,23 @@ def gdps_url_scanner(final_forecast_hour,
 
         if type_of_level == 'pressure':
             
-            level = levels[0]      
             if level < 10:
-                level = f"000{level}"
+                strlevel = f"000{level}"
             elif level >= 10 and level < 100:
-                level = f"00{level}"
+                strlevel = f"00{level}"
             elif level >= 100 and level < 1000:
-                level = f"0{level}"
+                strlevel = f"0{level}"
             else:
-                level = f"{level}"
+                strlevel = f"{level}"
                 
-            file = f"{date}T{run}Z_MSC_GDPS_{parameter}_IsbL-{level}_LatLon0.15_PT{hour}H.grib2"
+            file = f"{date}T{run}Z_MSC_GDPS_{parameter}_IsbL-{strlevel}_LatLon0.15_PT{hour}H.grib2"
             
         elif type_of_level == 'surface':
             
             file = f"{date}T{run}Z_MSC_GDPS_{parameter}_Sfc_LatLon0.15_PT{hour}H.grib2"
             
         elif type_of_level == 'height above ground':
-            
-                level = levels[0]
-                
+                            
                 f"{date}T{run}Z_MSC_GDPS_{parameter}_AGL-{level}m_LatLon0.15_PT{hour}H.grib2"
                 
         elif type_of_level == 'pressure layer':
@@ -451,9 +438,7 @@ def gdps_url_scanner(final_forecast_hour,
             file = f"{date}T{run}Z_MSC_GDPS_{parameter}_MSL_LatLon0.15_PT{hour}H.grib2"
             
         elif type_of_level == 'potential vorticity surface':
-                
-            level = levels[0]
-                
+                                
             file = f"{date}T{run}Z_MSC_GDPS_{parameter}_PVU-{level}_LatLon0.15_PT{hour}H.grib2"
             
         else:
@@ -473,13 +458,47 @@ def gdps_url_scanner(final_forecast_hour,
     url_responses = []
     for f in full_urls:
         if proxies == None:
-            response = requests.get(f"{f}",
-                                    stream=True)
+            try:
+                response = requests.get(f"{f}",
+                                        stream=True)
+            except Exception as e:
+                for i in range(0, 10, 1):
+                    time.sleep(60)
+                    try:
+                        response = requests.get(f"{f}",
+                                                stream=True)
+                        break
+                    except Exception as e:
+                        i = i
+                        if i >= 9:
+                            print("Error: Client cannot establish connection to: https://dd.weather.gc.ca/")   
+                            print("System Exit")
+                            sys.exit(1)     
+                        else:
+                            pass  
+                        
             
         else:
-            response = requests.get(f"{f}",
-                                    stream=True,
-                                    proxies=proxies)
+            try:
+                response = requests.get(f"{f}",
+                                        stream=True,
+                                        proxies=proxies)
+            except Exception as e:
+                for i in range(0, 10, 1):
+                    time.sleep(60)
+                    try:
+                        response = requests.get(f"{f}",
+                                                stream=True,
+                                                proxies=proxies)
+                        break
+                    except Exception as e:
+                        i = i
+                        if i >= 9:
+                            print("Error: Client cannot establish connection to: https://dd.weather.gc.ca/")   
+                            print("System Exit")
+                            sys.exit(1)     
+                        else:
+                            pass  
         response.close()
             
         url_responses.append(response)

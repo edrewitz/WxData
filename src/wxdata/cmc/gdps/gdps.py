@@ -264,5 +264,7 @@ def gdps(final_forecast_hour=240,
         else:
             print(f"GDPS Data Processing Complete: {variable.upper()} - surface")
         return ds
+    else:
+        pass
                 
     

@@ -41,9 +41,14 @@ def invalid_info(has_levels):
                 if type_of_level='depth below surface' => levels=[height of higher level, height at lower level] (levels=[0, 10] = example for 0cm to 10cm)
                 if type_of_level='potential vorticity surface' => levels=[potential vorticity surface] (levels=[1.5] = example for 1.5 PVU)
                 
+                Some parameters such as 'absolute vorticity' are not found at all the same levels as other parameters such as 'air temperature'
+                In these cases, the best practice is to download different datasets each with levels that are consistent between parameters.
+                
+                
             3) Try double checking the level corresponds correctly to the parameter. Please check at: https://dd.weather.gc.ca/
             """)
         
     else:
         print("Consider the following:")
         print("Try double checking the spelling of your variable.")
+        print("Try double checking to make sure your level_type is correct.")

@@ -3,12 +3,12 @@ This file hosts the URL Scanner for the GDPS
 
 (C) Eric J. Drewitz 2025-2026
 """
-
 import requests
 import sys
 import time
 import wxdata.cmc.utils._exceptions as _exceptions
 
+from wxdata.cmc.utils.filenames import get_filenames
 # Exception handling for Python >= 3.13 and Python < 3.13
 try:
     from datetime import datetime, timedelta, UTC
@@ -69,21 +69,21 @@ def gdps_url_scanner(final_forecast_hour,
         'depth below surface'
         'mean sea level'
         'potential vorticity surface'
+        'nominal top'
         'entire atmosphere'
         
     4) parameter (String) - Parameter the user is requesting.
+        
+    5) step (Integer) - Increment of forecast hours. 
     
-    5) levels (Integer or Float list) - The level(s) the user wishes to download. 
+    Optional Arguments: 
+    
+    1) level (Integer) - Default=None. The pressure level in hPa.
+    
+    2) levels (Integer or Float list) - Default=None. The levels the user wishes to download for a layer between levels[a,b]. 
 
-        if type_of_level='pressure' => levels=[pressure level] (levels=[500] = example for 500mb)
-        if type_of_level='height above ground' => levels=[height above ground level] (levels=[10] = example for 10m)
         if type_of_level='pressure layer' => levels=[pressure at lower level, pressure at higher level] (levels=[1000, 500] = example for 1000mb to 500mb)
         if type_of_level='depth below surface' => levels=[height of higher level, height at lower level] (levels=[0, 10] = example for 0cm to 10cm)
-        if type_of_level='potential vorticity surface' => levels=[potential vorticity surface] (levels=[1.5] = example for 1.5 PVU)
-        
-    6) step (Integer) - Increment of forecast hours. 
-    
-    Optional Arguments: None
     
     Returns
     ------
@@ -199,13 +199,20 @@ def gdps_url_scanner(final_forecast_hour,
         file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_GDPS_{parameter}_PVU-{level}_LatLon0.15_PT{final_forecast_hour}H.grib2"
         file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_GDPS_{parameter}_PVU-{level}_LatLon0.15_PT{final_forecast_hour}H.grib2"
         
-    else:
+    elif type_of_level == 'nominal top':
         
         has_levels = False
         file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_GDPS_{parameter}_NTAtm_LatLon0.15_PT{final_forecast_hour}H.grib2"
         file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_GDPS_{parameter}_NTAtm_LatLon0.15_PT{final_forecast_hour}H.grib2"
         file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_GDPS_{parameter}_NTAtm_LatLon0.15_PT{final_forecast_hour}H.grib2"
         file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_GDPS_{parameter}_NTAtm_LatLon0.15_PT{final_forecast_hour}H.grib2"
+        
+    else:
+        has_levels = False
+        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_GDPS_{parameter}_EAtm_LatLon0.15_PT{final_forecast_hour}H.grib2"
+        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_GDPS_{parameter}_EAtm_LatLon0.15_PT{final_forecast_hour}H.grib2"
+        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_GDPS_{parameter}_EAtm_LatLon0.15_PT{final_forecast_hour}H.grib2"
+        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_GDPS_{parameter}_EAtm_LatLon0.15_PT{final_forecast_hour}H.grib2"
         
     if proxies == None:
         
@@ -399,7 +406,7 @@ def gdps_url_scanner(final_forecast_hour,
             
         elif type_of_level == 'height above ground':
                             
-                f"{date}T{run}Z_MSC_GDPS_{parameter}_AGL-{level}m_LatLon0.15_PT{hour}H.grib2"
+            file = f"{date}T{run}Z_MSC_GDPS_{parameter}_AGL-{level}m_LatLon0.15_PT{hour}H.grib2"
                 
         elif type_of_level == 'pressure layer':
         
@@ -509,8 +516,10 @@ def gdps_url_scanner(final_forecast_hour,
             filtered_urls.append(u)
         else:
             pass
+        
+    files = get_filenames(filtered_urls)
             
-    return filtered_urls
+    return filtered_urls, files
         
             
         

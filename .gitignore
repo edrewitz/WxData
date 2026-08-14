@@ -23,7 +23,7 @@ dist/
 *.egg-info/
 
 # Data Files
-.grib2
-.grb2
-.nc
+*.grib2
+*.grb2
+*.nc
 *.csv

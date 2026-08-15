@@ -24,7 +24,7 @@ _sys.tracebacklimit = 0
 _logging.disable()
    
 
-def gdps_rdps_post_processing(path,
+def cmc_post_processing(path,
                          western_bound,
                          eastern_bound,
                          northern_bound,
@@ -33,7 +33,7 @@ def gdps_rdps_post_processing(path,
                          transform_longitude=True):
     
     """
-    This function processes the GDPS and RDPS data by doing the following:
+    This function processes the model data from the Canadian Meteorological Centre by doing the following:
     
     1) Re-mapping the GRIB variable keys into a plain-language format.
     
@@ -445,7 +445,7 @@ def gdps_rdps_post_processing(path,
     try:    
         ds = ds.sortby('step')
     except Exception as e:
-        pass   
+        _eccodes_error_message() 
 
     try:
         ds = ds.drop_duplicates(dim='step', keep='first')

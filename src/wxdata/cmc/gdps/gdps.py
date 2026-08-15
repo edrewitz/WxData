@@ -946,7 +946,7 @@ def gdps(final_forecast_hour=240,
         
         print("Data Processing...")
         
-        ds = _cmc_post_processing.gdps_rdps_post_processing(dir,
+        ds = _cmc_post_processing.cmc_post_processing(dir,
                                                         western_bound,
                                                         eastern_bound,
                                                         northern_bound,

@@ -127,6 +127,34 @@ def gdps_post_processing(path,
         pass
     
     try:
+        variable = variable.replace(' ', '_')
+        ds[variable] = ds['tirf']
+        ds = ds.drop_vars('tirf')
+    except Exception as e:
+        pass
+    
+    try:
+        variable = variable.replace(' ', '_')
+        ds[variable] = ds['iprate']
+        ds = ds.drop_vars('iprate')
+    except Exception as e:
+        pass
+    
+    try:
+        variable = variable.replace(' ', '_')
+        ds[variable] = ds['fzrawe']
+        ds = ds.drop_vars('fzrawe')
+    except Exception as e:
+        pass
+    
+    try:
+        variable = variable.replace(' ', '_')
+        ds[variable] = ds['tsnowp']
+        ds = ds.drop_vars('tsnowp')
+    except Exception as e:
+        pass
+    
+    try:
         ds['cloud_water'] = ds['cwat']
         ds = ds.drop_vars('cwat')
     except Exception as e:
@@ -431,6 +459,12 @@ def gdps_post_processing(path,
         ds = ds.drop_vars('v')
     except Exception as e:
         pass    
+    
+    try:
+        ds['precipitation_rate'] = ds['prate']
+        ds = ds.drop_vars('prate')
+    except Exception as e:
+        pass
 
     try:    
         ds = ds.sortby('step')
@@ -530,6 +564,34 @@ def rdps_post_processing(path,
         pass
     
     try:
+        variable = variable.replace(' ', '_')
+        ds[variable] = ds['tirf']
+        ds = ds.drop_vars('tirf')
+    except Exception as e:
+        pass
+    
+    try:
+        variable = variable.replace(' ', '_')
+        ds[variable] = ds['iprate']
+        ds = ds.drop_vars('iprate')
+    except Exception as e:
+        pass
+    
+    try:
+        variable = variable.replace(' ', '_')
+        ds[variable] = ds['fzrawe']
+        ds = ds.drop_vars('fzrawe')
+    except Exception as e:
+        pass
+    
+    try:
+        variable = variable.replace(' ', '_')
+        ds[variable] = ds['tsnowp']
+        ds = ds.drop_vars('tsnowp')
+    except Exception as e:
+        pass
+    
+    try:
         ds['cloud_water'] = ds['cwat']
         ds = ds.drop_vars('cwat')
     except Exception as e:
@@ -834,6 +896,12 @@ def rdps_post_processing(path,
         ds = ds.drop_vars('v')
     except Exception as e:
         pass    
+    
+    try:
+        ds['precipitation_rate'] = ds['prate']
+        ds = ds.drop_vars('prate')
+    except Exception as e:
+        pass
 
     try:    
         ds = ds.sortby('step')

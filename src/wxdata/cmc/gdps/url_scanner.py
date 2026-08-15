@@ -32,6 +32,18 @@ PREFIX_TODAY_00Z = f"https://dd.weather.gc.ca/{now.strftime('%Y%m%d')}/WXO-DD/mo
 PREFIX_YESTERDAY_12Z = f"https://dd.weather.gc.ca/{yd.strftime('%Y%m%d')}/WXO-DD/model_gdps/15km/12"
 PREFIX_YESTERDAY_00Z = f"https://dd.weather.gc.ca/{yd.strftime('%Y%m%d')}/WXO-DD/model_gdps/15km/00"
 
+precip_1hr = ['Precip-Accum1h',
+              'FreezingRain-Accum1h',
+              'IcePellets-Accum1h',
+              'Rain-Accum1h',
+              'Snow-Accum1h']
+
+precip_3hr = ['Precip-Accum3h',
+              'FreezingRain-Accum3h',
+              'IcePellets-Accum3h',
+              'Rain-Accum3h',
+              'Snow-Accum3h']
+
 
 def gdps_url_scanner(final_forecast_hour,
                                     proxies,
@@ -92,6 +104,24 @@ def gdps_url_scanner(final_forecast_hour,
     """
     type_of_level = type_of_level.lower()
     
+    if parameter in precip_1hr:
+        if final_forecast_hour > 84:
+            final_forecast_hour = 84
+            print("Maximum value for final_forecast_hour is 84 for 1-hourly precipitation parameters.\nDefaulting to 84.")
+        else:
+            pass
+    else:
+        pass
+    
+    if parameter in precip_3hr:
+        if final_forecast_hour > 168:
+            final_forecast_hour = 168
+            print("Maximum value for final_forecast_hour is 168 for 3-hourly precipitation parameters.\nDefaulting to 168.")
+        else:
+            pass
+    else:
+        pass
+    
     if final_forecast_hour > 240:
         final_forecast_hour = 240
         print("Maximum value for final_forecast_hour is 240.\nDefaulting to 240.")
@@ -104,6 +134,7 @@ def gdps_url_scanner(final_forecast_hour,
         final_forecast_hour = f"0{final_forecast_hour}"
     else:
         final_forecast_hour = final_forecast_hour
+        
     
     url_12z_today = f"{PREFIX_TODAY_12Z}/{final_forecast_hour}/"
     url_00z_today = f"{PREFIX_TODAY_00Z}/{final_forecast_hour}/"

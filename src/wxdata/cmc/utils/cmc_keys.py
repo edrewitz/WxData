@@ -70,6 +70,7 @@ def gdps_rdps_variable_keys(variable):
         'ozone'
         'boundary layer height'
         'precipitation type'
+        'precipitation rate'
         'pressure'
         'radiative temperature'
         'rain accumulation 12hr'
@@ -170,6 +171,7 @@ def gdps_rdps_variable_keys(variable):
         'ozone':'O3',
         'boundary layer height':'PlanetaryBoundaryLayerHeight',
         'precipitation type':'PrecipType-Instant',
+        'precipitation rate':'PrecipRate',
         'pressure':'Pressure',
         'radiative temperature':'RadiativeTemp',
         'rain accumulation 12hr':'Rain-Accum12h',

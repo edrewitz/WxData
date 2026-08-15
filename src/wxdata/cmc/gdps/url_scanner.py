@@ -46,9 +46,9 @@ def gdps_url_scanner(final_forecast_hour,
     
     Required Arguments:
     
-    1) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The GFS0P25
-    goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    384 by the nereast increment of 6 hours. 
+    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The GDPS
+    goes out to 240 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
+    240 by the nereast increment of 6 hours. 
     
     2) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 

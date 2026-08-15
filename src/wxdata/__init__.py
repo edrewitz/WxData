@@ -101,7 +101,9 @@ from wxdata.ecmwf.ecmwf import(
 
 # Canadian Meteorological Center
 # - Canadian Global (GDPS)
+# - Canadian Regional (RDPS)
 from wxdata.cmc.gdps.gdps import gdps
+from wxdata.cmc.rdps.rdps import rdps
 
 # FEMS RAWS Network
 # - Single Station Weather Observations

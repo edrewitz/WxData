@@ -1,5 +1,5 @@
 """
-This file hosts the functions for the GDPS Data Client
+This file hosts the functions for the RDPS Data Client
 
 (C) Eric J. Drewitz 2025-2026
 """
@@ -10,7 +10,7 @@ _warnings.filterwarnings('ignore')
 import wxdata.post_processors.cmc_post_processing as _cmc_post_processing
 
 from wxdata.cmc.utils.file_scanner import scan_local_machine as _scan_local_machine
-from wxdata.cmc.gdps.url_scanner import gdps_url_scanner as _gdps_url_scanner
+from wxdata.cmc.rdps.url_scanner import rdps_url_scanner as _rdps_url_scanner
 from wxdata.cmc.utils.cmc_keys import gdps_rdps_variable_keys as _gdps_rdps_variable_keys
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
 from wxdata.utils.recycle_bin import(
@@ -20,9 +20,9 @@ from wxdata.utils.recycle_bin import(
 )
 
 
-def _gdps_client(final_forecast_hour=240, 
+def _rdps_client(final_forecast_hour=84, 
              step=1,
-             path=f"GDPS",
+             path=f"RDPS",
              proxies=None, 
              chunk_size=8192,
              notifications='off',
@@ -39,13 +39,13 @@ def _gdps_client(final_forecast_hour=240,
     
     Optional Arguments:
     
-    1) final_forecast_hour (Integer) - Default = 240. The final forecast hour the user wishes to download. The GDPS
-        goes out to 240 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-        240 by the nereast increment of 6 hours. 
+    1) final_forecast_hour (Integer) - Default = 84. The final forecast hour the user wishes to download. The RDPS
+        goes out to 84 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
+        84 by the nereast increment of 6 hours. 
         
     2) step (Integer) - Default=1. Increment in forecast hours (Default=1hrly).
     
-    3) path (String) - Default='GDPS'. The parent directory for the GRIB2 files on the local machine.
+    3) path (String) - Default='RDPS'. The parent directory for the GRIB2 files on the local machine.
     
     4) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
@@ -370,15 +370,15 @@ def _gdps_client(final_forecast_hour=240,
     Returns
     -------
     
-    1) Scans and downloads the latest GDPS data for `parameter` of `level_type` at `level` or `layer`
+    1) Scans and downloads the latest RDPS data for `parameter` of `level_type` at `level` or `layer`
     
-    2) When clear_data=False (Default) -> The GDPS URL & file scanners are active and will prevent downloading data
+    2) When clear_data=False (Default) -> The RDPS URL & file scanners are active and will prevent downloading data
         from the server until newer data arrives. This helps prevent you from getting temporarily blocked from requesting
         data as a result of server rate limits. 
         
     3) Builds and/or clears out the directory and downloads the new files into the directory at {path}
     
-    4) The full directory path defined by the user where the GDPS files are stored. 
+    4) The full directory path defined by the user where the RDPS files are stored. 
     
     """
     
@@ -395,9 +395,9 @@ def _gdps_client(final_forecast_hour=240,
         else:
             suffix = ' PVU'
         
-        print(f"Scanning https://dd.weather.gc.ca/ GDPS {variable.upper()} {level}{suffix}")
+        print(f"Scanning https://dd.weather.gc.ca/ RDPS {variable.upper()} {level}{suffix}")
         print("Please Wait...")
-        urls, files = _gdps_url_scanner(final_forecast_hour,
+        urls, files = _rdps_url_scanner(final_forecast_hour,
                             proxies,
                             level_type,
                             variable_key,
@@ -424,9 +424,9 @@ def _gdps_client(final_forecast_hour=240,
                                         proxies=proxies,
                                         chunk_size=chunk_size,
                                         notifications=notifications)
-            print(f"GDPS {variable.upper()} {level}{suffix} Download Complete!\n")   
+            print(f"RDPS {variable.upper()} {level}{suffix} Download Complete!\n")   
         else:
-            print(f"GDPS {variable.upper()} {level}{suffix} data on local machine is up to date with latest data on the server.\nSkipping Download.\n")
+            print(f"RDPS {variable.upper()} {level}{suffix} data on local machine is up to date with latest data on the server.\nSkipping Download.\n")
             
     elif level_type == 'pressure layer' or level_type == 'depth below surface':
         
@@ -437,9 +437,9 @@ def _gdps_client(final_forecast_hour=240,
             
         full_path = f"{path}/{variable.upper()}/{ext}"
         
-        print(f"Scanning https://dd.weather.gc.ca/ GDPS {variable.upper()} {ext}")
+        print(f"Scanning https://dd.weather.gc.ca/ RDPS {variable.upper()} {ext}")
         print("Please Wait...")
-        urls, files = _gdps_url_scanner(final_forecast_hour,
+        urls, files = _rdps_url_scanner(final_forecast_hour,
                             proxies,
                             level_type,
                             variable_key,
@@ -467,17 +467,17 @@ def _gdps_client(final_forecast_hour=240,
                                         proxies=proxies,
                                         chunk_size=chunk_size,
                                         notifications=notifications)
-            print(f"GDPS {variable.upper()} {ext} Download Complete!\n")   
+            print(f"RDPS {variable.upper()} {ext} Download Complete!\n")   
         else:
-            print(f"GDPS {variable.upper()} {ext} data on local machine is up to date with latest data on the server.\nSkipping Download.\n")
+            print(f"RDPS {variable.upper()} {ext} data on local machine is up to date with latest data on the server.\nSkipping Download.\n")
             
     else:
         
         full_path = f"{path}/{variable.upper()}/{level_type.upper()}"
         
-        print(f"Scanning https://dd.weather.gc.ca/ GDPS {variable.upper()} {level_type}")
+        print(f"Scanning https://dd.weather.gc.ca/ RDPS {variable.upper()} {level_type}")
         print("Please Wait...")
-        urls, files = _gdps_url_scanner(final_forecast_hour,
+        urls, files = _rdps_url_scanner(final_forecast_hour,
                             proxies,
                             level_type,
                             variable_key,
@@ -504,9 +504,9 @@ def _gdps_client(final_forecast_hour=240,
                                         proxies=proxies,
                                         chunk_size=chunk_size,
                                         notifications=notifications)
-            print(f"GDPS {variable.upper()} {level_type} Download Complete!\n")   
+            print(f"RDPS {variable.upper()} {level_type} Download Complete!\n")   
         else:
-            print(f"GDPS {variable.upper()} {level_type} data on local machine is up to date with latest data on the server.\nSkipping Download.\n")
+            print(f"RDPS {variable.upper()} {level_type} data on local machine is up to date with latest data on the server.\nSkipping Download.\n")
             
     
     return full_path
@@ -514,13 +514,9 @@ def _gdps_client(final_forecast_hour=240,
 
         
 
-def gdps(final_forecast_hour=240, 
-             western_bound=-180, 
-             eastern_bound=180, 
-             northern_bound=90, 
-             southern_bound=-90, 
+def rdps(final_forecast_hour=84, 
              step=1,
-             path=f"GDPS",
+             path=f"RDPS",
              proxies=None, 
              clear_recycle_bin=False,
              process_data=True,
@@ -535,53 +531,45 @@ def gdps(final_forecast_hour=240,
             layer=[1000, 500]):
     
     """
-    This function retrieves the latest GDPS data from https://dd.weather.gc.ca/ and returns an xarray.array of specified data.
+    This function retrieves the latest RDPS data from https://dd.weather.gc.ca/ and returns an xarray.array of specified data.
     
     Required Arguments: None
     
     Optional Arguments:
     
-    1) final_forecast_hour (Integer) - Default = 240. The final forecast hour the user wishes to download. The GDPS
-        goes out to 240 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-        240 by the nereast increment of 6 hours. 
+    1) final_forecast_hour (Integer) - Default = 84. The final forecast hour the user wishes to download. The RDPS
+        goes out to 84 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
+        84 by the nereast increment of 6 hours. 
     
-    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
-
-    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
-
-    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
-
-    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+    2) step (Integer) - Default=1. Increment in forecast hours (Default=1hrly).
     
-    6) step (Integer) - Default=1. Increment in forecast hours (Default=1hrly).
+    3) path (String) - Default='RDPS'. The parent directory for the GRIB2 files on the local machine.
     
-    7) path (String) - Default='GDPS'. The parent directory for the GRIB2 files on the local machine.
-    
-    8) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    4) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
                                
-    9) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
+    5) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
         with each run of the program you are calling WxData. This setting is to help preserve memory on the machine.
         
-    10) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
+    6) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed and no values
        returned to the user.
        
-    11) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+    7) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
         
-    12) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+    8) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    13) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    9) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
-    14) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    10) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    15) level_type (String) - Default='pressure'. The type of level for the variable.
+    11) level_type (String) - Default='pressure'. The type of level for the variable.
     
         ***Level Types***
         
@@ -595,15 +583,15 @@ def gdps(final_forecast_hour=240,
         'nominal top'
         'entire atmosphere'
         
-    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+    12) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
         
-    17) variable (String) - Default='geopotential height'. The variable the user wishes to download.
+    13) variable (String) - Default='geopotential height'. The variable the user wishes to download.
     
-    18) level (Integer or Float) - Default=500. For parameters that have multiple levels, here is where you select the level to 
+    14) level (Integer or Float) - Default=500. For parameters that have multiple levels, here is where you select the level to 
         download. Default is 500mb. An example of where this can be a floating point is 1.5 for 1.5 PVU. 
         
-    19) layer (Integer List) - Default=[1000, 500]. For level types that correspond to a layer (i.e. 'pressure layer' & 'depth below surface')
+    15) layer (Integer List) - Default=[1000, 500]. For level types that correspond to a layer (i.e. 'pressure layer' & 'depth below surface')
         here is where you define the layer. Layers are in the following format for each level_type:
         
         level_type='pressure layer': -> layer=[lower level, upper level] (i.e. layer=[1000, 500] for 1000mb to 500mb layer).
@@ -893,9 +881,9 @@ def gdps(final_forecast_hour=240,
     Returns
     -------
     
-    An xarray.array of the latest GDPS forecast data for a user-specified variable, level/layer and level_type.
+    An xarray.array of the latest RDPS forecast data for a user-specified variable, level/layer and level_type.
     
-    GDPS files are saved to directory {path}  
+    RDPS files are saved to directory {path}  
     """
     if clear_recycle_bin == True:
         _clear_recycle_bin_windows()
@@ -906,7 +894,7 @@ def gdps(final_forecast_hour=240,
 
     if level_type == 'pressure' or level_type == 'height above ground' or level_type == 'potential vorticity surface':
 
-        dir = _gdps_client(final_forecast_hour=final_forecast_hour, 
+        dir = _rdps_client(final_forecast_hour=final_forecast_hour, 
                     step=step,
                     path=path,
                     proxies=proxies, 
@@ -919,7 +907,7 @@ def gdps(final_forecast_hour=240,
             
             
     elif level_type == 'pressure layer' or level_type == 'depth below surface':
-        dir = _gdps_client(final_forecast_hour=final_forecast_hour, 
+        dir = _rdps_client(final_forecast_hour=final_forecast_hour, 
                     step=step,
                     path=path,
                     proxies=proxies, 
@@ -932,7 +920,7 @@ def gdps(final_forecast_hour=240,
         
         
     else:
-        dir = _gdps_client(final_forecast_hour=final_forecast_hour, 
+        dir = _rdps_client(final_forecast_hour=final_forecast_hour, 
                     step=step,
                     path=path,
                     proxies=proxies, 
@@ -946,11 +934,7 @@ def gdps(final_forecast_hour=240,
         
         print("Data Processing...")
         
-        ds = _cmc_post_processing.gdps_post_processing(dir,
-                                                        western_bound,
-                                                        eastern_bound,
-                                                        northern_bound,
-                                                        southern_bound,
+        ds = _cmc_post_processing.rdps_post_processing(dir,
                                                         variable=variable)
         
         if convert_temperature == True:
@@ -961,14 +945,14 @@ def gdps(final_forecast_hour=240,
             pass
         
         if level_type == 'pressure' or level_type == 'height above ground' or level_type == 'potential vorticity surface':
-            print(f"GDPS Data Processing Complete: {variable.upper()} - {level}mb")
+            print(f"RDPS Data Processing Complete: {variable.upper()} - {level}mb")
         elif level_type == 'pressure layer' or level_type == 'depth below surface':
             if level_type == 'pressure layer':
-                print(f"GDPS Data Processing Complete: {variable.upper()} - {layer[0]}to{layer[1]}mb")
+                print(f"RDPS Data Processing Complete: {variable.upper()} - {layer[0]}to{layer[1]}mb")
             else:
-                print(f"GDPS Data Processing Complete: {variable.upper()} - {layer[0]}to{layer[1]}cm")
+                print(f"RDPS Data Processing Complete: {variable.upper()} - {layer[0]}to{layer[1]}cm")
         else:
-            print(f"GDPS Data Processing Complete: {variable.upper()} - surface")
+            print(f"RDPS Data Processing Complete: {variable.upper()} - surface")
         return ds
     else:
         pass

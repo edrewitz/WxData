@@ -448,9 +448,12 @@ def gdps_url_scanner(final_forecast_hour,
                                 
             file = f"{date}T{run}Z_MSC_GDPS_{parameter}_PVU-{level}_LatLon0.15_PT{hour}H.grib2"
             
-        else:
+        elif type_of_level == 'nominal top':
             
             file = f"{date}T{run}Z_MSC_GDPS_{parameter}_NTAtm_LatLon0.15_PT{hour}H.grib2"
+            
+        else:
+            file = f"{date}T{run}Z_MSC_GDPS_{parameter}_EAtm_LatLon0.15_PT{hour}H.grib2"
             
         files.append(file)
     

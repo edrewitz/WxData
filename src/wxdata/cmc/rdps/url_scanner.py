@@ -38,18 +38,19 @@ PREFIX_YESTERDAY_06Z = f"https://dd.weather.gc.ca/{yd.strftime('%Y%m%d')}/WXO-DD
 PREFIX_YESTERDAY_00Z = f"https://dd.weather.gc.ca/{yd.strftime('%Y%m%d')}/WXO-DD/model_rdps/10km/00"
 
 
-def _eta_levels(level):
+def _eta_levels(parameter):
     
     """
     Returns the eta coordinate in the format for the filename. 
     """
     
     levels = {
-        1:10000,
-        0.65:6500
+        'StormRelativeHelicity':'10000',
+        'StormSeverityIndex':'10000',
+        'VerticalWindShear':'6500'
     }
     
-    return levels[level]
+    return levels[parameter]
 
 def rdps_url_scanner(final_forecast_hour,
                                     proxies,
@@ -271,9 +272,9 @@ def rdps_url_scanner(final_forecast_hour,
         file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_RDPS_{parameter}_EAtm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
         
     else:
-        has_levels = False
+        has_levels = True
         
-        level = _eta_levels(level)
+        level = _eta_levels(parameter)
         file_18z_today = f"{now.strftime('%Y%m%d')}T18Z_MSC_RDPS_{parameter}_EtaL-{level}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
         file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_RDPS_{parameter}_EtaL-{level}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
         file_06z_today = f"{now.strftime('%Y%m%d')}T06Z_MSC_RDPS_{parameter}_EtaL-{level}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
@@ -623,9 +624,16 @@ def rdps_url_scanner(final_forecast_hour,
                                 
             file = f"{date}T{run}Z_MSC_RDPS_{parameter}_PVU-{level}_RLatLon0.09_PT{hour}H.grib2"
             
-        else:
+        elif type_of_level == 'nominal top':
             
             file = f"{date}T{run}Z_MSC_RDPS_{parameter}_NTAtm_RLatLon0.09_PT{hour}H.grib2"
+            
+        elif type_of_level == 'entire atmosphere':
+            
+            file = f"{date}T{run}Z_MSC_RDPS_{parameter}_EAtm_RLatLon0.09_PT{hour}H.grib2"
+            
+        else:
+            file = f"{date}T{run}Z_MSC_RDPS_{parameter}_EtaL-{level}_RLatLon0.09_PT{hour}H.grib2"
             
         files.append(file)
     

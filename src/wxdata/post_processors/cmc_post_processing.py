@@ -29,16 +29,48 @@ def gdps_rdps_post_processing(path,
                          eastern_bound,
                          northern_bound,
                          southern_bound,
-                         variable=None):
+                         variable=None,
+                         transform_longitude=True):
     
     """
+    This function processes the GDPS and RDPS data by doing the following:
     
+    1) Re-mapping the GRIB variable keys into a plain-language format.
     
+    2) Trimming the data to fit the coordinates of your bounding box.
+    
+    3) Transform ds['longitude'] from a 0 to 360 coordinate system to -180 to 180 for the GDPS.
+    
+    Required Arguments:
+    
+    1) path (String) - The path to the directory holding the GRIB2 Data from CMC.
+    
+    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+
+    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+
+    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+
+    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+    
+    Optional Arguments:
+    
+    1) variable (String) - Default=None. For parameters that are unrecognized by eccodes, users can rename their
+        parameter from 'unknown' to `variable`. 
+        
+    2) transform_longitude (Boolean) - Default=True. 
+        When set to True, the longitude coordinate is in the 0 to 360 projection and needs to be transformed to -180 to 180
+        When set to False, the longitude coordinate is in the -180 to 180 projection and does not need to be transformed.
+        
+    Returns
+    -------    
+    
+    An xarray.array of the latest GDPS forecast data for a user-specified variable, level/layer and level_type.
     """
     
     
 
-    
+    model = model.lower()
     western_bound, eastern_bound = _convert_lon(western_bound, 
                                                         eastern_bound) 
     
@@ -53,8 +85,10 @@ def gdps_rdps_post_processing(path,
                                 decode_timedelta=False,
                                 backend_kwargs={"indexpath": ""}).sel(longitude=slice(western_bound, eastern_bound, 1), 
                                                                                                 latitude=slice(southern_bound, northern_bound, 1))
-                
-        ds = _shift_longitude(ds)
+        if transform_longitude == True:        
+            ds = _shift_longitude(ds)
+        else:
+            pass
     except Exception as e:
         pass
     
@@ -420,3 +454,5 @@ def gdps_rdps_post_processing(path,
 
     
     return ds
+
+

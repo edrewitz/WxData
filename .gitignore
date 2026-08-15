@@ -27,3 +27,4 @@ dist/
 *.grb2
 *.nc
 *.csv
+*.idx

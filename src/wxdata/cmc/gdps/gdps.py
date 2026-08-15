@@ -378,6 +378,8 @@ def _gdps_client(final_forecast_hour=240,
         
     3) Builds and/or clears out the directory and downloads the new files into the directory at {path}
     
+    4) The full directory path defined by the user where the GDPS files are stored. 
+    
     """
     
     variable_key = _gdps_rdps_variable_keys(variable)

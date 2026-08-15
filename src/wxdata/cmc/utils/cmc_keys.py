@@ -4,6 +4,17 @@ This file hosts the functions that map the user input to he variable keys to the
 (C) Eric J. Drewitz 2025-2026
 """
 
+import sys
+
+def _invalid_key(variable):
+    
+    """
+    Returns an error message for invalid variable keys.
+    """
+    
+    print(f"Error: '{variable}' is not a valid variable key.\nPlease try again")
+    sys.exit(1)
+
 def gdps_rdps_variable_keys(variable):
     
     """
@@ -206,5 +217,8 @@ def gdps_rdps_variable_keys(variable):
         'vertical wind shear':'VerticalWindShear'
     }
     
-    return variables[variable]
+    try:
+        return variables[variable]
+    except Exception as e:
+        _invalid_key(variable)
 

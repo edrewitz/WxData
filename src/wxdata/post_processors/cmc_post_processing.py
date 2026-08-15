@@ -482,7 +482,7 @@ def rdps_post_processing(path,
                                 compat='override', 
                                 decode_timedelta=False,
                                 backend_kwargs={"indexpath": ""}).sel(x=slice(180, 900, 1), 
-                                                                      y=slice(100, 800, 1))
+                                                                      y=slice(0, 800, 1))
     except Exception as e:
         pass
     

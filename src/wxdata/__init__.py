@@ -99,6 +99,12 @@ from wxdata.ecmwf.ecmwf import(
     ecmwf_ifs_wave_ens
 )
 
+# Canadian Meteorological Center
+# - Canadian Global (GDPS)
+# - Canadian Regional (RDPS)
+from wxdata.cmc.gdps.gdps import gdps
+from wxdata.cmc.rdps.rdps import rdps
+
 # FEMS RAWS Network
 # - Single Station Weather Observations
 # - Single Station Fuels Observations
@@ -197,6 +203,11 @@ import wxdata.post_processors.ecmwf_post_processing as ecmwf_post_processing
 
 # Climate Forecast System (CFS)
 import wxdata.post_processors.cfs_post_processing as cfs_post_processing
+
+# Canadian Meteorological Center Gridded Models
+# - GDPS
+# - RDPS
+import wxdata.post_processors.cmc_post_processing as cmc_post_processing
 
 # Real-Time Mesoscale Analysis (RTMA)
 from wxdata.post_processors.rtma_post_processing import process_rtma_data

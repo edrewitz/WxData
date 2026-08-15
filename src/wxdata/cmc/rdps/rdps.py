@@ -148,6 +148,30 @@ def _rdps_client(final_forecast_hour=84,
                                                 OR 
                            (level_type='nominal top' -> 'nominal top' is the only level)  
                            
+    'freezing rain accumulation 12hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level) 
+        
+    'freezing rain accumulation 1hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'freezing rain accumulation 24hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'freezing rain accumulation 3hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'freezing rain accumulation 6hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'freezing rain accumulation total':  
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)              
+                           
     'geopotential height':
         valid level type(s) = 'pressure', 'surface'.
         valid levels:
@@ -159,6 +183,30 @@ def _rdps_client(final_forecast_hour=84,
     'humidex':
         valid level type(s): 'surface'
         valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+    'ice pellets accumulation 12hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level) 
+        
+    'ice pellets accumulation 1hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'ice pellets accumulation 24hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'ice pellets accumulation 3hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'ice pellets accumulation 6hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'ice pellets accumulation total':  
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)    
         
     'k index':
         valid level type(s): 'surface'
@@ -224,6 +272,30 @@ def _rdps_client(final_forecast_hour=84,
         valid level type(s): 'surface'
         valid levels: None (level_type='surface' -> 'surface' is the only level)
         
+    'rain accumulation 12hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level) 
+        
+    'rain accumulation 1hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'rain accumulation 24hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'rain accumulation 3hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'rain accumulation 6hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'rain accumulation total':  
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
     'relative humidity':    
         valid level type(s) = 'pressure', 'height above ground'.
         valid levels:
@@ -249,6 +321,10 @@ def _rdps_client(final_forecast_hour=84,
         valid level type(s): 'surface'
         valid levels: None (level_type='surface' -> 'surface' is the only level)
         
+    'seeing index':
+        valid level type(s): 'entire atmosphere'
+        valid levels: None (level_type='entire atmosphere' -> 'entire atmosphere' is the only level) 
+        
     'sensible heat net flux'
         valid level type(s): 'surface'
         valid levels: None (level_type='surface' -> 'surface' is the only level)
@@ -256,7 +332,35 @@ def _rdps_client(final_forecast_hour=84,
     'showalter index':
         valid level type(s) = 'pressure'.
         valid levels:
-            level_type='pressure' (hPa): 500.  
+            level_type='pressure' (hPa): 500. 
+            
+    'sky transparency index': 
+        valid level type(s): 'entire atmosphere'
+        valid levels: None (level_type='entire atmosphere' -> 'entire atmosphere' is the only level) 
+            
+    'snow accumulation 12hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level) 
+        
+    'snow accumulation 1hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'snow accumulation 24hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'snow accumulation 3hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'snow accumulation 6hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'snow accumulation total':  
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
             
     'snow density':
         valid level type(s): 'surface'
@@ -293,6 +397,19 @@ def _rdps_client(final_forecast_hour=84,
                                    
             level_type='height above ground' (m): 2, 40, 80, 120
             
+    'storm relative helicity':
+        valid level type(s): 'eta'
+        valid levels: None (level_type='eta' -> 'eta' is the only level)    
+        
+    'storm severity index':
+        valid level type(s): 'eta'
+        valid levels: None (level_type='eta' -> 'eta' is the only level)      
+    
+    'sweat index':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+             
     'thickness':
         valid level type(s): 'pressure layer'.
         valid_levels:
@@ -304,6 +421,30 @@ def _rdps_client(final_forecast_hour=84,
     'total cloud cover':
         valid level type(s): 'surface'
         valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+    'total precitation 12hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level) 
+        
+    'total precitation 1hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'total precitation 24hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'total precitation 3hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'total precitation 6hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'total precitation total':  
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
         
     'total totals index':
         valid level type(s): 'surface'
@@ -366,6 +507,10 @@ def _rdps_client(final_forecast_hour=84,
                                    350, 300, 275, 250, 225, 200, 175, 150, 100, 50, 30, 20, 10, 5, 1.
                                    
             level_type='height above ground' (m): 10, 40, 80, 120
+            
+    'vertical wind shear':
+        valid level type(s): 'eta'
+        valid levels: None (level_type='eta' -> 'eta' is the only level)        
             
     Returns
     -------
@@ -659,6 +804,30 @@ def rdps(final_forecast_hour=84,
                                                 OR 
                            (level_type='nominal top' -> 'nominal top' is the only level)  
                            
+    'freezing rain accumulation 12hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level) 
+        
+    'freezing rain accumulation 1hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'freezing rain accumulation 24hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'freezing rain accumulation 3hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'freezing rain accumulation 6hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'freezing rain accumulation total':  
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)              
+                           
     'geopotential height':
         valid level type(s) = 'pressure', 'surface'.
         valid levels:
@@ -670,6 +839,30 @@ def rdps(final_forecast_hour=84,
     'humidex':
         valid level type(s): 'surface'
         valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+    'ice pellets accumulation 12hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level) 
+        
+    'ice pellets accumulation 1hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'ice pellets accumulation 24hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'ice pellets accumulation 3hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'ice pellets accumulation 6hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'ice pellets accumulation total':  
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)    
         
     'k index':
         valid level type(s): 'surface'
@@ -735,6 +928,30 @@ def rdps(final_forecast_hour=84,
         valid level type(s): 'surface'
         valid levels: None (level_type='surface' -> 'surface' is the only level)
         
+    'rain accumulation 12hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level) 
+        
+    'rain accumulation 1hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'rain accumulation 24hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'rain accumulation 3hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'rain accumulation 6hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'rain accumulation total':  
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
     'relative humidity':    
         valid level type(s) = 'pressure', 'height above ground'.
         valid levels:
@@ -760,6 +977,10 @@ def rdps(final_forecast_hour=84,
         valid level type(s): 'surface'
         valid levels: None (level_type='surface' -> 'surface' is the only level)
         
+    'seeing index':
+        valid level type(s): 'entire atmosphere'
+        valid levels: None (level_type='entire atmosphere' -> 'entire atmosphere' is the only level) 
+        
     'sensible heat net flux'
         valid level type(s): 'surface'
         valid levels: None (level_type='surface' -> 'surface' is the only level)
@@ -767,7 +988,35 @@ def rdps(final_forecast_hour=84,
     'showalter index':
         valid level type(s) = 'pressure'.
         valid levels:
-            level_type='pressure' (hPa): 500.  
+            level_type='pressure' (hPa): 500. 
+            
+    'sky transparency index': 
+        valid level type(s): 'entire atmosphere'
+        valid levels: None (level_type='entire atmosphere' -> 'entire atmosphere' is the only level) 
+            
+    'snow accumulation 12hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level) 
+        
+    'snow accumulation 1hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'snow accumulation 24hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'snow accumulation 3hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'snow accumulation 6hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'snow accumulation total':  
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
             
     'snow density':
         valid level type(s): 'surface'
@@ -804,6 +1053,19 @@ def rdps(final_forecast_hour=84,
                                    
             level_type='height above ground' (m): 2, 40, 80, 120
             
+    'storm relative helicity':
+        valid level type(s): 'eta'
+        valid levels: None (level_type='eta' -> 'eta' is the only level)    
+        
+    'storm severity index':
+        valid level type(s): 'eta'
+        valid levels: None (level_type='eta' -> 'eta' is the only level)      
+    
+    'sweat index':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+             
     'thickness':
         valid level type(s): 'pressure layer'.
         valid_levels:
@@ -815,6 +1077,30 @@ def rdps(final_forecast_hour=84,
     'total cloud cover':
         valid level type(s): 'surface'
         valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+    'total precitation 12hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level) 
+        
+    'total precitation 1hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'total precitation 24hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'total precitation 3hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'total precitation 6hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'total precitation total':  
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
         
     'total totals index':
         valid level type(s): 'surface'
@@ -877,6 +1163,10 @@ def rdps(final_forecast_hour=84,
                                    350, 300, 275, 250, 225, 200, 175, 150, 100, 50, 30, 20, 10, 5, 1.
                                    
             level_type='height above ground' (m): 10, 40, 80, 120
+            
+    'vertical wind shear':
+        valid level type(s): 'eta'
+        valid levels: None (level_type='eta' -> 'eta' is the only level)   
             
     Returns
     -------

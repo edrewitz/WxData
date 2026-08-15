@@ -902,6 +902,24 @@ def rdps_post_processing(path,
         ds = ds.drop_vars('prate')
     except Exception as e:
         pass
+    
+    try:
+        ds['sweat_index'] = ds['sx']
+        ds = ds.drop_vars('sx')
+    except Exception as e:
+        pass
+    
+    try:
+        ds['storm_relative_helicity'] = ds['hlcy']
+        ds = ds.drop_vars('hlcy')
+    except Exception as e:
+        pass
+    
+    try:
+        ds['vertical_wind_shear'] = ds['vwsh']
+        ds = ds.drop_vars('vwsh')
+    except Exception as e:
+        pass
 
     try:    
         ds = ds.sortby('step')

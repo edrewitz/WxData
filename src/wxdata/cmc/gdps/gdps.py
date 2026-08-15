@@ -148,6 +148,30 @@ def _gdps_client(final_forecast_hour=240,
                                                 OR 
                            (level_type='nominal top' -> 'nominal top' is the only level)  
                            
+    'freezing rain accumulation 12hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level) 
+        
+    'freezing rain accumulation 1hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'freezing rain accumulation 24hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'freezing rain accumulation 3hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'freezing rain accumulation 6hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'freezing rain accumulation total':  
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)              
+                           
     'geopotential height':
         valid level type(s) = 'pressure', 'surface'.
         valid levels:
@@ -159,6 +183,30 @@ def _gdps_client(final_forecast_hour=240,
     'humidex':
         valid level type(s): 'surface'
         valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+    'ice pellets accumulation 12hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level) 
+        
+    'ice pellets accumulation 1hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'ice pellets accumulation 24hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'ice pellets accumulation 3hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'ice pellets accumulation 6hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'ice pellets accumulation total':  
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)    
         
     'k index':
         valid level type(s): 'surface'
@@ -224,6 +272,30 @@ def _gdps_client(final_forecast_hour=240,
         valid level type(s): 'surface'
         valid levels: None (level_type='surface' -> 'surface' is the only level)
         
+    'rain accumulation 12hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level) 
+        
+    'rain accumulation 1hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'rain accumulation 24hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'rain accumulation 3hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'rain accumulation 6hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'rain accumulation total':  
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
     'relative humidity':    
         valid level type(s) = 'pressure', 'height above ground'.
         valid levels:
@@ -257,6 +329,30 @@ def _gdps_client(final_forecast_hour=240,
         valid level type(s) = 'pressure'.
         valid levels:
             level_type='pressure' (hPa): 500.  
+            
+    'snow accumulation 12hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level) 
+        
+    'snow accumulation 1hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'snow accumulation 24hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'snow accumulation 3hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'snow accumulation 6hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'snow accumulation total':  
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
             
     'snow density':
         valid level type(s): 'surface'
@@ -304,6 +400,30 @@ def _gdps_client(final_forecast_hour=240,
     'total cloud cover':
         valid level type(s): 'surface'
         valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+    'total precitation 12hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level) 
+        
+    'total precitation 1hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'total precitation 24hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'total precitation 3hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'total precitation 6hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'total precitation total':  
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
         
     'total totals index':
         valid level type(s): 'surface'
@@ -671,6 +791,30 @@ def gdps(final_forecast_hour=240,
                                                 OR 
                            (level_type='nominal top' -> 'nominal top' is the only level)  
                            
+    'freezing rain accumulation 12hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level) 
+        
+    'freezing rain accumulation 1hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'freezing rain accumulation 24hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'freezing rain accumulation 3hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'freezing rain accumulation 6hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'freezing rain accumulation total':  
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)              
+                           
     'geopotential height':
         valid level type(s) = 'pressure', 'surface'.
         valid levels:
@@ -682,6 +826,30 @@ def gdps(final_forecast_hour=240,
     'humidex':
         valid level type(s): 'surface'
         valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+    'ice pellets accumulation 12hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level) 
+        
+    'ice pellets accumulation 1hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'ice pellets accumulation 24hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'ice pellets accumulation 3hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'ice pellets accumulation 6hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'ice pellets accumulation total':  
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)    
         
     'k index':
         valid level type(s): 'surface'
@@ -747,6 +915,30 @@ def gdps(final_forecast_hour=240,
         valid level type(s): 'surface'
         valid levels: None (level_type='surface' -> 'surface' is the only level)
         
+    'rain accumulation 12hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level) 
+        
+    'rain accumulation 1hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'rain accumulation 24hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'rain accumulation 3hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'rain accumulation 6hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'rain accumulation total':  
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
     'relative humidity':    
         valid level type(s) = 'pressure', 'height above ground'.
         valid levels:
@@ -780,6 +972,30 @@ def gdps(final_forecast_hour=240,
         valid level type(s) = 'pressure'.
         valid levels:
             level_type='pressure' (hPa): 500.  
+            
+    'snow accumulation 12hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level) 
+        
+    'snow accumulation 1hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'snow accumulation 24hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'snow accumulation 3hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'snow accumulation 6hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'snow accumulation total':  
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
             
     'snow density':
         valid level type(s): 'surface'
@@ -827,6 +1043,30 @@ def gdps(final_forecast_hour=240,
     'total cloud cover':
         valid level type(s): 'surface'
         valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+    'total precitation 12hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level) 
+        
+    'total precitation 1hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'total precitation 24hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+        
+    'total precitation 3hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'total precitation 6hr':
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)  
+        
+    'total precitation total':  
+        valid level type(s): 'surface'
+        valid levels: None (level_type='surface' -> 'surface' is the only level)   
         
     'total totals index':
         valid level type(s): 'surface'

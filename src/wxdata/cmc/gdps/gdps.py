@@ -9,7 +9,7 @@ import warnings as _warnings
 _warnings.filterwarnings('ignore')
 import wxdata.post_processors.cmc_post_processing as _cmc_post_processing
 
-from wxdata.cmc.gdps.file_scanner import scan_local_machine as _scan_local_machine
+from wxdata.cmc.utils.file_scanner import scan_local_machine as _scan_local_machine
 from wxdata.cmc.gdps.url_scanner import gdps_url_scanner as _gdps_url_scanner
 from wxdata.cmc.utils.cmc_keys import gdps_rdps_variable_keys as _gdps_rdps_variable_keys
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units

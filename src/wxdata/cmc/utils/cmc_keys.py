@@ -41,8 +41,8 @@ def gdps_rdps_variable_keys(variable):
         'land water proportion':'LandWaterProportion',
         'latent heat net flux':'LatentHeatNetFlux',
         'lifted index':'LiftedIndex-MU-VT',
-        'maximum wind gust 10m':'WindGust-Max',
-        'minimum wind gust 10m':'WindGust-Min',
+        'maximum wind gust':'WindGust-Max',
+        'minimum wind gust':'WindGust-Min',
         'net longwave radiation flux':'NetLongwaveRadiationFlux-Accum',
         'net shortwave radiation flux':'NetShortwaveRadiationFlux-Accum',
         'ozone mixing ratio':'O3MixingRatio',
@@ -54,7 +54,7 @@ def gdps_rdps_variable_keys(variable):
         'relative humidity':'RelativeHumidity',
         'surface runoff':'Runoff-Accum',
         'sea ice fraction':'SeaIceFraction',
-        'water temperature':'SeaWaterTemp',
+        'sea surface temperature':'SeaWaterTemp',
         'sensible heat net flux':'SensibleHeatNetFlux',
         'showalter index':'ShowalterIndex',
         'snow density':'SnowDensity',
@@ -80,28 +80,3 @@ def gdps_rdps_variable_keys(variable):
     
     return variables[variable]
 
-
-def gdps_keys(variables):
-    
-    """
-    This function creates a list of variable keys
-    
-    Required Arguments:
-    
-    1) variables (String List) - Variable names.
-    
-    Optional Arguments: None
-    
-    Returns
-    -------
-    
-    A list of variable keys for our request    
-    """
-    
-    variables_list = []
-    
-    for variable in variables:
-        v = gdps_variable_keys(variable)
-        variables_list.append(v)
-        
-    return variables_list

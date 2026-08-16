@@ -29,23 +29,23 @@ A Python package consisting of the following:
 
 # Table of Contents
 
-1) [Installation Instructions](https://edrewitz.github.io/WxData/#installation-instructions)
+1) [Installation Instructions](https://github.com/edrewitz/WxData/wiki#installation-instructions)
 
-2) [Server List (For End-To-End Clients That Can Rotate Between Servers)](https://edrewitz.github.io/WxData/#server-list)
+2) [Server List (For End-To-End Clients That Can Rotate Between Servers)](https://github.com/edrewitz/WxData/wiki#server-list)
 
-3) [Proxy Server Configuration](https://edrewitz.github.io/WxData/#proxy-server-configuration)
+3) [Proxy Server Configuration](https://github.com/edrewitz/WxData/wiki#proxy-server-configuration)
 
-4) [What makes WxData unique among various meteorological Python packages?](https://edrewitz.github.io/WxData/#what-makes-wxdata-unique-among-various-meteorological-python-packages)
+4) [What makes WxData unique among various meteorological Python packages?](https://github.com/edrewitz/WxData/wiki#what-makes-wxdata-unique-among-various-meteorological-python-packages)
 
-5) [WxData Tutorials](https://edrewitz.github.io/WxData/#wxdata-tutorials)
+5) [WxData Tutorials](https://github.com/edrewitz/WxData/wiki#wxdata-tutorials)
 
-6) [WxData Documentation](https://edrewitz.github.io/WxData/#wxdata-documentation)
+6) [WxData Documentation](https://github.com/edrewitz/WxData/wiki#wxdata-documentation)
 
-7) [Importing Functions from WxData](https://edrewitz.github.io/WxData/#importing-functions-from-wxdata)
+7) [Importing Functions from WxData](https://github.com/edrewitz/WxData/wiki#importing-functions-from-wxdata)
 
-8) [Citations](https://edrewitz.github.io/WxData/#citations)
+8) [Citations](https://github.com/edrewitz/WxData/wiki#citations)
 
-9) [Data Sources]()
+9) [Data Sources](https://github.com/edrewitz/WxData/wiki#data-sources)
 
 
 ## Installation Instructions
@@ -315,6 +315,10 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 2. [AIGEFS Members (Surface Parameters)](https://edrewitz.github.io/WxData/aigefs_surface_members)
 3. [AIGEFS Ensemble Mean & Ensemble Spread](https://edrewitz.github.io/WxData/aigefs_single)
 
+##### ***Canadian Meteorological Centre***
+1. [GDPS](https://edrewitz.github.io/WxData/gdps)
+2. [RDPS](https://edrewitz.github.io/WxData/rdps)
+
 ##### ***ECMWF Open Data***
 1. [ECMWF IFS](https://edrewitz.github.io/WxData/ECMWF_IFS)
 2. [ECMWF IFS Ensemble](https://edrewitz.github.io/WxData/ECMWF%20IFS%20Ensemble)
@@ -549,7 +553,7 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 
 ## Importing Functions from WxData
 
-```Python
+```python
 """
 This file hosts all of the functions in the WxData Python library that directly interact with the user. 
 
@@ -651,6 +655,12 @@ from wxdata.ecmwf.ecmwf import(
     ecmwf_ifs_wave_ens
 )
 
+# Canadian Meteorological Center
+# - Canadian Global (GDPS)
+# - Canadian Regional (RDPS)
+from wxdata.cmc.gdps.gdps import gdps
+from wxdata.cmc.rdps.rdps import rdps
+
 # FEMS RAWS Network
 # - Single Station Weather Observations
 # - Single Station Fuels Observations
@@ -749,6 +759,11 @@ import wxdata.post_processors.ecmwf_post_processing as ecmwf_post_processing
 
 # Climate Forecast System (CFS)
 import wxdata.post_processors.cfs_post_processing as cfs_post_processing
+
+# Canadian Meteorological Center Gridded Models
+# - GDPS
+# - RDPS
+import wxdata.post_processors.cmc_post_processing as cmc_post_processing
 
 # Real-Time Mesoscale Analysis (RTMA)
 from wxdata.post_processors.rtma_post_processing import process_rtma_data

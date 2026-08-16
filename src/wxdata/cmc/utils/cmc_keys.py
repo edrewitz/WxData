@@ -224,16 +224,195 @@ def gdps_rdps_variable_keys(variable):
     except Exception as e:
         _invalid_key(variable)
         
-
 def hrdps_variable_keys(variable):
     
     """
+    This function returns the variable in the filename to make our HTTPS request.
     
+    Required Argument:
+    
+    1) variable (String) - The variable the user wants to query.
+    
+    ***Variable List***
+    
+        'air density'
+        'absolute vorticity'
+        'albedo'
+        'blowing snow'
+        'boundary layer height'
+        'cape'
+        'character of precipitation'
+        'cloud water'
+        'conditional freezing precipitation'
+        'conditional amount of liquid precipitation'
+        'conditional amount of solid ice pellets'
+        'conditional amount of solid snow'
+        'conditional precipitation rate'
+        'convective precipitation'
+        'dew point depression'
+        'dew point'
+        'dominant precipitation type'
+        'downward longwave radiation flux'
+        'downward shortwave radiation flux'
+        'geopotential height'
+        'latent heat net flux'
+        'lifted index'
+        'mean sea level pressure'
+        'net longwave radiation flux'
+        'net shortwave radiation flux'
+        'snow level height'
+        'humidex'
+        'orography'
+        'precipitation rate'
+        'precipitation type'
+        'pressure'
+        'probability of blowing snow'
+        'probability of drizzle'
+        'probability of freezing drizzle'
+        'probability of freezing precipitation'
+        'probability of freezing rain'
+        'probability of ice pellets'
+        'probability of liquid precipitation'
+        'probability of precipitation'
+        'probability of rain'
+        'probability of snow squalls'
+        'probability of snow'
+        'probability of thunderstorms'
+        'relative humidity'
+        'sea ice fraction'
+        'secondary precipitation type'
+        'sensible heat net flux'
+        'showalter index'
+        'skin temperature'
+        'sky state'
+        'snow density'
+        'snow depth water equivalent'
+        'snow depth'
+        'soil temperature'
+        'soil volumetric ice content'
+        'soil moisture content'
+        'specific humidity'
+        'storm relative helicity'
+        'surface runoff'
+        'sweat index'
+        'temperature'
+        'thickness'
+        'total cloud cover'
+        'total precipitation intensity index'
+        'total precipitation'
+        'upward longwave radiation flux'
+        'upward shortwave radiation flux'
+        'uv index'
+        'uv index (clear sky)'
+        'ventilation index'
+        'vertical wind shear'
+        'vertical velocity'
+        'visibility through ice fog'
+        'visibility through liquid fog'
+        'land sea mask'
+        'wind chill'
+        'wind direction'
+        'wind gust'
+        'wind speed'
+        'u-wind component'
+        'v-wind component'
+    
+    Optional Arguments: None
+    
+    Returns
+    -------
+    
+    The variable in the format on the filename to make our HTTPS request.     
     """
     
     variables = {
         
-        'absolute vorticity':'ABSV',
-        'albedo':'ALBDO'
+        'air density':'HRDPS_DEN',
+        'absolute vorticity':'HRDPS_ABSV',
+        'albedo':'HRDPS_ALBDO',
+        'blowing snow':'HRDPS-WEonG_BLSN',
+        'boundary layer height':'HRDPS_HPBL',
+        'cape':'HRDPS_CAPE',
+        'character of precipitation':'HRDPS-WEonG_CHARPCPN',
+        'cloud water':'HRDPS_CWAT',
+        'conditional freezing precipitation':'HRDPS-WEonG_CONDAFZPCPN',
+        'conditional amount of liquid precipitation':'HRDPS-WEonG_CONDALPCPN',
+        'conditional amount of solid ice pellets':'HRDPS-WEonG_CONDAPL',
+        'conditional amount of solid snow':'HRDPS-WEonG_CONDASSN',
+        'conditional precipitation rate':'HRDPS-WEonG_CONDAPCPN',
+        'convective precipitation':'HRDPS_ACPCP',
+        'dew point depression':'HRDPS_DEPR',
+        'dew point':'HRDPS_DPT',
+        'dominant precipitation type':'HRDPS-WEonG_DMNTPCPNTYPE',
+        'downward longwave radiation flux':'HRDPS_DLWRF',
+        'downward shortwave radiation flux':'HRDPS_DSWRF',
+        'geopotential height':'HRDPS_HGT',
+        'latent heat net flux':'HRDPS_LHTFL',
+        'lifted index':'HRDPS_LFTX',
+        'mean sea level pressure':'HRDPS_PRMSL',
+        'net longwave radiation flux':'HRDPS_NLWRS',
+        'net shortwave radiation flux':'HRDPS_NSWRS',
+        'snow level height':'HRDPS-WEonG_HGTSNLVL',
+        'humidex':'HRDPS_Humidex',
+        'orography':'HRDPS_ORGPHY',
+        'precipitation rate':'HRDPS_PRATE',
+        'precipitation type':'HRDPS-WEonG_PCPNTYPE',
+        'pressure':'HRDPS_PRES',
+        'probability of blowing snow':'HRDPS-WEonG_PROBBLSN',
+        'probability of drizzle':'HRDPS-WEonG_PROBDZ',
+        'probability of freezing drizzle':'HRDPS-WEonG_PROBFZDZ',
+        'probability of freezing precipitation':'HRDPS-WEonG_PROBFZPCPN',
+        'probability of freezing rain':'HRDPS-WEonG_PROBFZRA',
+        'probability of ice pellets':'HRDPS-WEonG_PROBPL',
+        'probability of liquid precipitation':'HRDPS-WEonG_PROBLPCPN',
+        'probability of precipitation':'HRDPS-WEonG_PROBPCPN',
+        'probability of rain':'HRDPS-WEonG_PROBRA',
+        'probability of snow squalls':'HRDPS-WEonG_PROBSNSQ',
+        'probability of snow':'HRDPS-WEonG_PROBSN',
+        'probability of thunderstorms':'HRDPS-WEonG_PROBTSOCRNC',
+        'relative humidity':'HRDPS_RH',
+        'sea ice fraction':'HRDPS_ICEC',
+        'secondary precipitation type':'HRDPS-WEonG_SCNDPCPNTYPE',
+        'sensible heat net flux':'HRDPS_SHTFL',
+        'showalter index':'HRDPS_SHWINX',
+        'skin temperature':'HRDPS_SKINT',
+        'sky state':'HRDPS-WEonG_SKSTATE',
+        'snow density':'HRDPS_SDEN',
+        'snow depth water equivalent':'HRDPS_SDWE',
+        'snow depth':'HRDPS_SNOD',
+        'soil temperature':'HRDPS_TSOIL',
+        'soil volumetric ice content':'HRDPS_SOILVIC',
+        'soil moisture content':'HRDPS_SOILM',
+        'specific humidity':'HRDPS_SPFH',
+        'storm relative helicity':'HRDPS_HLCY',
+        'surface runoff':'HRDPS_SFCWRO',
+        'sweat index':'HRDPS_SWEAT',
+        'temperature':'HRDPS_TMP',
+        'thickness':'HRDPS_THICK',
+        'total cloud cover':'HRDPS_TCDC',
+        'total precipitation intensity index':'HRDPS-WEonG_TPCPNINTSTI',
+        'total precipitation':'HRDPS_APCP',
+        'upward longwave radiation flux':'HRDPS_ULWRF',
+        'upward shortwave radiation flux':'HRDPS_USWRF',
+        'uv index':'HRDPS_UVI',
+        'uv index (clear sky)':'HRDPS_UVIUCS',
+        'ventilation index':'HRDPS_VI',
+        'vertical wind shear':'HRDPS_VWSH',
+        'vertical velocity':'HRDPS_VVEL',
+        'visibility through ice fog':'HRDPS-WEonG_VISIFG',
+        'visibility through liquid fog':'HRDPS-WEonG_VISLFG',
+        'land sea mask':'HRDPS-WEonG_WTRLANMASK',
+        'wind chill':'HRDPS_WCF',
+        'wind direction':'HRDPS_WDIR',
+        'wind gust':'HRDPS_GUST',
+        'wind speed':'HRDPS_WIND',
+        'u-wind component':'HRDPS_UGRD',
+        'v-wind component':'HRDPS_VGRD'
     }
+    
+    try:
+        return variables[variable]
+    except Exception as e:
+        _invalid_key(variable)
+
 

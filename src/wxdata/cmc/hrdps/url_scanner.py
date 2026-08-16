@@ -1,5 +1,5 @@
 """
-This file hosts the URL Scanner for the RDPS
+This file hosts the URL Scanner for the HRDPS
 
 (C) Eric J. Drewitz 2025-2026
 """
@@ -27,15 +27,15 @@ local = datetime.now()
 # Gets yesterday's date
 yd = now - timedelta(days=1)
 
-PREFIX_TODAY_18Z = f"https://dd.weather.gc.ca/{now.strftime('%Y%m%d')}/WXO-DD/model_rdps/10km/18"
-PREFIX_TODAY_12Z = f"https://dd.weather.gc.ca/{now.strftime('%Y%m%d')}/WXO-DD/model_rdps/10km/12"
-PREFIX_TODAY_06Z = f"https://dd.weather.gc.ca/{now.strftime('%Y%m%d')}/WXO-DD/model_rdps/10km/06"
-PREFIX_TODAY_00Z = f"https://dd.weather.gc.ca/{now.strftime('%Y%m%d')}/WXO-DD/model_rdps/10km/00"
+PREFIX_TODAY_18Z = f"https://dd.weather.gc.ca/{now.strftime('%Y%m%d')}/WXO-DD/model_hrdps/continental/2.5km/18"
+PREFIX_TODAY_12Z = f"https://dd.weather.gc.ca/{now.strftime('%Y%m%d')}/WXO-DD/model_hrdps/continental/2.5km/12"
+PREFIX_TODAY_06Z = f"https://dd.weather.gc.ca/{now.strftime('%Y%m%d')}/WXO-DD/model_hrdps/continental/2.5km/06/"
+PREFIX_TODAY_00Z = f"https://dd.weather.gc.ca/{now.strftime('%Y%m%d')}/WXO-DD/model_hrdps/continental/2.5km/00/"
 
-PREFIX_YESTERDAY_18Z = f"https://dd.weather.gc.ca/{yd.strftime('%Y%m%d')}/WXO-DD/model_rdps/10km/18"
-PREFIX_YESTERDAY_12Z = f"https://dd.weather.gc.ca/{yd.strftime('%Y%m%d')}/WXO-DD/model_rdps/10km/12"
-PREFIX_YESTERDAY_06Z = f"https://dd.weather.gc.ca/{yd.strftime('%Y%m%d')}/WXO-DD/model_rdps/10km/06"
-PREFIX_YESTERDAY_00Z = f"https://dd.weather.gc.ca/{yd.strftime('%Y%m%d')}/WXO-DD/model_rdps/10km/00"
+PREFIX_YESTERDAY_18Z = f"https://dd.weather.gc.ca/{yd.strftime('%Y%m%d')}/WXO-DD/model_hrdps/continental/2.5km/18"
+PREFIX_YESTERDAY_12Z = f"https://dd.weather.gc.ca/{yd.strftime('%Y%m%d')}/WXO-DD/model_hrdps/continental/2.5km/12"
+PREFIX_YESTERDAY_06Z = f"https://dd.weather.gc.ca/{yd.strftime('%Y%m%d')}/WXO-DD/model_hrdps/continental/2.5km/06/"
+PREFIX_YESTERDAY_00Z = f"https://dd.weather.gc.ca/{yd.strftime('%Y%m%d')}/WXO-DD/model_hrdps/continental/2.5km/00/"
 
 
 def _eta_levels(parameter):
@@ -52,7 +52,7 @@ def _eta_levels(parameter):
     
     return levels[parameter]
 
-def rdps_url_scanner(final_forecast_hour,
+def hrdps_url_scanner(final_forecast_hour,
                                     proxies,
                                     type_of_level,
                                     parameter,
@@ -65,7 +65,7 @@ def rdps_url_scanner(final_forecast_hour,
     
     Required Arguments:
     
-    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The RDPS
+    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The HRDPS
         goes out to 84 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
         84 by the nereast increment of 6 hours. 
     
@@ -108,13 +108,13 @@ def rdps_url_scanner(final_forecast_hour,
     Returns
     ------
     
-    A list of full URLs for the client to download the RDPS files. 
+    A list of full URLs for the client to download the HRDPS files. 
     """
     type_of_level = type_of_level.lower()
     
-    if final_forecast_hour > 84:
-        final_forecast_hour = 84
-        print("Maximum value for final_forecast_hour is 84.\nDefaulting to 84.")
+    if final_forecast_hour > 48:
+        final_forecast_hour = 48
+        print("Maximum value for final_forecast_hour is 48.\nDefaulting to 48.")
     else:
         final_forecast_hour = final_forecast_hour
     
@@ -144,38 +144,38 @@ def rdps_url_scanner(final_forecast_hour,
         else:
             strlevel = f"{level}"
         
-        file_18z_today = f"{now.strftime('%Y%m%d')}T18Z_MSC_RDPS_{parameter}_IsbL-{strlevel}_RLatLon0.09_PT{final_forecast_hour}H.grib2"    
-        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_RDPS_{parameter}_IsbL-{strlevel}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_06z_today = f"{now.strftime('%Y%m%d')}T06Z_MSC_RDPS_{parameter}_IsbL-{strlevel}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_RDPS_{parameter}_IsbL-{strlevel}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}T18Z_MSC_RDPS_{parameter}_IsbL-{strlevel}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_RDPS_{parameter}_IsbL-{strlevel}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}T06Z_MSC_RDPS_{parameter}_IsbL-{strlevel}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_RDPS_{parameter}_IsbL-{strlevel}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
+        file_18z_today = f"{now.strftime('%Y%m%d')}T18Z_MSC_{parameter}_ISBL-{strlevel}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"    
+        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_{parameter}_ISBL-{strlevel}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_06z_today = f"{now.strftime('%Y%m%d')}T06Z_MSC_{parameter}_ISBL-{strlevel}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_{parameter}_ISBL-{strlevel}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}T18Z_MSC_{parameter}_ISBL-{strlevel}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_{parameter}_ISBL-{strlevel}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}T06Z_MSC_{parameter}_ISBL-{strlevel}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_{parameter}_ISBL-{strlevel}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
         
     elif type_of_level == 'surface':
         
         has_levels = False
-        file_18z_today = f"{now.strftime('%Y%m%d')}T18Z_MSC_RDPS_{parameter}_Sfc_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_RDPS_{parameter}_Sfc_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_06z_today = f"{now.strftime('%Y%m%d')}T06Z_MSC_RDPS_{parameter}_Sfc_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_RDPS_{parameter}_Sfc_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}T18Z_MSC_RDPS_{parameter}_Sfc_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_RDPS_{parameter}_Sfc_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}T06Z_MSC_RDPS_{parameter}_Sfc_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_RDPS_{parameter}_Sfc_RLatLon0.09_PT{final_forecast_hour}H.grib2"
+        file_18z_today = f"{now.strftime('%Y%m%d')}T18Z_MSC_{parameter}_Sfc_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_{parameter}_Sfc_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_06z_today = f"{now.strftime('%Y%m%d')}T06Z_MSC_{parameter}_Sfc_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_{parameter}_Sfc_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}T18Z_MSC_{parameter}_Sfc_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_{parameter}_Sfc_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}T06Z_MSC_{parameter}_Sfc_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_{parameter}_Sfc_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
         
     elif type_of_level == 'height above ground':
         
         has_levels = True   
-        file_18z_today = f"{now.strftime('%Y%m%d')}T18Z_MSC_RDPS_{parameter}_AGL-{level}m_RLatLon0.09_PT{final_forecast_hour}H.grib2"     
-        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_RDPS_{parameter}_AGL-{level}m_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_06z_today = f"{now.strftime('%Y%m%d')}T06Z_MSC_RDPS_{parameter}_AGL-{level}m_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_RDPS_{parameter}_AGL-{level}m_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}T18Z_MSC_RDPS_{parameter}_AGL-{level}m_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_RDPS_{parameter}_AGL-{level}m_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}T06Z_MSC_RDPS_{parameter}_AGL-{level}m_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_RDPS_{parameter}_AGL-{level}m_RLatLon0.09_PT{final_forecast_hour}H.grib2" 
+        file_18z_today = f"{now.strftime('%Y%m%d')}T18Z_MSC_{parameter}_AGL-{level}m_RLatLon0.0225_PT{final_forecast_hour}H.grib2"     
+        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_{parameter}_AGL-{level}m_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_06z_today = f"{now.strftime('%Y%m%d')}T06Z_MSC_{parameter}_AGL-{level}m_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_{parameter}_AGL-{level}m_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}T18Z_MSC_{parameter}_AGL-{level}m_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_{parameter}_AGL-{level}m_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}T06Z_MSC_{parameter}_AGL-{level}m_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_{parameter}_AGL-{level}m_RLatLon0.0225_PT{final_forecast_hour}H.grib2" 
         
     elif type_of_level == 'pressure layer':
         
@@ -202,88 +202,88 @@ def rdps_url_scanner(final_forecast_hour,
         else:
             level_high = f"{level_high}"
            
-        file_18z_today = f"{now.strftime('%Y%m%d')}T18Z_MSC_RDPS_{parameter}_IsbL-{level_low}to{level_high}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_RDPS_{parameter}_IsbL-{level_low}to{level_high}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_06z_today = f"{now.strftime('%Y%m%d')}T06Z_MSC_RDPS_{parameter}_IsbL-{level_low}to{level_high}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_RDPS_{parameter}_IsbL-{level_low}to{level_high}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}T18Z_MSC_RDPS_{parameter}_IsbL-{level_low}to{level_high}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_RDPS_{parameter}_IsbL-{level_low}to{level_high}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}T06Z_MSC_RDPS_{parameter}_IsbL-{level_low}to{level_high}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_RDPS_{parameter}_IsbL-{level_low}to{level_high}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
+        file_18z_today = f"{now.strftime('%Y%m%d')}T18Z_MSC_{parameter}_ISBL-{level_low}to{level_high}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_{parameter}_ISBL-{level_low}to{level_high}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_06z_today = f"{now.strftime('%Y%m%d')}T06Z_MSC_{parameter}_ISBL-{level_low}to{level_high}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_{parameter}_ISBL-{level_low}to{level_high}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}T18Z_MSC_{parameter}_ISBL-{level_low}to{level_high}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_{parameter}_ISBL-{level_low}to{level_high}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}T06Z_MSC_{parameter}_ISBL-{level_low}to{level_high}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_{parameter}_ISBL-{level_low}to{level_high}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
         
     elif type_of_level == 'depth below surface':
         
         has_levels = True
         level_low = levels[0]
         level_high = levels[1]
-        file_18z_today = f"{now.strftime('%Y%m%d')}T18Z_MSC_RDPS_{parameter}_DBS-{level_low}to{level_high}cm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_RDPS_{parameter}_DBS-{level_low}to{level_high}cm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_06z_today = f"{now.strftime('%Y%m%d')}T06Z_MSC_RDPS_{parameter}_DBS-{level_low}to{level_high}cm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_RDPS_{parameter}_DBS-{level_low}to{level_high}cm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}T18Z_MSC_RDPS_{parameter}_DBS-{level_low}to{level_high}cm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_RDPS_{parameter}_DBS-{level_low}to{level_high}cm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}T06Z_MSC_RDPS_{parameter}_DBS-{level_low}to{level_high}cm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_RDPS_{parameter}_DBS-{level_low}to{level_high}cm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
+        file_18z_today = f"{now.strftime('%Y%m%d')}T18Z_MSC_{parameter}_DBS-{level_low}to{level_high}cm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_{parameter}_DBS-{level_low}to{level_high}cm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_06z_today = f"{now.strftime('%Y%m%d')}T06Z_MSC_{parameter}_DBS-{level_low}to{level_high}cm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_{parameter}_DBS-{level_low}to{level_high}cm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}T18Z_MSC_{parameter}_DBS-{level_low}to{level_high}cm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_{parameter}_DBS-{level_low}to{level_high}cm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}T06Z_MSC_{parameter}_DBS-{level_low}to{level_high}cm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_{parameter}_DBS-{level_low}to{level_high}cm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
         
     elif type_of_level == 'mean sea level':
         
         has_levels = False
-        file_18z_today = f"{now.strftime('%Y%m%d')}T18Z_MSC_RDPS_{parameter}_MSL_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_RDPS_{parameter}_MSL_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_06z_today = f"{now.strftime('%Y%m%d')}T06Z_MSC_RDPS_{parameter}_MSL_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_RDPS_{parameter}_MSL_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}T18Z_MSC_RDPS_{parameter}_MSL_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_RDPS_{parameter}_MSL_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}T06Z_MSC_RDPS_{parameter}_MSL_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_RDPS_{parameter}_MSL_RLatLon0.09_PT{final_forecast_hour}H.grib2"
+        file_18z_today = f"{now.strftime('%Y%m%d')}T18Z_MSC_{parameter}_MSL_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_{parameter}_MSL_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_06z_today = f"{now.strftime('%Y%m%d')}T06Z_MSC_{parameter}_MSL_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_{parameter}_MSL_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}T18Z_MSC_{parameter}_MSL_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_{parameter}_MSL_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}T06Z_MSC_{parameter}_MSL_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_{parameter}_MSL_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
         
     elif type_of_level == 'potential vorticity surface':
         
         has_levels = True 
-        file_18z_today = f"{now.strftime('%Y%m%d')}T18Z_MSC_RDPS_{parameter}_PVU-{level}_RLatLon0.09_PT{final_forecast_hour}H.grib2"       
-        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_RDPS_{parameter}_PVU-{level}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_06z_today = f"{now.strftime('%Y%m%d')}T06Z_MSC_RDPS_{parameter}_PVU-{level}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_RDPS_{parameter}_PVU-{level}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}T18Z_MSC_RDPS_{parameter}_PVU-{level}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_RDPS_{parameter}_PVU-{level}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}T06Z_MSC_RDPS_{parameter}_PVU-{level}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_RDPS_{parameter}_PVU-{level}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
+        file_18z_today = f"{now.strftime('%Y%m%d')}T18Z_MSC_{parameter}_PVU-{level}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"       
+        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_{parameter}_PVU-{level}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_06z_today = f"{now.strftime('%Y%m%d')}T06Z_MSC_{parameter}_PVU-{level}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_{parameter}_PVU-{level}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}T18Z_MSC_{parameter}_PVU-{level}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_{parameter}_PVU-{level}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}T06Z_MSC_{parameter}_PVU-{level}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_{parameter}_PVU-{level}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
         
     elif type_of_level == 'nominal top':
         
         has_levels = False
-        file_18z_today = f"{now.strftime('%Y%m%d')}T18Z_MSC_RDPS_{parameter}_NTAtm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_RDPS_{parameter}_NTAtm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_06z_today = f"{now.strftime('%Y%m%d')}T06Z_MSC_RDPS_{parameter}_NTAtm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_RDPS_{parameter}_NTAtm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}T18Z_MSC_RDPS_{parameter}_NTAtm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_RDPS_{parameter}_NTAtm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}T06Z_MSC_RDPS_{parameter}_NTAtm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_RDPS_{parameter}_NTAtm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
+        file_18z_today = f"{now.strftime('%Y%m%d')}T18Z_MSC_{parameter}_NTAtm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_{parameter}_NTAtm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_06z_today = f"{now.strftime('%Y%m%d')}T06Z_MSC_{parameter}_NTAtm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_{parameter}_NTAtm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}T18Z_MSC_{parameter}_NTAtm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_{parameter}_NTAtm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}T06Z_MSC_{parameter}_NTAtm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_{parameter}_NTAtm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
         
     elif type_of_level == 'entire atmosphere':
         has_levels = False
-        file_18z_today = f"{now.strftime('%Y%m%d')}T18Z_MSC_RDPS_{parameter}_EAtm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_RDPS_{parameter}_EAtm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_06z_today = f"{now.strftime('%Y%m%d')}T06Z_MSC_RDPS_{parameter}_EAtm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_RDPS_{parameter}_EAtm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}T18Z_MSC_RDPS_{parameter}_EAtm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_RDPS_{parameter}_EAtm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}T06Z_MSC_RDPS_{parameter}_EAtm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_RDPS_{parameter}_EAtm_RLatLon0.09_PT{final_forecast_hour}H.grib2"
+        file_18z_today = f"{now.strftime('%Y%m%d')}T18Z_MSC_{parameter}_EAtm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_{parameter}_EAtm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_06z_today = f"{now.strftime('%Y%m%d')}T06Z_MSC_{parameter}_EAtm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_{parameter}_EAtm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}T18Z_MSC_{parameter}_EAtm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_{parameter}_EAtm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}T06Z_MSC_{parameter}_EAtm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_{parameter}_EAtm_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
         
     else:
         has_levels = True
         
         level = _eta_levels(parameter)
-        file_18z_today = f"{now.strftime('%Y%m%d')}T18Z_MSC_RDPS_{parameter}_EtaL-{level}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_RDPS_{parameter}_EtaL-{level}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_06z_today = f"{now.strftime('%Y%m%d')}T06Z_MSC_RDPS_{parameter}_EtaL-{level}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_RDPS_{parameter}_EtaL-{level}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}T18Z_MSC_RDPS_{parameter}_EtaL-{level}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_RDPS_{parameter}_EtaL-{level}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}T06Z_MSC_RDPS_{parameter}_EtaL-{level}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
-        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_RDPS_{parameter}_EtaL-{level}_RLatLon0.09_PT{final_forecast_hour}H.grib2"
+        file_18z_today = f"{now.strftime('%Y%m%d')}T18Z_MSC_{parameter}_EtaL-{level}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_12z_today = f"{now.strftime('%Y%m%d')}T12Z_MSC_{parameter}_EtaL-{level}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_06z_today = f"{now.strftime('%Y%m%d')}T06Z_MSC_{parameter}_EtaL-{level}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_00z_today = f"{now.strftime('%Y%m%d')}T00Z_MSC_{parameter}_EtaL-{level}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}T18Z_MSC_{parameter}_EtaL-{level}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_12z_yesterday = f"{yd.strftime('%Y%m%d')}T12Z_MSC_{parameter}_EtaL-{level}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}T06Z_MSC_{parameter}_EtaL-{level}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
+        file_00z_yesterday = f"{yd.strftime('%Y%m%d')}T00Z_MSC_{parameter}_EtaL-{level}_RLatLon0.0225_PT{final_forecast_hour}H.grib2"
     
     if proxies == None:
         
@@ -575,15 +575,15 @@ def rdps_url_scanner(final_forecast_hour,
             else:
                 strlevel = f"{level}"
                 
-            file = f"{date}T{run}Z_MSC_RDPS_{parameter}_IsbL-{strlevel}_RLatLon0.09_PT{hour}H.grib2"
+            file = f"{date}T{run}Z_MSC_{parameter}_ISBL-{strlevel}_RLatLon0.0225_PT{hour}H.grib2"
             
         elif type_of_level == 'surface':
             
-            file = f"{date}T{run}Z_MSC_RDPS_{parameter}_Sfc_RLatLon0.09_PT{hour}H.grib2"
+            file = f"{date}T{run}Z_MSC_{parameter}_Sfc_RLatLon0.0225_PT{hour}H.grib2"
             
         elif type_of_level == 'height above ground':
                             
-            file = f"{date}T{run}Z_MSC_RDPS_{parameter}_AGL-{level}m_RLatLon0.09_PT{hour}H.grib2"
+            file = f"{date}T{run}Z_MSC_{parameter}_AGL-{level}m_RLatLon0.0225_PT{hour}H.grib2"
                 
         elif type_of_level == 'pressure layer':
         
@@ -608,33 +608,33 @@ def rdps_url_scanner(final_forecast_hour,
             else:
                 level_high = f"{level_high}"
             
-            file = f"{date}T{run}Z_MSC_RDPS_{parameter}_IsbL-{level_low}to{level_high}_RLatLon0.09_PT{hour}H.grib2"
+            file = f"{date}T{run}Z_MSC_{parameter}_ISBL-{level_low}to{level_high}_RLatLon0.0225_PT{hour}H.grib2"
         
         elif type_of_level == 'depth below surface':
             
             level_low = levels[0]
             level_high = levels[1]
             
-            file = f"{date}T{run}Z_MSC_RDPS_{parameter}_DBS-{level_low}to{level_high}cm_RLatLon0.09_PT{hour}H.grib2"
+            file = f"{date}T{run}Z_MSC_{parameter}_DBS-{level_low}to{level_high}cm_RLatLon0.0225_PT{hour}H.grib2"
         
         elif type_of_level == 'mean sea level':
         
-            file = f"{date}T{run}Z_MSC_RDPS_{parameter}_MSL_RLatLon0.09_PT{hour}H.grib2"
+            file = f"{date}T{run}Z_MSC_{parameter}_MSL_RLatLon0.0225_PT{hour}H.grib2"
             
         elif type_of_level == 'potential vorticity surface':
                                 
-            file = f"{date}T{run}Z_MSC_RDPS_{parameter}_PVU-{level}_RLatLon0.09_PT{hour}H.grib2"
+            file = f"{date}T{run}Z_MSC_{parameter}_PVU-{level}_RLatLon0.0225_PT{hour}H.grib2"
             
         elif type_of_level == 'nominal top':
             
-            file = f"{date}T{run}Z_MSC_RDPS_{parameter}_NTAtm_RLatLon0.09_PT{hour}H.grib2"
+            file = f"{date}T{run}Z_MSC_{parameter}_NTAtm_RLatLon0.0225_PT{hour}H.grib2"
             
         elif type_of_level == 'entire atmosphere':
             
-            file = f"{date}T{run}Z_MSC_RDPS_{parameter}_EAtm_RLatLon0.09_PT{hour}H.grib2"
+            file = f"{date}T{run}Z_MSC_{parameter}_EAtm_RLatLon0.0225_PT{hour}H.grib2"
             
         else:
-            file = f"{date}T{run}Z_MSC_RDPS_{parameter}_EtaL-{level}_RLatLon0.09_PT{hour}H.grib2"
+            file = f"{date}T{run}Z_MSC_{parameter}_EtaL-{level}_RLatLon0.0225_PT{hour}H.grib2"
             
         files.append(file)
     

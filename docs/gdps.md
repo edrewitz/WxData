@@ -36,7 +36,7 @@ Optional Arguments:
 
 1) final_forecast_hour (Integer) - Default = 240. The final forecast hour the user wishes to download. The GDPS
   goes out to 240 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-  240 by the nereast increment of 6 hours. 
+  240 by the nereast increment of 1 hour. 
 
 2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 

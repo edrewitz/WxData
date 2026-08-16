@@ -4,7 +4,7 @@ title: Canadian Meteorological Centre RDPS
 
 [***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
 
-# Canadian Meteorological Centre: RDPS
+# Canadian Regional Deterministic Prediction System (RDPS)
 
 ```python
 def rdps(final_forecast_hour=84, 

@@ -4,7 +4,7 @@ title: Canadian Meteorological Centre GDPS
 
 [***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
 
-# Canadian Meteorological Centre: GDPS
+# Canadian Global Deterministic Prediction System (GDPS)
 
 ```python
 def gdps(final_forecast_hour=240, 

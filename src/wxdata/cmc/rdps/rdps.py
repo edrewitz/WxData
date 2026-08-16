@@ -1225,7 +1225,7 @@ def rdps(final_forecast_hour=84,
         print("Data Processing...")
         
         ds = _cmc_post_processing.rdps_post_processing(dir,
-                                                        variable=variable)
+                                                        variable)
         
         if convert_temperature == True:
             ds = _convert_temperature_units(ds, 

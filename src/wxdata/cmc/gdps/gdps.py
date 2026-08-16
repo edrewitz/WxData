@@ -1191,7 +1191,7 @@ def gdps(final_forecast_hour=240,
                                                         eastern_bound,
                                                         northern_bound,
                                                         southern_bound,
-                                                        variable=variable)
+                                                        variable)
         
         if convert_temperature == True:
             ds = _convert_temperature_units(ds, 

@@ -225,4 +225,15 @@ def gdps_rdps_variable_keys(variable):
         _invalid_key(variable)
         
 
+def hrdps_variable_keys(variable):
+    
+    """
+    
+    """
+    
+    variables = {
+        
+        'absolute vorticity':'ABSV',
+        'albedo':'ALBDO'
+    }
 

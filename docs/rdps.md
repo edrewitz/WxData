@@ -32,7 +32,7 @@ Optional Arguments:
 
 1) final_forecast_hour (Integer) - Default = 84. The final forecast hour the user wishes to download. The RDPS
     goes out to 84 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    84 by the nereast increment of 6 hours. 
+    84 by the nereast increment of 1 hour. 
 
 2) step (Integer) - Default=1. Increment in forecast hours (Default=1hrly).
 

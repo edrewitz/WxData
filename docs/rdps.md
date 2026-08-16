@@ -77,6 +77,7 @@ Optional Arguments:
 'mean sea level'
 'nominal top'
 'entire atmosphere'
+'eta'
 ```
     
 12) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).

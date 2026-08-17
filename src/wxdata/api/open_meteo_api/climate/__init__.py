@@ -1,0 +1,1 @@
+import wxdata.api.open_meteo_api.climate.climate_data as open_meteo_api_climate_data

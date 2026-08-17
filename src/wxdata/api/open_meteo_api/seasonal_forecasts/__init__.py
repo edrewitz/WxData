@@ -1,0 +1,3 @@
+import wxdata.api.open_meteo_api.seasonal_forecasts.ecmwf_daily as open_meteo_api_ecmwf_seasonal_forecasts_daily
+import wxdata.api.open_meteo_api.seasonal_forecasts.ecmwf_weekly as open_meteo_api_ecmwf_seasonal_forecasts_weekly
+import wxdata.api.open_meteo_api.seasonal_forecasts.ecmwf_monthly as open_meteo_api_ecmwf_seasonal_forecasts_monthly

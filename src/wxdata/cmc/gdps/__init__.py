@@ -1,1 +1,0 @@
-from wxdata.cmc.gdps.gdps import gdps

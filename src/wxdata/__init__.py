@@ -43,23 +43,23 @@ These functions do the following:
 # - GFS 0.25x0.25 Degree Primary Parameters
 # - GFS 0.25x0.25 Degree Secondary Parameters
 # - GFS 0.5x0.5 Degree
-from wxdata.gfs.gfs import(
+from wxdata.model_data.noaa.gfs.gfs import(
     gfs_0p25,
     gfs_0p25_secondary_parameters,
     gfs_0p50
 )
 
 # AI Global Forecast System (AIGFS)
-from wxdata.aigfs.aigfs import aigfs
+from wxdata.model_data.noaa.aigfs.aigfs import aigfs
 
 # Hybrid Global Ensemble Forecast System (HGEFS)
-from wxdata.hgefs.hgefs import hgefs_mean_spread
+from wxdata.model_data.noaa.hgefs.hgefs import hgefs_mean_spread
 
 # Global Ensemble Forecast System (GEFS)
 # - GEFS 0.5x0.5 Degree Primary Parameters
 # - GEFS 0.5x0.5 Degree Secondary Parameters
 # - GEFS 0.25x0.25 Degree
-from wxdata.gefs.gefs import(
+from wxdata.model_data.noaa.gefs.gefs import(
     gefs_0p50,
     gefs_0p50_secondary_parameters,
     gefs_0p25
@@ -68,7 +68,7 @@ from wxdata.gefs.gefs import(
 # Climate Forecast System (CFS)
 # - CFS Flux Products
 # - CFS Pressure Products
-from wxdata.cfs.cfs import(
+from wxdata.model_data.noaa.cfs.cfs import(
     cfs_flux,
     cfs_pressure
 )
@@ -77,7 +77,7 @@ from wxdata.cfs.cfs import(
 # - AIGEFS Pressure Members (Pressure Level Variables)
 # - AIGEFS Surface Members (Surface Level Variables)
 # - AIGEFS Single (AIGEFS Ensemble Mean & AIGEFS Ensemble Spread)
-from wxdata.aigefs.aigefs import(
+from wxdata.model_data.noaa.aigefs.aigefs import(
     aigefs_pressure_members,
     aigefs_surface_members,
     aigefs_single
@@ -90,7 +90,7 @@ from wxdata.aigefs.aigefs import(
 # - ECMWF AIFS Ensemble
 # - ECMWF IFS Wave
 # - ECMWF IFS Wave Ensemble
-from wxdata.ecmwf.ecmwf import(
+from wxdata.model_data.ecmwf.ecmwf import(
     ecmwf_ifs,
     ecmwf_ifs_ens,
     ecmwf_aifs,
@@ -100,10 +100,12 @@ from wxdata.ecmwf.ecmwf import(
 )
 
 # Canadian Meteorological Center
-# - Canadian Global (GDPS)
-# - Canadian Regional (RDPS)
-from wxdata.cmc.gdps.gdps import gdps
-from wxdata.cmc.rdps.rdps import rdps
+# - Canadian Global Deterministic Prediction System (GDPS)
+# - Canadian Regional Deterministic Prediction System (RDPS)
+# - Canadian High Resolution Deterministic Prediction System (HRDPS)
+from wxdata.model_data.cmc.gdps.gdps import gdps
+from wxdata.model_data.cmc.rdps.rdps import rdps
+from wxdata.model_data.cmc.hrdps.hrdps import hrdps
 
 # FEMS RAWS Network
 # - Single Station Weather Observations
@@ -118,7 +120,7 @@ from wxdata.cmc.rdps.rdps import rdps
 # - Multi Station NFDRS Forecast
 # - Single Station Weather Forecast
 # - Multi Station Weather Forecast
-from wxdata.fems.observations import(
+from wxdata.fuels_data.fems.observations import(
     get_single_raws_station_weather_observations,
     get_single_raws_station_fuels_observations,
     get_multi_raws_station_weather_observations,
@@ -136,7 +138,7 @@ from wxdata.fems.observations import(
 # FEMS RAWS Network
 # - Single Station Meta Data
 # - Multi Station Meta Data
-from wxdata.fems.meta_data import(
+from wxdata.fuels_data.fems.meta_data import(
     get_single_raws_station_meta_data,
     get_multi_raws_station_meta_data
 )
@@ -144,7 +146,7 @@ from wxdata.fems.meta_data import(
 # Real-Time Mesoscale Analysis (RTMA)
 # - RTMA Latest 
 # - RTMA Comparison Between Two Times 
-from wxdata.rtma.rtma import(
+from wxdata.model_data.noaa.rtma.rtma import(
     rtma, 
     rtma_comparison
 )
@@ -153,22 +155,22 @@ from wxdata.rtma.rtma import(
 # - Storm Prediction Center Outlooks
 # - Climate Prediction Center Outlooks
 # - National Weather Service Forecasts
-from wxdata.noaa.nws import(
+from wxdata.gridded_forecasts.noaa.nws.nws import(
     get_ndfd_grids,
     get_cpc_outlook
 )
 
 # Observed Upper-Air Soundings
 # (University of Wyoming Database)
-from wxdata.soundings.wyoming_soundings import get_observed_sounding_data
+from wxdata.observational_data.soundings.wyoming_soundings import get_observed_sounding_data
 
 # METAR Observational Data (From NOAA)
-from wxdata.metars.metar_obs import download_metar_data
+from wxdata.observational_data.metars.metar_obs import download_metar_data
 
 # NEXRAD2 Radar Data
 # - NEXRAD2 Radar Single Station
 # - NEXRAD2 Radar Multi Station
-from wxdata.radar.nexrad2 import(
+from wxdata.observational_data.radar.nexrad2 import(
     download_current_single_station_nexrad2_radar_data,
     download_current_multi_station_nexrad2_radar_data
 )
@@ -289,43 +291,43 @@ import wxdata.client.client as client
 # - UK Met Office (UKMO)
 # - Current Weather (Model Mosaic)
 # - Google (Weather Next 2 Ensemble)
-import wxdata.open_meteo_api.weather_forecasts.noaa as open_meteo_api_noaa
-import wxdata.open_meteo_api.weather_forecasts.ecmwf as open_meteo_api_ecmwf
-import wxdata.open_meteo_api.weather_forecasts.dwd as open_meteo_api_dwd
-import wxdata.open_meteo_api.weather_forecasts.meteo_france as open_meteo_api_meteo_france
-import wxdata.open_meteo_api.weather_forecasts.cmc as open_meteo_api_cmc
-import wxdata.open_meteo_api.weather_forecasts.jma as open_meteo_api_jma
-import wxdata.open_meteo_api.weather_forecasts.ukmo as open_meteo_api_ukmo
-import wxdata.open_meteo_api.weather_forecasts.current_weather as open_meteo_api_current_weather
-import wxdata.open_meteo_api.weather_forecasts.google as open_meteo_api_google
+import wxdata.api.open_meteo_api.weather_forecasts.noaa as open_meteo_api_noaa
+import wxdata.api.open_meteo_api.weather_forecasts.ecmwf as open_meteo_api_ecmwf
+import wxdata.api.open_meteo_api.weather_forecasts.dwd as open_meteo_api_dwd
+import wxdata.api.open_meteo_api.weather_forecasts.meteo_france as open_meteo_api_meteo_france
+import wxdata.api.open_meteo_api.weather_forecasts.cmc as open_meteo_api_cmc
+import wxdata.api.open_meteo_api.weather_forecasts.jma as open_meteo_api_jma
+import wxdata.api.open_meteo_api.weather_forecasts.ukmo as open_meteo_api_ukmo
+import wxdata.api.open_meteo_api.weather_forecasts.current_weather as open_meteo_api_current_weather
+import wxdata.api.open_meteo_api.weather_forecasts.google as open_meteo_api_google
 
 ### Seasonal Forecasts (ECMWF EC46 & SEAS5) ###
 
 # - Daily Data (EC46 & SEAS5)
 # - Weekly Data (EC46)
 # - Monthly Data (SEAS5)
-import wxdata.open_meteo_api.seasonal_forecasts.ecmwf_daily as open_meteo_api_ecmwf_seasonal_forecasts_daily
-import wxdata.open_meteo_api.seasonal_forecasts.ecmwf_weekly as open_meteo_api_ecmwf_seasonal_forecasts_weekly
-import wxdata.open_meteo_api.seasonal_forecasts.ecmwf_monthly as open_meteo_api_ecmwf_seasonal_forecasts_monthly
+import wxdata.api.open_meteo_api.seasonal_forecasts.ecmwf_daily as open_meteo_api_ecmwf_seasonal_forecasts_daily
+import wxdata.api.open_meteo_api.seasonal_forecasts.ecmwf_weekly as open_meteo_api_ecmwf_seasonal_forecasts_weekly
+import wxdata.api.open_meteo_api.seasonal_forecasts.ecmwf_monthly as open_meteo_api_ecmwf_seasonal_forecasts_monthly
 
 ### Climate Data ###
-import wxdata.open_meteo_api.climate.climate_data as open_meteo_api_climate_data
+import wxdata.api.open_meteo_api.climate.climate_data as open_meteo_api_climate_data
 
 ### Air Quality Information ###
-import wxdata.open_meteo_api.air_quality.cams as open_meteo_api_air_quality
+import wxdata.api.open_meteo_api.air_quality.cams as open_meteo_api_air_quality
 
 ### Marine Forecasts ###
 # - Meteo-France
 # - Deutscher Wetterdienst (DWD)
 # - ECMWF
 # - NOAA
-import wxdata.open_meteo_api.marine_forecasts.meteo_france as open_meteo_api_meteo_france_marine
-import wxdata.open_meteo_api.marine_forecasts.dwd as open_meteo_api_dwd_marine
-import wxdata.open_meteo_api.marine_forecasts.ecmwf as open_meteo_api_ecmwf_marine
-import wxdata.open_meteo_api.marine_forecasts.noaa as open_meteo_api_noaa_marine
+import wxdata.api.open_meteo_api.marine_forecasts.meteo_france as open_meteo_api_meteo_france_marine
+import wxdata.api.open_meteo_api.marine_forecasts.dwd as open_meteo_api_dwd_marine
+import wxdata.api.open_meteo_api.marine_forecasts.ecmwf as open_meteo_api_ecmwf_marine
+import wxdata.api.open_meteo_api.marine_forecasts.noaa as open_meteo_api_noaa_marine
 
 ### Solar Radiation Forecasts ### 
-import wxdata.open_meteo_api.solar_radiation.solar_radiation as open_meteo_api_solar_radiation
+import wxdata.api.open_meteo_api.solar_radiation.solar_radiation as open_meteo_api_solar_radiation
 
 ###################
 ### Air-Now API ###
@@ -334,4 +336,4 @@ import wxdata.open_meteo_api.solar_radiation.solar_radiation as open_meteo_api_s
 # Air-Now API: https://docs.airnowapi.org/
 
 # - Observations
-import wxdata.airnow_api.observations as air_now_observations
+import wxdata.api.airnow_api.observations as air_now_observations

@@ -1,0 +1,1 @@
+import wxdata.api.open_meteo_api.solar_radiation.solar_radiation as open_meteo_api_solar_radiation

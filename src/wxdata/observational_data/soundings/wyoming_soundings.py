@@ -1,0 +1,839 @@
+"""
+This file hosts the function to retrieve Wyoming Sounding Data.
+
+This data is for observed soundings. 
+
+1) get_observed_sounding_data
+
+(C) Eric J. Drewitz 2025-2026
+"""
+# Imports the needed libraries
+import requests as _requests
+import pandas as _pd
+import metpy.calc as _mpcalc
+import sys as _sys
+import wxdata.observational_data.soundings._exceptions as _exceptions
+
+from wxdata.calc.kinematics import get_u_and_v as _get_u_and_v
+from metpy.units import units as _units
+from bs4 import BeautifulSoup as _BeautifulSoup
+from io import StringIO as _StringIO
+
+from wxdata.utils.recycle_bin import(
+    clear_recycle_bin_windows as _clear_recycle_bin_windows,
+    clear_trash_bin_mac as _clear_trash_bin_mac,
+    clear_trash_bin_linux as _clear_trash_bin_linux
+)
+
+try:
+    from datetime import(
+        datetime as _datetime, 
+        timedelta as _timedelta, 
+        UTC as _UTC
+    )
+except Exception as e:
+    from datetime import(
+        datetime as _datetime, 
+        timedelta as _timedelta
+    )
+
+try:
+    now = _datetime.now(_UTC)
+except Exception as e:
+    now = _datetime.utcnow()
+
+
+def _parse_sounding_text(data, usecols, names, widths=None):
+    """
+    Parse the fixed-width Wyoming sounding text response while preserving the first
+    pressure level row. The text includes header lines that should not be treated as
+    data rows.
+    
+    Required Arguments:
+    
+    1) data (Bytes) - The sounding data in bytes format.
+    
+    2) usecols (Integer List) - The list of columns to be used.
+    
+    3) names (String List) - Column names.
+    
+    Optional Arguments:
+    
+    1) widths - Width of columns. 
+    
+    Returns
+    -------
+    
+    A Pandas.DataFrame of the sounding data.
+    """
+    if widths is None:
+        widths = [7] * 8
+
+    if hasattr(data, "readlines"):
+        lines = data.readlines()
+    else:
+        lines = data.splitlines()
+
+    cleaned_lines = [line.rstrip("\n") for line in lines]
+    start_idx = None
+
+    for idx, line in enumerate(cleaned_lines):
+        stripped = line.strip()
+        if not stripped:
+            continue
+
+        parts = stripped.split()
+        if not parts:
+            continue
+
+        first_token = parts[0]
+        if first_token.replace(".", "", 1).replace("-", "", 1).replace("+", "", 1).isdigit():
+            start_idx = idx
+            break
+
+    if start_idx is None:
+        raise ValueError("No sounding data rows found")
+
+    return _pd.read_fwf(
+        _StringIO("\n".join(cleaned_lines[start_idx:])),
+        widths=widths,
+        usecols=usecols,
+        names=names,
+    )
+
+
+def _url_scanner(date,
+                 station_number,
+                 proxies):
+    
+    """
+    Scans URLs for a 200 response. 
+    
+    Required Arguments:
+    
+    1) date (datetime) - The date and time of the observation.
+    
+    2) station_number (Integer) - The number corresponding to the site.
+    
+    3) proxies (String) - Default = None. If the user is requesting the data on a machine using a proxy server,
+    the user must set proxy='proxy_url'. The default setting assumes the user is not using a proxy server conenction.
+    
+        proxies=None ---> proxies={
+                                'http':'http://your-proxy-address:port',
+                                'https':'http://your-proxy-address:port'
+                                }
+                                
+    Optional Arguments: None
+    
+    Returns
+    -------
+    
+    The URL for data access. 
+    
+    """
+
+    bufr = f"https://weather.uwyo.edu/wsgi/sounding?datetime={date.strftime('%Y-%m-%d')}%20{date.hour}:00:00&id={station_number}&src=BUFR&type=TEXT:LIST"
+    fm35 = f"https://weather.uwyo.edu/wsgi/sounding?datetime={date.strftime('%Y-%m-%d')}%20{date.hour}:00:00&id={station_number}&src=FM35&type=TEXT:LIST"
+    fm37 = f"https://weather.uwyo.edu/wsgi/sounding?datetime={date.strftime('%Y-%m-%d')}%20{date.hour}:00:00&id={station_number}&src=FM37&type=TEXT:LIST"
+    
+    if proxies == None:
+        bufr_response = _requests.get(bufr)
+        fm35_response = _requests.get(fm35)
+        fm37_response = _requests.get(fm37)
+        
+    else:
+        bufr_response = _requests.get(bufr,
+                                      proxies=proxies)
+        fm35_response = _requests.get(fm35,
+                                      proxies=proxies)
+        fm37_response = _requests.get(fm37,
+                                      proxies=proxies)
+        
+    urls = []
+    urls.append(bufr)
+    urls.append(fm35)
+    urls.append(fm37)
+    
+    responses = []
+    responses.append(bufr_response)
+    responses.append(fm35_response)
+    responses.append(fm37_response)
+    
+    for r, url in zip(responses, urls):
+        if r.status_code == 200:
+            url = url
+            break
+        
+    return url
+
+def _station_ids(station_id):
+
+    """
+    This function returns the station number for a station ID
+
+    Required Arguments:
+
+    1) station_id (String)
+    
+    To find the list of station IDs, visit: https://weather.uwyo.edu/upperair/sounding_legacy.html
+
+    Returns
+    -------
+
+    An integer for the station number
+    """
+
+    station_id = station_id.upper()
+
+    station_ids = {
+
+        'PABR':'70026',
+        'PAOM':'70200',
+        'PAMC':'70231',
+        'PAYA':'70361',
+        'PANT':'70398',
+        'PAVA':'70361',
+        'PANC':'70273',
+        'PACD':'70316',
+        'PADQ':'70350',
+        'PASY':'70414',
+        'PABE':'70219',
+        'NKX':'72293',
+        'OTX':'72786',
+        'SLE':'72694',
+        'MFR':'72597',
+        'OAK':'72493',
+        'VEF':'72388',
+        'REV':'72489',
+        'BOI':'72681',
+        'LKN':'72582',
+        'SLC':'72572',
+        'TUS':'72274',
+        'EPZ':'72364',
+        'GJT':'72476',
+        'RIW':'72672',
+        'GGW':'72768',
+        'BIS':'72764',
+        'UNR':'72662',
+        'ABQ':'72365',
+        'MAF':'72265',
+        'DRT':'72261',
+        'MMAN':'76394',
+        'CRP':'72251',
+        'BRO':'72250',
+        'FWD':'72249',
+        'AMA':'72363',
+        'OUN':'72357',
+        'DDC':'72451',
+        'TOP':'72456',
+        'LBF':'72562',
+        'OAX':'72558',
+        'ABR':'72659',
+        'INL':'72747',
+        'MPX':'72649',
+        'SGF':'72440',
+        'LZK':'72340',
+        'SHV':'72248',
+        'LCH':'72240',
+        'LIX':'72233',
+        'JAN':'72235',
+        'VBG':'72393',
+        'YEV':'71957',
+        'YVQ':'71043',
+        'ZXS':'71908',
+        'YZT':'71109',
+        'CWVK':'73033',
+        'YQD':'71867',
+        'YBK':'71926',
+        'YCB':'71925',
+        'YRB':'71924',
+        'YUX':'71081',
+        'YFB':'71909',
+        'YVP':'71906',
+        'YAH':'71823',
+        'YZV':'71811',
+        'YYR':'71816',
+        'YJT':'71815',
+        'AYT':'71802',
+        'BGEM':'04220',
+        'BGBW':'04270',
+        'TXKF':'78016',
+        'CAR':'72712',
+        'YQI':'71603',
+        'GYX':'74389',
+        'ALB':'72518',
+        'WMW':'71722',
+        'BUF':'72528',
+        'OKX':'72501',
+        'DTX':'72632',
+        'APX':'72634',
+        'GRB':'72645',
+        'ILX':'74560',
+        'ILN':'72426',
+        'BNA':'72327',
+        'BNF':'72800',
+        'FFC':'72215',
+        'BMX':'72230',
+        'PIT':'72520',
+        'IAD':'72403',
+        'WAL':'72402',
+        'RNK':'72318',
+        'GSO':'72317',
+        'MHX':'72305',
+        'CHS':'72208',
+        'JAX':'72206',
+        'TBW':'72210',
+        'EYW':'72201',
+        'SKSP':'80001',
+        'MPCZ':'78807',
+        'SKBQ':'80028',
+        'SKBG':'80094',
+        'MKJP':'78397',
+        'MDSD':'78486',
+        'TJSJ':'78526',
+        'TBPB':'78954',
+        'SBBV':'82022',
+        'SBMQ':'82099',
+        'SBBE':'82193',
+        'SBMN':'82332',
+        'SKLT':'80398',
+        'SBPV':'82824',
+        'SBNT':'82599',
+        'SBAT':'82965',
+        'SBVH':'83208',
+        'SCFA':'85442',
+        'SBBR':'83378',
+        'SBUL':'83525',
+        'SBCG':'83612',
+        'SBLO':'83768',
+        'SBMT':'83779',
+        'SBCT':'83840',
+        'SBCT':'83840',
+        'SBFL':'83899',
+        'SBFI':'83827',
+        'SGAS':'86218',
+        'SARE':'87155',
+        'SBUG':'83928',
+        'SBSM':'83937',
+        'SACO':'87344',
+        'SAME':'87418',
+        'SCSN':'85586',
+        'SAZR':'87623',
+        'SAZN':'87715',
+        'SCTE':'85799',
+        'SAVC':'87860',
+        'SCCI':'85934',
+        'PHTO':'91285',
+        'PHLI':'91165',
+        'PKMJ':'91376',
+        'RJAM':'47991',
+        'RJAO':'47971',
+        'ROMD':'47945',
+        'ROIG':'47918',
+        'RPLI':'98223',
+        'PGUM':'91212',
+        'PTPN':'91348',
+        'PTKK':'91334',
+        'PTYA':'91413',
+        'PTRO':'91408',
+        'RPMP':'98444',
+        'RPVG':'98558',
+        'RPMT':'98646',
+        'RPVP':'98618',
+        'RPMD':'98753',
+        'WBKK':'96471',
+        'WBKW':'96481',
+        'WRLR':'96509',
+        'WBGB':'96441',
+        'WBGG':'96413',
+        'WASS':'97502',
+        'WAAA':'97180',
+        'WRSJ':'96935',
+        'WRRR':'97230',
+        'WRKK':'97372',
+        'YPDN':'94120',
+        'YBRM':'94203',
+        'YPPD':'94312',
+        'YPLM':'94302',
+        'YPGN':'94403',
+        'YPPH':'94610',
+        'YPAL':'94802',
+        'YPDN':'94120',
+        'YPWR':'94659',
+        'YPAD':'94672',
+        'YMML':'94866',
+        'YSWG':'94910',
+        'YBCV':'94510',
+        'YBBN':'94578',
+        'NGFU':'91643',
+        'NFFN':'91680',
+        'YSNF':'94996',
+        'NZWP':'93112',
+        'NZPP':'93417',
+        'NZNV':'93844',
+        'WEU':'71917',
+        'WLT':'71082',
+        'BGDH':'04320',
+        'BGSC':'04339',
+        'BIKF':'04018',
+        'ENJA':'01001',
+        'ENOL':'01241',
+        'ULOL':'26477',
+        'ULWW':'27038',
+        'UUOO':'34122',
+        'UWPP':'27962',
+        'URWW':'34467',
+        'UATT':'35229',
+        'USHH':'23933',
+        'UNNN':'29634',
+        'UNII':'29263',
+        'UINN':'29698',
+        'UIAA':'30758',
+        'UEEE':'24959',
+        'UHMM':'25913',
+        'UHPP':'32540',
+        'EDZE':'10410',
+        'LIMN':'16064',
+        'LIED':'16546',
+        'LICT':'16429',
+        'LIRE':'16245',
+        'LIBN':'16332',
+        'LIPI':'16045',
+        'LDDD':'14240',
+        'LHUD':'12982',
+        'LYNI':'13388',
+        'LBSF':'15614',
+        'LGAT':'16716',
+        'LRBS':'15420',
+        'LTBM':'17240',
+        'LTAU':'17196',
+        'DTTZ':'60760',
+        'DRZA':'61024',
+        'DRRN':'61052',
+        'DFFD':'65503',
+        'DIMN':'65548',
+        'FAIR':'68263',
+        'ERZM':'17095',
+        'OITT':'40706',
+        'OING':'40738',
+        'OIMB':'40809',
+        'OIKK':'40841',
+        'OIAW':'40811',
+        'OEPA':'40373',
+        'OEHL':'40394',
+        'OEMA':'40430',
+        'OEAB':'41112',
+        'OERK':'40437',
+        'OEDF':'40417',
+        'OMAA':'41217',
+        'VAAH':'42647',
+        'VABB':'43003',
+        'VOCC':'43353',
+        'VOMM':'43279',
+        'VANP':'42867',
+        'VIDD':'42182',
+        'VILK':'42369',
+        'VEJH':'42886',
+        'VECC':'42809',
+        'VEAT':'42724',
+        'VGTJ':'41923',
+        'VEGT':'42410',
+        'VVNB':'48820',
+        'VTCC':'48327',
+        'VTPS':'48378',
+        'VTUK':'48381',
+        'VTUU':'48407',
+        'VVDN':'48855',
+        'VVTS':'48900',
+        'VTUN':'48431',
+        'VTBC':'48480',
+        'VTPB':'48500',
+        'WMKP':'48601',
+        'WIMM':'96035',
+        'WIII':'96749',
+        'WRSJ':'96935',
+        'WRRR':'97230'
+        
+
+    }
+
+    station_number = station_ids.get(station_id)
+
+    return station_number
+    
+
+def get_observed_sounding_data(station_id, 
+                               current=True, 
+                               custom_time=None, 
+                               comparison_24=False, 
+                               proxies=None,
+                               clear_recycle_bin=False,
+                               loop_over_missing_data=False):
+
+    """
+    This function scrapes the University of Wyoming Sounding Database and returns the data in a Pandas DataFrame
+
+    Required Arguments:
+
+    1) station_id (String or Integer) - User inputs the station_id as a string or an integer. 
+    Some stations only have the ID by integer. Please see https://weather.uwyo.edu/upperair/sounding_legacy.html for more info. 
+    
+    Optional Arguments:
+
+    1) current (Boolean) - Default = True. When set to True, the latest available data will be returned.
+    If set to False, the user can download the data for a custom date/time of their choice. 
+
+    2) custom_time (String) - If a user wants to download the data for a custom date/time, they must do the following:
+
+        1. set current=False
+        2. set custom_time='YYYY-mm-dd:HH'
+
+    3) comparison_24 (Boolean) - Default = False. When set to True, the function will return the current dataset and dataset from 
+       24-hours prior to the current dataset (i.e. 00z this evening vs. 00z yesterday evening). When set to False, only the 
+       current dataset is returned. 
+
+    4) proxies (String) - Default = None. If the user is requesting the data on a machine using a proxy server,
+    the user must set proxy='proxy_url'. The default setting assumes the user is not using a proxy server conenction.
+    
+        proxies=None ---> proxies={
+                                'http':'http://your-proxy-address:port',
+                                'https':'http://your-proxy-address:port'
+                                }
+    
+    5) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
+        
+    6) loop_over_missing_data (Boolean) - Default=False. When set to True, the program does not close if the data is missing.
+        Setting `loop_over_missing_data=True` is useful for those downloading multiple observations over a period of time. 
+
+    Returns
+    -------
+    
+    if comparison_24 == False: 
+        A Pandas DataFrame of the University of Wyoming Sounding Data
+    if comparison_24 == True:
+        A Pandas DataFrame of the latest University of Wyoming Sounding Data
+                                    AND
+        A Pandas DataFrame of the University of Wyoming Sounding Data from 24-hours prior to the current DataFrame. 
+    """
+    if clear_recycle_bin == True:
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
+    else:
+        pass
+
+    if type(station_id) == type(0):
+        station_number = station_id
+    else:
+        station_number = _station_ids(station_id)
+
+    if comparison_24 == False:
+
+        if current == True:
+            date = now
+            if date.hour <= 12:
+                hour = 0
+            else:
+                hour = 12
+    
+            y = date.year
+            m = date.month
+            d = date.day
+            date = _datetime(y, m, d, hour)
+        else:
+            year = int(f"{custom_time[0]}{custom_time[1]}{custom_time[2]}{custom_time[3]}")
+            month = int(f"{custom_time[5]}{custom_time[6]}")
+            day = int(f"{custom_time[8]}{custom_time[9]}")
+            hour = int(f"{custom_time[11]}{custom_time[12]}")
+
+            try:
+                date = _datetime(year, month, day, hour)
+            except Exception as e:
+                _exceptions.date_format_exception(date)
+    
+        url = _url_scanner(date,
+                           station_number,
+                           proxies)
+    
+        max_retries = 5
+        retry = 0
+        if proxies == None:
+            response = _requests.get(url)
+            response.close()
+            while response.status_code != 200:
+                response = _requests.get(url)
+                response.close()
+                retry = retry + 1
+                if retry > max_retries:
+                    break
+        else:
+            response = _requests.get(url, proxies=proxies)
+            response.close()
+            while response.status_code != 200:
+                response = _requests.get(url, proxies=proxies)
+                response.close()
+                retry = retry + 1
+                if retry > max_retries:
+                    break    
+        try:
+            soup = _BeautifulSoup(response.content, "html.parser")
+            data = _StringIO(soup.find_all('pre')[0].contents[0])
+            success = True
+        except Exception as e:
+            success = False
+    
+        if success == False and current == True:
+    
+            date = date - _timedelta(hours=12)
+            hour = date.hour
+    
+            url = _url_scanner(date,
+                           station_number,
+                           proxies)
+        
+            max_retries = 5
+            retry = 0
+            if proxies == None:
+                response = _requests.get(url)
+                response.close()
+                while response.status_code != 200:
+                    response = _requests.get(url)
+                    response.close()
+                    retry = retry + 1
+                    if retry > max_retries:
+                        break
+            else:
+                response = _requests.get(url, proxies=proxies)
+                response.close()
+                while response.status_code != 200:
+                    response = _requests.get(url, proxies=proxies)
+                    response.close()
+                    retry = retry + 1
+                    if retry > max_retries:
+                        break    
+    
+            try:
+                soup = _BeautifulSoup(response.content, "html.parser")
+                data = _StringIO(soup.find_all('pre')[0].contents[0])
+                success = True
+            except Exception as e:
+                if loop_over_missing_data == False:
+                    print(f"No Recent Sounding Data for {station_id}.\nQuitting Now")
+                    _sys.exit()
+                else:
+                    print(f"No Recent Sounding Data for {station_id}\nSkipping...")
+        else:
+            pass
+            
+                   
+        col_names = ['PRES', 'HGHT', 'TEMP', 'DWPT', 'RELH', 'MIXR', 'DRCT', 'SKNT', 'THTA', 'THTE', 'THTV']
+        
+        try:
+            df = _parse_sounding_text(
+                data,
+                usecols=[0, 1, 2, 3, 4, 5, 6, 7],
+                names=col_names,
+                widths=[7] * 8,
+            )
+        except Exception as e:
+            _exceptions.station_id_exception(station_id)
+            
+        df['U-WIND'], df['V-WIND'] = _get_u_and_v(df['SKNT'], df['DRCT'])
+        df = df.rename(columns={'RELH': 'RH'})
+        pressure = df['PRES'].values * _units('hPa')
+        temperature = df['TEMP'].values * _units('degC')
+        dewpoint = df['DWPT'].values * _units('degC')
+        df['THETA'] = _mpcalc.potential_temperature(pressure, temperature)
+        height = df['HGHT'].values * _units('meters')
+        theta = df['THETA'].values * _units('degK')
+        df['BVF'] = _mpcalc.brunt_vaisala_frequency(height, theta, vertical_dim=0) 
+        df['WET-BULB'] = _mpcalc.wet_bulb_temperature(pressure, temperature, dewpoint)
+        
+        df.drop_duplicates(inplace=True,subset='PRES',ignore_index=True)
+        df.dropna(axis=0, inplace=True)
+    
+        return df, date
+
+    else:
+        if current == True:
+            date = now
+            if date.hour <= 12:
+                hour = 0
+            else:
+                hour = 12
+    
+            y = date.year
+            m = date.month
+            d = date.day
+            date = _datetime(y, m, d, hour)
+        else:
+            year = int(f"{custom_time[0]}{custom_time[1]}{custom_time[2]}{custom_time[3]}")
+            month = int(f"{custom_time[5]}{custom_time[6]}")
+            day = int(f"{custom_time[8]}{custom_time[9]}")
+            hour = int(f"{custom_time[11]}{custom_time[12]}")
+    
+            try:
+                date = _datetime(year, month, day, hour)
+            except Exception as e:
+                _exceptions.date_format_exception(date)
+            
+        date_24 = date - _timedelta(hours=24)
+    
+        url = _url_scanner(date,
+                        station_number,
+                        proxies)
+
+        url_24 = _url_scanner(date_24,
+                        station_number,
+                        proxies)
+        
+        max_retries = 5
+        retry = 0
+        if proxies == None:
+            response = _requests.get(url)
+            response.close()
+            response_24 = _requests.get(url_24)
+            response_24.close()
+            while response.status_code != 200 and response_24.status_code != 200:
+                response = _requests.get(url)
+                response.close()
+                response_24 = _requests.get(url_24)
+                response_24.close()
+                retry = retry + 1
+                if retry > max_retries:
+                    break
+        else:
+            response = _requests.get(url, proxies=proxies)
+            response.close()
+            response_24 = _requests.get(url_24, proxies=proxies)
+            response_24.close()
+            while response.status_code != 200 and response_24.status_code != 200:
+                response = _requests.get(url, proxies=proxies)
+                response.close()
+                response_24 = _requests.get(url_24, proxies=proxies)
+                response_24.close()
+                retry = retry + 1
+                if retry > max_retries:
+                    break
+    
+        try:
+            soup = _BeautifulSoup(response.content, "html.parser")
+            soup_24 = _BeautifulSoup(response_24.content, "html.parser")
+            data = _StringIO(soup.find_all('pre')[0].contents[0])
+            data_24 = _StringIO(soup_24.find_all('pre')[0].contents[0])
+            success = True
+        except Exception as e:
+            success = False
+    
+        if success == False and current == True:
+    
+            date = date - _timedelta(hours=12)
+            date_24 = date - _timedelta(hours=24)
+            hour = date.hour
+    
+            url = _url_scanner(date,
+                        station_number,
+                        proxies)
+
+            url_24 = _url_scanner(date_24,
+                            station_number,
+                            proxies)
+        
+            max_retries = 5
+            retry = 0
+            if proxies == None:
+                response = _requests.get(url)
+                response.close()
+                response_24 = _requests.get(url_24)
+                response_24.close()
+                while response.status_code != 200 and response_24.status_code != 200:
+                    response = _requests.get(url)
+                    response.close()
+                    response_24 = _requests.get(url_24)
+                    response_24.close()
+                    retry = retry + 1
+                    if retry > max_retries:
+                        break
+            else:
+                response = _requests.get(url, proxies=proxies)
+                response.close()
+                response_24 = _requests.get(url_24, proxies=proxies)
+                response_24.close()
+                while response.status_code != 200 and response_24.status_code != 200:
+                    response = _requests.get(url, proxies=proxies)
+                    response.close()
+                    response_24 = _requests.get(url_24, proxies=proxies)
+                    response_24.close()
+                    retry = retry + 1
+                    if retry > max_retries:
+                        break
+    
+            try:
+                soup = _BeautifulSoup(response.content, "html.parser")
+                soup_24 = _BeautifulSoup(response_24.content, "html.parser")
+                data = _StringIO(soup.find_all('pre')[0].contents[0])
+                data_24 = _StringIO(soup_24.find_all('pre')[0].contents[0])
+                success = True
+            except Exception as e:
+                if loop_over_missing_data == False:
+                    print(f"No Recent Sounding Data for {station_id}.\nQuitting Now")
+                    _sys.exit()
+                else:
+                    print(f"No Recent Sounding Data for {station_id}\nSkipping...")
+        else:
+            pass
+            
+                   
+        col_names = ['PRES', 'HGHT', 'TEMP', 'DWPT', 'RELH', 'MIXR', 'DRCT', 'SKNT', 'THTA', 'THTE', 'THTV']
+        
+        try:
+            df = _parse_sounding_text(
+                data,
+                usecols=[0, 1, 2, 3, 4, 5, 6, 7],
+                names=col_names,
+                widths=[7] * 8,
+            )
+        except Exception as e:
+            _exceptions.station_id_exception(station_id)
+        
+        df['U-WIND'], df['V-WIND'] = _get_u_and_v(df['SKNT'], df['DRCT'])
+        df = df.rename(columns={'RELH': 'RH'})
+        pressure = df['PRES'].values * _units('hPa')
+        temperature = df['TEMP'].values * _units('degC')
+        dewpoint = df['DWPT'].values * _units('degC')
+        df['THETA'] = _mpcalc.potential_temperature(pressure, temperature)
+        height = df['HGHT'].values * _units('meters')
+        theta = df['THETA'].values * _units('degK')
+        df['BVF'] = _mpcalc.brunt_vaisala_frequency(height, theta, vertical_dim=0) 
+        df['WET-BULB'] = _mpcalc.wet_bulb_temperature(pressure, temperature, dewpoint)
+
+        try:
+            df_24 = _parse_sounding_text(
+                data_24,
+                usecols=[0, 1, 2, 3, 4, 5, 6, 7],
+                names=col_names,
+                widths=[7] * 8,
+            )
+        except Exception as e:
+            _exceptions.station_id_exception(station_id)
+        
+        df_24['U-WIND'], df_24['V-WIND'] = _get_u_and_v(df_24['SKNT'], df_24['DRCT'])
+        df_24 = df_24.rename(columns={'RELH': 'RH'})
+        pressure_24 = df_24['PRES'].values * _units('hPa')
+        temperature_24 = df_24['TEMP'].values * _units('degC')
+        dewpoint_24 = df_24['DWPT'].values * _units('degC')
+        df_24['THETA'] = _mpcalc.potential_temperature(pressure_24, temperature_24)
+        height_24 = df_24['HGHT'].values * _units('meters')
+        theta_24 = df_24['THETA'].values * _units('degK')
+        df_24['BVF'] = _mpcalc.brunt_vaisala_frequency(height_24, theta_24, vertical_dim=0)
+        df_24['WET-BULB'] = _mpcalc.wet_bulb_temperature(pressure_24, temperature_24, dewpoint_24)
+        
+        df.drop_duplicates(inplace=True,subset='PRES',ignore_index=True)
+        df.dropna(axis=0, inplace=True)
+        
+        df_24.drop_duplicates(inplace=True,subset='PRES',ignore_index=True)
+        df_24.dropna(axis=0, inplace=True)
+    
+        return df, df_24, date, date_24

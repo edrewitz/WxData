@@ -115,11 +115,7 @@ def rdps_post_processing(path,
     This function processes the model data from the RDPS by doing the following:
     
     1) Re-mapping the GRIB variable keys into a plain-language format.
-    
-    2) Trimming the data to fit the coordinates of your bounding box.
-    
-    3) Transform ds['longitude'] from a 0 to 360 coordinate system to -180 to 180 for the GDPS.
-    
+            
     Required Arguments:
     
     1) path (String) - The path to the directory holding the GRIB2 Data from CMC.
@@ -131,7 +127,7 @@ def rdps_post_processing(path,
     Returns
     -------    
     
-    An xarray.array of the latest GDPS forecast data for a user-specified variable, level/layer and level_type.
+    An xarray.array of the latest RDPS forecast data for a user-specified variable, level/layer and level_type.
     """
 
     try:
@@ -144,6 +140,65 @@ def rdps_post_processing(path,
                                 decode_timedelta=False,
                                 backend_kwargs={"indexpath": ""}).sel(x=slice(180, 900, 1), 
                                                                       y=slice(0, 800, 1))
+    except Exception as e:
+        pass
+    
+    try:
+        var = str(list(ds.data_vars)[0])
+        if ' ' in variable:
+            variable = variable.replace(' ', '_')
+        else:
+            pass
+        
+        ds[variable] = ds[var]
+        ds = ds.drop_vars(var)
+    except Exception as e:
+        pass
+
+    try:    
+        ds = ds.sortby('step')
+    except Exception as e:
+        _eccodes_error_message() 
+
+    try:
+        ds = ds.drop_duplicates(dim='step', keep='first')
+    except Exception as e:
+        pass
+
+    
+    return ds
+
+def hrdps_post_processing(path,
+                         variable):
+    
+    """
+    This function processes the model data from the HRDPS by doing the following:
+    
+    1) Re-mapping the GRIB variable keys into a plain-language format.
+    
+    Required Arguments:
+    
+    1) path (String) - The path to the directory holding the GRIB2 Data from CMC.
+    
+    2) variable (String) - The name of the variable to rename our dataset with the proper variable key.
+    
+    Optional Arguments: None
+
+    Returns
+    -------    
+    
+    An xarray.array of the latest HRDPS forecast data for a user-specified variable, level/layer and level_type.
+    """
+
+    try:
+        ds = _xr.open_mfdataset(f"{path}/*grib2",
+                                concat_dim='step', 
+                                combine='nested', 
+                                coords='minimal', 
+                                engine='cfgrib', 
+                                compat='override', 
+                                decode_timedelta=False,
+                                backend_kwargs={"indexpath": ""})
     except Exception as e:
         pass
     

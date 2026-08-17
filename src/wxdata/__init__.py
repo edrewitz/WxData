@@ -39,6 +39,16 @@ These functions do the following:
      - When clear_recycle_bin=True, the user's recycle bin is also cleared. 
 """
 
+"""
+********************************************************************************
+
+
+************  This section hosts the Model Data Clients. ***********************
+
+
+********************************************************************************
+"""
+
 # Global Forecast System (GFS)
 # - GFS 0.25x0.25 Degree Primary Parameters
 # - GFS 0.25x0.25 Degree Secondary Parameters
@@ -107,6 +117,24 @@ from wxdata.model_data.cmc.gdps.gdps import gdps
 from wxdata.model_data.cmc.rdps.rdps import rdps
 from wxdata.model_data.cmc.hrdps.hrdps import hrdps
 
+# Real-Time Mesoscale Analysis (RTMA)
+# - RTMA Latest 
+# - RTMA Comparison Between Two Times 
+from wxdata.model_data.noaa.rtma.rtma import(
+    rtma, 
+    rtma_comparison
+)
+
+"""
+********************************************************************************
+
+
+************  This section hosts the Fuels Data Clients.  **********************
+
+
+********************************************************************************
+"""
+
 # FEMS RAWS Network
 # - Single Station Weather Observations
 # - Single Station Fuels Observations
@@ -143,13 +171,16 @@ from wxdata.fuels_data.fems.meta_data import(
     get_multi_raws_station_meta_data
 )
 
-# Real-Time Mesoscale Analysis (RTMA)
-# - RTMA Latest 
-# - RTMA Comparison Between Two Times 
-from wxdata.model_data.noaa.rtma.rtma import(
-    rtma, 
-    rtma_comparison
-)
+
+"""
+********************************************************************************
+
+
+************  This section hosts the Gridded Forecast Data Clients.  ***********
+
+
+********************************************************************************
+"""
 
 # NOAA 
 # - Storm Prediction Center Outlooks
@@ -159,6 +190,16 @@ from wxdata.gridded_forecasts.noaa.nws.nws import(
     get_ndfd_grids,
     get_cpc_outlook
 )
+
+"""
+*****************************************************************************
+
+
+************  This section hosts the Observational Data Clients. ************
+
+
+*****************************************************************************
+"""
 
 # Observed Upper-Air Soundings
 # (University of Wyoming Database)
@@ -176,12 +217,13 @@ from wxdata.observational_data.radar.nexrad2 import(
 )
 
 """
-This section hosts all the functions and modules that involve post-processing the data.
-These are the functions and modules that:
+*********************************************************************************
 
-1) Re-map the GRIB2 Variable Keys into Plain Language Keys
-2) Build the xarray.array of the various datasets. 
 
+************  This section hosts the Model Data Processors. *********************
+
+
+*********************************************************************************
 """
 
 
@@ -216,18 +258,15 @@ from wxdata.post_processors.rtma_post_processing import process_rtma_data
 
 
 """
-This section hosts the utility functions accessable to the user. 
+****************************************************************************************************************
 
-These functions provide helpful utilities when analyzing weather data. 
 
-Utility functions are geared towards the following types of users:
+************  This section hosts the Data Querying/Transforming Tools & Automation Tools. **********************
 
-1) Users who want to use their own scripts to download the data however, they
-   would like to use the wxdata post-processing capabilities. 
-   
-2) Users who want to make hemispheric graphics or any graphics where cyclic points
-   resolve missing data along the prime meridian or international dateline. 
+
+****************************************************************************************************************
 """
+
 # WxData function using cartopy to make cyclic points
 # This is for users who wish to make graphics that cross the -180/180 degree longitude line
 # This is commonly used for Hemispheric graphics
@@ -250,9 +289,13 @@ from wxdata.utils.tools import(
 from wxdata.utils.scripts import run_external_scripts
 
 """
-This section hosts the various data clients that retrieve various types of data.
+***************************************************************************
 
-These clients can be easily configured to work on VPN/PROXY connections.
+
+************  This section hosts the Raw Data Clients. ********************
+
+
+***************************************************************************
 """
 
 # These are the wxdata HTTPS Clients with full VPN/PROXY Support
@@ -266,13 +309,13 @@ These clients can be easily configured to work on VPN/PROXY connections.
 import wxdata.client.client as client
 
 """
-***************************************************************************
+***********************************************************************************
 
 
-************  This section hosts the different API Interfaces.  ***********
+************  This section hosts the API Interface Clients. ***********************
 
 
-***************************************************************************
+***********************************************************************************
 """
 #######################
 ### Open-Meteo API ###

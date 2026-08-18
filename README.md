@@ -605,6 +605,9 @@ These functions do the following:
 ********************************************************************************
 """
 
+##############
+#### NOAA ####
+##############
 # Global Forecast System (GFS)
 # - GFS 0.25x0.25 Degree Primary Parameters
 # - GFS 0.25x0.25 Degree Secondary Parameters
@@ -649,7 +652,17 @@ from wxdata.model_data.noaa.aigefs.aigefs import(
     aigefs_single
 )
 
-# European Centre for Medium-Range Weather Forecasts (ECMWF)
+# Real-Time Mesoscale Analysis (RTMA)
+# - RTMA Latest 
+# - RTMA Comparison Between Two Times 
+from wxdata.model_data.noaa.rtma.rtma import(
+    rtma, 
+    rtma_comparison
+)
+
+##############################################################
+# European Centre for Medium-Range Weather Forecasts (ECMWF) #
+##############################################################
 # - ECMWF IFS
 # - ECMWF IFS Ensemble
 # - ECMWF AIFS
@@ -665,7 +678,9 @@ from wxdata.model_data.ecmwf.ecmwf import(
     ecmwf_ifs_wave_ens
 )
 
-# Canadian Meteorological Center
+##################################
+# Canadian Meteorological Center #
+##################################
 # - Canadian Global Deterministic Prediction System (GDPS)
 # - Canadian Regional Deterministic Prediction System (RDPS)
 # - Canadian High Resolution Deterministic Prediction System (HRDPS)
@@ -673,13 +688,7 @@ from wxdata.model_data.cmc.gdps.gdps import gdps
 from wxdata.model_data.cmc.rdps.rdps import rdps
 from wxdata.model_data.cmc.hrdps.hrdps import hrdps
 
-# Real-Time Mesoscale Analysis (RTMA)
-# - RTMA Latest 
-# - RTMA Comparison Between Two Times 
-from wxdata.model_data.noaa.rtma.rtma import(
-    rtma, 
-    rtma_comparison
-)
+
 
 """
 ********************************************************************************

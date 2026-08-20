@@ -462,6 +462,10 @@ def _rdps_client(final_forecast_hour=84,
         valid level type(s): 'nominal top'
         valid levels: None (level_type='nominal top' -> 'nominal top' is the only level)
         
+    'upward shortwave radiation flux':
+        valid level type(s): 'nominal top'
+        valid levels: None (level_type='nominal top' -> 'nominal top' is the only level)
+        
     'vertical velocity':
         valid level type(s): 'pressure'
         valid levels: 

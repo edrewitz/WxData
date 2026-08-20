@@ -290,7 +290,6 @@ def hrdps_variable_keys(variable):
         'snow depth'
         'soil temperature'
         'soil volumetric ice content'
-        'soil moisture content'
         'specific humidity'
         'storm relative helicity'
         'surface runoff'
@@ -382,7 +381,6 @@ def hrdps_variable_keys(variable):
         'snow depth':'HRDPS_SNOD',
         'soil temperature':'HRDPS_TSOIL',
         'soil volumetric ice content':'HRDPS_SOILVIC',
-        'soil moisture content':'HRDPS_SOILM',
         'specific humidity':'HRDPS_SPFH',
         'storm relative helicity':'HRDPS_HLCY',
         'surface runoff':'HRDPS_SFCWRO',

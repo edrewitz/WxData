@@ -318,6 +318,7 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 ##### ***Canadian Meteorological Centre***
 1. [GDPS](https://edrewitz.github.io/WxData/gdps)
 2. [RDPS](https://edrewitz.github.io/WxData/rdps)
+3. [HRDPS](https://edrewitz.github.io/WxData/hrdps)
 
 ##### ***ECMWF Open Data***
 1. [ECMWF IFS](https://edrewitz.github.io/WxData/ECMWF_IFS)

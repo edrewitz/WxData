@@ -470,6 +470,10 @@ Any area where valid_levels = None -> Users do not need to edit the optional arg
 'upward longwave radiation flux':
     valid level type(s): 'nominal top'
     valid levels: None (level_type='nominal top' -> 'nominal top' is the only level)
+
+'upward shortwave radiation flux':
+    valid level type(s): 'nominal top'
+    valid levels: None (level_type='nominal top' -> 'nominal top' is the only level)
     
 'vertical velocity':
     valid level type(s): 'pressure'

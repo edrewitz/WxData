@@ -266,6 +266,12 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 
 24) [Download Latest Fine Particulates (PM2.5) and Ozone (O3) Observations Using Air Now API](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/air_now_api.ipynb)
 
+25) [Download and plot the first 24 hours of the GDPS 500mb Geopotential Height, Relative Vorticity and Wind Forecast across CONUS & Southern Canada](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/gdps.ipynb)
+
+26) [Download and plot the first 24 hours of the RDPS 2-Meter Temperature & 10-Meter Wind Forecast across CONUS & Southern Canada](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/rdps.ipynb)
+
+27) [Download and plot the first 12 hours of the HRDPS 0-10cm Soil Temperature across British Columbia & Alberta](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/hrdps.ipynb)
+
 ### Advanced Users
 
 1) [Using the `client` module to download the latest HadCRUT5 Analysis netCDF file and open this dataset in xarray](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/hadcrut5.ipynb)

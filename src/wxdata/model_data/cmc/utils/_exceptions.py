@@ -54,3 +54,27 @@ def invalid_info(has_levels):
         print("Consider the following:")
         print("Try double checking the spelling of your variable.")
         print("Try double checking to make sure your level_type is correct.")
+        
+        
+def invalid_cansips_request():
+    
+    """
+    Returns error message for an invalid CanSIPS request
+    """
+    
+    print(f"""
+          
+          Error: User submitted an invalid request for CanSIPS data.
+          
+          Things to know when submitting a request for CanSIPS data:
+          
+          1) Probabilistic air temperature forecasts are always of level_type='height above ground' at level=2 (2-meters).
+          2) 850mb (level=850) is the only valid level for air temperature forecasts of level_type='pressure'.
+          3) Any requests related to precipitation, sea surface temperature and/or precipitation rate are of level_type='surface'.
+          4) Any request related to sea surface height is always of level_type='geoid'.
+          5) Any request related to u and v wind components are only valid at either level=850 or level=200 and are always of level_type='pressure'
+          6) `category` can not be None when level_type='height above ground'. 
+          7) 850mb temperature is only available at monthly periods.
+          
+          
+          """)

@@ -128,9 +128,11 @@ from wxdata.model_data.ecmwf.ecmwf import(
 # - Canadian Global Deterministic Prediction System (GDPS)
 # - Canadian Regional Deterministic Prediction System (RDPS)
 # - Canadian High Resolution Deterministic Prediction System (HRDPS)
+# - Canadian Seasonal to Inter-annual Prediction System (CanSIPS)
 from wxdata.model_data.cmc.gdps.gdps import gdps
 from wxdata.model_data.cmc.rdps.rdps import rdps
 from wxdata.model_data.cmc.hrdps.hrdps import hrdps
+from wxdata.model_data.cmc.cansips.cansips import cansips
 
 
 

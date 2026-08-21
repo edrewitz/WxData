@@ -1017,5 +1017,7 @@ import wxdata.api.airnow_api.observations as air_now_observations
 
 11) [Air Now API](https://docs.airnowapi.org/webservices)
 
+12) [Canadian Meteorological Centre](https://dd.weather.gc.ca/)
+
 
 

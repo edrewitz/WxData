@@ -18,7 +18,11 @@ from wxdata.utils.recycle_bin import(
     clear_trash_bin_linux as _clear_trash_bin_linux
 )
 
-def cansips(variable='geopotential height',
+def cansips(western_bound=-180,
+            eastern_bound=180,
+            northern_bound=90,
+            southern_bound=-90,
+            variable='geopotential height',
             level=500,
             level_type='pressure',
             period='monthly',
@@ -40,7 +44,15 @@ def cansips(variable='geopotential height',
     
     Optional Arguments:
     
-    1) variable (String) - Variable the user is requesting.
+    1) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+
+    2) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+
+    3) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+
+    4) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+    
+    5) variable (String) - Variable the user is requesting.
     
     ***Variable List***
     
@@ -54,9 +66,9 @@ def cansips(variable='geopotential height',
         'u-wind component'
         'v-wind component'
         
-    2) level (Integer) - The pressure level in hPa or height above ground in meters.
+    6) level (Integer) - The pressure level in hPa or height above ground in meters.
     
-    3) level_type (String) - The type of level surface for the variable.
+    7) level_type (String) - The type of level surface for the variable.
     
     ***Level Types***
     
@@ -66,9 +78,9 @@ def cansips(variable='geopotential height',
         'geoid'
         'mean sea level'
         
-    4) period (String) - The forecast increment (monthly or seasonal [3-month])
+    8) period (String) - The forecast increment (monthly or seasonal [3-month])
     
-    5) category (String or None) - The type of probabilistic category. If not requesting a probabilistic forecast set this to None.
+    9) category (String or None) - The type of probabilistic category. If not requesting a probabilistic forecast set this to None.
     
     ***Category List***
     
@@ -85,33 +97,33 @@ def cansips(variable='geopotential height',
     'probability > 80th percentile'
     'probability > 90th percentile'
     
-    6) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    10) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
                                
-    7) path (String) - Default="CanSIPS/Geopotential Height/500mb/Monthly". 
+    11) path (String) - Default="CanSIPS/Geopotential Height/500mb/Monthly". 
        The parent directory for the GRIB2 files on the local machine.
        
-    8) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    12) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
-    9) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    10) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+    14) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
         
-    11) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
+    15) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
         with each run of the program you are calling WxData. This setting is to help preserve memory on the machine.
         
-    12) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+    16) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
         
-    13) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+    17) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    14) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
+    18) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed and no values
        returned to the user.
        
@@ -164,7 +176,11 @@ def cansips(variable='geopotential height',
         print("Data Processing...")
         
         ds = _cmc_post_processing.cansips_post_processing(path,
-                                                          variable)
+                                                            variable,
+                                                            western_bound,
+                                                            eastern_bound,
+                                                            northern_bound,
+                                                            southern_bound)
         
         if convert_temperature == True:
             ds = _convert_temperature_units(ds, 

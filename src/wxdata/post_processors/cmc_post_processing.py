@@ -229,7 +229,11 @@ def hrdps_post_processing(path,
 
 
 def cansips_post_processing(path,
-                         variable):
+                         variable,
+                         western_bound,
+                         eastern_bound,
+                         northern_bound,
+                         southern_bound):
     
     """
     This function processes the model data from the CanSIPS by doing the following:
@@ -242,6 +246,14 @@ def cansips_post_processing(path,
     
     2) variable (String) - The name of the variable to rename our dataset with the proper variable key.
     
+    3) western_bound (Float or Integer) - The western bound of the data needed. 
+
+    4) eastern_bound (Float or Integer) - The eastern bound of the data needed.
+
+    5) northern_bound (Float or Integer) - The northern bound of the data needed.
+
+    6) southern_bound (Float or Integer) - The southern bound of the data needed.
+    
     Optional Arguments: None
 
     Returns
@@ -249,6 +261,8 @@ def cansips_post_processing(path,
     
     An xarray.array of the latest CanSIPS data. 
     """
+    western_bound, eastern_bound = _convert_lon(western_bound, 
+                                                eastern_bound) 
 
     try:
         ds = _xr.open_mfdataset(f"{path}/*grib2",
@@ -258,7 +272,10 @@ def cansips_post_processing(path,
                                 engine='cfgrib', 
                                 compat='override', 
                                 decode_timedelta=False,
-                                backend_kwargs={"indexpath": ""})
+                                backend_kwargs={"indexpath": ""}).sel(longitude=slice(western_bound, eastern_bound, 1), 
+                                                                                                latitude=slice(southern_bound, northern_bound, 1))
+        
+        ds = _shift_longitude(ds)
     except Exception as e:
         pass
     

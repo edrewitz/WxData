@@ -228,3 +228,63 @@ def hrdps_post_processing(path,
     return ds
 
 
+def cansips_post_processing(path,
+                         variable):
+    
+    """
+    This function processes the model data from the CanSIPS by doing the following:
+    
+    1) Re-mapping the GRIB variable keys into a plain-language format.
+    
+    Required Arguments:
+    
+    1) path (String) - The path to the directory holding the GRIB2 Data from CMC.
+    
+    2) variable (String) - The name of the variable to rename our dataset with the proper variable key.
+    
+    Optional Arguments: None
+
+    Returns
+    -------    
+    
+    An xarray.array of the latest CanSIPS data. 
+    """
+
+    try:
+        ds = _xr.open_mfdataset(f"{path}/*grib2",
+                                concat_dim='step', 
+                                combine='nested', 
+                                coords='minimal', 
+                                engine='cfgrib', 
+                                compat='override', 
+                                decode_timedelta=False,
+                                backend_kwargs={"indexpath": ""})
+    except Exception as e:
+        pass
+    
+    try:
+        var = str(list(ds.data_vars)[0])
+        if ' ' in variable:
+            variable = variable.replace(' ', '_')
+        else:
+            pass
+        
+        ds[variable] = ds[var]
+        ds = ds.drop_vars(var)
+    except Exception as e:
+        pass
+
+    try:    
+        ds = ds.sortby('step')
+    except Exception as e:
+        _eccodes_error_message() 
+
+    try:
+        ds = ds.drop_duplicates(dim='step', keep='first')
+    except Exception as e:
+        pass
+
+    
+    return ds
+
+

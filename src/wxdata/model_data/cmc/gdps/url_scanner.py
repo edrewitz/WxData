@@ -90,7 +90,7 @@ def gdps_url_scanner(final_forecast_hour,
     
     Optional Arguments: 
     
-    1) level (Integer) - Default=None. The pressure level in hPa.
+    1) level (Integer) - Default=None. The pressure level in hPa or height above ground in meters.
     
     2) levels (Integer or Float list) - Default=None. The levels the user wishes to download for a layer between levels[a,b]. 
 

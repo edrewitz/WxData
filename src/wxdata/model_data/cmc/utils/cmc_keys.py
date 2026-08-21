@@ -412,5 +412,54 @@ def hrdps_variable_keys(variable):
         return variables[variable]
     except Exception as e:
         _invalid_key(variable)
+        
+        
+def cansips_variable_keys(variable):
+    
+    """
+        This function returns the variable in the filename to make our HTTPS request.
+    
+    Required Argument:
+    
+    1) variable (String) - The variable the user wants to query.
+    
+    ***Variable List***
+    
+        'temperature'
+        'geopotential height'
+        'precipitation'
+        'precipitation rate'
+        'pressure'
+        'sea surface height'
+        'sea surface temperature'
+        'u-wind component'
+        'v-wind component'
+        
+    Optional Arguments: None
+    
+    Returns
+    -------
+    
+    The variable in the format on the filename to make our HTTPS request.  
+    """
+    
+    variables = {
+        
+        'temperature':'AirTemp',
+        'geopotential height':'GeopotentialHeight',
+        'precipitation':'PrecipAccum',
+        'precipitation rate':'PrecipRate',
+        'pressure':'Pressure',
+        'sea surface height':'SeaSfcHeight',
+        'sea surface temperature':'WaterTemp',
+        'u-wind component':'WindU',
+        'v-wind component':'WindV'
+    }
+    
+    try:
+        return variables[variable]
+    except Exception as e:
+        _invalid_key(variable)
+    
 
 

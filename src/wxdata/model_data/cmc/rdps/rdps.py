@@ -1123,6 +1123,10 @@ def rdps(final_forecast_hour=84,
         valid level type(s): 'nominal top'
         valid levels: None (level_type='nominal top' -> 'nominal top' is the only level)
         
+    'upward shortwave radiation flux':
+        valid level type(s): 'nominal top'
+        valid levels: None (level_type='nominal top' -> 'nominal top' is the only level)
+        
     'vertical velocity':
         valid level type(s): 'pressure'
         valid levels: 
@@ -1171,7 +1175,7 @@ def rdps(final_forecast_hour=84,
             
     'vertical wind shear':
         valid level type(s): 'eta'
-        valid levels: None (level_type='eta' -> 'eta' is the only level)   
+        valid levels: None (level_type='eta' -> 'eta' is the only level)     
             
     Returns
     -------

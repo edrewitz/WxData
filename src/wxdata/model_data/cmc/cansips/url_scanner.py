@@ -329,8 +329,12 @@ def cansips_url_scanner(level_type,
             r0 = requests.get(f"{CURRENT_MONTH_DIRECTORY}{current_files[-1]}",
                                 stream=True)
             
+            r0.close()
+            
             r1 = requests.get(f"{PREVIOUS_MONTH_DIRECTORY}{previous_files[-1]}",
                                 stream=True)
+            
+            r1.close()
         except Exception as e:
             for i in range(0, 10, 1):
                 try:
@@ -338,8 +342,12 @@ def cansips_url_scanner(level_type,
                     r0 = requests.get(f"{CURRENT_MONTH_DIRECTORY}{current_files[-1]}",
                                         stream=True)
                     
+                    r0.close()
+                    
                     r1 = requests.get(f"{PREVIOUS_MONTH_DIRECTORY}{previous_files[-1]}",
                                         stream=True)
+                    
+                    r1.close()
                 except Exception as e:
                     i = i
                     if i >= 9:
@@ -355,9 +363,13 @@ def cansips_url_scanner(level_type,
                                 stream=True,
                                 proxies=proxies)
             
+            r0.close()
+            
             r1 = requests.get(f"{PREVIOUS_MONTH_DIRECTORY}{previous_files[-1]}",
                                 stream=True,
                                 proxies=proxies)
+            
+            r1.close()
         except Exception as e:
             for i in range(0, 10, 1):
                 try:
@@ -366,9 +378,13 @@ def cansips_url_scanner(level_type,
                                         stream=True,
                                         proxies=proxies)
                     
+                    r0.close()
+                    
                     r1 = requests.get(f"{PREVIOUS_MONTH_DIRECTORY}{previous_files[-1]}",
                                         stream=True,
                                         proxies=proxies)
+                    
+                    r1.close()
                 except Exception as e:
                     i = i
                     if i >= 9:
@@ -378,7 +394,7 @@ def cansips_url_scanner(level_type,
                     else:
                         pass  
                     
-                    
+              
     responses = [r0, r1]
     urls = [CURRENT_MONTH_DIRECTORY, 
             PREVIOUS_MONTH_DIRECTORY]

@@ -127,6 +127,93 @@ def cansips(western_bound=-180,
        data via their own external method, set process_data=False which means the data will be downloaded but not processed and no values
        returned to the user.
        
+    ***Variables & Proper level_type & level & category & period***
+    
+    'temperature':
+        valid level type(s): 'pressure', 'height above ground'.
+        valid levels:
+            level_type='pressure' (hPa): 850.                              
+            level_type='height above ground' (m): 2.
+        valid categories: 
+            level_type='height above ground':
+                1)  'probability above normal'
+                2)  'probability below normal'
+                3)  'probability near normal'
+                4)   'probability > 10th percentile'
+                5)   'probability > 20th percentile'
+                6)   'probability > 30th percentile'
+                7)   'probability > 40th percentile'
+                8)   'probability > 50th percentile'
+                9)   'probability > 60th percentile'
+                10)  'probability > 70th percentile'
+                11)  'probability > 80th percentile'
+                12)  'probability > 90th percentile'
+            
+            level_type='pressure':
+                1) None (There are no probabilistic forecasts for this level_type)
+        valid_period(s): 'seasonal', 'monthly'.
+        
+    'geopotential height':
+        valid level type(s): 'pressure'.
+        valid_levels: 500 (hPa)
+        valid categories: None (There are no probabilistic forecasts for this level_type)
+        valid period(s): 'monthly'. 
+        
+    'precipitation':
+        valid level type(s): 'surface'.
+        valid levels: N/A - User does not need to change around anything here as the only level is surface.
+        valid categories: 
+            1)  'probability above normal'
+            2)  'probability below normal'
+            3)  'probability near normal'
+            4)   'probability > 10th percentile'
+            5)   'probability > 20th percentile'
+            6)   'probability > 30th percentile'
+            7)   'probability > 40th percentile'
+            8)   'probability > 50th percentile'
+            9)   'probability > 60th percentile'
+            10)  'probability > 70th percentile'
+            11)  'probability > 80th percentile'
+            12)  'probability > 90th percentile'
+            
+        valid_period(s): 'seasonal', 'monthly'.
+    
+    'precipitation rate':    
+        valid level type(s): 'surface'.
+        valid levels: N/A - User does not need to change around anything here as the only level is surface.
+        valid categories: None (There are no probabilistic forecasts for this level_type)
+        valid period(s): 'monthly'. 
+        
+    'pressure':
+        valid level type(s): 'surface'.
+        valid levels: N/A - User does not need to change around anything here as the only level is surface.
+        valid categories: None (There are no probabilistic forecasts for this level_type)
+        valid period(s): 'monthly'. 
+        
+    'sea surface height':        
+        valid level type(s): 'geoid'.
+        valid levels: N/A - User does not need to change around anything here as the only level is geoid.
+        valid categories: None (There are no probabilistic forecasts for this level_type)
+        valid period(s): 'monthly'. 
+        
+    'sea surface temperature':
+        valid level type(s): 'surface'.
+        valid levels: N/A - User does not need to change around anything here as the only level is surface.
+        valid categories: None (There are no probabilistic forecasts for this level_type)
+        valid period(s): 'monthly'. 
+        
+    'u-wind component':
+        valid level type(s): 'pressure'.
+        valid levels: 850, 200 (hPa).
+        valid categories: None (There are no probabilistic forecasts for this level_type)
+        valid period(s): 'monthly'.  
+        
+    'v-wind component':
+        valid level type(s): 'pressure'.
+        valid levels: 850, 200 (hPa).
+        valid categories: None (There are no probabilistic forecasts for this level_type)
+        valid period(s): 'monthly'. 
+       
     Returns
     -------
     

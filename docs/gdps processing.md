@@ -24,7 +24,7 @@ This function processes the model data from the GDPS by doing the following:
 
 Required Arguments:
 
-1) path (String) - The path to the directory holding the GRIB2 Data from CMC.
+1) path (String) - The path to the directory holding the GRIB2 Data for the GDPS.
 
 2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 

@@ -1,12 +1,18 @@
 """
-This file hosts the function responsible for GDPS data post-processing. 
+This file hosts the function responsible for CMC data post-processing. 
+
+***Model List***
+
+- GDPS
+- RDPS
+- HRDPS
+- CanSIPS
 
 GRIB variable keys will be post-processed into Plain Language variable keys. 
 
 (C) Eric J. Drewitz 2025-2026
 """
 import xarray as _xr
-import numpy as _np
 import sys as _sys
 import logging as _logging
 import warnings as _warnings
@@ -42,7 +48,7 @@ def gdps_post_processing(path,
     
     Required Arguments:
     
-    1) path (String) - The path to the directory holding the GRIB2 Data from CMC.
+    1) path (String) - The path to the directory holding the GRIB2 Data for the GDPS.
     
     2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
@@ -118,7 +124,7 @@ def rdps_post_processing(path,
             
     Required Arguments:
     
-    1) path (String) - The path to the directory holding the GRIB2 Data from CMC.
+    1) path (String) - The path to the directory holding the GRIB2 Data for the RDPS.
     
     2) variable (String) - The name of the variable to rename our dataset with the proper variable key.
     
@@ -178,7 +184,7 @@ def hrdps_post_processing(path,
     
     Required Arguments:
     
-    1) path (String) - The path to the directory holding the GRIB2 Data from CMC.
+    1) path (String) - The path to the directory holding the GRIB2 Data for the HRDPS.
     
     2) variable (String) - The name of the variable to rename our dataset with the proper variable key.
     
@@ -242,7 +248,7 @@ def cansips_post_processing(path,
     
     Required Arguments:
     
-    1) path (String) - The path to the directory holding the GRIB2 Data from CMC.
+    1) path (String) - The path to the directory holding the GRIB2 Data for the CanSIPS.
     
     2) variable (String) - The name of the variable to rename our dataset with the proper variable key.
     

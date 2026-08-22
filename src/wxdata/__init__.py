@@ -260,8 +260,10 @@ import wxdata.post_processors.ecmwf_post_processing as ecmwf_post_processing
 import wxdata.post_processors.cfs_post_processing as cfs_post_processing
 
 # Canadian Meteorological Center Gridded Models
-# - GDPS
-# - RDPS
+# - Canadian Global Deterministic Prediction System (GDPS)
+# - Canadian Regional Deterministic Prediction System (RDPS)
+# - Canadian High Resolution Deterministic Prediction System (HRDPS)
+# - Canadian Seasonal to Inter-annual Prediction System (CanSIPS)
 import wxdata.post_processors.cmc_post_processing as cmc_post_processing
 
 # Real-Time Mesoscale Analysis (RTMA)

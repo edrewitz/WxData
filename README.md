@@ -403,6 +403,12 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 ##### ***Real-Time Mesoscale Analysis Post-Processing***
 1. [RTMA](https://edrewitz.github.io/WxData/RTMA%20Post%20Processing)
 
+##### ***CMC Post Processing***
+1. [GDPS](https://edrewitz.github.io/WxData/gdps%20processing)
+2. [RDPS](https://edrewitz.github.io/WxData/rdps%20processing)
+3. [HRDPS](https://edrewitz.github.io/WxData/hrdps%20processing)
+4. [CanSIPS](https://edrewitz.github.io/WxData/cansips%20processing)
+
 -----------------------------------------------
 
 #### Raw Data Clients
@@ -692,9 +698,11 @@ from wxdata.model_data.ecmwf.ecmwf import(
 # - Canadian Global Deterministic Prediction System (GDPS)
 # - Canadian Regional Deterministic Prediction System (RDPS)
 # - Canadian High Resolution Deterministic Prediction System (HRDPS)
+# - Canadian Seasonal to Inter-annual Prediction System (CanSIPS)
 from wxdata.model_data.cmc.gdps.gdps import gdps
 from wxdata.model_data.cmc.rdps.rdps import rdps
 from wxdata.model_data.cmc.hrdps.hrdps import hrdps
+from wxdata.model_data.cmc.cansips.cansips import cansips
 
 
 
@@ -822,8 +830,10 @@ import wxdata.post_processors.ecmwf_post_processing as ecmwf_post_processing
 import wxdata.post_processors.cfs_post_processing as cfs_post_processing
 
 # Canadian Meteorological Center Gridded Models
-# - GDPS
-# - RDPS
+# - Canadian Global Deterministic Prediction System (GDPS)
+# - Canadian Regional Deterministic Prediction System (RDPS)
+# - Canadian High Resolution Deterministic Prediction System (HRDPS)
+# - Canadian Seasonal to Inter-annual Prediction System (CanSIPS)
 import wxdata.post_processors.cmc_post_processing as cmc_post_processing
 
 # Real-Time Mesoscale Analysis (RTMA)

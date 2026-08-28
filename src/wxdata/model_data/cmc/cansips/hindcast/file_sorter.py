@@ -10,7 +10,8 @@ import shutil
 from urllib.parse import urlparse
 
 
-def create_directories(path):
+def create_directories(path,
+                       variable):
     
     """
     Creates file directories for each year.
@@ -18,6 +19,8 @@ def create_directories(path):
     Required Arguments:
     
     1) path (String) - The path of the base directory.
+    
+    2) variable (String) - The variable requested by the user. 
     
     Optional Arguments: None
     
@@ -28,12 +31,13 @@ def create_directories(path):
     """
     
     for i in range(1991, 2021, 1):
-        os.makedirs(f"{path}/{i}", 
+        os.makedirs(f"{path}/{i}/{variable.upper()}", 
                     exist_ok=True)
         
 
 def sort_files(path,
-               urls):
+               urls,
+               variable):
     
     """
     Sorts the files into their proper bins from the temporary folder
@@ -44,6 +48,8 @@ def sort_files(path,
     
     2) urls (String List) - List of URLs to extract the filenames.
     
+    3) variable (String) - The variable requested by the user. 
+    
     Optional Arguments: None
     
     Returns
@@ -52,7 +58,8 @@ def sort_files(path,
     Moves the files from the temporary folder into their respective folders.
     """
     
-    create_directories(path)
+    create_directories(path,
+                       variable)
     
     files = []
     for url in urls:
@@ -72,7 +79,7 @@ def sort_files(path,
     for year, bin in zip(years, bins):
         for file in bin:
             try:
-                os.replace(f"{path}/Temp/{file}", f"{path}/{year}/{file}")
+                os.replace(f"{path}/Temp/{file}", f"{path}/{year}/{variable.upper()}/{file}")
             except Exception as e:
                 pass
             

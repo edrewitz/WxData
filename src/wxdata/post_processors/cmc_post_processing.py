@@ -352,7 +352,7 @@ def cansips_hindcast_post_processing(path,
     ds_list = []
     for folder in _os.listdir(path):
         try:
-            ds = _xr.open_mfdataset(f"{path}/{folder}/*grib2",
+            ds = _xr.open_mfdataset(f"{path}/{folder}/{variable.upper()}/*grib2",
                                     concat_dim='step', 
                                     combine='nested', 
                                     coords='minimal', 

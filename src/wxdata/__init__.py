@@ -265,7 +265,8 @@ import wxdata.post_processors.cfs_post_processing as cfs_post_processing
 # - Canadian Global Deterministic Prediction System (GDPS)
 # - Canadian Regional Deterministic Prediction System (RDPS)
 # - Canadian High Resolution Deterministic Prediction System (HRDPS)
-# - Canadian Seasonal to Inter-annual Prediction System (CanSIPS)
+# - Canadian Seasonal to Inter-annual Prediction System (CanSIPS) Forecast
+# - Canadian Seasonal to Inter-annual Prediction System (CanSIPS) Hindcast
 import wxdata.post_processors.cmc_post_processing as cmc_post_processing
 
 # Real-Time Mesoscale Analysis (RTMA)

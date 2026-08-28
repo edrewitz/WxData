@@ -417,7 +417,7 @@ def hrdps_variable_keys(variable):
 def cansips_variable_keys(variable):
     
     """
-        This function returns the variable in the filename to make our HTTPS request.
+    This function returns the variable in the filename to make our HTTPS request.
     
     Required Argument:
     
@@ -460,6 +460,147 @@ def cansips_variable_keys(variable):
         return variables[variable]
     except Exception as e:
         _invalid_key(variable)
+      
+def cansips_hindcast_keys(variable):
     
+    """
+    This function returns the variable in the filename to make our HTTPS request.
+    
+    Required Argument:
+    
+    1) variable (String) - The variable the user wants to query.
+    
+    ***Variable List***
+    
+        'temperature'
+        'geopotential height'
+        'precipitation rate'
+        'pressure'
+        'sea surface height'
+        'sea surface temperature'
+        'u-wind component'
+        'v-wind component'
+        
+    Optional Arguments: None
+    
+    Returns
+    -------
+    
+    The variable in the format on the filename to make our HTTPS request.  
+    
+    
+    """
+    
+    variables = {
+        
+        'temperature':'AirTemp',
+        'geopotential height':'GeopotentialHeight',
+        'precipitation rate':'PrecipRate',
+        'pressure':'Pressure',
+        'sea surface height':'SeaSfcHeight',
+        'sea surface temperature':'WaterTemp',
+        'u-wind component':'WindU',
+        'v-wind component':'WindV'
+    }
+    
+    try:
+        return variables[variable]
+    except Exception as e:
+        _invalid_key(variable)  
+        
+def geps_variable_keys(variable):
+    
+    """
+    This function returns the variable in the filename to make our HTTPS request.
+    
+    Required Argument:
+    
+    1) variable (String) - The variable the user wants to query.
+    
+    ***Variable List***
+    
+        'freezing rain accumulation'
+        'ice pellets accumulation'
+        'total convective precipitation'
+        'rain accumulation'
+        'snow accumulation'
+        'cape'
+        'cin'
+        'downward longwave radiation flux'
+        'downward shortwave radiation flux'
+        'geopotential height'
+        'sea ice thickness'
+        'latent heat net flux'
+        'outgoing longwave radiation'
+        'pressure'
+        'mean sea level pressure'
+        'precipitable water'
+        'relative humidity'
+        'surface runoff'
+        'sensible heat net flux'
+        'snow depth'
+        'specific humidity'
+        'soil moisture'
+        'total cloud cover'
+        'maximum temperature'
+        'minimum temperature'
+        'temperature'
+        'soil temperature'
+        'u-wind component'
+        'v-wind component'
+        'upward longwave radiation flux'
+        'upward shortwave radiation flux'
+        'vertical velocity'
+        'wind speed'
+        
+    Optional Arguments: None
+    
+    Returns
+    -------
+    
+    The variable in the format on the filename to make our HTTPS request.  
+    """
+    
+    variables = {
+        
+        'freezing rain accumulation':'AFRAIN',
+        'ice pellets accumulation':'AICEP',
+        'total convective precipitation':'APCP',
+        'rain accumulation':'ARAIN',
+        'snow accumulation':'ASNOW',
+        'cape':'CAPE',
+        'cin':'CIN',
+        'downward longwave radiation flux':'HRDPS_DLWRF',
+        'downward shortwave radiation flux':'HRDPS_DSWRF',
+        'geopotential height':'HGT',
+        'sea ice thickness':'ICETK',
+        'latent heat net flux':'LHTFL',
+        'outgoing longwave radiation':'OLR',
+        'pressure':'PRES',
+        'mean sea level pressure':'PRMSL',
+        'precipitable water':'PWAT',
+        'relative humidity':'RH',
+        'surface runoff':'SFCWRO',
+        'sensible heat net flux':'HRDPS_SHTFL',
+        'snow depth':'SNOD',
+        'specific humidity':'SPFH',
+        'soil moisture':'SWAT',
+        'total cloud cover':'TCDC',
+        'maximum temperature':'TMAX',
+        'minimum temperature':'TMIN',
+        'temperature':'TMP',
+        'soil temperature':'TSOIL',
+        'u-wind component':'UGRD',
+        'v-wind component':'VGRD',
+        'upward longwave radiation flux':'ULWRF',
+        'upward shortwave radiation flux':'USWRF',
+        'vertical velocity':'VVEL',
+        'wind speed':'WIND'
+        
+    }
 
+    try:
+        return variables[variable]
+    except Exception as e:
+        _invalid_key(variable)
 

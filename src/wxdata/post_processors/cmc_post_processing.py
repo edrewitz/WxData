@@ -12,6 +12,7 @@ GRIB variable keys will be post-processed into Plain Language variable keys.
 
 (C) Eric J. Drewitz 2025-2026
 """
+import os as _os
 import xarray as _xr
 import sys as _sys
 import logging as _logging
@@ -234,7 +235,7 @@ def hrdps_post_processing(path,
     return ds
 
 
-def cansips_post_processing(path,
+def cansips_forecast_post_processing(path,
                          variable,
                          western_bound,
                          eastern_bound,
@@ -310,4 +311,103 @@ def cansips_post_processing(path,
     
     return ds
 
+def cansips_hindcast_post_processing(path,
+                         variable,
+                         western_bound,
+                         eastern_bound,
+                         northern_bound,
+                         southern_bound):
+    
+    """
+    This function processes the model data from the CanSIPS by doing the following:
+    
+    1) Re-mapping the GRIB variable keys into a plain-language format.
+    
+    2) Creating a 30-year mean of the hindcast data to use as a climatology for anomalies.
+    
+    Required Arguments:
+    
+    1) path (String) - The path to the directory holding the GRIB2 Data for the CanSIPS.
+    
+    2) variable (String) - The name of the variable to rename our dataset with the proper variable key.
+    
+    3) western_bound (Float or Integer) - The western bound of the data needed. 
+
+    4) eastern_bound (Float or Integer) - The eastern bound of the data needed.
+
+    5) northern_bound (Float or Integer) - The northern bound of the data needed.
+
+    6) southern_bound (Float or Integer) - The southern bound of the data needed.
+    
+    Optional Arguments: None
+
+    Returns
+    -------    
+    
+    An xarray.array of a 30-year mean CanSIPS Hindcast.  
+    """
+    western_bound, eastern_bound = _convert_lon(western_bound, 
+                                                eastern_bound) 
+
+    ds_list = []
+    for folder in _os.listdir(path):
+        try:
+            ds = _xr.open_mfdataset(f"{path}/{folder}/{variable.upper()}/*grib2",
+                                    concat_dim='step', 
+                                    combine='nested', 
+                                    coords='minimal', 
+                                    engine='cfgrib', 
+                                    compat='override', 
+                                    decode_timedelta=False,
+                                    backend_kwargs={"indexpath": ""}).sel(longitude=slice(western_bound, eastern_bound, 1), 
+                                                                                                    latitude=slice(southern_bound, northern_bound, 1))
+            
+            ds = _shift_longitude(ds)
+        except Exception as e:
+            pass
+        
+        try:
+            var = str(list(ds.data_vars)[0])
+            if ' ' in variable:
+                variable = variable.replace(' ', '_')
+            else:
+                pass
+            
+            ds[variable] = ds[var]
+            ds = ds.drop_vars(var)
+        except Exception as e:
+            pass
+
+        try:    
+            ds = ds.sortby('step')
+        except Exception as e:
+            _eccodes_error_message() 
+
+        try:
+            ds = ds.drop_duplicates(dim='step', keep='first')
+        except Exception as e:
+            pass
+        
+        try:
+            ds = ds.mean(dim='number')
+        except Exception as e:
+            pass
+        
+        try:
+            ds_list.append(ds)
+        except Exception as e:
+            pass
+
+    try:
+        ds = _xr.concat(ds_list,
+                        dim='time')
+    except Exception as e:
+        pass
+    
+    try:
+        ds = ds.mean(dim='time')
+    except Exception as e:
+        pass
+    
+    return ds
 

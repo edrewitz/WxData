@@ -1,0 +1,1 @@
+from wxdata.model_data.cmc.cansips.forecast.cansips_forecast import cansips_forecast

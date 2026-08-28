@@ -42,6 +42,12 @@ def cansips_hindcast(western_bound=-180,
     
     https://eccc-msc.github.io/open-data/msc-data/nwp_cansips/readme_cansips-datamart_en/
     
+    TLDR Process for calculating 30-year mean:
+    
+    1) Find the ensemble mean for each year of the CanSIPS Hindcast data.
+    
+    2) Find the time mean from all 30 ensemble means.
+    
     Required Arguments: None
     
     Optional Arguments:

@@ -325,6 +325,12 @@ def cansips_hindcast_post_processing(path,
     
     2) Creating a 30-year mean of the hindcast data to use as a climatology for anomalies.
     
+    Process for calculating 30-year mean:
+    
+    1) Find the ensemble mean for each year of the CanSIPS Hindcast data.
+    
+    2) Find the time mean from all 30 ensemble means.
+    
     Required Arguments:
     
     1) path (String) - The path to the directory holding the GRIB2 Data for the CanSIPS.

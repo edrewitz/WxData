@@ -17,7 +17,7 @@ def cansips(western_bound=-180,
             period='monthly',
             category=None,
             proxies=None,
-            path=f"CanSIPS/Geopotential Height/500mb/Monthly",
+            path=f"CanSIPS/Forecast/Geopotential Height/500mb/Monthly",
             chunk_size=8192,
             notifications='off',
             clear_data=False,
@@ -101,7 +101,7 @@ Optional Arguments:
                            }
   ```
 
-11) path (String) - Default="CanSIPS/Geopotential Height/500mb/Monthly". 
+11) path (String) - Default="CanSIPS/Forecast/Geopotential Height/500mb/Monthly". 
    The parent directory for the GRIB2 files on the local machine.
    
 12) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.

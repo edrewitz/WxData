@@ -1,5 +1,5 @@
 """
-This file hosts the functions for the CanSIPS Data Client
+This file hosts the functions for the CanSIPS Forecast Data Client
 
 (C) Eric J. Drewitz 2025-2026
 """
@@ -10,7 +10,7 @@ _warnings.filterwarnings('ignore')
 import wxdata.post_processors.cmc_post_processing as _cmc_post_processing
 
 from wxdata.model_data.cmc.utils.file_scanner import scan_local_machine as _scan_local_machine
-from wxdata.model_data.cmc.cansips.url_scanner import cansips_url_scanner as _cansips_url_scanner
+from wxdata.model_data.cmc.cansips.forecast.url_scanner import cansips_url_scanner as _cansips_url_scanner
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
 from wxdata.utils.recycle_bin import(
     clear_recycle_bin_windows as _clear_recycle_bin_windows,
@@ -18,7 +18,7 @@ from wxdata.utils.recycle_bin import(
     clear_trash_bin_linux as _clear_trash_bin_linux
 )
 
-def cansips(western_bound=-180,
+def cansips_forecast(western_bound=-180,
             eastern_bound=180,
             northern_bound=90,
             southern_bound=-90,
@@ -28,7 +28,7 @@ def cansips(western_bound=-180,
             period='monthly',
             category=None,
             proxies=None,
-            path=f"CanSIPS/Geopotential Height/500mb/Monthly",
+            path=f"CanSIPS/Forecast/Geopotential Height/500mb/Monthly",
             chunk_size=8192,
             notifications='off',
             clear_data=False,
@@ -104,7 +104,7 @@ def cansips(western_bound=-180,
                                'https':'http://your-proxy-address:port'
                                }
                                
-    11) path (String) - Default="CanSIPS/Geopotential Height/500mb/Monthly". 
+    11) path (String) - Default="CanSIPS/Forecast/Geopotential Height/500mb/Monthly". 
        The parent directory for the GRIB2 files on the local machine.
        
     12) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
@@ -262,7 +262,7 @@ def cansips(western_bound=-180,
     if process_data == True:
         print("Data Processing...")
         
-        ds = _cmc_post_processing.cansips_post_processing(path,
+        ds = _cmc_post_processing.cansips_forecast_post_processing(path,
                                                             variable,
                                                             western_bound,
                                                             eastern_bound,
@@ -273,7 +273,7 @@ def cansips(western_bound=-180,
             ds = _convert_temperature_units(ds, 
                                         convert_to)
          
-        print("CanSIPS Data Processing Complete!")   
+        print("CanSIPS Forecast Data Processing Complete!")   
         return ds
     else:
         pass

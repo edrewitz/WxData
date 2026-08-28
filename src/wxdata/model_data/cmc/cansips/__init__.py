@@ -1,1 +1,0 @@
-from wxdata.model_data.cmc.cansips.cansips import cansips

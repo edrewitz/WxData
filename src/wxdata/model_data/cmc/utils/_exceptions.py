@@ -78,3 +78,23 @@ def invalid_cansips_request():
           
           
           """)
+    
+    
+def invalid_cansips_hindcast_request():
+    
+    """
+    Returns error message for an invalid CanSIPS hindcast request
+    """
+    
+    print(f"""
+          
+          Error: User submitted an invalid request for CanSIPS Hindcast data.
+          
+          Things to know when submitting a request for CanSIPS Hindcast data:
+          
+          1) 850mb (level=850) is the only valid level for air temperature forecasts of level_type='pressure'.
+          2) Any requests related to precipitation, sea surface temperature and/or precipitation rate are of level_type='surface'.
+          3) Any request related to sea surface height is always of level_type='geoid'.
+          4) Any request related to u and v wind components are only valid at either level=850 or level=200 and are always of level_type='pressure'          
+          
+          """)

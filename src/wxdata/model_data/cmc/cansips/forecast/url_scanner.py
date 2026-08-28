@@ -1,5 +1,5 @@
 """
-This file hosts the URL Scanner for the CanSIPS
+This file hosts the URL Scanner for the CanSIPS Forecasts
 
 (C) Eric J. Drewitz 2025-2026
 """

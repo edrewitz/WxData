@@ -4,7 +4,7 @@ title: Canadian Meteorological Centre CanSIPS
 
 [***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
 
-# Canadian Seasonal to Inter-annual Prediction System (CanSIPS)
+# Canadian Seasonal to Inter-annual Prediction System (CanSIPS) Forecast
 
 ```python
 def cansips(western_bound=-180,

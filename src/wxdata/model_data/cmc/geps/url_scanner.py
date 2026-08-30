@@ -1,5 +1,5 @@
 """
-This file hosts the URL Scanner for the GDPS
+This file hosts the URL Scanner for the GEPS
 
 (C) Eric J. Drewitz 2025-2026
 """

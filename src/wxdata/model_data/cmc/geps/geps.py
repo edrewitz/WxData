@@ -1150,9 +1150,9 @@ def geps(final_forecast_hour=384,
             else:
                 suffix = 'cm'
             
-            print(f"GDPS Data Processing Complete: {variable.upper()} - {level}{suffix}")
+            print(f"GEPS Data Processing Complete: {variable.upper()} - {level}{suffix}")
         else:
-            print(f"GDPS Data Processing Complete: {variable.upper()} - surface")
+            print(f"GEPS Data Processing Complete: {variable.upper()} - surface")
         return ds
     else:
         pass

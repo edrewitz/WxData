@@ -38,7 +38,7 @@ def cansips_hindcast(western_bound=-180,
     
     """
     This function is a client that retrieves the CanSIPS Hindcast Data for the current month and calculates the
-    30-year mean to find anomalies when comparing to the CanSIPS forecast as described here: 
+    30-year ensemble mean (40 ensemble members) to find anomalies when comparing to the CanSIPS forecast as described here: 
     
     https://eccc-msc.github.io/open-data/msc-data/nwp_cansips/readme_cansips-datamart_en/
     

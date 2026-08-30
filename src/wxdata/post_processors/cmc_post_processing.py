@@ -333,7 +333,10 @@ def cansips_hindcast_post_processing(path,
     
     Required Arguments:
     
-    1) path (String) - The path to the directory holding the GRIB2 Data for the CanSIPS.
+    1) path (String) - The path to the directory holding the GRIB2 Data for the CanSIPS Hindcast data.
+        This path should correspond to the parent directory of where the data is housed. In this directory,
+        there are subdirectories corresponding to each year from 1991-2020 as we need to bin the files by year
+        for proper ingestion. 
     
     2) variable (String) - The name of the variable to rename our dataset with the proper variable key.
     

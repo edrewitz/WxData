@@ -76,13 +76,13 @@ def geps_url_scanner(final_forecast_hour,
     
     Optional Arguments: 
     
-    1) level (Integer) - Default=None. The pressure level in hPa or height above ground in meters.
+    1) level (Integer) - Default=None. The pressure level in hPa or height above ground in meters or depth below surface in cm.
     
   
     Returns
     ------
     
-    A list of full URLs for the client to download the GDPS files. 
+    A list of full URLs for the client to download the GEPS files. 
     """
     type_of_level = type_of_level.lower()
     

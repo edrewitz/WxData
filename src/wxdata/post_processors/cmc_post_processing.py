@@ -29,6 +29,20 @@ from wxdata.utils.coords import(
 _eccodes_warning()
 _sys.tracebacklimit = 0
 _logging.disable()
+
+def _ensemble_cat(cat):
+    
+    """
+    Returns either the key for the control run or all members for GEPS
+    """
+    cat = cat.lower()
+    categories = {
+        
+        'control':'cf',
+        'members':'pf'
+    }
+    
+    return categories[cat]
    
 
 def gdps_post_processing(path,
@@ -420,3 +434,88 @@ def cansips_hindcast_post_processing(path,
     
     return ds
 
+def geps_post_processing(path,
+                         western_bound,
+                         eastern_bound,
+                         northern_bound,
+                         southern_bound,
+                         variable,
+                         cat):
+    
+    """
+    This function processes the model data from the GDPS by doing the following:
+    
+    1) Re-mapping the GRIB variable keys into a plain-language format.
+    
+    2) Trimming the data to fit the coordinates of your bounding box.
+    
+    3) Transform ds['longitude'] from a 0 to 360 coordinate system to -180 to 180 for the GDPS.
+    
+    Required Arguments:
+    
+    1) path (String) - The path to the directory holding the GRIB2 Data for the GDPS.
+    
+    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+
+    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+
+    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+
+    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+    
+    6) variable (String) - The name of the variable to rename our dataset with the proper variable key.  
+    
+    Optional Arguments: None 
+
+    Returns
+    -------    
+    
+    An xarray.array of the latest GEPS forecast data for a user-specified variable, level/layer and level_type.
+    """
+
+    cat = _ensemble_cat(cat)
+
+    western_bound, eastern_bound = _convert_lon(western_bound, 
+                                                eastern_bound) 
+
+    try:
+        ds = _xr.open_mfdataset(f"{path}/*grib2",
+                                concat_dim='step', 
+                                combine='nested', 
+                                coords='minimal', 
+                                engine='cfgrib', 
+                                compat='override', 
+                                decode_timedelta=False,
+                                filter_by_keys={'dataType': cat},
+                                backend_kwargs={"indexpath": ""}).sel(longitude=slice(western_bound, eastern_bound, 1), 
+                                                                                                latitude=slice(southern_bound, northern_bound, 1))
+        
+        ds = _shift_longitude(ds)
+    except Exception as e:
+        pass
+    
+    
+    try:
+        var = str(list(ds.data_vars)[0])
+        if ' ' in variable:
+            variable = variable.replace(' ', '_')
+        else:
+            pass
+        
+        ds[variable] = ds[var]
+        ds = ds.drop_vars(var)
+    except Exception as e:
+        pass
+
+    try:    
+        ds = ds.sortby('step')
+    except Exception as e:
+        _eccodes_error_message() 
+
+    try:
+        ds = ds.drop_duplicates(dim='step', keep='first')
+    except Exception as e:
+        pass
+
+    
+    return ds

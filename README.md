@@ -272,6 +272,10 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 
 27) [Download and plot the first 12 hours of the HRDPS 0-10cm Soil Temperature across British Columbia & Alberta](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/hrdps.ipynb)
 
+28) [Download the first 24 hours of the GEPS 850mb Temperature Forecast, find the ensemble mean and plot the GEPS Ensemble Mean 850mb Temperature Forecast](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/geps.ipynb)
+
+29) [Use the `cansips_forecast()` and `cansips_hindcast()` clients to download and plot the monthly 500mb Geopotential Height & 850mb Temperature Forecasts & Forecast Anomalies](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/cansips.ipynb)
+
 ### Advanced Users
 
 1) [Using the `client` module to download the latest HadCRUT5 Analysis netCDF file and open this dataset in xarray](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/hadcrut5.ipynb)
@@ -325,7 +329,8 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 1. [GDPS](https://edrewitz.github.io/WxData/gdps)
 2. [RDPS](https://edrewitz.github.io/WxData/rdps)
 3. [HRDPS](https://edrewitz.github.io/WxData/hrdps)
-4. [CanSIPS](https://edrewitz.github.io/WxData/cansips)
+4. [GEPS](https://edrewitz.github.io/WxData/geps)
+5. [CanSIPS](https://edrewitz.github.io/WxData/cansips)
 
 ##### ***ECMWF Open Data***
 1. [ECMWF IFS](https://edrewitz.github.io/WxData/ECMWF_IFS)
@@ -374,26 +379,26 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 #### Post-Processors
 
 ##### ***GFS Post-Processing***
-1. [Primary GFS Post-Processing](https://edrewitz.github.io/WxData/Primary%20GFS%20Post%20Processing)
-2. [Secondary GFS Post-Processing](https://edrewitz.github.io/WxData/Secondary%20GFS%20Post%20Processing)
+1. [Primary GFS](https://edrewitz.github.io/WxData/Primary%20GFS%20Post%20Processing)
+2. [Secondary GFS](https://edrewitz.github.io/WxData/Secondary%20GFS%20Post%20Processing)
 
 ##### ***AIGFS Post-Processing***
-1. [AIGFS Post-Processing](https://edrewitz.github.io/WxData/aigfs_post_processing)
+1. [AIGFS](https://edrewitz.github.io/WxData/aigfs_post_processing)
 
 ##### ***CFS Post-Processing***
-1. [CFS Pressure Post-Processing](https://edrewitz.github.io/WxData/cfs_pressure_post_processing)
-2. [CFS Flux Post-Processing](https://edrewitz.github.io/WxData/cfs_flux_post_processing)
+1. [CFS Pressure](https://edrewitz.github.io/WxData/cfs_pressure_post_processing)
+2. [CFS Flux](https://edrewitz.github.io/WxData/cfs_flux_post_processing)
 
 ##### ***GEFS Post-Processing***
-1. [Primary GEFS Post-Processing](https://edrewitz.github.io/WxData/Primary%20GEFS%20Post-Processing)
-2. [Secondary GEFS Post-Processing](https://edrewitz.github.io/WxData/Secondary%20GEFS%20Post%20Processing)
+1. [Primary GEFS](https://edrewitz.github.io/WxData/Primary%20GEFS%20Post-Processing)
+2. [Secondary GEFS](https://edrewitz.github.io/WxData/Secondary%20GEFS%20Post%20Processing)
 
 ##### ***AIGEFS Post-Processing***
-1. [AIGEFS Members Post-Processing](https://edrewitz.github.io/WxData/aigefs_members_post_processing)
-2. [AIGEFS Single Post-Processing](https://edrewitz.github.io/WxData/aigefs_single_post_processing)
+1. [AIGEFS Members](https://edrewitz.github.io/WxData/aigefs_members_post_processing)
+2. [AIGEFS Single](https://edrewitz.github.io/WxData/aigefs_single_post_processing)
 
 ##### ***HGEFS Post-Processing***
-1. [HGEFS Post-Processing](https://edrewitz.github.io/WxData/hgefs_post_processing)
+1. [HGEFS](https://edrewitz.github.io/WxData/hgefs_post_processing)
 
 ##### ***ECMWF Post-Processing***
 1. [ECMWF IFS and IFS Ensemble](https://edrewitz.github.io/WxData/ECMWF%20IFS%20Post%20Processing)
@@ -407,7 +412,8 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 1. [GDPS](https://edrewitz.github.io/WxData/gdps%20processing)
 2. [RDPS](https://edrewitz.github.io/WxData/rdps%20processing)
 3. [HRDPS](https://edrewitz.github.io/WxData/hrdps%20processing)
-4. [CanSIPS](https://edrewitz.github.io/WxData/cansips%20processing)
+4. [GEPS](https://edrewitz.github.io/WxData/geps%20processing)
+5. [CanSIPS](https://edrewitz.github.io/WxData/cansips%20processing)
 
 -----------------------------------------------
 
@@ -698,11 +704,15 @@ from wxdata.model_data.ecmwf.ecmwf import(
 # - Canadian Global Deterministic Prediction System (GDPS)
 # - Canadian Regional Deterministic Prediction System (RDPS)
 # - Canadian High Resolution Deterministic Prediction System (HRDPS)
-# - Canadian Seasonal to Inter-annual Prediction System (CanSIPS)
+# - Canadian Global Ensemble Prediction System (GEPS)
+# - Canadian Seasonal to Inter-annual Prediction System (CanSIPS) Forecasts
+# - Canadian Seasonal to Inter-annual Prediction System (CanSIPS) Hindcasts
 from wxdata.model_data.cmc.gdps.gdps import gdps
 from wxdata.model_data.cmc.rdps.rdps import rdps
 from wxdata.model_data.cmc.hrdps.hrdps import hrdps
-from wxdata.model_data.cmc.cansips.cansips import cansips
+from wxdata.model_data.cmc.geps.geps import geps
+from wxdata.model_data.cmc.cansips.forecast.cansips_forecast import cansips_forecast
+from wxdata.model_data.cmc.cansips.hindcast.cansips_hindcast import cansips_hindcast
 
 
 
@@ -833,7 +843,9 @@ import wxdata.post_processors.cfs_post_processing as cfs_post_processing
 # - Canadian Global Deterministic Prediction System (GDPS)
 # - Canadian Regional Deterministic Prediction System (RDPS)
 # - Canadian High Resolution Deterministic Prediction System (HRDPS)
-# - Canadian Seasonal to Inter-annual Prediction System (CanSIPS)
+# - Canadian Global Ensemble Prediction System (GEPS)
+# - Canadian Seasonal to Inter-annual Prediction System (CanSIPS) Forecast
+# - Canadian Seasonal to Inter-annual Prediction System (CanSIPS) Hindcast
 import wxdata.post_processors.cmc_post_processing as cmc_post_processing
 
 # Real-Time Mesoscale Analysis (RTMA)

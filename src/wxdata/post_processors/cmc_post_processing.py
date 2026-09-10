@@ -443,17 +443,17 @@ def geps_post_processing(path,
                          cat):
     
     """
-    This function processes the model data from the GDPS by doing the following:
+    This function processes the model data from the GEPS by doing the following:
     
     1) Re-mapping the GRIB variable keys into a plain-language format.
     
     2) Trimming the data to fit the coordinates of your bounding box.
     
-    3) Transform ds['longitude'] from a 0 to 360 coordinate system to -180 to 180 for the GDPS.
+    3) Transform ds['longitude'] from a 0 to 360 coordinate system to -180 to 180 for the GEPS.
     
     Required Arguments:
     
-    1) path (String) - The path to the directory holding the GRIB2 Data for the GDPS.
+    1) path (String) - The path to the directory holding the GRIB2 Data for the GEPS.
     
     2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
@@ -464,6 +464,8 @@ def geps_post_processing(path,
     5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
     
     6) variable (String) - The name of the variable to rename our dataset with the proper variable key.  
+    
+    7) cat (String) - Default='members'. Set cat='members' for all ensemble members OR set cat='control' for control run.
     
     Optional Arguments: None 
 

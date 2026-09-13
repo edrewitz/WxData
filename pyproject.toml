@@ -37,7 +37,7 @@ dependencies = [
 ]
 
 [project.scripts]
-wx = "wxdata.cli:main"
+wx = "wxdata/cli.cli:main"
 
 [build-system]
 requires = ["setuptools>=64.0.0", "wheel"]

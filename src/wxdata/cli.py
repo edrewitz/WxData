@@ -1,9 +1,9 @@
 import click
 
 from wxdata.model_data.noaa.gfs.gfs import(
-    gfs_0p25,
-    gfs_0p25_secondary_parameters,
-    gfs_0p50
+    gfs_0p25 as _fetch_gfs_0p25,
+    gfs_0p25_secondary_parameters as _fetch_gfs_0p25_secondary_parameters,
+    gfs_0p50 as _fetch_gfs_0p50
 )
 
 from wxdata.model_data.noaa.aigfs.aigfs import aigfs
@@ -45,6 +45,17 @@ from wxdata.model_data.cmc.hrdps.hrdps import hrdps
 from wxdata.model_data.cmc.geps.geps import geps
 from wxdata.model_data.cmc.cansips.forecast.cansips_forecast import cansips_forecast
 from wxdata.model_data.cmc.cansips.hindcast.cansips_hindcast import cansips_hindcast
+
+import wxdata.post_processors.gfs_post_processing as gfs_post_processing
+import wxdata.post_processors.aigfs_post_processing as aigfs_post_processing
+import wxdata.post_processors.hgefs_post_processing as hgefs_post_processing
+import wxdata.post_processors.gefs_post_processing as gefs_post_processing
+import wxdata.post_processors.aigefs_post_processing as aigefs_post_processing
+import wxdata.post_processors.ecmwf_post_processing as ecmwf_post_processing
+import wxdata.post_processors.cfs_post_processing as cfs_post_processing
+import wxdata.post_processors.cmc_post_processing as cmc_post_processing
+from wxdata.post_processors.rtma_post_processing import process_rtma_data
+
 from wxdata.fuels_data.fems.observations import(
     get_single_raws_station_weather_observations,
     get_single_raws_station_fuels_observations,
@@ -130,7 +141,6 @@ def rtma():
     "--model",
     default="rtma",
     show_default=True,
-    required=True,
     help="rtma (CONUS) | akrtma (Alaska) | hi rtma (Hawaii) | pr rtma (Puerto Rico) | gu rtma (Guam)"
 )
 
@@ -196,6 +206,23 @@ def rtma_fetch(model, cat, proxy, clear_recycle_bin, custom_directory, clear_dat
     else:
         click.echo(f"RTMA fetch complete for model={model}, category={cat}, saved to {model.upper()}/{cat.upper()}")
         
+
+# ---------------------------------------------------------------------
+# GFS 0.25x0.25 Commands
+# ---------------------------------------------------------------------
+@wx.group()
+def gfs_0p25():
+    """GFS 0.25x0.25 utilities."""
+    pass
+
+@gfs_0p25.command("gfs0p25")
+@click.option(
+    "--final_forecast_hour",
+    default=384,
+    show_default=True,
+    help="This is the final forecast hour requested in the dataset."
+)
+
         
 # ---------------------------------------------------------------------
 # Entry point

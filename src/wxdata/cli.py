@@ -155,7 +155,7 @@ def rtma():
     "--proxy",
     default=None,
     callback=lambda _, __, v: _parse_proxy(v),
-    help="Proxy URL (e.g., http://user:pass@host:port). Default: no proxy.",
+    help="Proxy URL (e.g., https://address:port). Default: no proxy.",
     show_default=True,
 )
 

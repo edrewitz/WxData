@@ -1,6 +1,6 @@
 [project]
 name = "wxdata"
-version = "2.3"
+version = "2.4"
 description = "A Python package of end-to-end weather data clients & raw data clients with VPN/Proxy Server support, data processors that decode variable keys from GRIB format into a plain-language format & various tools for assisting Python automated workflows, querying meteorological datasets and filling gaps in meteorological data."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -32,8 +32,12 @@ dependencies = [
   "ecmwf-opendata>=0.3.26",
   "openpyxl>=3.1.5",
   "arm-pyart>=2.2.0",
+  "click>=8.3.1",
  
 ]
+
+[project.scripts]
+wx = "wxdata.cli:main"
 
 [build-system]
 requires = ["setuptools>=64.0.0", "wheel"]

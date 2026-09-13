@@ -112,14 +112,14 @@ def _parse_proxy(value):
 # Top-level CLI group
 # ---------------------------------------------------------------------
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
-def wxdata():
+def wx():
     """WxData command line utilities."""
     pass
 
 # ---------------------------------------------------------------------
 # RTMA Commands
 # ---------------------------------------------------------------------
-@wxdata.group()
+@wx.group()
 def rtma():
     """RTMA utilities."""
     pass
@@ -201,7 +201,7 @@ def rtma_fetch(model, cat, proxy, clear_recycle_bin, custom_directory, clear_dat
 # Entry point
 # ---------------------------------------------------------------------
 def main():
-    wxdata()
+    wx()
     
 if __name__ == "__main__":
     main()

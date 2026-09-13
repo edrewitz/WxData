@@ -150,21 +150,21 @@ def rtma():
 )
 
 @click.option(
-    "--clear recycle bin",
+    "--clear_recycle_bin",
     default=False,
     show_default=True,
     help="To clear your recycle bin with each run of the script set to True."
 )
 
 @click.option(
-    "--custom directory",
+    "--custom_directory",
     default=None,
     show_default=True,
     help="If you want to save the files in a custom directory - enter the full path here."
 )
 
 @click.option(
-    "--clear data",
+    "--clear_data",
     default=False,
     show_default=True,
     help="To bypass the safety scanner set --clear data to False."

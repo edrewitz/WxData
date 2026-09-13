@@ -149,9 +149,10 @@ def rtma_fetch(model, cat, proxy, clear_recycle_bin, custom_directory, clear_dat
 # ---------------------------------------------------------------------
 # GFS 0.25x0.25 Commands
 # ---------------------------------------------------------------------
+"""
 @wx.group()
 def gfs_0p25():
-    """GFS 0.25x0.25 utilities."""
+    GFS 0.25x0.25 utilities.
     pass
 
 @gfs_0p25.command("gfs0p25")
@@ -161,7 +162,7 @@ def gfs_0p25():
     show_default=True,
     help="This is the final forecast hour requested in the dataset."
 )
-
+"""
         
 # ---------------------------------------------------------------------
 # Entry point

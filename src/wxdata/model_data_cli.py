@@ -77,10 +77,10 @@ def rtma():
 
 @rtma.command("rtma")
 @click.option(
-    "--model",
-    default="rtma",
+    "--region",
+    default="conus",
     show_default=True,
-    help="rtma (CONUS) | akrtma (Alaska) | hi rtma (Hawaii) | pr rtma (Puerto Rico) | gu rtma (Guam)"
+    help="Enter the abbreviation of the region: 1) conus, 2) ak (Alaska), 3) hi (Hawaii), 4) pr (Puerto Rico), 5) gu (Guam)"
 )
 
 @click.option(
@@ -126,8 +126,23 @@ def rtma():
     help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services"
 )
 
-def rtma_fetch(model, cat, proxy, clear_recycle_bin, custom_directory, clear_data, source):
+def rtma_fetch(region, cat, proxy, clear_recycle_bin, custom_directory, clear_data, source):
     """Download and decode RTMA GRIB2 data."""
+    
+    region = region.lower()
+    
+    if region == 'conus':
+        model = 'rtma'
+    elif region == 'ak':
+        model = 'ak rtma'
+    elif region == 'pr':
+        model = 'pr rtma'
+    elif region == 'hi':
+        model = 'hi rtma'
+    elif region == 'gu':
+        model = 'gu rtma'
+    else:
+        model = 'rtma'
 
     _fetch_rtma(
         model=model,

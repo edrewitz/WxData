@@ -27,15 +27,17 @@ conda create -n "$ENV_NAME" python=3.12 -y
 # 3. Activate the new environment
 conda activate "$ENV_NAME"
 
+pip uninstall wxdata
+
 # 4. Install the wxdata package
 echo "========================================="
 echo "Installing wxdata package..."
 echo "========================================="
-pip install git+"https://github.com/edrewitz/WxData.git"
+pip install git+"https://github.com/edrewitz/WxData.git@development"
 
 echo "========================================="
 echo "Setup complete! Environment '$ENV_NAME' is ready."
 echo "To use it in your terminal, run: conda activate $ENV_NAME"
 echo "========================================="
 
-wxdata rtma rtma --model rtma --cat analysis
+model rtma fetch --region conus --cat analysis

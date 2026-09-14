@@ -11,7 +11,7 @@ conda create -n wxtest python=3.12 -y
 conda activate wxtest
 
 # Install WxData from GitHub
-pip install git+https://github.com/edrewitz/WxData.git
+pip install git+https://github.com/edrewitz/WxData.git@development
 
 # Run the WxData command
-wxdata rtma rtma --model rtma --cat analysis
+model rtma fetch --region conus --cat analysis

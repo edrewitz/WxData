@@ -75,7 +75,7 @@ def rtma():
     pass
 
 
-@rtma.command("rtma")
+@rtma.command("fetch")
 @click.option(
     "--region",
     default="conus",

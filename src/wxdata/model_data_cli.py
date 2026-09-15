@@ -220,7 +220,7 @@ def gfs0p25():
     help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"
 )
         
-@click.option('--variable', 
+@click.option('--variables', 
               '-v', 
               default=['geopotential_height',
                        'temperature',

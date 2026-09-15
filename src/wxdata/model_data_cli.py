@@ -309,7 +309,13 @@ def gfs0p25_fetch(final_forecast_hour,
                   levels,
                   level_type):
     
-    """Downloads GFS 0.25x0.25 Data"""
+    """
+    Downloads GFS 0.25x0.25 Data
+    
+    -f -> The final forecast hour the user wants to download in the dataset (Default=384)
+    
+    
+    """
     
     vars_fixed = []
     for v in variables:

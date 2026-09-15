@@ -11,7 +11,7 @@ def _command_error_message(model):
     
     """Error Message For Invalid Commands"""
     
-    print(f"Invalid Command Error: User Entered An Invalid Command.")
+    print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
     print(f"Please run `model {model.lower()} -h to view the help documentation.")
 
 def _parse_proxy(value):

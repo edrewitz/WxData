@@ -126,8 +126,14 @@ def rtma():
     help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services"
 )
 
-def rtma_fetch(region, cat, proxy, clear_recycle_bin, custom_directory, clear_data, source):
-    """Download and decode RTMA GRIB2 data."""
+def rtma_fetch(region, 
+               cat, 
+               proxy, 
+               clear_recycle_bin, 
+               custom_directory, 
+               clear_data, 
+               source):
+    """Download RTMA GRIB2 data."""
     
     region = region.lower()
     
@@ -164,21 +170,156 @@ def rtma_fetch(region, cat, proxy, clear_recycle_bin, custom_directory, clear_da
 # ---------------------------------------------------------------------
 # GFS 0.25x0.25 Commands
 # ---------------------------------------------------------------------
-"""
 @wx.group()
-def gfs_0p25():
-    GFS 0.25x0.25 utilities.
+def gfs0p25():
+    """GFS 0.25x0.25 utilities."""
     pass
 
-@gfs_0p25.command("gfs0p25")
+@gfs0p25.command("fetch")
 @click.option(
     "--final_forecast_hour",
     default=384,
+    type=int,
     show_default=True,
     help="This is the final forecast hour requested in the dataset."
 )
-"""
+
+@click.option(
+    "--proxy",
+    default=None,
+    callback=lambda _, __, v: _parse_proxy(v),
+    help="Proxy URL (e.g., https://address:port). Default: no proxy.",
+    show_default=True,
+)
+
+@click.option(
+    "--clear_recycle_bin",
+    default=False,
+    show_default=True,
+    help="To clear your recycle bin with each run of the script set to True."
+)
+
+@click.option(
+    "--custom_directory",
+    default=None,
+    show_default=True,
+    help="If you want to save the files in a custom directory - enter the full path here."
+)
+
+@click.option(
+    "--clear_data",
+    default=False,
+    show_default=True,
+    help="To bypass the safety scanner set --clear data to False."
+)
+
+@click.option(
+    "--source",
+    default="noaa",
+    show_default=True,
+    help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"
+)
         
+@click.option('--variable', 
+              '-v', 
+              default=['geopotential height',
+                       'temperature',
+                       'relative humidity',
+                       'u-component of wind'
+                       'v-component of wind'],
+              multiple=True, 
+              help=(
+                  """"Variables to pass into the function. 
+                  
+                  Default=['geopotential height',
+                            'temperature',
+                            'relative humidity',
+                            'u-component of wind'
+                            'v-component of wind']
+                  
+                  See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
+                  
+                  )
+)
+
+@click.option(
+    '--levels', '-l', 
+    default=[1000,
+            925,
+            850,
+            700,
+            500,
+            400,
+            300,
+            250,
+            200,
+            100,
+            50,
+            10],
+    multiple=True, 
+    type=int,  
+    help=("""Levels for pressure, height, PVU etc. 
+          
+          Pressure (hPa)
+          
+          Default=[1000,
+                    925,
+                    850,
+                    700,
+                    500,
+                    400,
+                    300,
+                    250,
+                    200,
+                    100,
+                    50,
+                    10]
+          
+          See https://edrewitz.github.io/WxData/GFS0P25 for available levels.
+          
+          """)
+)
+
+@click.option(
+    '--level_type', '-lt', 
+    default="pressure",
+    help=("""Type of level (i.e. pressure, height above ground etc.). 
+        
+          Default='pressure'.
+          
+          See https://edrewitz.github.io/WxData/GFS0P25 for available level types.
+          
+          """)
+)
+
+def gfs0p25_fetch(final_forecast_hour,
+                  proxy,
+                  clear_recycle_bin,
+                  custom_directory,
+                  clear_data,
+                  source,
+                  variables,
+                  levels,
+                  level_type):
+    
+    """Downloads GFS 0.25x0.25 Data"""
+    
+    _fetch_gfs_0p25(final_forecast_hour=final_forecast_hour,
+                    process_data=False,
+                    proxies=proxy,
+                    clear_recycle_bin=clear_recycle_bin,
+                    custom_directory=custom_directory,
+                    clear_data=clear_data,
+                    source=source,
+                    variables=variables,
+                    levels=levels,
+                    level_type=level_type)
+    
+    if custom_directory == True:
+        click.echo(f"GFS0P25 fetch complete, data files saved to {custom_directory}")
+    else:
+        click.echo(f"GFS0P25 fetch complete, data files saved to GFS0P25/ATMOSPHERIC")
+
 # ---------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------

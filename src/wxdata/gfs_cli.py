@@ -83,11 +83,7 @@ def gfs0p25():
     Setting -cr True clears your recycle bin with each run of the script. 
     This ensures if any old files are moved to the recycle bin are deleted if they are not already.
     
-    -v = Variables(Default=['geopotential_height',
-                       'temperature',
-                       'relative_humidity',
-                       'u-component_of_wind'
-                       'v-component_of_wind']) 
+    -v = Variables(Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']) 
                        
     The list of variables the user wants to query.
     
@@ -275,18 +271,7 @@ def gfs0p25():
     
     wilting_point
     
-    -l = Levels (Default=[1000,
-                            925,
-                            850,
-                            700,
-                            500,
-                            400,
-                            300,
-                            250,
-                            200,
-                            100,
-                            50,
-                            10])
+    -l = Levels (Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10])
                             
     Here is a sample of how to query geopotential height and temperature at 850 and 500mb `model gfs0p25 latest -v geopotential_height -v temperature -l 850 -l 500`
     

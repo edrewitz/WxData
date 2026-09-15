@@ -172,23 +172,18 @@ def rtma_fetch(region,
 # ---------------------------------------------------------------------
 @wx.group()
 def gfs0p25():
-    """GFS 0.25x0.25 utilities."""
+    """
+    GFS 0.25x0.25 utilities.
+    
+    Valid Commands
+    --------------
+    
+    -f = Final Forecast Hour. Default=384. The last hour the user wishes to download in the dataset. GFS0P25 has 384 forecast hours.
+    
+    """
     pass
 
 @gfs0p25.command("fetch")
-
-@click.option(
-    "--help",
-    "-h",
-    help=(
-        """
-        -f = Final Forecast Hour. Default=384. The last hour the user wishes to download in the dataset. GFS0P25 has 384 forecast hours.
-        
-        
-        """
-    )
-)
-
 @click.option(
     "--final_forecast_hour",
     "-f",

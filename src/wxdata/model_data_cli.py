@@ -176,6 +176,19 @@ def gfs0p25():
     pass
 
 @gfs0p25.command("fetch")
+
+@click.option(
+    "--help",
+    "-h",
+    help=(
+        """
+        -f = Final Forecast Hour. Default=384. The last hour the user wishes to download in the dataset. GFS0P25 has 384 forecast hours.
+        
+        
+        """
+    )
+)
+
 @click.option(
     "--final_forecast_hour",
     "-f",

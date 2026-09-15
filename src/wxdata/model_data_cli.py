@@ -178,6 +178,7 @@ def gfs0p25():
 @gfs0p25.command("fetch")
 @click.option(
     "--final_forecast_hour",
+    "-f",
     default=384,
     type=int,
     show_default=True,
@@ -194,6 +195,7 @@ def gfs0p25():
 
 @click.option(
     "--clear_recycle_bin",
+    "-cr",
     default=False,
     show_default=True,
     help="To clear your recycle bin with each run of the script set to True."
@@ -201,6 +203,7 @@ def gfs0p25():
 
 @click.option(
     "--custom_directory",
+    "cdir",
     default=None,
     show_default=True,
     help="If you want to save the files in a custom directory - enter the full path here."
@@ -208,6 +211,7 @@ def gfs0p25():
 
 @click.option(
     "--clear_data",
+    "-cd",
     default=False,
     show_default=True,
     help="To bypass the safety scanner set --clear data to False."
@@ -243,7 +247,8 @@ def gfs0p25():
 )
 
 @click.option(
-    '--levels', '-l', 
+    '--levels', 
+    '-l', 
     default=[1000,
             925,
             850,
@@ -281,7 +286,8 @@ def gfs0p25():
 )
 
 @click.option(
-    '--level_type', '-lt', 
+    '--level_type', 
+    '-lt', 
     default="pressure",
     help=("""Type of level (i.e. pressure, height above ground etc.). 
         

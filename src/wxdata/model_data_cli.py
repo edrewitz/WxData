@@ -219,6 +219,7 @@ def gfs0p25():
 
 @click.option(
     "--source",
+    "s",
     default="noaa",
     show_default=True,
     help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"

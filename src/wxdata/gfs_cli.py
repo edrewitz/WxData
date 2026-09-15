@@ -487,7 +487,7 @@ def gfs0p25_fetch(final_forecast_hour,
                   levels,
                   level_type):
     
-    """Downloads GFS 0.25x0.25 Data"""
+    """Downloads Latest GFS 0.25x0.25 Data"""
     
     try:
         vars_fixed = []
@@ -513,7 +513,7 @@ def gfs0p25_fetch(final_forecast_hour,
         else:
             click.echo(f"GFS0P25 latest download complete, data files saved to GFS0P25/ATMOSPHERIC")
             
-    except Exception as e:
+    except SystemExit as e:
         _command_error_message('gfs0p25')
         sys.exit(1)
 

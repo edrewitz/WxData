@@ -203,7 +203,7 @@ def gfs0p25():
 
 @click.option(
     "--custom_directory",
-    "cdir",
+    "-cdir",
     default=None,
     show_default=True,
     help="If you want to save the files in a custom directory - enter the full path here."
@@ -219,7 +219,7 @@ def gfs0p25():
 
 @click.option(
     "--source",
-    "s",
+    "-s",
     default="noaa",
     show_default=True,
     help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"

@@ -156,9 +156,9 @@ def rtma_fetch(region, cat, proxy, clear_recycle_bin, custom_directory, clear_da
     )
 
     if custom_directory == True:
-        click.echo(f"RTMA fetch complete for model={model}, category={cat}, saved to {custom_directory}")
+        click.echo(f"RTMA {region.upper()} fetch complete for model={model}, category={cat}, saved to {custom_directory}")
     else:
-        click.echo(f"RTMA fetch complete for model={model}, category={cat}, saved to {model.upper()}/{cat.upper()}")
+        click.echo(f"RTMA {region.upper()} fetch complete for model={model}, category={cat}, saved to {model.upper()}/{cat.upper()}")
         
 
 # ---------------------------------------------------------------------

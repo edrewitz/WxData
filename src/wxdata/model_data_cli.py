@@ -179,9 +179,19 @@ def gfs0p25():
     
     --------------
     
-    1) -f = Final Forecast Hour. Default=384. 
-    The last hour the user wishes to download in the dataset. 
-    GFS0P25 has 384 forecast hours.
+    -f = Final Forecast Hour. Default=384. 
+    The last hour the user wishes to download in the dataset. GFS0P25 has 384 forecast hours.
+    
+    -s = Source (Default=noaa). Selects the primary data server to use.
+    If the primary server is unavailable the client will rotate and try other servers.
+    
+    Server Choices
+    
+    -------------
+    
+    noaa - NCEP/NOMADS
+    aws - Amazon Web Services
+    google - Google Cloud Servers
     
     """
     pass

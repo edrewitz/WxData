@@ -173,7 +173,7 @@ def rtma_fetch(region,
 @wx.group()
 def gfs0p25():
     """
-    GFS 0.25x0.25 utilities.
+    GFS 0.25x0.25 Client.
     
     Valid Commands
     

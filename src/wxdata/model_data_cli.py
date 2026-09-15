@@ -222,20 +222,20 @@ def gfs0p25():
         
 @click.option('--variable', 
               '-v', 
-              default=['geopotential height',
+              default=['geopotential_height',
                        'temperature',
-                       'relative humidity',
-                       'u-component of wind'
-                       'v-component of wind'],
+                       'relative_humidity',
+                       'u-component_of_wind'
+                       'v-component_of_wind'],
               multiple=True, 
               help=(
                   """"Variables to pass into the function. 
                   
-                  Default=['geopotential height',
+                  Default=['geopotential_height',
                             'temperature',
-                            'relative humidity',
-                            'u-component of wind'
-                            'v-component of wind']
+                            'relative_humidity',
+                            'u-component_of_wind'
+                            'v-component_of_wind']
                   
                   See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
                   
@@ -304,6 +304,11 @@ def gfs0p25_fetch(final_forecast_hour,
     
     """Downloads GFS 0.25x0.25 Data"""
     
+    vars_fixed = []
+    for v in variables:
+        v = v.replace('_', ' ')
+        vars_fixed.append(v)
+    
     _fetch_gfs_0p25(final_forecast_hour=final_forecast_hour,
                     process_data=False,
                     proxies=proxy,
@@ -311,7 +316,7 @@ def gfs0p25_fetch(final_forecast_hour,
                     custom_directory=custom_directory,
                     clear_data=clear_data,
                     source=source,
-                    variables=variables,
+                    variables=vars_fixed,
                     levels=levels,
                     level_type=level_type)
     

@@ -176,9 +176,12 @@ def gfs0p25():
     GFS 0.25x0.25 utilities.
     
     Valid Commands
+    
     --------------
     
-    -f = Final Forecast Hour. Default=384. The last hour the user wishes to download in the dataset. GFS0P25 has 384 forecast hours.
+    1) -f = Final Forecast Hour. Default=384. 
+    The last hour the user wishes to download in the dataset. 
+    GFS0P25 has 384 forecast hours.
     
     """
     pass

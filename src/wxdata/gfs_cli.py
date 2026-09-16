@@ -13,6 +13,7 @@ def _command_error_message(model):
     
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
     print(f"Please run `gfs {model.lower()} -h to view the help documentation.")
+    print(f"Please visit: https://github.com/edrewitz/WxData/wiki#global-forecast-system-gfs for full detailed documentation.")
 
 def _parse_proxy(value):
     if value is None:
@@ -43,6 +44,10 @@ def gfs0p25():
     Valid Commands
     
     --------------
+    
+    -c = Category (Default=primary).
+    
+    This determines the category of variables and levels.
     
     -f = Final Forecast Hour (Default=384).
      
@@ -89,9 +94,9 @@ def gfs0p25():
     
     Here is a sample of how to query geopotential height and temperature `model gfs0p25 fetch -v geopotential_height -v temperature`
     
-    Variables
+    Primary Variables
     
-    ---------
+    ------------------
     
     best_lifted_index
     
@@ -355,6 +360,22 @@ def gfs0p25():
     
 @gfs0p25.command("latest")
 @click.option(
+    "--category",
+    "-c",
+    default="primary",
+    type=str,
+    show_default=True,
+    help=(""""This determines whether the user downloads primary or secondary data variables
+          
+          Default=primary
+          
+          set -c secondary for secondary variables.
+          
+          """
+    )
+)
+
+@click.option(
     "--final_forecast_hour",
     "-f",
     default=384,
@@ -485,9 +506,10 @@ def gfs0p25_fetch(final_forecast_hour,
                   source,
                   variables,
                   levels,
-                  level_type):
+                  level_type,
+                  category):
     
-    """Downloads Latest GFS 0.25x0.25 Data"""
+    """Downloads Latest GFS 0.25x0.25 Data (Primary Variables)"""
     
     try:
         vars_fixed = []
@@ -497,21 +519,38 @@ def gfs0p25_fetch(final_forecast_hour,
             
         level_type = level_type.replace('_', ' ')
         
-        _fetch_gfs_0p25(final_forecast_hour=final_forecast_hour,
-                        process_data=False,
-                        proxies=proxy,
-                        clear_recycle_bin=clear_recycle_bin,
-                        custom_directory=custom_directory,
-                        clear_data=clear_data,
-                        source=source,
-                        variables=vars_fixed,
-                        levels=levels,
-                        level_type=level_type)
+        category = category.lower()
+        
+        if category == 'primary':
+        
+            _fetch_gfs_0p25(final_forecast_hour=final_forecast_hour,
+                            process_data=False,
+                            proxies=proxy,
+                            clear_recycle_bin=clear_recycle_bin,
+                            custom_directory=custom_directory,
+                            clear_data=clear_data,
+                            source=source,
+                            variables=vars_fixed,
+                            levels=levels,
+                            level_type=level_type)
+            
+        else:
+            
+            _fetch_gfs_0p25_secondary_parameters(final_forecast_hour=final_forecast_hour,
+                            process_data=False,
+                            proxies=proxy,
+                            clear_recycle_bin=clear_recycle_bin,
+                            custom_directory=custom_directory,
+                            clear_data=clear_data,
+                            source=source,
+                            variables=vars_fixed,
+                            levels=levels,
+                            level_type=level_type)
         
         if custom_directory == True:
-            click.echo(f"GFS0P25 latest download complete, data files saved to {custom_directory}")
+            click.echo(f"GFS0P25 {category.upper()} latest download complete, data files saved to {custom_directory}")
         else:
-            click.echo(f"GFS0P25 latest download complete, data files saved to GFS0P25/ATMOSPHERIC")
+            click.echo(f"GFS0P25 {category.upper()} latest download complete, data files saved to GFS0P25/ATMOSPHERIC")
             
     except SystemExit as e:
         _command_error_message('gfs0p25')

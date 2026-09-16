@@ -1,21 +1,21 @@
 # Force GitHub to count Batch Scripts
-*.bat linguist-detectable
-*.cmd linguist-detectable
+*.bat linguist-detectable=true linguist-language=Batchfile
+*.cmd linguist-detectable=true linguist-language=Batchfile
 
 # Force GitHub to count PowerShell scripts
-*.ps1 linguist-detectable
-*.psm1 linguist-detectable
+*.ps1 linguist-detectable=true linguist-language=PowerShell
+*.psm1 linguist-detectable=true linguist-language=PowerShell
 
 # Force GitHub to count Shell scripts
-*.sh linguist-detectable
+*.sh linguist-detectable=true linguist-language=Shell
 
 # Force GitHub to count Python scripts
-*.py linguist-detectable
+*.py linguist-detectable=true linguist-language=Python
 
-# Matching the file type to the language
+# Git attributes for line endings and diff formatting
 *.py    text diff=python
 *.bat   text diff=batch
 *.cmd   text diff=batch
 *.ps1   text diff=powershell
-*.psm1   text diff=powershell
-*.sh   text diff=shell
+*.psm1  text diff=powershell
+*.sh    text diff=shell

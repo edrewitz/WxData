@@ -105,7 +105,7 @@ def _gfs_0p25_client(final_forecast_hour=384,
     9) variables (String List) - Default=['geopotential height',
                                             'temperature',
                                             'relative humidity',
-                                            'u-component of wind'
+                                            'u-component of wind',
                                             'v-component of wind']
                        
         The variables the user wishes to query.
@@ -654,7 +654,7 @@ def _gfs_0p25_secondary_parameters_client(final_forecast_hour=384,
     9) variables (String List) - Default=['geopotential height',
                                             'temperature',
                                             'relative humidity',
-                                            'u-component of wind'
+                                            'u-component of wind',
                                             'v-component of wind']
                        
         The variables the user wishes to query.
@@ -1133,7 +1133,7 @@ def _gfs_0p50_client(final_forecast_hour=384,
     9) variables (String List) - Default=['geopotential height',
                                             'temperature',
                                             'relative humidity',
-                                            'u-component of wind'
+                                            'u-component of wind',
                                             'v-component of wind']
                        
         The variables the user wishes to query.
@@ -1746,7 +1746,7 @@ def gfs_0p25(final_forecast_hour=384,
     9) variables (String List) - Default=['geopotential height',
                                             'temperature',
                                             'relative humidity',
-                                            'u-component of wind'
+                                            'u-component of wind',
                                             'v-component of wind']
                        
         The variables the user wishes to query.
@@ -2275,7 +2275,7 @@ def gfs_0p50(final_forecast_hour=384,
     9) variables (String List) - Default=['geopotential height',
                                             'temperature',
                                             'relative humidity',
-                                            'u-component of wind'
+                                            'u-component of wind',
                                             'v-component of wind']
                        
         The variables the user wishes to query.
@@ -2856,7 +2856,7 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
     9) variables (String List) - Default=['geopotential height',
                                             'temperature',
                                             'relative humidity',
-                                            'u-component of wind'
+                                            'u-component of wind',
                                             'v-component of wind']
                        
         The variables the user wishes to query.

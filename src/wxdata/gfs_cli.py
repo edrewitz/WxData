@@ -16,8 +16,8 @@ def _command_error_message(model):
     print(f"Please visit: https://github.com/edrewitz/WxData/wiki#global-forecast-system-gfs for full detailed documentation.")
 
 def _parse_proxy(value):
-    if value is None:
-        return None
+    if value is "none":
+        return "none"
 
     else:
         # Accept either http://host:port or https://host:port
@@ -37,7 +37,7 @@ def gfs_data():
 # ---------------------------------------------------------------------
 # GFS 0.25x0.25 Commands
 # ---------------------------------------------------------------------
-@gfs_data.group(name='gfs0p25')
+@gfs_data.group(name='0p25')
 def gfs0p25():
     """
     GFS 0.25x0.25 Client.
@@ -93,7 +93,7 @@ def gfs0p25():
                        
     The list of variables the user wants to query.
     
-    Here is a sample of how to query geopotential height and temperature `model gfs0p25 fetch -v geopotential_height -v temperature`
+    Here is a sample of how to query geopotential height and temperature `gfs 0p25 latest -v geopotential_height -v temperature`
     
     Primary Variables
     
@@ -329,7 +329,7 @@ def gfs0p25():
     
     -l = Levels (Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10])
                             
-    Here is a sample of how to query geopotential height and temperature at 850 and 500mb `model gfs0p25 latest -v geopotential_height -v temperature -l 850 -l 500`
+    Here is a sample of how to query geopotential height and temperature at 850 and 500mb `gfs 0p25 latest -v geopotential_height -v temperature -l 850 -l 500`
     
     The default setting of levels assume pressure levels are being used and that the category is set to primary.
     
@@ -409,7 +409,7 @@ def gfs0p25():
     
     If you are using a proxy server you can define it by using --proxy https://proxy-server-address:proxy-server-port
     
-    Example: `model gfs0p25 latest -v geopotential height -l 500 --proxy https://proxy-server-address:proxy-server-port`
+    Example: `gfs 0p25 latest -v geopotential height -l 500 --proxy https://proxy-server-address:proxy-server-port`
     
     """
     
@@ -434,17 +434,18 @@ def gfs0p25():
     "--final_forecast_hour",
     "-f",
     default=384,
-    type=int,
     show_default=True,
+    type=int,
     help="This is the final forecast hour requested in the dataset."
 )
 
 @click.option(
     "--proxy",
-    default=None,
+    default="none",
     callback=lambda _, __, v: _parse_proxy(v),
-    help="Proxy URL (e.g., https://address:port). Default: no proxy.",
     show_default=True,
+    type=str, 
+    help="Proxy URL (e.g., https://address:port). Default: no proxy.",
 )
 
 @click.option(
@@ -452,14 +453,16 @@ def gfs0p25():
     "-cr",
     default=False,
     show_default=True,
+    type=bool,
     help="To clear your recycle bin with each run of the script set to True."
 )
 
 @click.option(
     "--custom_directory",
     "-cdir",
-    default=None,
+    default="none",
     show_default=True,
+    type=str,
     help="If you want to save the files in a custom directory - enter the full path here."
 )
 
@@ -468,6 +471,7 @@ def gfs0p25():
     "-cd",
     default=False,
     show_default=True,
+    type=bool,
     help="To bypass the safety scanner set --clear data to False."
 )
 
@@ -476,6 +480,7 @@ def gfs0p25():
     "-s",
     default="noaa",
     show_default=True,
+    type=str,
     help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"
 )
         
@@ -487,13 +492,11 @@ def gfs0p25():
                        'u-component_of_wind'
                        'v-component_of_wind'],
               multiple=True, 
+              type=str,
               help=(
                   """"Variables to pass into the function. 
                   
-                  Default=['geopotential_height', 'temperature',
-                            'relative_humidity',
-                            'u-component_of_wind'
-                            'v-component_of_wind']
+                  Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']
                   
                   See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
                   
@@ -532,6 +535,7 @@ def gfs0p25():
     '--level_type', 
     '-lt', 
     default="pressure",
+    type=str,
     help=("""Type of level (i.e. pressure, height above ground etc.). 
         
           Default='pressure'.
@@ -555,6 +559,17 @@ def gfs0p25_fetch(final_forecast_hour,
     """Downloads Latest GFS 0.25x0.25 Data"""
     
     try:
+        
+        if proxy.lower() == "none":
+            proxy = None
+        else:
+            proxy = proxy
+        
+        if custom_directory.lower() == "none":
+            custom_directory = None
+        else:
+            custom_directory = custom_directory
+        
         vars_fixed = []
         for v in variables:
             v = v.replace('_', ' ')
@@ -600,18 +615,14 @@ def gfs0p25_fetch(final_forecast_hour,
         sys.exit(1)
         
         
-@gfs_data.group(name='gfs0p50')
-def gfs0p25():
+@gfs_data.group(name='0p50')
+def gfs0p50():
     """
-    GFS 0.25x0.25 Client.
+    GFS 0.50x0.50 Client.
     
     Valid Commands
     
     --------------
-    
-    -c = Category (Default=primary).
-    
-    This determines the category of variables and levels.
     
     -f = Final Forecast Hour (Default=384).
      
@@ -644,7 +655,7 @@ def gfs0p25():
     -cdir = Custom Directory (Default=None).
     
     If the user wishes to build their own directory to hold the data files set -cd directory_branch_path.
-    The default path is f:GFS0P25/ATMOSPHERIC. 
+    The default path is f:GFS0P50/ATMOSPHERIC. 
     
     -cr = Clear Recycle Bin (Default=False).
     
@@ -656,243 +667,195 @@ def gfs0p25():
                        
     The list of variables the user wants to query.
     
-    Here is a sample of how to query geopotential height and temperature `model gfs0p25 fetch -v geopotential_height -v temperature`
+    Here is a sample of how to query geopotential height and temperature `gfs 0p50 latest -v geopotential_height -v temperature`
     
-    Primary Variables
+    Variables
     
-    ------------------
+    ---------
     
     best_lifted_index
-    
+
     absolute_vorticity
-    
+
     convective_precipitation
-    
+
     albedo
-    
+
     total_precipitation
-    
+
     convective_available_potential_energy
-    
+
     categorical_freezing_rain
-    
+
     categorical_ice_pellets
-    
+
     convective_inhibition
-    
+
     cloud_mixing_ratio
-    
+
     plant_canopy_surface_water
-    
+
     percent_frozen_precipitaion
-    
+
     convective_precipitation_rate
-    
+
     categorical_rain
-    
+
     categorical_snow
-    
+
     cloud_water
-    
+
     cloud_work_function
-    
+
     downward_longwave_radiation_flux
-    
+
     dew_point
-    
+
     downward_shortwave_radiation_flux
-    
+
     vertical_velocity_(height)
-    
+
     field_capacity
-    
+
     surface_friction_velocity
-    
+
     ground_heat_flux
-    
+
     graupel
-    
+
     wind_gust
-    
+
     high_cloud_cover
-    
+
     geopotential_height
-    
+
     haines_index
-    
+
     storm_relative_helicity
-    
+
     planetary_boundary_layer_height
-    
+
     icao_standard_atmosphere_reference_height
-    
+
     ice_cover
-    
+
     ice_growth_rate
-    
+
     ice_thickness
-    
+
     ice_temperature
-    
+
     ice_water_mixing_ratio
-    
+
     land_cover
-    
+
     low_cloud_cover
-    
+
     surface_lifted_index
-    
+
     latent_heat_net_flux
-    
+
     middle_cloud_cover
-    
-    mean_sea_level_pressure
-    
+
     mslp_(eta_model_reduction)
-    
+
     ozone_mixing_ratio
-    
+
     potential_evaporation_rate
-    
+
     pressure_level_from_which_parcel_was_lifted
-    
+
     potential_temperature
-    
+
     precipitation_rate
-    
+
     pressure
-    
+
     mean_sea_level_pressure
-    
+
     precipitable_water
-    
+
     composite_reflectivity
-    
+
     reflectivity
-    
+
     relative_humidity
-    
+
     rain_mixing_ratio
-    
+
     surface_roughness
-    
+
     sensible_heat_net_flux
-    
+
     snow_mixing_ratio
-    
+
     snow_depth
-    
+
     liquid_volumetric_soil_moisture_(non-frozen)
-    
+
     volumetric_soil_moisture_content
-    
+
     soil_type
-    
+
     specific_humidity
-    
+
     sunshine_duration
-    
+
     total_cloud_cover
-    
+
     maximum_temperature
-    
+
     minimum_temperature
-    
+
     temperature
-    
+
     total_ozone
-    
+
     soil_temperature
-    
+
     momentum_flux_(u-component)
-    
+
     u-component_of_wind
-    
+
     zonal_flux_of_gravity_wave_stress
-    
+
     upward_longwave_radiation_flux
-    
+
     u-component_of_storm_motion
-    
+
     upward_shortwave_radiation_flux
-    
+
     vegetation
-    
+
     momentum_flux_(v-component)
-    
+
     v-component_of_wind
-    
+
     meridional_flux_of_gravity_wave_stress
-    
+
     visibility
-    
+
     ventilation_rate
-    
+
     v-component_of_storm_motion
-    
+
     vertical_velocity_(pressure)
-    
+
     vertical_speed_shear
-    
+
     water_runoff
-    
-    lated_snow_depth
-    
+
+    water_equivalent_of_accumulated_snow_depth
+
     wilting_point
-    
-    Secondary Variables
-    
-    -------------------
-    
-    absolute_vorticity
 
     clear_sky_uv-b_downward_solar_flux
 
-    cloud_mixing_ratio
-
-    plant_canopy_surface_water
-
     uv-b_downward_solar_flux
-
-    vertical_velocity_(height)
-
-    graupel
-
-    geopotential_height
-
-    ice_thickness
-
-    ice_water_mixing_ratio
-
-    ozone_mixing_ratio
-
-    pressure
-
-    relative_humidity
-
-    rain_mixing_ratio
-
-    snow_mixing_ratio
-
-    liquid_volumetric_soil_moisture_(non-frozen)
-
-    specific_humidity
-
-    total_cloud_cover
-
-    temperature
-
-    u-component_of_wind
-
-    v-component_of_wind
-
-    vertical_velocity_(pressure)
-
-    vertical_speed_shear
     
-    -l = Levels (Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10])
+    -l = Levels (Default=[1000, 975, 950, 925, 900, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400, 350, 300, 250, 200, 150, 100, 70, 50, 40, 30, 20, 15, 10, 7, 5, 3, 2, 1])
                             
-    Here is a sample of how to query geopotential height and temperature at 850 and 500mb `model gfs0p25 latest -v geopotential_height -v temperature -l 850 -l 500`
+    Here is a sample of how to query geopotential height and temperature at 850 and 500mb `gfs 0p50 latest -v geopotential_height -v temperature -l 850 -l 500`
     
     The default setting of levels assume pressure levels are being used and that the category is set to primary.
     
@@ -900,9 +863,7 @@ def gfs0p25():
     
     This corresponds to the type of level.
     
-    Primary Levels: 1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10
-    
-    Secondary Levels: 875, 825, 775, 725, 675, 625, 575, 525, 475, 425, 375, 325, 275, 225, 175, 125, 7, 5, 3, 2, 1
+    Levels: 1000, 975, 950, 925, 900, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400, 350, 300, 250, 200, 150, 100, 70, 50, 40, 30, 20, 15, 10, 7, 5, 3, 2, 1
     
     Level Types
     
@@ -972,33 +933,17 @@ def gfs0p25():
     
     If you are using a proxy server you can define it by using --proxy https://proxy-server-address:proxy-server-port
     
-    Example: `model gfs0p25 latest -v geopotential height -l 500 --proxy https://proxy-server-address:proxy-server-port`
+    Example: `gfs 0p50 latest -v geopotential height -l 500 --proxy https://proxy-server-address:proxy-server-port`
     
     """
     
 @gfs0p25.command("latest")
 @click.option(
-    "--category",
-    "-c",
-    default="primary",
-    type=str,
-    show_default=True,
-    help=(""""This determines whether the user downloads primary or secondary data variables
-          
-          Default=primary
-          
-          set -c secondary for secondary variables.
-          
-          """
-    )
-)
-
-@click.option(
     "--final_forecast_hour",
     "-f",
     default=384,
-    type=int,
     show_default=True,
+    type=int,
     help="This is the final forecast hour requested in the dataset."
 )
 
@@ -1006,8 +951,9 @@ def gfs0p25():
     "--proxy",
     default=None,
     callback=lambda _, __, v: _parse_proxy(v),
-    help="Proxy URL (e.g., https://address:port). Default: no proxy.",
     show_default=True,
+    type=str,
+    help="Proxy URL (e.g., https://address:port). Default: no proxy.",
 )
 
 @click.option(
@@ -1015,14 +961,16 @@ def gfs0p25():
     "-cr",
     default=False,
     show_default=True,
+    type=bool,
     help="To clear your recycle bin with each run of the script set to True."
 )
 
 @click.option(
     "--custom_directory",
     "-cdir",
-    default=None,
+    default="none",
     show_default=True,
+    type=str,
     help="If you want to save the files in a custom directory - enter the full path here."
 )
 
@@ -1031,6 +979,7 @@ def gfs0p25():
     "-cd",
     default=False,
     show_default=True,
+    type=bool,
     help="To bypass the safety scanner set --clear data to False."
 )
 
@@ -1039,6 +988,7 @@ def gfs0p25():
     "-s",
     default="noaa",
     show_default=True,
+    type=str,
     help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"
 )
         
@@ -1050,13 +1000,11 @@ def gfs0p25():
                        'u-component_of_wind'
                        'v-component_of_wind'],
               multiple=True, 
+              type=str,
               help=(
                   """"Variables to pass into the function. 
                   
-                  Default=['geopotential_height', 'temperature',
-                            'relative_humidity',
-                            'u-component_of_wind'
-                            'v-component_of_wind']
+                  Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']
                   
                   See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
                   
@@ -1067,17 +1015,38 @@ def gfs0p25():
     '--levels', 
     '-l', 
     default=[1000,
+            975,
+            950,
             925,
+            900,
             850,
+            800,
+            750,
             700,
+            650,
+            600,
+            550,
             500,
+            450,
             400,
+            350,
             300,
             250,
             200,
+            150,
             100,
+            70,
             50,
-            10],
+            40,
+            30,
+            20,
+            15,
+            10,
+            7,
+            5,
+            3,
+            2,
+            1],
     multiple=True, 
     type=int,  
     help=("""Levels for pressure, height, PVU etc. 
@@ -1095,6 +1064,7 @@ def gfs0p25():
     '--level_type', 
     '-lt', 
     default="pressure",
+    type=str,
     help=("""Type of level (i.e. pressure, height above ground etc.). 
         
           Default='pressure'.
@@ -1104,7 +1074,7 @@ def gfs0p25():
           """)
 )
 
-def gfs0p25_fetch(final_forecast_hour,
+def gfs0p50_fetch(final_forecast_hour,
                   proxy,
                   clear_recycle_bin,
                   custom_directory,
@@ -1112,12 +1082,21 @@ def gfs0p25_fetch(final_forecast_hour,
                   source,
                   variables,
                   levels,
-                  level_type,
-                  category):
+                  level_type):
     
-    """Downloads Latest GFS 0.25x0.25 Data"""
+    """Downloads Latest GFS 0.50x0.50 Data"""
     
     try:
+        if proxy.lower() == "none":
+            proxy = None
+        else:
+            proxy = proxy
+        
+        if custom_directory.lower() == "none":
+            custom_directory = None
+        else:
+            custom_directory = custom_directory
+        
         vars_fixed = []
         for v in variables:
             v = v.replace('_', ' ')
@@ -1129,20 +1108,7 @@ def gfs0p25_fetch(final_forecast_hour,
         
         if category == 'primary':
         
-            _fetch_gfs_0p25(final_forecast_hour=final_forecast_hour,
-                            process_data=False,
-                            proxies=proxy,
-                            clear_recycle_bin=clear_recycle_bin,
-                            custom_directory=custom_directory,
-                            clear_data=clear_data,
-                            source=source,
-                            variables=vars_fixed,
-                            levels=levels,
-                            level_type=level_type)
-            
-        else:
-            
-            _fetch_gfs_0p25_secondary_parameters(final_forecast_hour=final_forecast_hour,
+            _fetch_gfs_0p50(final_forecast_hour=final_forecast_hour,
                             process_data=False,
                             proxies=proxy,
                             clear_recycle_bin=clear_recycle_bin,
@@ -1154,12 +1120,12 @@ def gfs0p25_fetch(final_forecast_hour,
                             level_type=level_type)
         
         if custom_directory == True:
-            click.echo(f"GFS0P25 {category.upper()} latest download complete, data files saved to {custom_directory}")
+            click.echo(f"GFS0P50 latest download complete, data files saved to {custom_directory}")
         else:
-            click.echo(f"GFS0P25 {category.upper()} latest download complete, data files saved to GFS0P25/ATMOSPHERIC")
+            click.echo(f"GFS0P50 latest download complete, data files saved to GFS0P50/ATMOSPHERIC")
             
     except SystemExit as e:
-        _command_error_message('gfs0p25')
+        _command_error_message('gfs0p50')
         sys.exit(1)
 
 # ---------------------------------------------------------------------

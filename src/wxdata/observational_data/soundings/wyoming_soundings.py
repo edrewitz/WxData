@@ -12,6 +12,7 @@ import requests as _requests
 import pandas as _pd
 import metpy.calc as _mpcalc
 import sys as _sys
+import os as _os
 import wxdata.observational_data.soundings._exceptions as _exceptions
 
 from wxdata.calc.kinematics import get_u_and_v as _get_u_and_v
@@ -468,7 +469,10 @@ def get_observed_sounding_data(station_id,
                                comparison_24=False, 
                                proxies=None,
                                clear_recycle_bin=False,
-                               loop_over_missing_data=False):
+                               loop_over_missing_data=False,
+                               to_csv=False,
+                               path=f"Observed Soundings",
+                               return_pandas_df=True):
 
     """
     This function scrapes the University of Wyoming Sounding Database and returns the data in a Pandas DataFrame
@@ -506,6 +510,13 @@ def get_observed_sounding_data(station_id,
         
     6) loop_over_missing_data (Boolean) - Default=False. When set to True, the program does not close if the data is missing.
         Setting `loop_over_missing_data=True` is useful for those downloading multiple observations over a period of time. 
+        
+    7) to_csv (Boolean) - Default=True. When set to True, the data will be saved as a CSV file.
+    
+    8) path (String) - Default="Observed Soundings". The path to where the CSV files save to. 
+    
+    9) return_pandas_df (Boolean) - Default=True. When set to True, returns a pandas.DataFrame. Sometimes when setting
+        to_csv=True, users may not want to return a pandas.DataFrame.
 
     Returns
     -------
@@ -653,8 +664,23 @@ def get_observed_sounding_data(station_id,
         
         df.drop_duplicates(inplace=True,subset='PRES',ignore_index=True)
         df.dropna(axis=0, inplace=True)
+        
+        if to_csv == True:
+            try:
+                _os.makedirs(f"{path}")
+            except Exception as e:
+                pass
+            
+            filename = f"{station_id.upper()}_{date.strftime('%Y_%m_%d')}.csv"
+            
+            df.to_csv(f"{path}/{filename}")
+        else:
+            pass
     
-        return df, date
+        if return_pandas_df == True:
+            return df, date
+        else:
+            pass
 
     else:
         if current == True:
@@ -835,5 +861,22 @@ def get_observed_sounding_data(station_id,
         
         df_24.drop_duplicates(inplace=True,subset='PRES',ignore_index=True)
         df_24.dropna(axis=0, inplace=True)
+        
+        if to_csv == True:
+            try:
+                _os.makedirs(f"{path}")
+            except Exception as e:
+                pass
+            
+            filename_1 = f"{station_id.upper()}_{date.strftime('%Y_%m_%d')}.csv"
+            filename_2 = f"{station_id.upper()}_{date_24.strftime('%Y_%m_%d')}.csv"
+            
+            df.to_csv(f"{path}/{filename_1}")
+            df_24.to_csv(f"{path}/{filename_2}")
+        else:
+            pass
     
-        return df, df_24, date, date_24
+        if return_pandas_df == True:
+            return df, df_24, date, date_24
+        else:
+            pass

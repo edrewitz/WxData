@@ -97,7 +97,7 @@ proxies=None ---> proxies={
 9) variables (String List) - Default=['geopotential height',
                     'temperature',
                     'relative humidity',
-                    'u-component of wind'
+                    'u-component of wind',
                     'v-component of wind']
 
 The variables the user wishes to query.

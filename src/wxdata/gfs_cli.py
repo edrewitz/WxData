@@ -276,15 +276,69 @@ def gfs0p25():
     
     wilting_point
     
+    Secondary Variables
+    
+    -------------------
+    
+    absolute_vorticity
+
+    clear_sky_uv-b_downward_solar_flux
+
+    cloud_mixing_ratio
+
+    plant_canopy_surface_water
+
+    uv-b_downward_solar_flux
+
+    vertical_velocity_(height)
+
+    graupel
+
+    geopotential_height
+
+    ice_thickness
+
+    ice_water_mixing_ratio
+
+    ozone_mixing_ratio
+
+    pressure
+
+    relative_humidity
+
+    rain_mixing_ratio
+
+    snow_mixing_ratio
+
+    liquid_volumetric_soil_moisture_(non-frozen)
+
+    specific_humidity
+
+    total_cloud_cover
+
+    temperature
+
+    u-component_of_wind
+
+    v-component_of_wind
+
+    vertical_velocity_(pressure)
+
+    vertical_speed_shear
+    
     -l = Levels (Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10])
                             
     Here is a sample of how to query geopotential height and temperature at 850 and 500mb `model gfs0p25 latest -v geopotential_height -v temperature -l 850 -l 500`
     
-    The default setting of levels assume pressure levels are being used.
+    The default setting of levels assume pressure levels are being used and that the category is set to primary.
     
     -lt = Level Type (Default=pressure).
     
     This corresponds to the type of level.
+    
+    Primary Levels: 1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10
+    
+    Secondary Levels: 875, 825, 775, 725, 675, 625, 575, 525, 475, 425, 375, 325, 275, 225, 175, 125, 7, 5, 3, 2, 1
     
     Level Types
     

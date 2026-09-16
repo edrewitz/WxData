@@ -40,4 +40,4 @@ echo "Setup complete! Environment '$ENV_NAME' is ready."
 echo "To use it in your terminal, run: conda activate $ENV_NAME"
 echo "========================================="
 
-model rtma fetch --region conus --cat analysis
+gfs gfs0p25 latest -v geopotential_height -l 500 -cd True & gfs gfs0p25 latest -c secondary -v temperature -l 875 -cd True -s google

@@ -23,6 +23,6 @@ pip install git+https://github.com/edrewitz/WxData.git@development
 # - GFS 0.25x0.25 Degree Primary Variables & Levels: NCEP/NOMADS
 # - GFS 0.25x0.25 Degree Secondary Variables & Levels: Google Cloud
 # - GFS 0.50x0.50 Degree 2-Meter Temperature: Amazon Web Services (AWS)
-Start-Job -ScriptBlock { gfs 0p25 latest -v geopotential_height -l 500 }
-Start-Job -ScriptBlock { gfs 0p25 latest -c secondary -v temperature -l 875 -s google }
-Start-Job -ScriptBlock { gfs 0p50 latest -v temperature -l 2 -lt height_above_ground -s aws }
+Start-Job -WorkingDirectory $CurrentDir -ScriptBlock { gfs 0p25 latest -v geopotential_height -l 500 }
+Start-Job -WorkingDirectory $CurrentDir -ScriptBlock { gfs 0p25 latest -c secondary -v temperature -l 875 -s google }
+Start-Job -WorkingDirectory $CurrentDir -ScriptBlock { gfs 0p50 latest -v temperature -l 2 -lt height_above_ground -s aws }

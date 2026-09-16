@@ -18,11 +18,12 @@ def _parse_proxy(value):
     if value is None:
         return None
 
-    # Accept either http://host:port or https://host:port
-    return {
-        "http": value,
-        "https": value,
-    }
+    else:
+        # Accept either http://host:port or https://host:port
+        return {
+            "http": value,
+            "https": value,
+        }
 
 # ---------------------------------------------------------------------
 # Top-level CLI group

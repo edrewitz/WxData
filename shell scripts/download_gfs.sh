@@ -40,4 +40,16 @@ echo "Setup complete! Environment '$ENV_NAME' is ready."
 echo "To use it in your terminal, run: conda activate $ENV_NAME"
 echo "========================================="
 
-gfs gfs0p25 latest -v geopotential_height -l 500 -cd True & gfs gfs0p25 latest -c secondary -v temperature -l 875 -cd True -s google
+# Downloads the following datasets concurrently
+# - GFS 0.25x0.25 Degree Primary Variables & Levels: 500mb Geopotential Height
+# - GFS 0.25x0.25 Degree Secondary Variables & Levels: 875mb Temperature
+# - GFS 0.50x0.50 Degree 2-Meter Temperature
+#
+# **IMPORTANT**
+# To prevent server rate limiting we are pulling from the different servers for each dataset
+# - GFS 0.25x0.25 Degree Primary Variables & Levels: NCEP/NOMADS
+# - GFS 0.25x0.25 Degree Secondary Variables & Levels: Google Cloud
+# - GFS 0.50x0.50 Degree 2-Meter Temperature: Amazon Web Services (AWS)
+gfs 0p25 latest -v geopotential_height -l 500 & \
+gfs 0p25 latest -c secondary -v temperature -l 875 -s google & \
+gfs 0p50 latest -v temperature -l 2 -lt height_above_ground -s aws

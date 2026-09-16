@@ -1090,21 +1090,18 @@ def gfs0p50_fetch(final_forecast_hour,
             vars_fixed.append(v)
             
         level_type = level_type.replace('_', ' ')
+                
         
-        category = category.lower()
-        
-        if category == 'primary':
-        
-            _fetch_gfs_0p50(final_forecast_hour=final_forecast_hour,
-                            process_data=False,
-                            proxies=proxy,
-                            clear_recycle_bin=clear_recycle_bin,
-                            custom_directory=custom_directory,
-                            clear_data=clear_data,
-                            source=source,
-                            variables=vars_fixed,
-                            levels=levels,
-                            level_type=level_type)
+        _fetch_gfs_0p50(final_forecast_hour=final_forecast_hour,
+                        process_data=False,
+                        proxies=proxy,
+                        clear_recycle_bin=clear_recycle_bin,
+                        custom_directory=custom_directory,
+                        clear_data=clear_data,
+                        source=source,
+                        variables=vars_fixed,
+                        levels=levels,
+                        level_type=level_type)
         
         if custom_directory == True:
             click.echo(f"GFS0P50 latest download complete, data files saved to {custom_directory}")

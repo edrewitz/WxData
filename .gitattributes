@@ -11,3 +11,11 @@
 
 # Force GitHub to count Python scripts
 *.py linguist-detectable
+
+# Matching the file type to the language
+*.py    text diff=python
+*.bat   text diff=batch
+*.cmd   text diff=batch
+*.ps1   text diff=powershell
+*.psm1   text diff=powershell
+*.sh   text diff=shell

@@ -16,7 +16,7 @@ def gfs_0p50(final_forecast_hour=384,
             variables=['geopotential height',
                        'temperature',
                        'relative humidity',
-                       'u-component of wind'
+                       'u-component of wind',
                        'v-component of wind'],
             custom_directory=None,
             clear_recycle_bin=False,

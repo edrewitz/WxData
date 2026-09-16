@@ -17,7 +17,7 @@ def _command_error_message(model):
 
 def _parse_proxy(value):
     if value is None:
-        return None"
+        return None
 
     else:
         # Accept either http://host:port or https://host:port

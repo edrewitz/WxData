@@ -81,7 +81,7 @@ proxies=None ---> proxies={
 variables=['geopotential height',
         'temperature',
         'relative humidity',
-        'u-component of wind'
+        'u-component of wind',
         'v-component of wind']
 ```
                        

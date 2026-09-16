@@ -1,0 +1,13 @@
+# Force GitHub to count Batch Scripts
+*.bat linguist-detectable
+*.cmd linguist-detectable
+
+# Force GitHub to count PowerShell scripts
+*.ps1 linguist-detectable
+*.psm1 linguist-detectable
+
+# Force GitHub to count Shell scripts
+*.sh linguist-detectable
+
+# Force GitHub to count Python scripts
+*.py linguist-detectable

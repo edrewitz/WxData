@@ -937,7 +937,7 @@ def gfs0p50():
     
     """
     
-@gfs0p25.command("latest")
+@gfs0p50.command("latest")
 @click.option(
     "--final_forecast_hour",
     "-f",

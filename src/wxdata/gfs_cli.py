@@ -16,8 +16,8 @@ def _command_error_message(model):
     print(f"Please visit: https://github.com/edrewitz/WxData/wiki#global-forecast-system-gfs for full detailed documentation.")
 
 def _parse_proxy(value):
-    if value is "none":
-        return "none"
+    if value is None:
+        return None"
 
     else:
         # Accept either http://host:port or https://host:port
@@ -441,10 +441,9 @@ def gfs0p25():
 
 @click.option(
     "--proxy",
-    default="none",
+    default=None,
     callback=lambda _, __, v: _parse_proxy(v),
     show_default=True,
-    type=str, 
     help="Proxy URL (e.g., https://address:port). Default: no proxy.",
 )
 
@@ -559,12 +558,6 @@ def gfs0p25_fetch(final_forecast_hour,
     """Downloads Latest GFS 0.25x0.25 Data"""
     
     try:
-        
-        if proxy.lower() == "none":
-            proxy = None
-        else:
-            proxy = proxy
-        
         if custom_directory.lower() == "none":
             custom_directory = None
         else:
@@ -952,7 +945,6 @@ def gfs0p50():
     default=None,
     callback=lambda _, __, v: _parse_proxy(v),
     show_default=True,
-    type=str,
     help="Proxy URL (e.g., https://address:port). Default: no proxy.",
 )
 
@@ -1087,11 +1079,6 @@ def gfs0p50_fetch(final_forecast_hour,
     """Downloads Latest GFS 0.50x0.50 Data"""
     
     try:
-        if proxy.lower() == "none":
-            proxy = None
-        else:
-            proxy = proxy
-        
         if custom_directory.lower() == "none":
             custom_directory = None
         else:

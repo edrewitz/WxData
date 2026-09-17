@@ -911,8 +911,14 @@ def byte_range_request(grib_url,
     records = []
     for line in idx_text.strip().splitlines():
         parts = line.split(':')
-        msg_no = int(parts[0])
-        offset = int(parts[1])
+        try:
+            msg_no = int(parts[0])
+        except Exception as e:
+            msg_no = float(parts[0])
+        try:
+            offset = int(parts[1])
+        except Exception as e:
+            offset = float(parts[1])
         var = parts[3]
         lev = parts[4]
         records.append({

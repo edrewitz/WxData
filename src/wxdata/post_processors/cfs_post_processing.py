@@ -15,7 +15,10 @@ _warnings.filterwarnings('ignore')
 from wxdata.utils.warnings import eccodes_warning as _eccodes_warning
 from wxdata.utils.file_funcs import sorted_paths as _sorted_paths
 from wxdata.utils.exceptions import eccodes_error_message as _eccodes_error_message
-from wxdata.utils.coords import shift_longitude as _shift_longitude
+from wxdata.utils.coords import(
+    shift_longitude as _shift_longitude,
+    convert_lon as _convert_lon
+)
 
 _eccodes_warning()
 _sys.tracebacklimit = 0
@@ -1759,5 +1762,90 @@ def cfs_pressure_post_processing(path):
         ds = ds.sortby('step')
     except Exception as e:
         pass
+    
+    return ds
+
+def archived_cfs_post_processing(path,
+                         western_bound,
+                         eastern_bound,
+                         northern_bound,
+                         southern_bound,
+                         variables):
+    
+    """
+    This function processes the model data from the GDPS by doing the following:
+    
+    1) Re-mapping the GRIB variable keys into a plain-language format.
+    
+    2) Trimming the data to fit the coordinates of your bounding box.
+    
+    3) Transform ds['longitude'] from a 0 to 360 coordinate system to -180 to 180 for the GDPS.
+    
+    Required Arguments:
+    
+    1) path (String) - The path to the directory holding the GRIB2 Data for the GDPS.
+    
+    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+
+    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+
+    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+
+    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+    
+    6) variable (String) - The name of the variable to rename our dataset with the proper variable key.  
+    
+    Optional Arguments: None 
+
+    Returns
+    -------    
+    
+    An xarray.array of the latest GDPS forecast data for a user-specified variable, level/layer and level_type.
+    """
+
+
+    western_bound, eastern_bound = _convert_lon(western_bound, 
+                                                eastern_bound) 
+
+    try:
+        ds = _xr.open_mfdataset(f"{path}/*grb2",
+                                concat_dim='step', 
+                                combine='nested', 
+                                coords='minimal', 
+                                engine='cfgrib', 
+                                compat='override', 
+                                decode_timedelta=False,
+                                backend_kwargs={"indexpath": ""}).sel(longitude=slice(western_bound, eastern_bound, 1), 
+                                                                                                latitude=slice(northern_bound, southern_bound, 1))
+        
+        ds = _shift_longitude(ds)
+    except Exception as e:
+        pass
+    
+    
+    try:
+        coded_vars = list(ds.data_vars)
+        for i in range(0, len(variables), 1):
+            if ' ' in variables[i]:
+                variables[i] = variables[i].replace(' ', '_')
+            else:
+                pass
+            
+            ds[variables[i]] = ds[coded_vars[i]]
+            ds = ds.drop_vars(coded_vars[i])
+                
+    except Exception as e:
+        pass
+
+    try:    
+        ds = ds.sortby('step')
+    except Exception as e:
+        _eccodes_error_message() 
+
+    try:
+        ds = ds.drop_duplicates(dim='step', keep='first')
+    except Exception as e:
+        pass
+
     
     return ds

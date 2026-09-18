@@ -105,9 +105,9 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 <img src="https://github.com/edrewitz/WxData/blob/main/icons/noaa_rotation.png?raw=true" width="200" alt="Alt text" /> <img src="https://github.com/edrewitz/WxData/blob/main/icons/ecmwf_rotation.png?raw=true" width="200" alt="Alt text" />
 
-End-To-End clients with multiple servers to pull data from can find the different options for `source` by the table below
+End-To-End clients with multiple servers to pull data from can find the different options for `source` by the table below.
 
-*`source` is only a valid argument for clients with multiple data servers.*
+*`source` is only a valid argument for operationally focused (automated) clients with multiple data servers.*
 
 `source='noaa' - NOAA/NCEP/NOMADS OR NOAA/NWS/FTP`
 

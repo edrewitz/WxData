@@ -28,7 +28,7 @@ def cfs_post_processing(path,
                          eastern_bound,
                          northern_bound,
                          southern_bound,
-                         variables):
+                         variable):
     
     """
     This function processes the model data from the CFS by doing the following:
@@ -242,23 +242,21 @@ def cfs_post_processing(path,
                                 decode_timedelta=False,
                                 backend_kwargs={"indexpath": ""}).sel(longitude=slice(western_bound, eastern_bound, 1), 
                                                                                                 latitude=slice(northern_bound, southern_bound, 1))
-        
+            
         ds = _shift_longitude(ds)
     except Exception as e:
         pass
     
     
     try:
-        coded_vars = list(ds.data_vars)
-        for i in range(0, len(variables), 1):
-            if ' ' in variables[i]:
-                variables[i] = variables[i].replace(' ', '_')
-            else:
-                pass
-            
-            ds[variables[i]] = ds[coded_vars[i]]
-            ds = ds.drop_vars(coded_vars[i])
-                
+        var = str(list(ds.data_vars)[0])
+        if ' ' in variable:
+            variable = variable.replace(' ', '_')
+        else:
+            pass
+        
+        ds[variable] = ds[var]
+        ds = ds.drop_vars(var)
     except Exception as e:
         pass
 

@@ -1045,13 +1045,15 @@ import wxdata.api.airnow_api.observations as air_now_observations
 
 8) [USDA Fire Environment Mapping System](https://fems.fs2c.usda.gov/download)
 
-9) [Amazon AWS Unidata NEXRAD2 Bucket](https://unidata-nexrad-level2.s3.amazonaws.com/index.html)
+9) [Open-Meteo API](https://open-meteo.com/)
 
-10) [Open-Meteo API](https://open-meteo.com/)
+10) [Air Now API](https://docs.airnowapi.org/webservices)
 
-11) [Air Now API](https://docs.airnowapi.org/webservices)
+11) [Canadian Meteorological Centre](https://dd.weather.gc.ca/)
 
-12) [Canadian Meteorological Centre](https://dd.weather.gc.ca/)
+12) [Amazon Web Services](https://aws.amazon.com/)
+
+13) [Google Cloud](https://cloud.google.com/)
 
 
 

@@ -33,9 +33,7 @@ def get_archived_cfs_flux(
              chunk_size=8192,
              convert_to='celsius',
              level_type='height above ground',
-             variables=['temperature',
-                        'maximum temperature',
-                        'minimum temperature'],
+             variable='temperature',
              levels=[2]
              ):
     
@@ -109,14 +107,11 @@ def get_archived_cfs_flux(
         'hybrid'
 
                                 
-    14) variables (List) - Default=['temperature',
-                                    'maximum temperature',
-                                    'minimum temperature']
+    14) variable (String) - Default='temperature'.
     
-    A list of variable names the user wants to download in plain language. 
+        The variable the user selects to download.
     
-        Variable Name List for CFS Flux
-        -------------------------------
+        ***Variable Name List for CFS Flux Data***
         
 			'aerodynamic conductance'
             'albedo'
@@ -284,6 +279,9 @@ def get_archived_cfs_flux(
                                
     """
     
+    variables = [variable]
+    path = f"{path}/{variable.upper()}"
+    
     urls, files, idx_urls = _cfs_flux_url_scanner(date,
                                  run,
                                  final_forecast_hour,
@@ -319,7 +317,7 @@ def get_archived_cfs_flux(
                                                         eastern_bound,
                                                         northern_bound,
                                                         southern_bound,
-                                                        variables)
+                                                        variable)
         
         if convert_temperature == True:
                 ds = _convert_temperature_units(ds, 

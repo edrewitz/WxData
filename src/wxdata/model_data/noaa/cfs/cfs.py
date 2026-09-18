@@ -734,9 +734,7 @@ def cfs_flux(western_bound=-180,
             convert_to='celsius',
             source='aws',
             level_type='height above ground',
-            variables=['temperature',
-                    'maximum temperature',
-                    'minimum temperature'],
+            variable='temperature',
             levels=[2]):
     
     """
@@ -816,14 +814,11 @@ def cfs_flux(western_bound=-180,
         'hybrid'
 
                                 
-    17) variables (List) - Default=['temperature',
-                                    'maximum temperature',
-                                    'minimum temperature']
+    17) variable (String) - Default='temperature'.
     
-    A list of variable names the user wants to download in plain language. 
+        The variable the user selects to download.
     
-        Variable Name List for CFS Flux
-        -------------------------------
+        ***Variable Name List for CFS Flux Data***
         
 			'aerodynamic conductance'
             'albedo'
@@ -990,6 +985,9 @@ def cfs_flux(western_bound=-180,
         '995_sigma_geopotential_height'   
     """
     
+    variables = [variable]
+    path = f"{path}/{variable.upper()}"
+    
     source = source.lower()
     try:
         if process_data == True:
@@ -1123,6 +1121,11 @@ def cfs_flux(western_bound=-180,
                 print(f"Client unable to establish a connection with either server. - System Exit.")
                 _sys.exit(1)
                 
+    if process_data == True:
+        return ds
+    else:
+        pass
+                
 def cfs_pressure(western_bound=-180, 
             eastern_bound=180, 
             northern_bound=90, 
@@ -1139,12 +1142,7 @@ def cfs_pressure(western_bound=-180,
             convert_to='celsius',
             source='aws',
             level_type='pressure',
-            variables=['geopotential height',
-                    'temperature',
-                    'absolute vorticity',
-                    'relative humidity',
-                    'u-component of wind',
-                    'v-component of wind'],
+            variable='geopotential height',
             levels=[1000, 
                     925, 
                     850, 
@@ -1227,16 +1225,11 @@ def cfs_pressure(western_bound=-180,
         'sigma level'
         'potential vorticity surface'
                                 
-    15) variables (List) - Default=['geopotential height',
-                                    'temperature',
-                                    'absolute vorticity',
-                                    'relative humidity',
-                                    'u-component of wind',
-                                    'v-component of wind']
+    15) variable (String) - Default='geopotential height'.
     
-    A list of variable names the user wants to download in plain language. 
+    The variable the user selects to download.
         
-        ***Variable Name List for CFS Pressure***
+        ***Variable Name List for CFS Pressure Data***
         
             'best lifted index'
             '5 wave geopotential height anomaly'
@@ -1405,6 +1398,9 @@ def cfs_pressure(western_bound=-180,
     
     source = source.lower()
     
+    variables = [variable]
+    path = f"{path}/{variable.upper()}"
+    
     try:
         if process_data == True:
             ds = _cfs_pressure_client(western_bound=western_bound, 
@@ -1536,3 +1532,8 @@ def cfs_pressure(western_bound=-180,
             except Exception as e:
                 print(f"Client unable to establish a connection with either server. - System Exit.")
                 _sys.exit(1)
+                
+    if process_data == True:
+        return ds
+    else:
+        pass

@@ -48,7 +48,7 @@ def aigfs(final_forecast_hour=384,
                        'temperature',
                        'u-component of wind',
                        'v-component of wind',
-                       'vertical velocity'],
+                       'vertical velocity (pressure)'],
             levels=[1000,
                     925,
                     850,
@@ -60,7 +60,8 @@ def aigfs(final_forecast_hour=384,
                     250,
                     150,
                     100,
-                    50]):
+                    50],
+            source='noaa'):
     
     """
     This function downloads, pre-processes and post-processes the latest AIGFS Data. 
@@ -132,7 +133,7 @@ def aigfs(final_forecast_hour=384,
                                                                         'temperature',
                                                                         'u-component of wind',
                                                                         'v-component of wind',
-                                                                        'vertical velocity']
+                                                                        'vertical velocity (pressure)']
                        
         When the level_type = 'pressure', the user can filter by variable to the variable they want. (Surface level files are very small 
         compared to pressure level files).
@@ -152,6 +153,13 @@ def aigfs(final_forecast_hour=384,
                                                                         
         When the level_type = 'pressure', the user can filter by level to the level they want. (Surface level files are very small 
         compared to pressure level files).
+        
+    20) source (String) - Default='noaa'. The servers to pull the data from.
+
+        ***Server Choices***
+        
+        'noaa' = NCEP/NOMADS
+        'aws' = Amazon Web Services
     
     Returns
     -------
@@ -203,7 +211,8 @@ def aigfs(final_forecast_hour=384,
         
     url, file, run = _aigfs_url_scanner(final_forecast_hour,
                                                         proxies,
-                                                        level_type)
+                                                        level_type,
+                                                        source)
     
     download = _local_file_scanner(path, 
                                     file,

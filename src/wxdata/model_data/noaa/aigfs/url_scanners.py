@@ -26,9 +26,13 @@ local = datetime.now()
 # Gets yesterday's date
 yd = now - timedelta(days=1)
 
+NOMADS = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigfs/prod"
+AWS = f"https://noaa-nws-graphcastgfs-pds.s3.amazonaws.com"
+
 def aigfs_url_scanner(final_forecast_hour,
                                     proxies,
-                                    type_of_level):
+                                    type_of_level,
+                                    source):
     
     """
     This function is the URL scanner for the AIGFS Data.
@@ -55,6 +59,12 @@ def aigfs_url_scanner(final_forecast_hour,
         1) pressure
         2) surface
         
+    4) source (String) - The servers to pull the data from.
+
+        ***Server Choices***
+        
+        'noaa' = NCEP/NOMADS
+        'aws' = Amazon Web Services
     
     Optional Arguments: None
     
@@ -63,6 +73,12 @@ def aigfs_url_scanner(final_forecast_hour,
     
     The download URL and filename of the latest available file in the AIGEFS dataset.  
     """
+    
+    source = source.lower()
+    if source == 'noaa':
+        PREFIX = NOMADS
+    else:
+        PREFIX = AWS
 
     type_of_level = type_of_level.lower()
         
@@ -84,15 +100,15 @@ def aigfs_url_scanner(final_forecast_hour,
     else:
         final_forecast_hour = f"00{final_forecast_hour}"
         
-    today_18z_url = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigfs/prod/aigfs.{now.strftime('%Y%m%d')}/18/model/atmos/grib2/"
-    today_12z_url = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigfs/prod/aigfs.{now.strftime('%Y%m%d')}/12/model/atmos/grib2/"
-    today_06z_url = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigfs/prod/aigfs.{now.strftime('%Y%m%d')}/06/model/atmos/grib2/"
-    today_00z_url = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigfs/prod/aigfs.{now.strftime('%Y%m%d')}/00/model/atmos/grib2/"
+    today_18z_url = f"{PREFIX}/aigfs.{now.strftime('%Y%m%d')}/18/model/atmos/grib2/"
+    today_12z_url = f"{PREFIX}/aigfs.{now.strftime('%Y%m%d')}/12/model/atmos/grib2/"
+    today_06z_url = f"{PREFIX}/aigfs.{now.strftime('%Y%m%d')}/06/model/atmos/grib2/"
+    today_00z_url = f"{PREFIX}/aigfs.{now.strftime('%Y%m%d')}/00/model/atmos/grib2/"
     
-    yesterday_18z_url = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigfs/prod/aigfs.{yd.strftime('%Y%m%d')}/18/model/atmos/grib2/"
-    yesterday_12z_url = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigfs/prod/aigfs.{yd.strftime('%Y%m%d')}/12/model/atmos/grib2/"
-    yesterday_06z_url = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigfs/prod/aigfs.{yd.strftime('%Y%m%d')}/06/model/atmos/grib2/"
-    yesterday_00z_url = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigfs/prod/aigfs.{yd.strftime('%Y%m%d')}/00/model/atmos/grib2/"
+    yesterday_18z_url = f"{PREFIX}/aigfs.{yd.strftime('%Y%m%d')}/18/model/atmos/grib2/"
+    yesterday_12z_url = f"{PREFIX}/aigfs.{yd.strftime('%Y%m%d')}/12/model/atmos/grib2/"
+    yesterday_06z_url = f"{PREFIX}/aigfs.{yd.strftime('%Y%m%d')}/06/model/atmos/grib2/"
+    yesterday_00z_url = f"{PREFIX}/aigfs.{yd.strftime('%Y%m%d')}/00/model/atmos/grib2/"
 
                 
     file_18z = f"aigfs.t18z.{level}.f{final_forecast_hour}.grib2"
@@ -102,89 +118,132 @@ def aigfs_url_scanner(final_forecast_hour,
     
     if proxies == None:
         try:    
-            t_18 = requests.get(f"{today_18z_url}/{file_18z}", stream=True)
+            t_18 = requests.get(f"{today_18z_url}{file_18z}", stream=True)
             t_18.close()
-            t_12 = requests.get(f"{today_12z_url}/{file_12z}", stream=True)
+            t_12 = requests.get(f"{today_12z_url}{file_12z}", stream=True)
             t_12.close()
-            t_06 = requests.get(f"{today_06z_url}/{file_06z}", stream=True)
+            t_06 = requests.get(f"{today_06z_url}{file_06z}", stream=True)
             t_06.close()
-            t_00 = requests.get(f"{today_00z_url}/{file_00z}", stream=True)
+            t_00 = requests.get(f"{today_00z_url}{file_00z}", stream=True)
             t_00.close()
-            y_18 = requests.get(f"{yesterday_18z_url}/{file_18z}", stream=True)
+            y_18 = requests.get(f"{yesterday_18z_url}{file_18z}", stream=True)
             y_18.close()
-            y_12 = requests.get(f"{yesterday_12z_url}/{file_12z}", stream=True)
+            y_12 = requests.get(f"{yesterday_12z_url}{file_12z}", stream=True)
             y_12.close()
-            y_06 = requests.get(f"{yesterday_06z_url}/{file_06z}", stream=True)
+            y_06 = requests.get(f"{yesterday_06z_url}{file_06z}", stream=True)
             y_06.close()
-            y_00 = requests.get(f"{yesterday_00z_url}/{file_00z}", stream=True)
+            y_00 = requests.get(f"{yesterday_00z_url}{file_00z}", stream=True)
             y_00.close()
         except Exception as e:
             for i in range(0, 10, 1):
                 time.sleep(30)
                 try:
-                    t_18 = requests.get(f"{today_18z_url}/{file_18z}", stream=True)
+                    t_18 = requests.get(f"{today_18z_url}{file_18z}", stream=True)
                     t_18.close()
-                    t_12 = requests.get(f"{today_12z_url}/{file_12z}", stream=True)
+                    t_12 = requests.get(f"{today_12z_url}{file_12z}", stream=True)
                     t_12.close()
-                    t_06 = requests.get(f"{today_06z_url}/{file_06z}", stream=True)
+                    t_06 = requests.get(f"{today_06z_url}{file_06z}", stream=True)
                     t_06.close()
-                    t_00 = requests.get(f"{today_00z_url}/{file_00z}", stream=True)
+                    t_00 = requests.get(f"{today_00z_url}{file_00z}", stream=True)
                     t_00.close()
-                    y_18 = requests.get(f"{yesterday_18z_url}/{file_18z}", stream=True)
+                    y_18 = requests.get(f"{yesterday_18z_url}{file_18z}", stream=True)
                     y_18.close()
-                    y_12 = requests.get(f"{yesterday_12z_url}/{file_12z}", stream=True)
+                    y_12 = requests.get(f"{yesterday_12z_url}{file_12z}", stream=True)
                     y_12.close()
-                    y_06 = requests.get(f"{yesterday_06z_url}/{file_06z}", stream=True)
+                    y_06 = requests.get(f"{yesterday_06z_url}{file_06z}", stream=True)
                     y_06.close()
-                    y_00 = requests.get(f"{yesterday_00z_url}/{file_00z}", stream=True)
+                    y_00 = requests.get(f"{yesterday_00z_url}{file_00z}", stream=True)
                     y_00.close()
                     break
                 except Exception as e:
-                    i = i     
+                    i = i
+                    if i >= 9:
+                        print(f"Error: Client Unable to Connect to {source.upper()} Server")
+                        if source == 'noaa':
+                            print(f"Rotating to AWS.")
+                            try:
+                                url, file, run = aigfs_url_scanner(final_forecast_hour,
+                                                                        proxies,
+                                                                        type_of_level,
+                                                                        'aws')  
+                            except Exception as e:
+                                print(f"Client unable to establish a connection to either server. - System Exit.")
+                                sys.exit(1)
+                        else:
+                            print(f"Rotating to NCEP/NOMADS.")
+                            try:
+                                url, file, run = aigfs_url_scanner(final_forecast_hour,
+                                                                        proxies,
+                                                                        type_of_level,
+                                                                        'noaa')  
+                            except Exception as e:
+                                print(f"Client unable to establish a connection to either server. - System Exit.")
+                                sys.exit(1)    
                     
                        
     else:
         try:    
-            t_18 = requests.get(f"{today_18z_url}/{file_18z}", stream=True, proxies=proxies)
+            t_18 = requests.get(f"{today_18z_url}{file_18z}", stream=True, proxies=proxies)
             t_18.close()
-            t_12 = requests.get(f"{today_12z_url}/{file_12z}", stream=True, proxies=proxies)
+            t_12 = requests.get(f"{today_12z_url}{file_12z}", stream=True, proxies=proxies)
             t_12.close()
-            t_06 = requests.get(f"{today_06z_url}/{file_06z}", stream=True, proxies=proxies)
+            t_06 = requests.get(f"{today_06z_url}{file_06z}", stream=True, proxies=proxies)
             t_06.close()
-            t_00 = requests.get(f"{today_00z_url}/{file_00z}", stream=True, proxies=proxies)
+            t_00 = requests.get(f"{today_00z_url}{file_00z}", stream=True, proxies=proxies)
             t_00.close()
-            y_18 = requests.get(f"{yesterday_18z_url}/{file_18z}", stream=True, proxies=proxies)
+            y_18 = requests.get(f"{yesterday_18z_url}{file_18z}", stream=True, proxies=proxies)
             y_18.close()
-            y_12 = requests.get(f"{yesterday_12z_url}/{file_12z}", stream=True, proxies=proxies)
+            y_12 = requests.get(f"{yesterday_12z_url}{file_12z}", stream=True, proxies=proxies)
             y_12.close()
-            y_06 = requests.get(f"{yesterday_06z_url}/{file_06z}", stream=True, proxies=proxies)
+            y_06 = requests.get(f"{yesterday_06z_url}{file_06z}", stream=True, proxies=proxies)
             y_06.close()
-            y_00 = requests.get(f"{yesterday_00z_url}/{file_00z}", stream=True, proxies=proxies)
+            y_00 = requests.get(f"{yesterday_00z_url}{file_00z}", stream=True, proxies=proxies)
             y_00.close()
         except Exception as e:
             for i in range(0, 10, 1):
                 time.sleep(30)
                 try:
-                    t_18 = requests.get(f"{today_18z_url}/{file_18z}", stream=True, proxies=proxies)
+                    t_18 = requests.get(f"{today_18z_url}{file_18z}", stream=True, proxies=proxies)
                     t_18.close()
-                    t_12 = requests.get(f"{today_12z_url}/{file_12z}", stream=True, proxies=proxies)
+                    t_12 = requests.get(f"{today_12z_url}{file_12z}", stream=True, proxies=proxies)
                     t_12.close()
-                    t_06 = requests.get(f"{today_06z_url}/{file_06z}", stream=True, proxies=proxies)
+                    t_06 = requests.get(f"{today_06z_url}{file_06z}", stream=True, proxies=proxies)
                     t_06.close()
-                    t_00 = requests.get(f"{today_00z_url}/{file_00z}", stream=True, proxies=proxies)
+                    t_00 = requests.get(f"{today_00z_url}{file_00z}", stream=True, proxies=proxies)
                     t_00.close()
-                    y_18 = requests.get(f"{yesterday_18z_url}/{file_18z}", stream=True, proxies=proxies)
+                    y_18 = requests.get(f"{yesterday_18z_url}{file_18z}", stream=True, proxies=proxies)
                     y_18.close()
-                    y_12 = requests.get(f"{yesterday_12z_url}/{file_12z}", stream=True, proxies=proxies)
+                    y_12 = requests.get(f"{yesterday_12z_url}{file_12z}", stream=True, proxies=proxies)
                     y_12.close()
-                    y_06 = requests.get(f"{yesterday_06z_url}/{file_06z}", stream=True, proxies=proxies)
+                    y_06 = requests.get(f"{yesterday_06z_url}{file_06z}", stream=True, proxies=proxies)
                     y_06.close()
-                    y_00 = requests.get(f"{yesterday_00z_url}/{file_00z}", stream=True, proxies=proxies)
+                    y_00 = requests.get(f"{yesterday_00z_url}{file_00z}", stream=True, proxies=proxies)
                     y_00.close()
                     break
                 except Exception as e:
                     i = i 
-                    
+                    if i >= 9:
+                        print(f"Error: Client Unable to Connect to {source.upper()} Server")
+                        if source == 'noaa':
+                            print(f"Rotating to AWS.")
+                            try:
+                                url, file, run = aigfs_url_scanner(final_forecast_hour,
+                                                                        proxies,
+                                                                        type_of_level,
+                                                                        'aws')  
+                            except Exception as e:
+                                print(f"Client unable to establish a connection to either server. - System Exit.")
+                                sys.exit(1)
+                        else:
+                            print(f"Rotating to NCEP/NOMADS.")
+                            try:
+                                url, file, run = aigfs_url_scanner(final_forecast_hour,
+                                                                        proxies,
+                                                                        type_of_level,
+                                                                        'noaa')  
+                            except Exception as e:
+                                print(f"Client unable to establish a connection to either server. - System Exit.")
+                                sys.exit(1)    
                     
     urls = [
         today_18z_url,

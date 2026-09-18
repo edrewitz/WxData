@@ -476,47 +476,87 @@ def aigfs(final_forecast_hour=384,
     source = source.lower()
     
     try:
-        _aigfs_client(final_forecast_hour=final_forecast_hour, 
-             western_bound=western_bound, 
-             eastern_bound=eastern_bound, 
-             northern_bound=northern_bound, 
-             southern_bound=southern_bound, 
-             proxies=proxies, 
-             process_data=process_data,
-             clear_recycle_bin=clear_recycle_bin,
-             convert_temperature=convert_temperature,
-             convert_to=convert_to,
-             custom_directory=custom_directory,
-             chunk_size=chunk_size,
-             notifications=notifications,
-             level_type=level_type,
-             clear_data=clear_data,
-            variables=variables,
-            levels=levels,
-            source=source)
+        if process_data == True:
+            ds = _aigfs_client(final_forecast_hour=final_forecast_hour, 
+                western_bound=western_bound, 
+                eastern_bound=eastern_bound, 
+                northern_bound=northern_bound, 
+                southern_bound=southern_bound, 
+                proxies=proxies, 
+                process_data=process_data,
+                clear_recycle_bin=clear_recycle_bin,
+                convert_temperature=convert_temperature,
+                convert_to=convert_to,
+                custom_directory=custom_directory,
+                chunk_size=chunk_size,
+                notifications=notifications,
+                level_type=level_type,
+                clear_data=clear_data,
+                variables=variables,
+                levels=levels,
+                source=source)
+        else:
+            _aigfs_client(final_forecast_hour=final_forecast_hour, 
+                    western_bound=western_bound, 
+                    eastern_bound=eastern_bound, 
+                    northern_bound=northern_bound, 
+                    southern_bound=southern_bound, 
+                    proxies=proxies, 
+                    process_data=process_data,
+                    clear_recycle_bin=clear_recycle_bin,
+                    convert_temperature=convert_temperature,
+                    convert_to=convert_to,
+                    custom_directory=custom_directory,
+                    chunk_size=chunk_size,
+                    notifications=notifications,
+                    level_type=level_type,
+                    clear_data=clear_data,
+                    variables=variables,
+                    levels=levels,
+                    source=source)
     except Exception as e:
         if source == 'noaa':
             print(f"Client connection to {source.upper()} Server Closed.")
             print(f"Rotating to AWS.")
             try:
-                _aigfs_client(final_forecast_hour=final_forecast_hour, 
-                             western_bound=western_bound, 
-                             eastern_bound=eastern_bound, 
-                             northern_bound=northern_bound, 
-                             southern_bound=southern_bound, 
-                             proxies=proxies, 
-                             process_data=process_data,
-                             clear_recycle_bin=clear_recycle_bin,
-                             convert_temperature=convert_temperature,
-                             convert_to=convert_to,
-                             custom_directory=custom_directory,
-                             chunk_size=chunk_size,
-                             notifications=notifications,
-                             level_type=level_type,
-                             clear_data=clear_data,
-                            variables=variables,
-                            levels=levels,
-                            source='aws')
+                if process_data == True:
+                    ds = _aigfs_client(final_forecast_hour=final_forecast_hour, 
+                                western_bound=western_bound, 
+                                eastern_bound=eastern_bound, 
+                                northern_bound=northern_bound, 
+                                southern_bound=southern_bound, 
+                                proxies=proxies, 
+                                process_data=process_data,
+                                clear_recycle_bin=clear_recycle_bin,
+                                convert_temperature=convert_temperature,
+                                convert_to=convert_to,
+                                custom_directory=custom_directory,
+                                chunk_size=chunk_size,
+                                notifications=notifications,
+                                level_type=level_type,
+                                clear_data=clear_data,
+                                variables=variables,
+                                levels=levels,
+                                source='aws')
+                else:
+                    _aigfs_client(final_forecast_hour=final_forecast_hour, 
+                                western_bound=western_bound, 
+                                eastern_bound=eastern_bound, 
+                                northern_bound=northern_bound, 
+                                southern_bound=southern_bound, 
+                                proxies=proxies, 
+                                process_data=process_data,
+                                clear_recycle_bin=clear_recycle_bin,
+                                convert_temperature=convert_temperature,
+                                convert_to=convert_to,
+                                custom_directory=custom_directory,
+                                chunk_size=chunk_size,
+                                notifications=notifications,
+                                level_type=level_type,
+                                clear_data=clear_data,
+                                variables=variables,
+                                levels=levels,
+                                source='aws')
             except Exception as e:
                 print(f"Client unable to establish a connection with either server. - System Exit.")
                 _sys.exit(1)
@@ -525,26 +565,51 @@ def aigfs(final_forecast_hour=384,
             print(f"Client connection to {source.upper()} Server Closed.")
             print(f"Rotating to NCEP/NOMADS.")
             try:
-                _aigfs_client(final_forecast_hour=final_forecast_hour, 
-                             western_bound=western_bound, 
-                             eastern_bound=eastern_bound, 
-                             northern_bound=northern_bound, 
-                             southern_bound=southern_bound, 
-                             proxies=proxies, 
-                             process_data=process_data,
-                             clear_recycle_bin=clear_recycle_bin,
-                             convert_temperature=convert_temperature,
-                             convert_to=convert_to,
-                             custom_directory=custom_directory,
-                             chunk_size=chunk_size,
-                             notifications=notifications,
-                             level_type=level_type,
-                             clear_data=clear_data,
-                            variables=variables,
-                            levels=levels,
-                            source='noaa')
+                if process_data == True:
+                    ds = _aigfs_client(final_forecast_hour=final_forecast_hour, 
+                                western_bound=western_bound, 
+                                eastern_bound=eastern_bound, 
+                                northern_bound=northern_bound, 
+                                southern_bound=southern_bound, 
+                                proxies=proxies, 
+                                process_data=process_data,
+                                clear_recycle_bin=clear_recycle_bin,
+                                convert_temperature=convert_temperature,
+                                convert_to=convert_to,
+                                custom_directory=custom_directory,
+                                chunk_size=chunk_size,
+                                notifications=notifications,
+                                level_type=level_type,
+                                clear_data=clear_data,
+                                variables=variables,
+                                levels=levels,
+                                source='noaa')
+                else:
+                    _aigfs_client(final_forecast_hour=final_forecast_hour, 
+                                western_bound=western_bound, 
+                                eastern_bound=eastern_bound, 
+                                northern_bound=northern_bound, 
+                                southern_bound=southern_bound, 
+                                proxies=proxies, 
+                                process_data=process_data,
+                                clear_recycle_bin=clear_recycle_bin,
+                                convert_temperature=convert_temperature,
+                                convert_to=convert_to,
+                                custom_directory=custom_directory,
+                                chunk_size=chunk_size,
+                                notifications=notifications,
+                                level_type=level_type,
+                                clear_data=clear_data,
+                                variables=variables,
+                                levels=levels,
+                                source='noaa')
             except Exception as e:
                 print(f"Client unable to establish a connection with either server. - System Exit.")
                 _sys.exit(1)
+                
+    if process_data == True:
+        return ds
+    else:
+        pass
                 
         

@@ -107,6 +107,8 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 End-To-End clients with multiple servers to pull data from can find the different options for `source` by the table below
 
+*`source` is only a valid argument for clients with multiple data servers.*
+
 `source='noaa' - NOAA/NCEP/NOMADS OR NOAA/NWS/FTP`
 
 `source='ecmwf' - ECMWF Open-Data Server`
@@ -116,22 +118,30 @@ End-To-End clients with multiple servers to pull data from can find the differen
 `source='google' - Google Cloud`
 
 
-| Client | NOAA/NCEP/NOMADS | ECMWF Open-Data | Amazon AWS | Google Cloud | NOAA/NWS/FTP |
-| -------- | -------- | -------- | -------- | -------- | -------- |
-| GFS0P25  |Y|N|Y|Y|N|
-| GFS0P25 SECONDARY PARAMETERS  |Y|N|Y|Y|N| 
-| GFS0P50  |Y|N|Y|Y|N|
-| GEFS0P50  |Y|N|Y|Y|N|
-| GEFS0P50 SECONDARY PARAMETERS  |Y|N|Y|Y|N|
-| GEFS0P25  |Y|N|Y|Y|N|
-| ECMWF IFS |N|Y|Y|Y|N|
-| ECMWF IFS Ensemble |N|Y|Y|Y|N|
-| ECMWF AIFS|N|Y|Y|Y|N|
-| ECMWF AIFS Ensemble|N|Y|Y|Y|N|
-| ECMWF IFS Wave |N|Y|Y|Y|N|
-| ECMWF IFS Wave Ensemble |N|Y|Y|Y|N|
-| Get NDFD Grids |N|N|Y|N|Y|
-| RTMA |Y|N|Y|N|N|
+| Client | NOAA/NCEP/NOMADS | ECMWF Open-Data | Amazon AWS | Google Cloud | NOAA/NWS/FTP | MSC Open Data |
+| -------- | -------- | -------- | -------- | -------- | -------- | -------- | 
+| GFS0P25  |Y|N|Y|Y|N|N|
+| GFS0P25 SECONDARY PARAMETERS  |Y|N|Y|Y|N|N| 
+| GFS0P50  |Y|N|Y|Y|N|N|
+| GEFS0P50  |Y|N|Y|Y|N|N|
+| GEFS0P50 SECONDARY PARAMETERS  |Y|N|Y|Y|N|N|
+| GEFS0P25  |Y|N|Y|Y|N|N|
+| ECMWF IFS |N|Y|Y|Y|N|N|
+| ECMWF IFS Ensemble |N|Y|Y|Y|N|N|
+| ECMWF AIFS|N|Y|Y|Y|N|N|
+| ECMWF AIFS Ensemble|N|Y|Y|Y|N|N|
+| ECMWF IFS Wave |N|Y|Y|Y|N|N|
+| ECMWF IFS Wave Ensemble |N|Y|Y|Y|N|N|
+| Get NDFD Grids |N|N|Y|N|Y|N|
+| RTMA |Y|N|Y|N|N|N|
+| AIGFS |Y|N|Y|N|N|N|
+| AIGEFS |Y|N|Y|N|N|N|
+| CFS |Y|N|Y|N|N|N|
+| GDPS |N|N|N|N|N|Y|
+| RDPS |N|N|N|N|N|Y|
+| HRDPS |N|N|N|N|N|Y|
+| GEPS |N|N|N|N|N|Y|
+| CanSIPS |N|N|N|N|N|Y|
 
 ---------------------------------------------------------
 

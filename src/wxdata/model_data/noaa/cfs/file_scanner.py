@@ -34,6 +34,7 @@ def cfs_file_scanner(path,
         for file in os.listdir(f"{path}"):
             file_list.append(file)
         
+
         if files[-1] == file_list[-1]:
             download = False
         else:

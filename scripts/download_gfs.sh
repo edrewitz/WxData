@@ -40,16 +40,24 @@ echo "Setup complete! Environment '$ENV_NAME' is ready."
 echo "To use it in your terminal, run: conda activate $ENV_NAME"
 echo "========================================="
 
-# Downloads the following datasets concurrently
-# - GFS 0.25x0.25 Degree Primary Variables & Levels: 500mb Geopotential Height
-# - GFS 0.25x0.25 Degree Secondary Variables & Levels: 875mb Temperature
-# - GFS 0.50x0.50 Degree 2-Meter Temperature
+# Downloads the following datasets concurrently (in parallel)
+# - GFS 0.25x0.25 Degree Primary Variables & Levels
+# - GFS 0.25x0.25 Degree Secondary Variables & Levels
+# - GFS 0.50x0.50 Degree
 #
 # **IMPORTANT**
-# To prevent server rate limiting we are pulling from the different servers for each dataset
-# - GFS 0.25x0.25 Degree Primary Variables & Levels: NCEP/NOMADS
-# - GFS 0.25x0.25 Degree Secondary Variables & Levels: Google Cloud
-# - GFS 0.50x0.50 Degree 2-Meter Temperature: Amazon Web Services (AWS)
-gfs 0p25 latest -v geopotential_height -l 500 & \
-gfs 0p25 latest -c secondary -v temperature -l 875 -s google & \
-gfs 0p50 latest -v temperature -l 2 -lt height_above_ground -s aws
+# To prevent server rate limiting we are pulling from the different servers for each dataset.
+# This is a good practice as it prevents overloading a single server with too many requests. 
+# - GFS 0.25x0.25 Degree Primary Variables & Levels: NCEP/NOMADS.
+# - GFS 0.25x0.25 Degree Secondary Variables & Levels: Google Cloud.
+# - GFS 0.50x0.50 Degree: Amazon Web Services (AWS).
+#
+# We will download the following variables at the following levels for the GFS
+# - GFS 0.25x0.25 Degree Primary: Geopotential Height, Temperature, u & v Wind Components, Relative Humidity at 1000mb, 850mb, 700mb, 500mb and 250mb.
+# - GFS 0.25x0.25 Degree Secondary: Geopotential Height, Temperature, u & v Wind Components, Relative Humidity at 875mb, 775mb, 675mb, 575mb and 475mb.
+# - GFS 0.50x0.50 Degree: Temperature, Relative Humidity at 2-meters above ground. 
+
+gfs 0p25 latest -v geopotential_height -v temperature -v relative_humidity -v u-component_of_wind -v v-component_of_wind -l 1000 -l 850 -l 700 -l 500 -l 250 & \
+gfs 0p25 latest -c secondary -v geopotential_height -v temperature -v relative_humidity -v u-component_of_wind -v v-component_of_wind \
+ -l 875 -l 775 -l 675 -l 575 -l 475 -s google & \
+gfs 0p50 latest -v temperature -v relative_humidity -l 2 -lt height_above_ground -s aws 

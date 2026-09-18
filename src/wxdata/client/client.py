@@ -904,15 +904,48 @@ def byte_range_request(grib_url,
     variables = _key_list(variables)
 
     if proxies == None:
-        idx_text = _requests.get(idx_url).text
+        try:
+            idx_text = _requests.get(idx_url).text
+        except Exception as e:
+            for i in range(0, 10, 1):
+                print(f"Client lost connection to server - Waiting 30 seconds and trying again.")
+                _time.sleep(30)
+                try:
+                    idx_text = _requests.get(idx_url).text
+                    break
+                except Exception as e:
+                    i = i
+                    if i >= 9:
+                        print(f"Client cannot establish connection to server - System Exit.")
+                        _sys.exit(1)
+                    
     else:
-        idx_text = _requests.get(idx_url, proxies=proxies).text
+        try:
+            idx_text = _requests.get(idx_url, proxies=proxies).text
+        except Exception as e:
+            for i in range(0, 10, 1):
+                print(f"Client lost connection to server - Waiting 30 seconds and trying again.")
+                _time.sleep(30)
+                try:
+                    idx_text = _requests.get(idx_url, proxies=proxies).text
+                    break
+                except Exception as e:
+                    i = i
+                    if i >= 9:
+                        print(f"Client cannot establish connection to server - System Exit.")
+                        _sys.exit(1)
         
     records = []
     for line in idx_text.strip().splitlines():
         parts = line.split(':')
-        msg_no = int(parts[0])
-        offset = int(parts[1])
+        try:
+            msg_no = int(parts[0])
+        except Exception as e:
+            msg_no = float(parts[0])
+        try:
+            offset = int(parts[1])
+        except Exception as e:
+            offset = float(parts[1])
         var = parts[3]
         lev = parts[4]
         records.append({

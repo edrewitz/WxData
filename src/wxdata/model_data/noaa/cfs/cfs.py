@@ -42,71 +42,12 @@ def cfs_flux(western_bound=-180,
             process_data=True,
             convert_temperature=True,
             convert_to='celsius',
-            variables=['aerodynamic conductance',
-                        'albedo',
-                        'clear sky uv-b downward solar flux',
-                        'plant canopy surface water',
-                        'convective precipitation rate',
-                        'categorical rain',
-                        'clear sky downward longwave flux',
-                        'clear sky downward solar flux (surface)',
-                        'clear sky downward solar flux (top of the atmosphere)',
-                        'clear sky upward solar flux',
-                        'cloud work function',
-                        'downward longwave radiation flux',
-                        'downward shortwave radiation flux',
-                        'clear sky uv-b downward solar flux',
-                        'direct evaporation from bare soil',
-                        'canopy water evaporation',
-                        'surface friction velocity',
-                        'ground heat flux',
-                        'geopotential height',
-                        'planetary boundary layer height',
-                        'ice cover',
-                        'ice thickness',
-                        'land cover',
-                        'latent heat net flux',
-                        'near ir beam downward solar flux',
-                        'near ir diffuse downward solar flux',
-                        'potential evaporation rate',
-                        'precipitation rate',
-                        'pressure',
-                        'precipitable water',
-                        '2-meter maximum specific humidity',
-                        '2-meter minimum specific humidity',
-                        'sublimation (evaporation from snow)',
-                        'surface roughness',
-                        'sedimentation mass flux',
-                        'sensible heat net flux',
-                        'surface slope type',
-                        'snow depth',
-                        'snow phase-change heat flux',
-                        'snow cover',
-                        'liquid volumetric soil moisture (non-frozen)',
-                        'soil moisture content',
-                        'volumetric soil moisture content',
-                        'soil type',
-                        'specific humidity',
-                        'snowfall rate water equivalent',
-                        'storm surface runoff (non-infiltrating)',
-                        'total cloud cover',
-                        'maximum temperature',
-                        'minimum temperature',
-                        'temperature',
-                        'transpiration',
-                        'momentum flux (u-component)',
-                        'u-component of wind',
-                        'zonal flux of gravity wave stress',
-                        'upward longwave radiation flux',
-                        'upward shortwave radiation flux',
-                        'visible beam downward solar flux',
-                        'vegetation',
-                        'momentum flux (v-component)',
-                        'v-component of wind',
-                        'vegetation type',
-                        'meridional flux of gravity wave stress',
-                        'water runoff',
-                        'water equivalent of accumulated snow depth']):
+            source='aws',
+            level_type='height above ground',
+            variables=['temperature',
+                    'maximum temperature',
+                    'minimum temperature'],
+            levels=[2]):
     
     """
     This function is an end-to-end client that downloads, pre-processes, post-processes CFS Flux data.
@@ -156,8 +97,40 @@ def cfs_flux(western_bound=-180,
         
     14) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
+        
+    15) source (String) - Default='aws'. The servers to pull the data from.
+
+        ***Server Choices***
+        
+        'noaa' = NCEP/NOMADS
+        'aws' = Amazon Web Services
+        
+    16) level_type (String) - Default='height above ground'. The type of vertical coordinates for the list of variables.
+    
+        ***Level Types***
+        
+        'surface'
+        'height above ground'
+        'height below ground'
+        'entire atmosphere'
+        'top of atmosphere'
+        'high cloud top level'
+        'middle cloud top level'
+        'low cloud top level'
+        'high cloud bottom level'
+        'middle cloud bottom level'
+        'low cloud bottom level'
+        'convective cloud layer'
+        'boundary layer cloud layer'
+        'height above sea level'
+        'hybrid'
+
                                 
-    15) variables (List) - A list of variable names the user wants to download in plain language. 
+    17) variables (List) - Default=['temperature',
+                                    'maximum temperature',
+                                    'minimum temperature']
+    
+    A list of variable names the user wants to download in plain language. 
     
         Variable Name List for CFS Flux
         -------------------------------
@@ -228,13 +201,16 @@ def cfs_flux(western_bound=-180,
             'water runoff'
             'water equivalent of accumulated snow depth'
             
-    Returns
-    -------
+    18) levels (Integer List) - Default=[2].
+    
+    The units for the level in the atmosphere (i.e. levels=[2] -> 2-meters above ground)
+    
+            
+    **Returns**
     
     A post-processes xarray.array where the GRIB variable keys are decoded into a plain-language format.
     
-    CFS Flux Data Variables In Plain-Language Format
-    -------------------------------------------------
+    ***CFS Flux Data Variables In Plain-Language Format***
     
         'volumetric_soil_moisture_content'
         'soil_temperature'
@@ -338,23 +314,15 @@ def cfs_flux(western_bound=-180,
         pass
     
     
-    urls, files = _cfs_flux_url_scanner(western_bound, 
-                                        eastern_bound, 
-                                        northern_bound, 
-                                        southern_bound, 
-                                        proxies, 
-                                        variables,
-                                        final_forecast_hour)
+    grib_urls, files, idx_urls = _cfs_flux_url_scanner(final_forecast_hour,
+                                    proxies,
+                                    source)
     
     download = _cfs_file_scanner(path,
                                  files)
     
-    if clear_data == True:
-        download = True
-    else:
-        pass
     
-    if download == True:
+    if download == True or clear_data == True:
         try:
             for file in _os.listdir(f"{path}"):
                 _os.remove(f"{path}/{file}")
@@ -363,21 +331,29 @@ def cfs_flux(western_bound=-180,
         
         print(f"Downloading Latest CFS Flux Data")
         
-        for url, filename in zip(urls, files):    
-        
-            _client.get_gridded_data(url,
-                                     path,
-                                     filename,
-                                     proxies=proxies,
-                                     chunk_size=chunk_size,
-                                     notifications=notifications)
+        for u, f, i in zip(grib_urls, files, idx_urls):
+            _client.byte_range_request(u,
+                        i,
+                        variables,
+                        levels,
+                        level_type,
+                        path,
+                        f,
+                        proxies=proxies,
+                        chunk_size=chunk_size,
+                        notifications=notifications)
     else:
         print(f"Data in local directory is current. Skipping Download")
         
     if process_data == True:
         print(f"CFS Flux Data Processing...")
         
-        ds = _cfs_post_processing.cfs_flux_post_processing(path)
+        ds = _cfs_post_processing.cfs_post_processing(path,
+                                                        western_bound,
+                                                        eastern_bound,
+                                                        northern_bound,
+                                                        southern_bound,
+                                                        variables)
         
         if convert_temperature == True:
                 ds = _convert_temperature_units(ds, 
@@ -407,44 +383,21 @@ def cfs_pressure(western_bound=-180,
             process_data=True,
             convert_temperature=True,
             convert_to='celsius',
-            variables=['best lifted index',
-                        '5 wave geopotential height anomaly',
-                        '5 wave geopotential height',
-                        'absolute vorticity',
-                        'convective precipitation',
-                        'total precipitation',
-                        'convective available potential energy',
-                        'categorical freezing rain',
-                        'categorical ice pellets',
-                        'convective inhibition',
-                        'cloud mixing ratio',
-                        'categorical rain',
-                        'categorical snow',
-                        'cloud water',
-                        'dew point',
-                        'geopotential height anomaly',
-                        'geopotential height',
-                        'storm relative helicity',
-                        'surface lifted index',
-                        'large scale non-convective precipitation',
-                        'ozone mixing ratio',
-                        'parcel lifted index (to 500mb)',
-                        'potential temperature',
-                        'pressure',
-                        'mean sea level pressure',
-                        'precipitable water',
-                        'relative humidity',
-                        'specific humidity',
-                        'stream function',
-                        'temperature',
-                        'total ozone',
-                        'u-component of wind',
-                        'u-component of storm motion',
-                        'v-component of wind',
-                        'velocity potential',
-                        'v-component of storm motion',
-                        'vertical velocity (pressure)',
-                        'vertical speed shear']):
+            source='aws',
+            level_type='pressure',
+            variables=['geopotential height',
+                    'temperature',
+                    'absolute vorticity',
+                    'relative humidity',
+                    'u-component of wind',
+                    'v-component of wind'],
+            levels=[1000, 
+                    925, 
+                    850, 
+                    700, 
+                    500, 
+                    300, 
+                    250]):
     
     """
     This function is an end-to-end client that downloads, pre-processes, post-processes CFS Pressure data.
@@ -494,11 +447,42 @@ def cfs_pressure(western_bound=-180,
         
     14) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
-                                
-    15) variables (List) - A list of variable names the user wants to download in plain language. 
+        
+    15) source (String) - Default='aws'. The servers to pull the data from.
+
+        ***Server Choices***
+        
+        'noaa' = NCEP/NOMADS
+        'aws' = Amazon Web Services
+        
+    16) level_type (String) - Default='pressure'. The type of vertical coordinates for the list of variables.
     
-        Variable Name List for CFS Pressure
-        -----------------------------------
+        ***Level Types***
+        
+        'pressure'
+        'surface'
+        'height above ground'
+        'entire atmosphere'
+        'mean sea level'
+        'tropopause'
+        'height above sea level'
+        'isothermal'
+        'highest tropospheric freezing level'
+        'pressure above ground'
+        'sigma layer'
+        'sigma level'
+        'potential vorticity surface'
+                                
+    15) variables (List) - Default=['geopotential height',
+                                    'temperature',
+                                    'absolute vorticity',
+                                    'relative humidity',
+                                    'u-component of wind',
+                                    'v-component of wind']
+    
+    A list of variable names the user wants to download in plain language. 
+        
+        ***Variable Name List for CFS Pressure***
         
             'best lifted index'
             '5 wave geopotential height anomaly'
@@ -539,13 +523,54 @@ def cfs_pressure(western_bound=-180,
             'vertical velocity (pressure)'
             'vertical speed shear'
             
-    Returns
-    -------
+            
+    18) levels (Integer List) - Default=[1000, 925, 850, 700, 500, 300, 250]
+    
+    Available Levels
+    ----------------
+    
+        1000
+        975
+        925
+        900
+        875
+        850
+        825
+        800
+        775
+        750
+        700
+        650
+        600
+        550
+        500
+        450
+        400
+        350
+        300
+        250
+        225
+        200
+        175
+        150
+        125
+        100
+        70
+        50
+        30
+        20
+        10
+        7
+        5
+        3
+        2
+        1
+            
+    **Returns**
     
     A post-processes xarray.array where the GRIB variable keys are decoded into a plain-language format.
     
-    CFS Pressure Data Variables In Plain-Language Format
-    ----------------------------------------------------
+    ***CFS Pressure Data Variables In Plain-Language Format***
     
             'mslp'
             'geopotential_height'
@@ -638,23 +663,15 @@ def cfs_pressure(western_bound=-180,
         pass
     
     
-    urls, files = _cfs_pressure_url_scanner(western_bound, 
-                                        eastern_bound, 
-                                        northern_bound, 
-                                        southern_bound, 
-                                        proxies, 
-                                        variables,
-                                        final_forecast_hour)
+    grib_urls, files, idx_urls = _cfs_pressure_url_scanner(final_forecast_hour,
+                                    proxies,
+                                    source)
     
     download = _cfs_file_scanner(path,
                                  files)
     
-    if clear_data == True:
-        download = True
-    else:
-        pass
     
-    if download == True:
+    if download == True or clear_data == True:
         try:
             for file in _os.listdir(f"{path}"):
                 _os.remove(f"{path}/{file}")
@@ -663,21 +680,29 @@ def cfs_pressure(western_bound=-180,
         
         print(f"Downloading Latest CFS Pressure Data")
         
-        for url, filename in zip(urls, files):    
-        
-            _client.get_gridded_data(url,
-                                     path,
-                                     filename,
-                                     proxies=proxies,
-                                     chunk_size=chunk_size,
-                                     notifications=notifications)
+        for u, f, i in zip(grib_urls, files, idx_urls):
+            _client.byte_range_request(u,
+                        i,
+                        variables,
+                        levels,
+                        level_type,
+                        path,
+                        f,
+                        proxies=proxies,
+                        chunk_size=chunk_size,
+                        notifications=notifications)
     else:
         print(f"Data in local directory is current. Skipping Download")
         
     if process_data == True:
         print(f"CFS Pressure Data Processing...")
         
-        ds = _cfs_post_processing.cfs_pressure_post_processing(path)
+        ds = _cfs_post_processing.cfs_post_processing(path,
+                                                        western_bound,
+                                                        eastern_bound,
+                                                        northern_bound,
+                                                        southern_bound,
+                                                        variables)
         
         if convert_temperature == True:
                 ds = _convert_temperature_units(ds, 
@@ -686,7 +711,7 @@ def cfs_pressure(western_bound=-180,
         else:
             pass
         
-        print(f"CFS Pressure Data Processing Complete.")
+        print(f"CFS Flux Data Processing Complete.")
         return ds
     
     else:

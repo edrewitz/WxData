@@ -5,6 +5,8 @@ This file hosts the function that fetches the byte-range for a variable.
 """
 
 import requests
+import time
+import sys
 
 from tqdm.auto import tqdm
 
@@ -41,32 +43,100 @@ def fetch_range(url,
     """
     
     headers = {"Range": f"bytes={start}-{end}" if end else f"bytes={start}-"}
-    
+
     if proxies == None:
-        response = requests.get(url, 
-                         headers=headers,
-                         allow_redirects=True,
-                         stream=True)
+        try:
+            response = requests.get(url, 
+                            headers=headers,
+                            allow_redirects=True,
+                            stream=True)
+        except Exception as e:
+            for i in range(0, 10, 1):
+                print(f"Error: Connection to Server Has Been Interupted...")
+                print(f"Waiting 30 seconds and trying again...")
+                time.sleep(30)
+                try:
+                    response = requests.get(url, 
+                                    headers=headers,
+                                    allow_redirects=True,
+                                    stream=True)
+                    break
+                except Exception as e:
+                    i = i
+                    if i >= 9:
+                        print(f"Error: Client cannot establish a connection to server. - System Exit.") 
+                        sys.exit(1)
+                           
     else:
-        response = requests.get(url, 
-                         headers=headers,
-                         allow_redirects=True,
-                         proxies=proxies,
-                         stream=True)
+        try:
+            response = requests.get(url, 
+                            headers=headers,
+                            allow_redirects=True,
+                            proxies=proxies,
+                            stream=True)
+        except Exception as e:
+            for i in range(0, 10, 1):
+                print(f"Error: Connection to Server Has Been Interupted...")
+                print(f"Waiting 30 seconds and trying again...")
+                time.sleep(30)
+                try:
+                    response = requests.get(url, 
+                                    headers=headers,
+                                    allow_redirects=True,
+                                    proxies=proxies,
+                                    stream=True)
+                    break
+                except Exception as e:
+                    i = i
+                    if i >= 9:
+                        print(f"Error: Client cannot establish a connection to server. - System Exit.") 
+                        sys.exit(1)  
     
     response.raise_for_status()
     response.close()
     
     if len(response.content) == 0:
         if proxies == None:
-            response = requests.get(url,
-                            allow_redirects=True, 
-                            headers=headers)
+            try:
+                response = requests.get(url,
+                                allow_redirects=True, 
+                                headers=headers)
+            except Exception as e:
+                for i in range(0, 10, 1):
+                    print(f"Error: Connection to Server Has Been Interupted...")
+                    print(f"Waiting 30 seconds and trying again...")
+                    time.sleep(30)
+                    try:
+                        response = requests.get(url,
+                                        allow_redirects=True, 
+                                        headers=headers)
+                    except Exception as e:
+                        i = i
+                        if i >= 9:
+                            print(f"Error: Client cannot establish a connection to server. - System Exit.") 
+                            sys.exit(1)  
+                
         else:
-            response = requests.get(url,
-                            allow_redirects=True, 
-                            headers=headers,
-                            proxies=proxies)
+            try:
+                response = requests.get(url,
+                                allow_redirects=True, 
+                                headers=headers,
+                                proxies=proxies)
+            except Exception as e:
+                for i in range(0, 10, 1):
+                    print(f"Error: Connection to Server Has Been Interupted...")
+                    print(f"Waiting 30 seconds and trying again...")
+                    time.sleep(30)
+                    try:
+                        response = requests.get(url,
+                                        allow_redirects=True, 
+                                        headers=headers,
+                                        proxies=proxies)
+                    except Exception as e:
+                        i = i
+                        if i >= 9:
+                            print(f"Error: Client cannot establish a connection to server. - System Exit.") 
+                            sys.exit(1)  
     else:
         pass
     
@@ -107,12 +177,32 @@ def fetch_data(ranges,
     
     results = {}
     for (v, l), (start, end) in ranges.items():
-        results[(v, l)] = fetch_range(
-            url,
-            start,
-            end,
-            proxies
-        )
+        try:
+            results[(v, l)] = fetch_range(
+                url,
+                start,
+                end,
+                proxies
+            )
+        except Exception as e:
+            for i in range(0, 10, 1):
+                print(f"Error: Connection to Server Has Been Interupted...")
+                print(f"Waiting 30 seconds and trying again...")
+                time.sleep(30)
+                try:
+                    results[(v, l)] = fetch_range(
+                        url,
+                        start,
+                        end,
+                        proxies
+                    ) 
+                    break
+                except Exception as e:
+                    i = i
+                    if i >= 9:
+                        print(f"Error: Client cannot establish a connection to server. - System Exit.") 
+                        sys.exit(1)
+        
 
     return results
 

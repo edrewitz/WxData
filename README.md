@@ -107,7 +107,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 End-To-End clients with multiple servers to pull data from can find the different options for `source` by the table below.
 
-*`source` is only a valid argument for operationally focused (automated) clients with multiple data servers.*
+*`source` is only a valid argument for clients with multiple data servers.*
 
 `source='noaa' - NOAA/NCEP/NOMADS OR NOAA/NWS/FTP`
 
@@ -117,6 +117,7 @@ End-To-End clients with multiple servers to pull data from can find the differen
 
 `source='google' - Google Cloud`
 
+**Operational Data Server List**
 
 | Client | NOAA/NCEP/NOMADS | ECMWF Open-Data | Amazon AWS | Google Cloud | NOAA/NWS/FTP | MSC Open Data |
 | -------- | -------- | -------- | -------- | -------- | -------- | -------- | 

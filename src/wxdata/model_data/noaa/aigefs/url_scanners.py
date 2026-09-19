@@ -589,8 +589,7 @@ def aigefs_sfc_members_url_scanner(final_forecast_hour,
 def aigefs_single_url_scanner(final_forecast_hour,
                                     proxies,
                                     cat,
-                                    type_of_level,
-                                    source):
+                                    type_of_level):
     
     """
     This function is the URL scanner for the AIGEFS Pressure Parameters.
@@ -659,15 +658,15 @@ def aigefs_single_url_scanner(final_forecast_hour,
     else:
         final_forecast_hour = f"00{final_forecast_hour}"
         
-    today_18z_url = f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/18/ensstat/products/atmos/grib2/"
-    today_12z_url = f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/12/ensstat/products/atmos/grib2/"
-    today_06z_url = f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/06/ensstat/products/atmos/grib2/"
-    today_00z_url = f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/00/ensstat/products/atmos/grib2/"
+    today_18z_url = f"{NOMADS}/aigefs.{now.strftime('%Y%m%d')}/18/ensstat/products/atmos/grib2/"
+    today_12z_url = f"{NOMADS}/aigefs.{now.strftime('%Y%m%d')}/12/ensstat/products/atmos/grib2/"
+    today_06z_url = f"{NOMADS}/aigefs.{now.strftime('%Y%m%d')}/06/ensstat/products/atmos/grib2/"
+    today_00z_url = f"{NOMADS}/aigefs.{now.strftime('%Y%m%d')}/00/ensstat/products/atmos/grib2/"
     
-    yesterday_18z_url = f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/18/ensstat/products/atmos/grib2/"
-    yesterday_12z_url = f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/12/ensstat/products/atmos/grib2/"
-    yesterday_06z_url = f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/06/ensstat/products/atmos/grib2/"
-    yesterday_00z_url = f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/00/ensstat/products/atmos/grib2/"
+    yesterday_18z_url = f"{NOMADS}/aigefs.{yd.strftime('%Y%m%d')}/18/ensstat/products/atmos/grib2/"
+    yesterday_12z_url = f"{NOMADS}/aigefs.{yd.strftime('%Y%m%d')}/12/ensstat/products/atmos/grib2/"
+    yesterday_06z_url = f"{NOMADS}/aigefs.{yd.strftime('%Y%m%d')}/06/ensstat/products/atmos/grib2/"
+    yesterday_00z_url = f"{NOMADS}/aigefs.{yd.strftime('%Y%m%d')}/00/ensstat/products/atmos/grib2/"
     
     file_18z = f"aigefs.t18z.{level}.{cat}.f{final_forecast_hour}.grib2"
     file_12z = f"aigefs.t12z.{level}.{cat}.f{final_forecast_hour}.grib2"

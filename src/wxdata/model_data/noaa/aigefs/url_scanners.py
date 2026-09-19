@@ -631,11 +631,6 @@ def aigefs_single_url_scanner(final_forecast_hour,
     
     The download URL and filename of the latest available file in the AIGEFS dataset.  
     """
-    source = source.lower()
-    if source == 'noaa':
-        PREFIX = NOMADS
-    else:
-        PREFIX = AWS
     
     cat = cat.lower()
     type_of_level = type_of_level.lower()

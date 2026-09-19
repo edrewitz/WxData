@@ -221,42 +221,62 @@ def _aigefs_pressure_members_client(final_forecast_hour=384,
         stop = final_forecast_hour + 6
         for path, url in zip(paths, urls):
             for i in range(0, stop, 6):
-                if i < 10:
-                    _client.byte_range_request(f"{url}/aigefs.t{run}z.pres.f00{i}.grib2",
-                                                f"{url}/aigefs.t{run}z.pres.f00{i}.grib2.idx",
-                                                variables,
-                                                levels,
-                                                'pressure',
-                                                path,
-                                                f"aigefs.t{run}z.pres.f00{i}.grib2",
-                                                proxies=proxies,
-                                                chunk_size=chunk_size,
-                                                notifications=notifications,
-                                                clear_recycle_bin=clear_recycle_bin)
-                elif i >= 10 and i < 100:
-                    _client.byte_range_request(f"{url}/aigefs.t{run}z.pres.f0{i}.grib2",
-                                                f"{url}/aigefs.t{run}z.pres.f0{i}.grib2.idx",
-                                                variables,
-                                                levels,
-                                                'pressure',
-                                                path,
-                                                f"aigefs.t{run}z.pres.f0{i}.grib2",
-                                                proxies=proxies,
-                                                chunk_size=chunk_size,
-                                                notifications=notifications,
-                                                clear_recycle_bin=clear_recycle_bin)
+                if len(variables) < 6:
+                    if i < 10:
+                        _client.byte_range_request(f"{url}/aigefs.t{run}z.pres.f00{i}.grib2",
+                                                    f"{url}/aigefs.t{run}z.pres.f00{i}.grib2.idx",
+                                                    variables,
+                                                    levels,
+                                                    'pressure',
+                                                    path,
+                                                    f"aigefs.t{run}z.pres.f00{i}.grib2",
+                                                    proxies=proxies,
+                                                    chunk_size=chunk_size,
+                                                    notifications=notifications)
+                    elif i >= 10 and i < 100:
+                        _client.byte_range_request(f"{url}/aigefs.t{run}z.pres.f0{i}.grib2",
+                                                    f"{url}/aigefs.t{run}z.pres.f0{i}.grib2.idx",
+                                                    variables,
+                                                    levels,
+                                                    'pressure',
+                                                    path,
+                                                    f"aigefs.t{run}z.pres.f0{i}.grib2",
+                                                    proxies=proxies,
+                                                    chunk_size=chunk_size,
+                                                    notifications=notifications)
+                    else:
+                        _client.byte_range_request(f"{url}/aigefs.t{run}z.pres.f{i}.grib2",
+                                                    f"{url}/aigefs.t{run}z.pres.f{i}.grib2.idx",
+                                                    variables,
+                                                    levels,
+                                                    'pressure',
+                                                    path,
+                                                    f"aigefs.t{run}z.pres.f{i}.grib2",
+                                                    proxies=proxies,
+                                                    chunk_size=chunk_size,
+                                                    notifications=notifications) 
                 else:
-                    _client.byte_range_request(f"{url}/aigefs.t{run}z.pres.f{i}.grib2",
-                                                f"{url}/aigefs.t{run}z.pres.f{i}.grib2.idx",
-                                                variables,
-                                                levels,
-                                                'pressure',
-                                                path,
-                                                f"aigefs.t{run}z.pres.f{i}.grib2",
-                                                proxies=proxies,
-                                                chunk_size=chunk_size,
-                                                notifications=notifications,
-                                                clear_recycle_bin=clear_recycle_bin)   
+                    if i < 10:
+                        _client.get_gridded_data(f"{url}/aigefs.t{run}z.pres.f00{i}.grib2",
+                                                        path,
+                                                        f"aigefs.t{run}z.pres.f00{i}.grib2",
+                                                        proxies=proxies,
+                                                        chunk_size=chunk_size,
+                                                        notifications=notifications) 
+                    elif i >= 10 and i < 100:
+                        _client.get_gridded_data(f"{url}/aigefs.t{run}z.pres.f0{i}.grib2",
+                                                        path,
+                                                        f"aigefs.t{run}z.pres.f0{i}.grib2",
+                                                        proxies=proxies,
+                                                        chunk_size=chunk_size,
+                                                        notifications=notifications) 
+                    else:
+                        _client.get_gridded_data(f"{url}/aigefs.t{run}z.pres.f{i}.grib2",
+                                                        path,
+                                                        f"aigefs.t{run}z.pres.f{i}.grib2",
+                                                        proxies=proxies,
+                                                        chunk_size=chunk_size,
+                                                        notifications=notifications) 
     else:
         print(f"User has latest AIGEFS Pressure Parameter Files\nSkipping Download...")  
         
@@ -703,42 +723,62 @@ def aigefs_single(final_forecast_hour=384,
                                 chunk_size=chunk_size,
                                 notifications=notifications) 
             else:
-                if i < 10:
-                    _client.byte_range_request(f"{url}aigefs.t{run}z.{level}.{cat}.f00{i}.grib2",
-                                                    f"{url}aigefs.t{run}z.{level}.{cat}.f00{i}.grib2.idx",
+                if len(variables) < 6:
+                    if i < 10:
+                        _client.byte_range_request(f"{url}aigefs.t{run}z.{level}.{cat}.f00{i}.grib2",
+                                                        f"{url}aigefs.t{run}z.{level}.{cat}.f00{i}.grib2.idx",
+                                                        variables,
+                                                        levels,
+                                                        'pressure',
+                                                        path,
+                                                        f"aigefs.t{run}z.pres.f00{i}.grib2",
+                                                        proxies=proxies,
+                                                        chunk_size=chunk_size,
+                                                        notifications=notifications)
+                    elif i >= 10 and i < 100:
+                        _client.byte_range_request(f"{url}aigefs.t{run}z.{level}.{cat}.f0{i}.grib2",
+                                                    f"{url}aigefs.t{run}z.{level}.{cat}.f0{i}.grib2.idx",
                                                     variables,
                                                     levels,
                                                     'pressure',
                                                     path,
-                                                    f"aigefs.t{run}z.pres.f00{i}.grib2",
+                                                    f"aigefs.t{run}z.pres.f0{i}.grib2",
                                                     proxies=proxies,
                                                     chunk_size=chunk_size,
-                                                    notifications=notifications,
-                                                    clear_recycle_bin=clear_recycle_bin)
-                elif i >= 10 and i < 100:
-                    _client.byte_range_request(f"{url}aigefs.t{run}z.{level}.{cat}.f0{i}.grib2",
-                                                f"{url}aigefs.t{run}z.{level}.{cat}.f0{i}.grib2.idx",
-                                                variables,
-                                                levels,
-                                                'pressure',
-                                                path,
-                                                f"aigefs.t{run}z.pres.f0{i}.grib2",
-                                                proxies=proxies,
-                                                chunk_size=chunk_size,
-                                                notifications=notifications,
-                                                clear_recycle_bin=clear_recycle_bin)
-                else:
-                    _client.byte_range_request(f"{url}aigefs.t{run}z.{level}.{cat}.f{i}.grib2",
-                                                f"{url}aigefs.t{run}z.{level}.{cat}.f{i}.grib2.idx",
-                                                variables,
-                                                levels,
-                                                'pressure',
-                                                path,
-                                                f"aigefs.t{run}z.pres.f{i}.grib2",
-                                                proxies=proxies,
-                                                chunk_size=chunk_size,
-                                                notifications=notifications,
-                                                clear_recycle_bin=clear_recycle_bin)    
+                                                    notifications=notifications)
+                    else:
+                        _client.byte_range_request(f"{url}aigefs.t{run}z.{level}.{cat}.f{i}.grib2",
+                                                    f"{url}aigefs.t{run}z.{level}.{cat}.f{i}.grib2.idx",
+                                                    variables,
+                                                    levels,
+                                                    'pressure',
+                                                    path,
+                                                    f"aigefs.t{run}z.pres.f{i}.grib2",
+                                                    proxies=proxies,
+                                                    chunk_size=chunk_size,
+                                                    notifications=notifications)    
+                else:   
+                    if i < 10:
+                        _client.get_gridded_data(f"{url}aigefs.t{run}z.{level}.{cat}.f00{i}.grib2",
+                                                        path,
+                                                        f"aigefs.t{run}z.{level}.{cat}.f00{i}.grib2",
+                                                        proxies=proxies,
+                                                        chunk_size=chunk_size,
+                                                        notifications=notifications) 
+                    elif i >= 10 and i < 100:
+                        _client.get_gridded_data(f"{url}aigefs.t{run}z.{level}.{cat}.f0{i}.grib2",
+                                                        path,
+                                                        f"aigefs.t{run}z.{level}.{cat}.f0{i}.grib2",
+                                                        proxies=proxies,
+                                                        chunk_size=chunk_size,
+                                                        notifications=notifications)  
+                    else:
+                        _client.get_gridded_data(f"{url}aigefs.t{run}z.{level}.{cat}.f{i}.grib2",
+                                                        path,
+                                                        f"aigefs.t{run}z.{level}.{cat}.f{i}.grib2",
+                                                        proxies=proxies,
+                                                        chunk_size=chunk_size,
+                                                        notifications=notifications)  
                     
     else:
         print(f"User has latest AIGEFS {level_type.upper()} {cat.upper()} Files\nSkipping Download...")  

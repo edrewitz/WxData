@@ -26,10 +26,13 @@ local = datetime.now()
 # Gets yesterday's date
 yd = now - timedelta(days=1)
 
+NOMADS = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod"
+AWS = f"https://noaa-nws-graphcastgfs-pds.s3.amazonaws.com/EAGLE_ensemble"
 
 def aigefs_pres_members_url_scanner(final_forecast_hour,
                             proxies,
-                            members):
+                            members,
+                            source):
     
     """
     This function is the URL scanner for the AIGEFS Pressure Parameters.
@@ -57,6 +60,11 @@ def aigefs_pres_members_url_scanner(final_forecast_hour,
     
     The download URL and filename of the latest available file in the AIGEFS dataset.  
     """
+    source = source.lower()
+    if source == 'noaa':
+        PREFIX = NOMADS
+    else:
+        PREFIX = AWS
     
     if members[-1] < 10:
         last_member = f"00{members[-1]}"
@@ -80,15 +88,15 @@ def aigefs_pres_members_url_scanner(final_forecast_hour,
     # These are the different download URLs for the various runtimes in the past 24 hours
     
     # URLs to scan for the latest file
-    today_18z_url = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{now.strftime('%Y%m%d')}/18/mem{last_member}/model/atmos/grib2")
-    today_12z_url = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{now.strftime('%Y%m%d')}/12/mem{last_member}/model/atmos/grib2")
-    today_06z_url = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{now.strftime('%Y%m%d')}/06/mem{last_member}/model/atmos/grib2")
-    today_00z_url = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{now.strftime('%Y%m%d')}/00/mem{last_member}/model/atmos/grib2")
+    today_18z_url = (f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/18/mem{last_member}/model/atmos/grib2")
+    today_12z_url = (f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/12/mem{last_member}/model/atmos/grib2")
+    today_06z_url = (f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/06/mem{last_member}/model/atmos/grib2")
+    today_00z_url = (f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/00/mem{last_member}/model/atmos/grib2")
     
-    yesterday_18z_url = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{yd.strftime('%Y%m%d')}/18/mem{last_member}/model/atmos/grib2")
-    yesterday_12z_url = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{yd.strftime('%Y%m%d')}/12/mem{last_member}/model/atmos/grib2")
-    yesterday_06z_url = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{yd.strftime('%Y%m%d')}/06/mem{last_member}/model/atmos/grib2")
-    yesterday_00z_url = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{yd.strftime('%Y%m%d')}/00/mem{last_member}/model/atmos/grib2")
+    yesterday_18z_url = (f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/18/mem{last_member}/model/atmos/grib2")
+    yesterday_12z_url = (f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/12/mem{last_member}/model/atmos/grib2")
+    yesterday_06z_url = (f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/06/mem{last_member}/model/atmos/grib2")
+    yesterday_00z_url = (f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/00/mem{last_member}/model/atmos/grib2")
     
     file_18z = f"aigefs.t18z.pres.f{final_forecast_hour}.grib2"
     file_12z = f"aigefs.t12z.pres.f{final_forecast_hour}.grib2"
@@ -135,7 +143,31 @@ def aigefs_pres_members_url_scanner(final_forecast_hour,
                     y_00.close()
                     break
                 except Exception as e:
-                    i = i     
+                    i = i
+                    if i >= 9:
+                        print(f"Error: Client cannot establish connection to {source.upper()} server.")
+                        if source == 'noaa':
+                            print(f"Rotating to AWS Server.")
+                            try:
+                                urls, file, run = aigefs_pres_members_url_scanner(final_forecast_hour,
+                                                                                        proxies,
+                                                                                        members,
+                                                                                        'aws')
+                            except Exception as e:
+                                print(f"Error: Client cannot establish a connection to either server. - System Exit.")
+                                sys.exit(1)
+                
+                        else:
+                            print(f"Rotating to NCEP/NOMADS Server.")
+                            try:
+                                urls, file, run = aigefs_pres_members_url_scanner(final_forecast_hour,
+                                                                                        proxies,
+                                                                                        members,
+                                                                                        'noaa')
+                            except Exception as e:
+                                print(f"Error: Client cannot establish a connection to either server. - System Exit.")
+                                sys.exit(1)
+                                    
                     
                        
     else:
@@ -179,7 +211,29 @@ def aigefs_pres_members_url_scanner(final_forecast_hour,
                     break
                 except Exception as e:
                     i = i 
-                    
+                    if i >= 9:
+                        print(f"Error: Client cannot establish connection to {source.upper()} server.")
+                        if source == 'noaa':
+                            print(f"Rotating to AWS Server.")
+                            try:
+                                urls, file, run = aigefs_pres_members_url_scanner(final_forecast_hour,
+                                                                                        proxies,
+                                                                                        members,
+                                                                                        'aws')
+                            except Exception as e:
+                                print(f"Error: Client cannot establish a connection to either server. - System Exit.")
+                                sys.exit(1)
+                
+                        else:
+                            print(f"Rotating to NCEP/NOMADS Server.")
+                            try:
+                                urls, file, run = aigefs_pres_members_url_scanner(final_forecast_hour,
+                                                                                        proxies,
+                                                                                        members,
+                                                                                        'noaa')
+                            except Exception as e:
+                                print(f"Error: Client cannot establish a connection to either server. - System Exit.")
+                                sys.exit(1)
                     
     urls = [
         today_18z_url,
@@ -228,35 +282,36 @@ def aigefs_pres_members_url_scanner(final_forecast_hour,
         else:
             m = f"0{member}"
         if url == today_18z_url:
-                u = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{now.strftime('%Y%m%d')}/18/mem{m}/model/atmos/grib2"
+                u = f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/18/mem{m}/model/atmos/grib2"
                 urls.append(u)
         elif url == today_12z_url:
-                u = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{now.strftime('%Y%m%d')}/12/mem{m}/model/atmos/grib2"
+                u = f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/12/mem{m}/model/atmos/grib2"
                 urls.append(u)
         elif url == today_06z_url:
-                u = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{now.strftime('%Y%m%d')}/06/mem{m}/model/atmos/grib2"
+                u = f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/06/mem{m}/model/atmos/grib2"
                 urls.append(u)
         elif url == today_00z_url:
-                u = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{now.strftime('%Y%m%d')}/00/mem{m}/model/atmos/grib2"
+                u = f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/00/mem{m}/model/atmos/grib2"
                 urls.append(u)
         elif url == yesterday_18z_url:
-                u = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{yd.strftime('%Y%m%d')}/18/mem{m}/model/atmos/grib2"
+                u = f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/18/mem{m}/model/atmos/grib2"
                 urls.append(u)
         elif url == yesterday_12z_url:
-                u = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{yd.strftime('%Y%m%d')}/12/mem{m}/model/atmos/grib2"
+                u = f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/12/mem{m}/model/atmos/grib2"
                 urls.append(u)
         elif url == yesterday_06z_url:
-                u = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{yd.strftime('%Y%m%d')}/06/mem{m}/model/atmos/grib2"
+                u = f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/06/mem{m}/model/atmos/grib2"
                 urls.append(u)
         else:
-                u = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{yd.strftime('%Y%m%d')}/00/mem{m}/model/atmos/grib2"
+                u = f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/00/mem{m}/model/atmos/grib2"
                 urls.append(u)
         
     return urls, file, run
 
 def aigefs_sfc_members_url_scanner(final_forecast_hour,
                             proxies,
-                            members):
+                            members,
+                            source):
     
     """
     This function is the URL scanner for the AIGEFS Surface Parameters.
@@ -284,6 +339,11 @@ def aigefs_sfc_members_url_scanner(final_forecast_hour,
     
     The download URL and filename of the latest available file in the AIGEFS dataset.  
     """
+    source = source.lower()
+    if source == 'noaa':
+        PREFIX = NOMADS
+    else:
+        PREFIX = AWS
     
     if members[-1] < 10:
         last_member = f"00{members[-1]}"
@@ -307,15 +367,15 @@ def aigefs_sfc_members_url_scanner(final_forecast_hour,
     # These are the different download URLs for the various runtimes in the past 24 hours
     
     # URLs to scan for the latest file
-    today_18z_url = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{now.strftime('%Y%m%d')}/18/mem{last_member}/model/atmos/grib2")
-    today_12z_url = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{now.strftime('%Y%m%d')}/12/mem{last_member}/model/atmos/grib2")
-    today_06z_url = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{now.strftime('%Y%m%d')}/06/mem{last_member}/model/atmos/grib2")
-    today_00z_url = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{now.strftime('%Y%m%d')}/00/mem{last_member}/model/atmos/grib2")
+    today_18z_url = (f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/18/mem{last_member}/model/atmos/grib2")
+    today_12z_url = (f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/12/mem{last_member}/model/atmos/grib2")
+    today_06z_url = (f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/06/mem{last_member}/model/atmos/grib2")
+    today_00z_url = (f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/00/mem{last_member}/model/atmos/grib2")
     
-    yesterday_18z_url = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{yd.strftime('%Y%m%d')}/18/mem{last_member}/model/atmos/grib2")
-    yesterday_12z_url = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{yd.strftime('%Y%m%d')}/12/mem{last_member}/model/atmos/grib2")
-    yesterday_06z_url = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{yd.strftime('%Y%m%d')}/06/mem{last_member}/model/atmos/grib2")
-    yesterday_00z_url = (f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{yd.strftime('%Y%m%d')}/00/mem{last_member}/model/atmos/grib2")
+    yesterday_18z_url = (f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/18/mem{last_member}/model/atmos/grib2")
+    yesterday_12z_url = (f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/12/mem{last_member}/model/atmos/grib2")
+    yesterday_06z_url = (f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/06/mem{last_member}/model/atmos/grib2")
+    yesterday_00z_url = (f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/00/mem{last_member}/model/atmos/grib2")
     
     file_18z = f"aigefs.t18z.sfc.f{final_forecast_hour}.grib2"
     file_12z = f"aigefs.t12z.sfc.f{final_forecast_hour}.grib2"
@@ -363,7 +423,29 @@ def aigefs_sfc_members_url_scanner(final_forecast_hour,
                     break
                 except Exception as e:
                     i = i     
-                    
+                    if i >= 9:
+                        print(f"Error: Client cannot establish connection to {source.upper()} server.")
+                        if source == 'noaa':
+                            print(f"Rotating to AWS Server.")
+                            try:
+                                urls, file, run = aigefs_sfc_members_url_scanner(final_forecast_hour,
+                                                                                        proxies,
+                                                                                        members,
+                                                                                        'aws')
+                            except Exception as e:
+                                print(f"Error: Client cannot establish a connection to either server. - System Exit.")
+                                sys.exit(1)
+                
+                        else:
+                            print(f"Rotating to NCEP/NOMADS Server.")
+                            try:
+                                urls, file, run = aigefs_sfc_members_url_scanner(final_forecast_hour,
+                                                                                        proxies,
+                                                                                        members,
+                                                                                        'noaa')
+                            except Exception as e:
+                                print(f"Error: Client cannot establish a connection to either server. - System Exit.")
+                                sys.exit(1)
                        
     else:
         try:    
@@ -406,7 +488,29 @@ def aigefs_sfc_members_url_scanner(final_forecast_hour,
                     break
                 except Exception as e:
                     i = i 
-                    
+                    if i >= 9:
+                        print(f"Error: Client cannot establish connection to {source.upper()} server.")
+                        if source == 'noaa':
+                            print(f"Rotating to AWS Server.")
+                            try:
+                                urls, file, run = aigefs_sfc_members_url_scanner(final_forecast_hour,
+                                                                                        proxies,
+                                                                                        members,
+                                                                                        'aws')
+                            except Exception as e:
+                                print(f"Error: Client cannot establish a connection to either server. - System Exit.")
+                                sys.exit(1)
+                
+                        else:
+                            print(f"Rotating to NCEP/NOMADS Server.")
+                            try:
+                                urls, file, run = aigefs_sfc_members_url_scanner(final_forecast_hour,
+                                                                                        proxies,
+                                                                                        members,
+                                                                                        'noaa')
+                            except Exception as e:
+                                print(f"Error: Client cannot establish a connection to either server. - System Exit.")
+                                sys.exit(1)
                     
     urls = [
         today_18z_url,
@@ -455,28 +559,28 @@ def aigefs_sfc_members_url_scanner(final_forecast_hour,
         else:
             m = f"0{member}"
         if url == today_18z_url:
-                u = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{now.strftime('%Y%m%d')}/18/mem{m}/model/atmos/grib2"
+                u = f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/18/mem{m}/model/atmos/grib2"
                 urls.append(u)
         elif url == today_12z_url:
-                u = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{now.strftime('%Y%m%d')}/12/mem{m}/model/atmos/grib2"
+                u = f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/12/mem{m}/model/atmos/grib2"
                 urls.append(u)
         elif url == today_06z_url:
-                u = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{now.strftime('%Y%m%d')}/06/mem{m}/model/atmos/grib2"
+                u = f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/06/mem{m}/model/atmos/grib2"
                 urls.append(u)
         elif url == today_00z_url:
-                u = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{now.strftime('%Y%m%d')}/00/mem{m}/model/atmos/grib2"
+                u = f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/00/mem{m}/model/atmos/grib2"
                 urls.append(u)
         elif url == yesterday_18z_url:
-                u = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{yd.strftime('%Y%m%d')}/18/mem{m}/model/atmos/grib2"
+                u = f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/18/mem{m}/model/atmos/grib2"
                 urls.append(u)
         elif url == yesterday_12z_url:
-                u = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{yd.strftime('%Y%m%d')}/12/mem{m}/model/atmos/grib2"
+                u = f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/12/mem{m}/model/atmos/grib2"
                 urls.append(u)
         elif url == yesterday_06z_url:
-                u = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{yd.strftime('%Y%m%d')}/06/mem{m}/model/atmos/grib2"
+                u = f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/06/mem{m}/model/atmos/grib2"
                 urls.append(u)
         else:
-                u = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{yd.strftime('%Y%m%d')}/00/mem{m}/model/atmos/grib2"
+                u = f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/00/mem{m}/model/atmos/grib2"
                 urls.append(u)
         
     return urls, file, run
@@ -485,7 +589,8 @@ def aigefs_sfc_members_url_scanner(final_forecast_hour,
 def aigefs_single_url_scanner(final_forecast_hour,
                                     proxies,
                                     cat,
-                                    type_of_level):
+                                    type_of_level,
+                                    source):
     
     """
     This function is the URL scanner for the AIGEFS Pressure Parameters.
@@ -527,6 +632,12 @@ def aigefs_single_url_scanner(final_forecast_hour,
     
     The download URL and filename of the latest available file in the AIGEFS dataset.  
     """
+    source = source.lower()
+    if source == 'noaa':
+        PREFIX = NOMADS
+    else:
+        PREFIX = AWS
+    
     cat = cat.lower()
     type_of_level = type_of_level.lower()
         
@@ -548,15 +659,15 @@ def aigefs_single_url_scanner(final_forecast_hour,
     else:
         final_forecast_hour = f"00{final_forecast_hour}"
         
-    today_18z_url = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{now.strftime('%Y%m%d')}/18/ensstat/products/atmos/grib2/"
-    today_12z_url = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{now.strftime('%Y%m%d')}/12/ensstat/products/atmos/grib2/"
-    today_06z_url = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{now.strftime('%Y%m%d')}/06/ensstat/products/atmos/grib2/"
-    today_00z_url = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{now.strftime('%Y%m%d')}/00/ensstat/products/atmos/grib2/"
+    today_18z_url = f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/18/ensstat/products/atmos/grib2/"
+    today_12z_url = f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/12/ensstat/products/atmos/grib2/"
+    today_06z_url = f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/06/ensstat/products/atmos/grib2/"
+    today_00z_url = f"{PREFIX}/aigefs.{now.strftime('%Y%m%d')}/00/ensstat/products/atmos/grib2/"
     
-    yesterday_18z_url = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{yd.strftime('%Y%m%d')}/18/ensstat/products/atmos/grib2/"
-    yesterday_12z_url = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{yd.strftime('%Y%m%d')}/12/ensstat/products/atmos/grib2/"
-    yesterday_06z_url = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{yd.strftime('%Y%m%d')}/06/ensstat/products/atmos/grib2/"
-    yesterday_00z_url = f"https://nomads.ncep.noaa.gov/pub/data/nccf/com/aigefs/prod/aigefs.{yd.strftime('%Y%m%d')}/00/ensstat/products/atmos/grib2/"
+    yesterday_18z_url = f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/18/ensstat/products/atmos/grib2/"
+    yesterday_12z_url = f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/12/ensstat/products/atmos/grib2/"
+    yesterday_06z_url = f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/06/ensstat/products/atmos/grib2/"
+    yesterday_00z_url = f"{PREFIX}/aigefs.{yd.strftime('%Y%m%d')}/00/ensstat/products/atmos/grib2/"
     
     file_18z = f"aigefs.t18z.{level}.{cat}.f{final_forecast_hour}.grib2"
     file_12z = f"aigefs.t12z.{level}.{cat}.f{final_forecast_hour}.grib2"
@@ -604,7 +715,31 @@ def aigefs_single_url_scanner(final_forecast_hour,
                     break
                 except Exception as e:
                     i = i     
-                    
+                    if i >= 9:
+                        print(f"Error: Client cannot establish connection to {source.upper()} server.")
+                        if source == 'noaa':
+                            print(f"Rotating to AWS Server.")
+                            try:
+                                url, file, run = aigefs_single_url_scanner(final_forecast_hour,
+                                                                                    proxies,
+                                                                                    cat,
+                                                                                    type_of_level,
+                                                                                    'aws')
+                            except Exception as e:
+                                print(f"Error: Client cannot establish a connection to either server. - System Exit.")
+                                sys.exit(1)
+                
+                        else:
+                            print(f"Rotating to NCEP/NOMADS Server.")
+                            try:
+                                url, file, run = aigefs_single_url_scanner(final_forecast_hour,
+                                                                                    proxies,
+                                                                                    cat,
+                                                                                    type_of_level,
+                                                                                    'noaa')
+                            except Exception as e:
+                                print(f"Error: Client cannot establish a connection to either server. - System Exit.")
+                                sys.exit(1)
                        
     else:
         try:    

@@ -7,7 +7,7 @@ This file hosts the clients that download, pre-process and post-process AIGEFS D
 
 (C) Eric J. Drewitz 2025-2026
 """
-
+import sys as _sys
 import wxdata.client.client as _client
 import wxdata.post_processors.aigefs_post_processing as _aigefs_post_processing
 import warnings as _warnings
@@ -43,7 +43,7 @@ from wxdata.utils.recycle_bin import(
 
 _eccodes_warning()
 
-def aigefs_pressure_members(final_forecast_hour=384, 
+def _aigefs_pressure_members_client(final_forecast_hour=384, 
              western_bound=-180, 
              eastern_bound=180, 
              northern_bound=90, 
@@ -77,7 +77,8 @@ def aigefs_pressure_members(final_forecast_hour=384,
                     250,
                     150,
                     100,
-                    50]):
+                    50],
+            source='noaa'):
     
     """
     This function downloads, pre-processes and post-processes the latest pressure parameter dataset of the AIGEFS and bins the files to specific folders based on ensemble number.
@@ -158,14 +159,19 @@ def aigefs_pressure_members(final_forecast_hour=384,
                                         150,
                                         100,
                                         50]
+                                        
+    15) source (String) - Default='noaa'. The servers to pull the data from.
+
+    ***Server Choices***
     
-    Returns
-    -------
+    'noaa' = NCEP/NOMADS
+    'aws' = Amazon Web Services
+    
+    **Returns**
     
     An xarray data array of the AIGEFS Pressure Parameter data specified to the coordinate boundaries and variable list the user specifies. 
     
-    Pressure-Level Plain Language Variable Keys
-    -------------------------------------------
+    ***Pressure-Level Plain Language Variable Keys***
     
     'geopotential_height'
     'specific_humidity'
@@ -194,7 +200,8 @@ def aigefs_pressure_members(final_forecast_hour=384,
         
     urls, file, run = _aigefs_pres_members_url_scanner(final_forecast_hour,
                             proxies,
-                            members)
+                            members,
+                            source)
     
     download = _local_file_scanner(paths[-1], 
                                     file,
@@ -275,7 +282,7 @@ def aigefs_pressure_members(final_forecast_hour=384,
                         
                         
 
-def aigefs_surface_members(final_forecast_hour=384, 
+def _aigefs_surface_members_client(final_forecast_hour=384, 
              western_bound=-180, 
              eastern_bound=180, 
              northern_bound=90, 
@@ -291,7 +298,8 @@ def aigefs_surface_members(final_forecast_hour=384,
             custom_directory=None,
             chunk_size=8192,
             notifications='off',
-            clear_data=False):
+            clear_data=False,
+            source='noaa'):
     
     """
     This function downloads, pre-processes and post-processes the latest surface parameter dataset of the AIGEFS and bins the files to specific folders based on ensemble number.
@@ -352,6 +360,13 @@ def aigefs_surface_members(final_forecast_hour=384,
     
     17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+        
+    18) source (String) - Default='noaa'. The servers to pull the data from.
+
+    ***Server Choices***
+    
+    'noaa' = NCEP/NOMADS
+    'aws' = Amazon Web Services
     
     
     Returns
@@ -387,7 +402,8 @@ def aigefs_surface_members(final_forecast_hour=384,
     
     urls, file, run = _aigefs_sfc_members_url_scanner(final_forecast_hour,
                             proxies,
-                            members)
+                            members,
+                            source)
     
     download = _local_file_scanner(paths[-1], 
                                     file,
@@ -453,7 +469,7 @@ def aigefs_surface_members(final_forecast_hour=384,
         pass   
     
     
-def aigefs_single(final_forecast_hour=384, 
+def _aigefs_single_client(final_forecast_hour=384, 
                     western_bound=-180, 
                     eastern_bound=180, 
                     northern_bound=90, 
@@ -486,7 +502,8 @@ def aigefs_single(final_forecast_hour=384,
                     250,
                     150,
                     100,
-                    50]):                   
+                    50],
+            source='noaa'):                   
     
     """
     This function downloads, pre-processes and post-processes the latest AIGEFS Ensemble Mean or Ensemble Spread for either the Pressure or Surface Parameters. 
@@ -587,14 +604,19 @@ def aigefs_single(final_forecast_hour=384,
                                                                         
         When the level_type = 'pressure', the user can filter by level to the level they want. (Surface level files are very small 
         compared to pressure level files).
+        
+    21) source (String) - Default='noaa'. The servers to pull the data from.
+
+    ***Server Choices***
     
-    Returns
-    -------
+    'noaa' = NCEP/NOMADS
+    'aws' = Amazon Web Services
+    
+    **Returns**
     
     An xarray data array of the AIGEFS data specified to the coordinate boundaries and variable list the user specifies. 
     
-    Pressure-Level Plain Language Variable Keys
-    -------------------------------------------
+    ***Pressure-Level Plain Language Variable Keys***
     
     'geopotential_height'
     'specific_humidity'
@@ -645,7 +667,8 @@ def aigefs_single(final_forecast_hour=384,
     url, file, run = _aigefs_single_url_scanner(final_forecast_hour,
                                                         proxies,
                                                         cat,
-                                                        level_type)
+                                                        level_type,
+                                                        source)
     
     download = _local_file_scanner(path, 
                                     file,
@@ -748,3 +771,815 @@ def aigefs_single(final_forecast_hour=384,
         return ds
     else:
         pass       
+
+
+def aigefs_pressure_members(final_forecast_hour=384, 
+             western_bound=-180, 
+             eastern_bound=180, 
+             northern_bound=90, 
+             southern_bound=-90, 
+             proxies=None, 
+             members=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                      11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+                      21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+            process_data=True,
+            clear_recycle_bin=False,
+            convert_temperature=True,
+            convert_to='celsius',
+            custom_directory=None,
+            chunk_size=8192,
+            notifications='off',
+            clear_data=False,
+            variables=['geopotential height',
+                       'specific humidity',
+                       'temperature',
+                       'u-component of wind',
+                       'v-component of wind',
+                       'vertical velocity (pressure)'],
+            levels=[1000,
+                    925,
+                    850,
+                    700,
+                    600,
+                    500,
+                    400,
+                    300,
+                    250,
+                    150,
+                    100,
+                    50],
+            source='noaa'):
+    
+    """
+    This function downloads, pre-processes and post-processes the latest pressure parameter dataset of the AIGEFS and bins the files to specific folders based on ensemble number.
+    Users can also enter a list of paths for custom_directory if they do not wish to use the default directory.
+    
+    Required Arguments: None
+    
+    Optional Arguments:
+    
+    1) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The AIGEFS
+    goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
+    384 by the nereast increment of 6 hours. 
+    
+    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+
+    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+
+    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+
+    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+
+    6) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
+    
+    7) members (List) - Default=All 30 ensemble members + control. The individual ensemble members. There are 30 members in this ensemble.  
+    
+    8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
+       data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
+       
+    9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
+            
+    10) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
+        the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
+        be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
+    
+    11) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
+        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+        
+    12) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+        either Celsius or Fahrenheit. When False, this data remains in Kelvin.
+        
+    13) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+        Set convert_to='fahrenheit' for Fahrenheit. 
+        
+    14) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
+        Default = f:ECMWF/IFS/WAVE
+        
+    15) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    
+    16) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    
+    17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+        
+    18) variables (String List) Default=['geopotential height',
+                                        'specific humidity',
+                                        'temperature',
+                                        'u-component of wind',
+                                        'v-component of wind',
+                                        'vertical velocity (pressure)']
+                       
+        
+    19) levels (Integer List) - Default=[1000,
+                                        925,
+                                        850,
+                                        700,
+                                        600,
+                                        500,
+                                        400,
+                                        300,
+                                        250,
+                                        150,
+                                        100,
+                                        50]
+                                        
+    15) source (String) - Default='noaa'. The servers to pull the data from.
+
+    ***Server Choices***
+    
+    'noaa' = NCEP/NOMADS
+    'aws' = Amazon Web Services
+    
+    **Returns**
+    
+    An xarray data array of the AIGEFS Pressure Parameter data specified to the coordinate boundaries and variable list the user specifies. 
+    
+    ***Pressure-Level Plain Language Variable Keys***
+    
+    'geopotential_height'
+    'specific_humidity'
+    'air_temperature'
+    'u_wind_component'
+    'v_wind_component'
+    'vertical_velocity'
+    """
+    
+    source = source.lower()
+    try:
+        if process_data == True:
+            ds = _aigefs_pressure_members_client(final_forecast_hour=final_forecast_hour, 
+                western_bound=western_bound, 
+                eastern_bound=eastern_bound, 
+                northern_bound=northern_bound, 
+                southern_bound=southern_bound, 
+                proxies=proxies, 
+                members=members,
+                process_data=process_data,
+                clear_recycle_bin=clear_recycle_bin,
+                convert_temperature=convert_temperature,
+                convert_to=convert_to,
+                custom_directory=custom_directory,
+                chunk_size=chunk_size,
+                notifications=notifications,
+                clear_data=clear_data,
+                variables=variables,
+                levels=levels,
+                source=source)
+        else:
+            _aigefs_pressure_members_client(final_forecast_hour=final_forecast_hour, 
+                western_bound=western_bound, 
+                eastern_bound=eastern_bound, 
+                northern_bound=northern_bound, 
+                southern_bound=southern_bound, 
+                proxies=proxies, 
+                members=members,
+                process_data=process_data,
+                clear_recycle_bin=clear_recycle_bin,
+                convert_temperature=convert_temperature,
+                convert_to=convert_to,
+                custom_directory=custom_directory,
+                chunk_size=chunk_size,
+                notifications=notifications,
+                clear_data=clear_data,
+                variables=variables,
+                levels=levels,
+                source=source)
+    except Exception as e:
+        print(f"Error: Client lost connection to {source.upper()} server and is unable to restore connection.")
+        if source == 'noaa':
+            print(f"Rotating to AWS.")
+            try:
+                if process_data == True:
+                    ds = _aigefs_pressure_members_client(final_forecast_hour=final_forecast_hour, 
+                        western_bound=western_bound, 
+                        eastern_bound=eastern_bound, 
+                        northern_bound=northern_bound, 
+                        southern_bound=southern_bound, 
+                        proxies=proxies, 
+                        members=members,
+                        process_data=process_data,
+                        clear_recycle_bin=clear_recycle_bin,
+                        convert_temperature=convert_temperature,
+                        convert_to=convert_to,
+                        custom_directory=custom_directory,
+                        chunk_size=chunk_size,
+                        notifications=notifications,
+                        clear_data=clear_data,
+                        variables=variables,
+                        levels=levels,
+                        source='aws')
+                else:
+                    _aigefs_pressure_members_client(final_forecast_hour=final_forecast_hour, 
+                        western_bound=western_bound, 
+                        eastern_bound=eastern_bound, 
+                        northern_bound=northern_bound, 
+                        southern_bound=southern_bound, 
+                        proxies=proxies, 
+                        members=members,
+                        process_data=process_data,
+                        clear_recycle_bin=clear_recycle_bin,
+                        convert_temperature=convert_temperature,
+                        convert_to=convert_to,
+                        custom_directory=custom_directory,
+                        chunk_size=chunk_size,
+                        notifications=notifications,
+                        clear_data=clear_data,
+                        variables=variables,
+                        levels=levels,
+                        source='aws')
+            except Exception as e:
+                print(f"Error: Client unable to establish a connection to either server. - System Exit.")
+                _sys.exit(1)
+                
+        else:
+            print(f"Rotating to NCEP/NOMADS.")
+            try:
+                if process_data == True:
+                    ds = _aigefs_pressure_members_client(final_forecast_hour=final_forecast_hour, 
+                        western_bound=western_bound, 
+                        eastern_bound=eastern_bound, 
+                        northern_bound=northern_bound, 
+                        southern_bound=southern_bound, 
+                        proxies=proxies, 
+                        members=members,
+                        process_data=process_data,
+                        clear_recycle_bin=clear_recycle_bin,
+                        convert_temperature=convert_temperature,
+                        convert_to=convert_to,
+                        custom_directory=custom_directory,
+                        chunk_size=chunk_size,
+                        notifications=notifications,
+                        clear_data=clear_data,
+                        variables=variables,
+                        levels=levels,
+                        source='noaa')
+                else:
+                    _aigefs_pressure_members_client(final_forecast_hour=final_forecast_hour, 
+                        western_bound=western_bound, 
+                        eastern_bound=eastern_bound, 
+                        northern_bound=northern_bound, 
+                        southern_bound=southern_bound, 
+                        proxies=proxies, 
+                        members=members,
+                        process_data=process_data,
+                        clear_recycle_bin=clear_recycle_bin,
+                        convert_temperature=convert_temperature,
+                        convert_to=convert_to,
+                        custom_directory=custom_directory,
+                        chunk_size=chunk_size,
+                        notifications=notifications,
+                        clear_data=clear_data,
+                        variables=variables,
+                        levels=levels,
+                        source='noaa')
+            except Exception as e:
+                print(f"Error: Client unable to establish a connection to either server. - System Exit.")
+                _sys.exit(1)
+                
+    if process_data == True:
+        return ds
+    else:
+        pass
+                
+                
+def aigefs_surface_members(final_forecast_hour=384, 
+             western_bound=-180, 
+             eastern_bound=180, 
+             northern_bound=90, 
+             southern_bound=-90, 
+             proxies=None, 
+             members=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                      11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+                      21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+            process_data=True,
+            clear_recycle_bin=False,
+            convert_temperature=True,
+            convert_to='celsius',
+            custom_directory=None,
+            chunk_size=8192,
+            notifications='off',
+            clear_data=False,
+            source='noaa'):
+    
+    """
+    This function downloads, pre-processes and post-processes the latest surface parameter dataset of the AIGEFS and bins the files to specific folders based on ensemble number.
+    Users can also enter a list of paths for custom_directory if they do not wish to use the default directory.
+    
+    Required Arguments: None
+    
+    Optional Arguments:
+    
+    1) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The AIGEFS
+    goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
+    384 by the nereast increment of 3 hours. 
+    
+    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+
+    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+
+    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+
+    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+
+    6) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
+    
+    7) members (List) - Default=All 30 ensemble members + control. The individual ensemble members. There are 30 members in this ensemble.  
+    
+    8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
+       data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
+       
+    9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
+            
+    10) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
+        the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
+        be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
+    
+    11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
+        
+    12) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+        either Celsius or Fahrenheit. When False, this data remains in Kelvin.
+        
+    13) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+        Set convert_to='fahrenheit' for Fahrenheit. 
+        
+    14) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
+        Default = f:ECMWF/IFS/WAVE
+        
+    15) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    
+    16) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    
+    17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+        
+    18) source (String) - Default='noaa'. The servers to pull the data from.
+
+    ***Server Choices***
+    
+    'noaa' = NCEP/NOMADS
+    'aws' = Amazon Web Services
+    
+    
+    Returns
+    -------
+    
+    An xarray data array of the AIGEFS Surface Parameter data specified to the coordinate boundaries and variable list the user specifies. 
+    
+    Surface-Level Plain Language Variable Keys
+    ------------------------------------------
+    
+    '10m_u_wind_component'
+    '10m_v_wind_component'
+    'mslp'
+    '2m_temperature'
+    """
+    
+    source = source.lower()
+    try:
+        if process_data == True:
+            ds = _aigefs_surface_members_client(final_forecast_hour=final_forecast_hour, 
+                                                western_bound=western_bound, 
+                                                eastern_bound=eastern_bound, 
+                                                northern_bound=northern_bound, 
+                                                southern_bound=southern_bound, 
+                                                proxies=proxies, 
+                                                members=members,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                convert_temperature=convert_temperature,
+                                                convert_to=convert_to,
+                                                custom_directory=custom_directory,
+                                                chunk_size=chunk_size,
+                                                notifications=notifications,
+                                                clear_data=clear_data,
+                                                source=source)
+        else:
+            _aigefs_surface_members_client(final_forecast_hour=final_forecast_hour, 
+                                                western_bound=western_bound, 
+                                                eastern_bound=eastern_bound, 
+                                                northern_bound=northern_bound, 
+                                                southern_bound=southern_bound, 
+                                                proxies=proxies, 
+                                                members=members,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                convert_temperature=convert_temperature,
+                                                convert_to=convert_to,
+                                                custom_directory=custom_directory,
+                                                chunk_size=chunk_size,
+                                                notifications=notifications,
+                                                clear_data=clear_data,
+                                                source=source)
+    except Exception as e:
+        print(f"Error: Client lost connection to {source.upper()} server and is unable to restore connection.")
+        if source == 'noaa':
+            print(f"Rotating to AWS.")
+            try:
+                if process_data == True:
+                    ds = _aigefs_surface_members_client(final_forecast_hour=final_forecast_hour, 
+                                                        western_bound=western_bound, 
+                                                        eastern_bound=eastern_bound, 
+                                                        northern_bound=northern_bound, 
+                                                        southern_bound=southern_bound, 
+                                                        proxies=proxies, 
+                                                        members=members,
+                                                        process_data=process_data,
+                                                        clear_recycle_bin=clear_recycle_bin,
+                                                        convert_temperature=convert_temperature,
+                                                        convert_to=convert_to,
+                                                        custom_directory=custom_directory,
+                                                        chunk_size=chunk_size,
+                                                        notifications=notifications,
+                                                        clear_data=clear_data,
+                                                        source='aws')
+                else:
+                    _aigefs_surface_members_client(final_forecast_hour=final_forecast_hour, 
+                                                        western_bound=western_bound, 
+                                                        eastern_bound=eastern_bound, 
+                                                        northern_bound=northern_bound, 
+                                                        southern_bound=southern_bound, 
+                                                        proxies=proxies, 
+                                                        members=members,
+                                                        process_data=process_data,
+                                                        clear_recycle_bin=clear_recycle_bin,
+                                                        convert_temperature=convert_temperature,
+                                                        convert_to=convert_to,
+                                                        custom_directory=custom_directory,
+                                                        chunk_size=chunk_size,
+                                                        notifications=notifications,
+                                                        clear_data=clear_data,
+                                                        source='aws')
+            except Exception as e:
+                print(f"Error: Client unable to establish a connection to either server. - System Exit.")
+                _sys.exit(1)
+                
+        else:
+            print(f"Rotating to NCEP/NOMADS.")
+            try:
+                if process_data == True:
+                    ds = _aigefs_surface_members_client(final_forecast_hour=final_forecast_hour, 
+                                                        western_bound=western_bound, 
+                                                        eastern_bound=eastern_bound, 
+                                                        northern_bound=northern_bound, 
+                                                        southern_bound=southern_bound, 
+                                                        proxies=proxies, 
+                                                        members=members,
+                                                        process_data=process_data,
+                                                        clear_recycle_bin=clear_recycle_bin,
+                                                        convert_temperature=convert_temperature,
+                                                        convert_to=convert_to,
+                                                        custom_directory=custom_directory,
+                                                        chunk_size=chunk_size,
+                                                        notifications=notifications,
+                                                        clear_data=clear_data,
+                                                        source='noaa')
+                else:
+                    _aigefs_surface_members_client(final_forecast_hour=final_forecast_hour, 
+                                                        western_bound=western_bound, 
+                                                        eastern_bound=eastern_bound, 
+                                                        northern_bound=northern_bound, 
+                                                        southern_bound=southern_bound, 
+                                                        proxies=proxies, 
+                                                        members=members,
+                                                        process_data=process_data,
+                                                        clear_recycle_bin=clear_recycle_bin,
+                                                        convert_temperature=convert_temperature,
+                                                        convert_to=convert_to,
+                                                        custom_directory=custom_directory,
+                                                        chunk_size=chunk_size,
+                                                        notifications=notifications,
+                                                        clear_data=clear_data,
+                                                        source='noaa')
+            except Exception as e:
+                print(f"Error: Client unable to establish a connection to either server. - System Exit.")
+                _sys.exit(1)
+                
+    if process_data == True:
+        return ds
+    else:
+        pass
+    
+def aigefs_single(final_forecast_hour=384, 
+                    western_bound=-180, 
+                    eastern_bound=180, 
+                    northern_bound=90, 
+                    southern_bound=-90, 
+                    proxies=None, 
+                    process_data=True,
+                    clear_recycle_bin=False,
+                    convert_temperature=True,
+                    convert_to='celsius',
+                    custom_directory=None,
+                    chunk_size=8192,
+                    notifications='off',
+                    cat='mean',
+                    level_type='pressure',
+                    clear_data=False,
+            variables=['geopotential height',
+                       'specific humidity',
+                       'temperature',
+                       'u-component of wind',
+                       'v-component of wind',
+                       'vertical velocity (pressure)'],
+            levels=[1000,
+                    925,
+                    850,
+                    700,
+                    600,
+                    500,
+                    400,
+                    300,
+                    250,
+                    150,
+                    100,
+                    50],
+            source='noaa'):                   
+    
+    """
+    This function downloads, pre-processes and post-processes the latest AIGEFS Ensemble Mean or Ensemble Spread for either the Pressure or Surface Parameters. 
+    Users can also enter a list of paths for custom_directory if they do not wish to use the default directory.
+    
+    Required Arguments: None
+    
+    Optional Arguments:
+    
+    1) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The AIGEFS
+    goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
+    384 by the nereast increment of 3 hours. 
+    
+    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+
+    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+
+    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+
+    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+
+    6) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
+    
+    7) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
+       data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
+       
+    8) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
+        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+            
+    9) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
+        the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
+        be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
+    
+    10) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+        This setting is to help preserve memory on the machine. 
+        
+    11) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+        either Celsius or Fahrenheit. When False, this data remains in Kelvin.
+        
+    12) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+        Set convert_to='fahrenheit' for Fahrenheit. 
+        
+    13) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
+        Default = f:ECMWF/IFS/WAVE
+        
+    14) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    
+    15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    
+    16) cat (String) - Default='mean'. The category of the data.
+    
+        Catagories
+        ----------
+        
+        1) mean
+        2) spread
+        
+    17) level_type (String) - Default='pressure'. The type of level the data is in.
+    
+        Types of Levels
+        ---------------
+        
+        1) pressure
+        2) surface
+        
+    18) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+    
+    
+    19) variables (String List) **level_type='pressure'** - Default=['geopotential height',
+                                                                        'specific humidity',
+                                                                        'temperature',
+                                                                        'u-component of wind',
+                                                                        'v-component of wind',
+                                                                        'vertical velocity (pressure)']
+                       
+        When the level_type = 'pressure', the user can filter by variable to the variable they want. (Surface level files are very small 
+        compared to pressure level files).
+        
+    20) levels (Integer List) **level_type='pressure'** - Default=[1000,
+                                                                        925,
+                                                                        850,
+                                                                        700,
+                                                                        600,
+                                                                        500,
+                                                                        400,
+                                                                        300,
+                                                                        250,
+                                                                        150,
+                                                                        100,
+                                                                        50]
+                                                                        
+        When the level_type = 'pressure', the user can filter by level to the level they want. (Surface level files are very small 
+        compared to pressure level files).
+        
+    21) source (String) - Default='noaa'. The servers to pull the data from.
+
+    ***Server Choices***
+    
+    'noaa' = NCEP/NOMADS
+    'aws' = Amazon Web Services
+    
+    **Returns**
+    
+    An xarray data array of the AIGEFS data specified to the coordinate boundaries and variable list the user specifies. 
+    
+    ***Pressure-Level Plain Language Variable Keys***
+    
+    'geopotential_height'
+    'specific_humidity'
+    'air_temperature'
+    'u_wind_component'
+    'v_wind_component'
+    'vertical_velocity'
+    
+    Surface-Level Plain Language Variable Keys
+    ------------------------------------------
+    
+    '10m_u_wind_component'
+    '10m_v_wind_component'
+    'mslp'
+    '2m_temperature'
+    """
+    
+    source = source.lower()
+    try:
+        if process_data == True:
+            ds = _aigefs_single_client(final_forecast_hour=final_forecast_hour, 
+                    western_bound=western_bound, 
+                    eastern_bound=eastern_bound, 
+                    northern_bound=northern_bound, 
+                    southern_bound=southern_bound, 
+                    proxies=proxies, 
+                    process_data=process_data,
+                    clear_recycle_bin=clear_recycle_bin,
+                    convert_temperature=convert_temperature,
+                    convert_to=convert_to,
+                    custom_directory=custom_directory,
+                    chunk_size=chunk_size,
+                    notifications=notifications,
+                    cat=cat,
+                    level_type=level_type,
+                    clear_data=clear_data,
+                    variables=variables,
+                    levels=levels,
+                    source=source)
+        else:
+            _aigefs_single_client(final_forecast_hour=final_forecast_hour, 
+                    western_bound=western_bound, 
+                    eastern_bound=eastern_bound, 
+                    northern_bound=northern_bound, 
+                    southern_bound=southern_bound, 
+                    proxies=proxies, 
+                    process_data=process_data,
+                    clear_recycle_bin=clear_recycle_bin,
+                    convert_temperature=convert_temperature,
+                    convert_to=convert_to,
+                    custom_directory=custom_directory,
+                    chunk_size=chunk_size,
+                    notifications=notifications,
+                    cat=cat,
+                    level_type=level_type,
+                    clear_data=clear_data,
+                    variables=variables,
+                    levels=levels,
+                    source=source)
+    except Exception as e:
+        print(f"Error: Client lost connection to {source.upper()} server and is unable to restore connection.")
+        if source == 'noaa':
+            print(f"Rotating to AWS.")
+            try:
+                if process_data == True:
+                    ds = _aigefs_single_client(final_forecast_hour=final_forecast_hour, 
+                            western_bound=western_bound, 
+                            eastern_bound=eastern_bound, 
+                            northern_bound=northern_bound, 
+                            southern_bound=southern_bound, 
+                            proxies=proxies, 
+                            process_data=process_data,
+                            clear_recycle_bin=clear_recycle_bin,
+                            convert_temperature=convert_temperature,
+                            convert_to=convert_to,
+                            custom_directory=custom_directory,
+                            chunk_size=chunk_size,
+                            notifications=notifications,
+                            cat=cat,
+                            level_type=level_type,
+                            clear_data=clear_data,
+                            variables=variables,
+                            levels=levels,
+                            source='aws')
+                else:
+                    _aigefs_single_client(final_forecast_hour=final_forecast_hour, 
+                            western_bound=western_bound, 
+                            eastern_bound=eastern_bound, 
+                            northern_bound=northern_bound, 
+                            southern_bound=southern_bound, 
+                            proxies=proxies, 
+                            process_data=process_data,
+                            clear_recycle_bin=clear_recycle_bin,
+                            convert_temperature=convert_temperature,
+                            convert_to=convert_to,
+                            custom_directory=custom_directory,
+                            chunk_size=chunk_size,
+                            notifications=notifications,
+                            cat=cat,
+                            level_type=level_type,
+                            clear_data=clear_data,
+                            variables=variables,
+                            levels=levels,
+                            source='aws')
+            except Exception as e:
+                print(f"Error: Client unable to establish a connection to either server. - System Exit.")
+                _sys.exit(1)
+                
+        else:
+            print(f"Rotating to NCEP/NOMADS.")
+            try:
+                if process_data == True:
+                    ds = _aigefs_single_client(final_forecast_hour=final_forecast_hour, 
+                            western_bound=western_bound, 
+                            eastern_bound=eastern_bound, 
+                            northern_bound=northern_bound, 
+                            southern_bound=southern_bound, 
+                            proxies=proxies, 
+                            process_data=process_data,
+                            clear_recycle_bin=clear_recycle_bin,
+                            convert_temperature=convert_temperature,
+                            convert_to=convert_to,
+                            custom_directory=custom_directory,
+                            chunk_size=chunk_size,
+                            notifications=notifications,
+                            cat=cat,
+                            level_type=level_type,
+                            clear_data=clear_data,
+                            variables=variables,
+                            levels=levels,
+                            source='noaa')
+                else:
+                    _aigefs_single_client(final_forecast_hour=final_forecast_hour, 
+                            western_bound=western_bound, 
+                            eastern_bound=eastern_bound, 
+                            northern_bound=northern_bound, 
+                            southern_bound=southern_bound, 
+                            proxies=proxies, 
+                            process_data=process_data,
+                            clear_recycle_bin=clear_recycle_bin,
+                            convert_temperature=convert_temperature,
+                            convert_to=convert_to,
+                            custom_directory=custom_directory,
+                            chunk_size=chunk_size,
+                            notifications=notifications,
+                            cat=cat,
+                            level_type=level_type,
+                            clear_data=clear_data,
+                            variables=variables,
+                            levels=levels,
+                            source='noaa')
+            except Exception as e:
+                print(f"Error: Client unable to establish a connection to either server. - System Exit.")
+                _sys.exit(1)
+                
+    if process_data == True:
+        return ds
+    else:
+        pass
+                

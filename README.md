@@ -136,7 +136,8 @@ End-To-End clients with multiple servers to pull data from can find the differen
 | Get NDFD Grids |N|N|Y|N|Y|N|
 | RTMA |Y|N|Y|N|N|N|
 | AIGFS |Y|N|Y|N|N|N|
-| AIGEFS |Y|N|N|N|N|N|
+| AIGEFS |Y|N|Y|N|N|N|
+| HGEFS |Y|N|N|N|N|N|
 | CFS |Y|N|Y|N|N|N|
 | GDPS |N|N|N|N|N|Y|
 | RDPS |N|N|N|N|N|Y|

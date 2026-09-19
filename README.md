@@ -117,7 +117,7 @@ End-To-End clients with multiple servers to pull data from can find the differen
 
 `source='google' - Google Cloud`
 
-**Operational Data Server List**
+**Operational Weather Model Data Server List**
 
 | Client | NOAA/NCEP/NOMADS | ECMWF Open-Data | Amazon AWS | Google Cloud | NOAA/NWS/FTP | MSC Open Data |
 | -------- | -------- | -------- | -------- | -------- | -------- | -------- | 

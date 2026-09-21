@@ -31,7 +31,7 @@ def _parse_proxy(value):
 # ---------------------------------------------------------------------
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
 def gfs_data():
-    """RTMA command line utilities."""
+    """GFScommand line utilities."""
     pass
 
 # ---------------------------------------------------------------------

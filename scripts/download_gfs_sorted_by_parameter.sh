@@ -51,6 +51,6 @@ echo "========================================="
 # To prevent server rate limiting we are pulling from the different servers for each dataset.
 # This is a good practice as it prevents overloading a single server with too many requests. 
 
-gfs 0p25 latest -v geopotential_height -l 1000 -l 850 -l 700 -l 500 -l 250 -cdir GFS0P25/Geopotential_Height & \
-gfs 0p25 latest -v temperature -l 1000 -l 850 -l 700 -l 500 -l 250 -s aws -cdir GFS0P25/Temperature & \
-gfs 0p25 latest -v relative_humidity -l 1000 -l 850 -l 700 -l 500 -l 250 -s google -cdir GFS0P25/Relative_Humidity
+wxdata-gfs 0p25 latest -v geopotential_height -l 1000 -l 850 -l 700 -l 500 -l 250 -cdir GFS0P25/Geopotential_Height & \
+wxdata-gfs 0p25 latest -v temperature -l 1000 -l 850 -l 700 -l 500 -l 250 -s aws -cdir GFS0P25/Temperature & \
+wxdata-gfs 0p25 latest -v relative_humidity -l 1000 -l 850 -l 700 -l 500 -l 250 -s google -cdir GFS0P25/Relative_Humidity

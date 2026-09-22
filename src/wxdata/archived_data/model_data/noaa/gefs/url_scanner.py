@@ -564,13 +564,13 @@ def gefs_0p25_url_scanner(date,
     # User enters an invalid category
     # When a category is invalid - Defaults to Ensemble Mean
     else:
-        gefs0p50.gefs0p50_cat_error('gefs0p50')
+        gefs0p25.gefs0p25_cat_error('gefs0p50')
         aa = f"avg"
         
     # This section handles the final forecast hour for the filename
-    if final_forecast_hour > 384:
-        gefs0p50.forecast_hour_error()
-        final_forecast_hour = 384
+    if final_forecast_hour > 240:
+        gefs0p25.forecast_hour_error()
+        final_forecast_hour = 240
     else:
         final_forecast_hour = final_forecast_hour
         

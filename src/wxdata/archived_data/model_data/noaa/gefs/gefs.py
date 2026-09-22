@@ -944,7 +944,7 @@ def _gefs_0p25_client(date,
             run,
             cat='mean', 
             path=f'GEFS0P25/Archive',
-             final_forecast_hour=384, 
+             final_forecast_hour=240, 
              western_bound=-180, 
              eastern_bound=180, 
              northern_bound=90, 
@@ -956,14 +956,14 @@ def _gefs_0p25_client(date,
                       21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
              process_data=True,
              clear_recycle_bin=False,
-             variables=['geopotential height'],
+             variables=['temperature'],
             convert_temperature=True,
             convert_to='celsius',
             chunk_size=8192,
             notifications='off',
             source='aws',
-            level_type='pressure',
-            levels=[500]):
+            level_type='height above ground',
+            levels=[2]):
     
     """
     This function downloads the latest GEFS0P50 data for a region specified by the user
@@ -2182,7 +2182,9 @@ def gefs_0p50_secondary_parameters(date,
         
 
 
-def gefs_0p25(cat='mean', 
+def gefs_0p25(date,
+              run,
+             cat='mean', 
              final_forecast_hour=240, 
              western_bound=-180, 
              eastern_bound=180, 
@@ -2196,453 +2198,13 @@ def gefs_0p25(cat='mean',
              process_data=True,
              clear_recycle_bin=False,
              variables=['temperature'],
-             convert_temperature=True,
-             convert_to='celsius',
-             custom_directory=None,
-             chunk_size=8192,
-             notifications='off',
-             clear_data=False,
-            source='noaa',
-            level_type='height above ground',
-            levels=[2]):
-    
-    """
-    This function downloads the latest GEFS0P25 data for a region specified by the user
-    
-    Required Arguments: None
-    
-    Optional Arguments:
-    
-    1) cat (string) - Default='mean'. The category of the ensemble data. 
-    
-    Valid categories
-    -----------------
-    
-    1) mean
-    2) members
-    3) spread
-    4) control
-    
-    2) final_forecast_hour (Integer) - Default = 240. The final forecast hour the user wishes to download. The GEFS0P25
-    goes out to 240 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    240 by the nereast increment of 3 hours. 
-    
-    3) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
-
-    4) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
-
-    5) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
-
-    6) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
-
-    7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
-
-       proxies=None ---> proxies={
-                               'http':'http://your-proxy-address:port',
-                               'https':'http://your-proxy-address:port'
-                               }
-    
-    8) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
-    
-    9) members (List) - Default=All 30 ensemble members. The individual ensemble members. There are 30 members in this ensemble.  
-    
-    10) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
-       data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
-       
-    11) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-        of the program you are calling WxData. This setting is to help preserve memory on the machine. 
-        
-    12) variables (List) - Default=['temperature']. A list of variable names the user wants to download in plain language. 
-    
-        Variable Name List for GEFS0P25
-        -------------------------------
-        
-        'total precipitation'
-        'convective available potential energy'
-        'categorical freezing rain'
-        'categorical ice pellets'
-        'convective inhibition'
-        'percent frozen precipitaion'
-        'categorical rain'
-        'categorical snow'
-        'downward longwave radiation flux'
-        'downward shortwave radiation flux'
-        'dew point'
-        'wind gust'
-        'geopotential height'
-        'storm relative helicity'
-        'ice thickness'
-        'latent heat net flux'
-        'pressure'
-        'mean sea level pressure'
-        'precipitable water'
-        'relative humidity'
-        'sensible heat net flux'
-        'snow depth'
-        'volumetric soil moisture content'
-        'total cloud cover'
-        'maximum temperature'
-        'minimum temperature'
-        'temperature'
-        'soil temperature'
-        'u-component of wind'
-        'upward longwave radiation flux'
-        'upward shortwave radiation flux'
-        'v-component of wind'
-        'visibility'
-        'water equivalent of accumulated snow depth'
-        
-    13) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
-        the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
-        be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
-    
-    14) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
-        
-    15) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
-        either Celsius or Fahrenheit. When False, this data remains in Kelvin.
-        
-    16) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
-        Set convert_to='fahrenheit' for Fahrenheit. 
-        
-    17) custom_directory (String or None) - Default=None. The directory path where the GEFS0P25 files will be saved to.
-        
-    18) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
-    
-    19) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
-    
-    20) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
-        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
-    
-    21) source (String) - Default='noaa'. The data server the user wants to connect the client to.
-    
-        Server List
-        -----------
-        
-        1) NOAA/NCEP/NOMADS - source='noaa'
-        2) Amazon AWS - source='aws'
-        3) Google Cloud - source='google'
-        
-    22) level_type (String) - Default='height above ground'. The type of level for the variable.
-    
-        Level Types
-        -----------
-        
-        'surface'
-        'mean sea level'
-        'height above ground'
-        'height below ground'
-        'entire atmosphere (considered as a single layer)'
-        'cloud ceiling'
-        'pressure above ground'
-        
-    23) levels (String, Integer or Float List) - Default=[2] 
-                                                            
-        The pressure, height or depth levels.
-    
-    
-    Returns
-    -------
-    
-    An xarray data array of the GEFS0P25 data specified to the coordinate boundaries and variable list the user specifies. 
-    
-    GEFS0P25 files are saved to f:GEFS0P25/{cat} or in the case of ensemble members f:GEFS0P25/{cat}/{member}
-    
-    Variables
-    ---------
-    
-    'surface_pressure'
-    'total_precipitation'
-    'categorical_snow'
-    'categorical_ice_pellets'
-    'categorical_freezing_rain'
-    'categorical_rain'
-    'time_mean_surface_latent_heat_flux'
-    'time_mean_surface_sensible_heat_flux'
-    'surface_downward_shortwave_radiation_flux'
-    'surface_downward_longwave_radiation_flux'
-    'surface_upward_shortwave_radiation_flux'
-    'surface_upward_longwave_radiation_flux'
-    'orography'
-    'water_equivalent_of_accumulated_snow_depth'
-    'snow_depth'
-    'sea_ice_thickness'
-    'surface_visibility'
-    'surface_wind_gust'
-    'percent_frozen_precipitation'
-    'convective_available_potential_energy'
-    'convective_inhibition'
-    'mslp'
-    'soil_temperature'
-    'volumetric_soil_moisture_content'
-    '2m_temperature'
-    '2m_relative_humidity'
-    '2m_dew_point'
-    'maximum_temperature'
-    'minimum_temperature'
-    '10m_u_wind_component'
-    '10m_v_wind_component'
-    'precipitable_water'
-    'mixed_layer_cape'
-    'mixed_layer_cin'
-    '3km_helicity'
-    
-    """
-    
-    if final_forecast_hour > 240:
-        final_forecast_hour = 240
-    
-    try:
-        ds = _gefs_0p25_client(cat=cat, 
-             final_forecast_hour=final_forecast_hour, 
-             western_bound=western_bound, 
-             eastern_bound=eastern_bound, 
-             northern_bound=northern_bound, 
-             southern_bound=southern_bound, 
-             proxies=proxies, 
-             step=step, 
-             members=members,
-             process_data=process_data,
-             clear_recycle_bin=clear_recycle_bin,
-             variables=variables,
-            convert_temperature=convert_temperature,
-            convert_to=convert_to,
-            custom_directory=custom_directory,
-            chunk_size=chunk_size,
-            notifications=notifications,
-            clear_data=clear_data,
-            source=source,
-            level_type=level_type,
-            levels=levels)
-        
-        rotate = False
-    except Exception as e:
-        rotate = True
-        
-    if rotate == True:
-        if source == 'noaa':
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to Amazon AWS Server.")
-            
-            try:
-                ds = _gefs_0p25_client(cat=cat, 
-                                    final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    proxies=proxies, 
-                                    step=step, 
-                                    members=members,
-                                    process_data=process_data,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    variables=variables,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    custom_directory=custom_directory,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='aws',
-                                    level_type=level_type,
-                                    levels=levels)
-                rotate = False
-            except Exception as e:
-                rotate = True
-                
-        if source == 'aws':
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to NOAA/NCEP/NOMADS Server.")
-            
-            try:
-                ds = _gefs_0p25_client(cat=cat, 
-                                    final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    proxies=proxies, 
-                                    step=step, 
-                                    members=members,
-                                    process_data=process_data,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    variables=variables,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    custom_directory=custom_directory,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='noaa',
-                                    level_type=level_type,
-                                    levels=levels)
-                rotate = False
-            except Exception as e:
-                rotate = True
-                
-        else:
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to NOAA/NCEP/NOMADS Server.")
-            
-            try:
-                ds = _gefs_0p25_client(cat=cat, 
-                                    final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    proxies=proxies, 
-                                    step=step, 
-                                    members=members,
-                                    process_data=process_data,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    variables=variables,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    custom_directory=custom_directory,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='noaa',
-                                    level_type=level_type,
-                                    levels=levels)
-                rotate = False
-            except Exception as e:
-                rotate = True
-    
-    else:
-        pass
-    
-    if rotate == True:
-        if source == 'noaa':
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to Google Cloud Server.")
-            
-            try:
-                ds = _gefs_0p25_client(cat=cat, 
-                                    final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    proxies=proxies, 
-                                    step=step, 
-                                    members=members,
-                                    process_data=process_data,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    variables=variables,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    custom_directory=custom_directory,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='google',
-                                    level_type=level_type,
-                                    levels=levels)
-                rotate = False
-            except Exception as e:
-                rotate = True
-                
-        if source == 'aws':
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to Google Cloud Server.")
-            
-            try:
-                ds = _gefs_0p25_client(cat=cat, 
-                                    final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    proxies=proxies, 
-                                    step=step, 
-                                    members=members,
-                                    process_data=process_data,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    variables=variables,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    custom_directory=custom_directory,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='google',
-                                    level_type=level_type,
-                                    levels=levels)
-                rotate = False
-            except Exception as e:
-                rotate = True
-                
-        else:
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to Amazon AWS Server.")
-            
-            try:
-                ds = _gefs_0p25_client(cat=cat, 
-                                    final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    proxies=proxies, 
-                                    step=step, 
-                                    members=members,
-                                    process_data=process_data,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    variables=variables,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    custom_directory=custom_directory,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='aws',
-                                    level_type=level_type,
-                                    levels=levels)
-                rotate = False
-            except Exception as e:
-                print("Client cannot connect to any server.")
-                _version_warning()
-                print("System Exit.")
-                _sys.exit(1)
-    
-    else:
-        pass
-    
-    return ds
-
-
-def gefs_0p25(date,
-              run,
-             cat='mean', 
-             final_forecast_hour=384, 
-             western_bound=-180, 
-             eastern_bound=180, 
-             northern_bound=90, 
-             southern_bound=-90, 
-             proxies=None, 
-             step=3, 
-             members=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-                      11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-                      21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
-             process_data=True,
-             clear_recycle_bin=False,
-             variables=['geopotential height'],
             convert_temperature=True,
             convert_to='celsius',
             chunk_size=8192,
             notifications='off',
             source='aws',
-            level_type='pressure',
-            levels=[500]):
+            level_type='height above ground',
+            levels=[2]):
     
     """
     This function downloads the latest GEFS0P50 data for a region specified by the user
@@ -2846,29 +2408,30 @@ def gefs_0p25(date,
     
     source = source.lower()
     
-    try:
-        if process_data == True:
-            ds = _gefs_0p25_client(date,
-                                    run,
-                                    cat=cat, 
-                final_forecast_hour=final_forecast_hour, 
-                western_bound=western_bound, 
-                eastern_bound=eastern_bound, 
-                northern_bound=northern_bound, 
-                southern_bound=southern_bound, 
-                proxies=proxies, 
-                step=step, 
-                members=members,
-                process_data=process_data,
-                clear_recycle_bin=clear_recycle_bin,
-                variables=variables,
-                convert_temperature=convert_temperature,
-                convert_to=convert_to,
-                chunk_size=chunk_size,
-                notifications=notifications,
-                source=source,
-                level_type=level_type,
-                levels=levels)
+    #try:
+    if process_data == True:
+        ds = _gefs_0p25_client(date,
+                                run,
+                                cat=cat, 
+            final_forecast_hour=final_forecast_hour, 
+            western_bound=western_bound, 
+            eastern_bound=eastern_bound, 
+            northern_bound=northern_bound, 
+            southern_bound=southern_bound, 
+            proxies=proxies, 
+            step=step, 
+            members=members,
+            process_data=process_data,
+            clear_recycle_bin=clear_recycle_bin,
+            variables=variables,
+            convert_temperature=convert_temperature,
+            convert_to=convert_to,
+            chunk_size=chunk_size,
+            notifications=notifications,
+            source=source,
+            level_type=level_type,
+            levels=levels)
+    """
             
         else:
             _gefs_0p25_client(date,
@@ -3002,7 +2565,7 @@ def gefs_0p25(date,
                     print(f"Error: Data unavailible for {date} {run}z. - System Exit.")
                 _sys.exit(1)
                 
-                
+    """
     if process_data == True:
         return ds
     else:

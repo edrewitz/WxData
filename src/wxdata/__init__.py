@@ -49,6 +49,17 @@ These functions do the following:
 
 ***********************************************************************************************
 """
+
+# Global Ensemble Forecast System (GEFS)
+# - GEFS 0.5x0.5 Degree Primary Parameters
+# - GEFS 0.5x0.5 Degree Secondary Parameters
+# - GEFS 0.25x0.25 Degree
+from wxdata.archived_data.model_data.noaa.gefs.gefs import(
+    gefs_0p50 as archived_gefs_0p50,
+    gefs_0p50_secondary_parameters as archived_gefs_0p50_secondary_parameters,
+    gefs_0p25 as archived_gefs_0p25
+)
+
 # Climate Forecast System (CFS)
 # - CFS Flux Products
 # - CFS Pressure Products

@@ -1251,7 +1251,7 @@ def _gefs_0p25_client(date,
                                                 notifications=notifications,
                                                 clear_recycle_bin=clear_recycle_bin)   
                     
-                elif i >= 102 and i < (240 + step):
+                else:
                     byte_range_request(f"{url}ge{aa}.t{run}z.pgrb2s.0p25.f{i}",
                                                 f"{url}ge{aa}.t{run}z.pgrb2s.0p25.f{i}.idx",
                                                 variables,
@@ -1264,23 +1264,7 @@ def _gefs_0p25_client(date,
                                                 notifications=notifications,
                                                 clear_recycle_bin=clear_recycle_bin)    
                     
-                else:
-                    cont = True
-                    break
-                
-            if cont == True:
-                for i in range(240, final_forecast_hour + 6, 6):
-                    byte_range_request(f"{url}ge{aa}.t{run}z.pgrb2s.0p25.f{i}",
-                                                f"{url}ge{aa}.t{run}z.pgrb2s.0p25.f{i}.idx",
-                                                variables,
-                                                levels,
-                                                level_type,
-                                                path,
-                                                f"ge{aa}.t{run}z.pgrb2s.0p25.f{i}.grib2",
-                                                proxies=proxies,
-                                                chunk_size=chunk_size,
-                                                notifications=notifications,
-                                                clear_recycle_bin=clear_recycle_bin) 
+
             else:
                 pass                                                                
                             
@@ -1331,7 +1315,7 @@ def _gefs_0p25_client(date,
                                                 notifications=notifications,
                                                 clear_recycle_bin=clear_recycle_bin)   
                     
-                elif i >= 102 and i < (240 + step):
+                else:
                     byte_range_request(f"{url}ge{a}.t{run}z.pgrb2s.0p25.f{i}",
                                                 f"{url}ge{a}.t{run}z.pgrb2s.0p25.f{i}.idx",
                                                 variables,
@@ -1344,23 +1328,6 @@ def _gefs_0p25_client(date,
                                                 notifications=notifications,
                                                 clear_recycle_bin=clear_recycle_bin)    
                     
-                else:
-                    cont = True
-                    break
-                
-            if cont == True:
-                for i in range(240, final_forecast_hour + 6, 6):
-                    byte_range_request(f"{url}ge{a}.t{run}z.pgrb2s.0p25.f{i}",
-                                                f"{url}ge{a}.t{run}z.pgrb2s.0p25.f{i}.idx",
-                                                variables,
-                                                levels,
-                                                level_type,
-                                                path,
-                                                f"ge{a}.t{run}z.pgrb2s.0p25.f{i}.grib2",
-                                                proxies=proxies,
-                                                chunk_size=chunk_size,
-                                                notifications=notifications,
-                                                clear_recycle_bin=clear_recycle_bin) 
             else:
                 pass  
                         

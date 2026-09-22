@@ -902,102 +902,211 @@ def byte_range_request(grib_url,
         pass
 
     variables = _key_list(variables)
+    
+    try:
 
-    if proxies == None:
-        try:
-            idx_text = _requests.get(idx_url).text
-        except Exception as e:
-            for i in range(0, 10, 1):
-                print(f"Client lost connection to server - Waiting 30 seconds and trying again.")
-                _time.sleep(30)
-                try:
-                    idx_text = _requests.get(idx_url).text
-                    break
-                except Exception as e:
-                    i = i
-                    if i >= 9:
-                        print(f"Client cannot establish connection to server - System Exit.")
-                        _sys.exit(1)
+        if proxies == None:
+            try:
+                idx_text = _requests.get(idx_url).text
+            except Exception as e:
+                for i in range(0, 10, 1):
+                    print(f"Client lost connection to server - Waiting 30 seconds and trying again.")
+                    _time.sleep(30)
+                    try:
+                        idx_text = _requests.get(idx_url).text
+                        break
+                    except Exception as e:
+                        i = i
+                        if i >= 9:
+                            print(f"Client cannot establish connection to server - System Exit.")
+                            _sys.exit(1)
+                        
+        else:
+            try:
+                idx_text = _requests.get(idx_url, proxies=proxies).text
+            except Exception as e:
+                for i in range(0, 10, 1):
+                    print(f"Client lost connection to server - Waiting 30 seconds and trying again.")
+                    _time.sleep(30)
+                    try:
+                        idx_text = _requests.get(idx_url, proxies=proxies).text
+                        break
+                    except Exception as e:
+                        i = i
+                        if i >= 9:
+                            print(f"Client cannot establish connection to server - System Exit.")
+                            _sys.exit(1)
+            
+        records = []
+        for line in idx_text.strip().splitlines():
+            parts = line.split(':')
+            try:
+                msg_no = int(parts[0])
+            except Exception as e:
+                msg_no = float(parts[0])
+            try:
+                offset = int(parts[1])
+            except Exception as e:
+                offset = float(parts[1])
+            var = parts[3]
+            lev = parts[4]
+            records.append({
+                "msg": msg_no,
+                "offset": offset,
+                "var": var,
+                "lev": lev
+            })
+            
+        req_levels, levels = _get_level_expression(levels,
+                                                    level_type)
+        
+        if levels is not None:
+            reqs = list(_itertools.product(variables, req_levels))
+        else:
+            reqs = []
+            for v in variables:
+                req = (v, req_levels)
+                reqs.append(req)
+
+        ranges = {}
+        for v, l in reqs:
+            matches = [r for r in records if r["var"] == v and r["lev"] == l]
+            if not matches:
+                print(f"{v} is not a valid variable OR {l} is not a valid level.")
+                print(f"Please visit {idx_url} to look at the variables in the GRIB file meta-data")
+                _sys.exit(1)
+            else:
+                pass
+
+            rec = matches[0]
+            start = rec["offset"]
+
+            idx = records.index(rec)
+            if idx < len(records) - 1:
+                end = records[idx + 1]["offset"] - 1
+            else:
+                end = None
+
+            ranges[(v, l)] = (start, end)
+        
+        _download_grib_data_by_byte_range(ranges,
+                                chunk_size,
+                                path,
+                                filename,
+                                grib_url,
+                                start,
+                                end,
+                                proxies)
+        
+        if notifications == 'on':
+            print(f"{filename} saved to {path}")
+            
+    except Exception as e:
+        print(f"Error: An issue occurred parsing the index file.")
+        print(f"Waiting 30 seconds and trying again in case this was from redirects.")
+        for i in range(0, 10, 1):
+            _time.sleep(30)
+            try:
+                
+                if proxies == None:
+                    try:
+                        idx_text = _requests.get(idx_url).text
+                    except Exception as e:
+                        for i in range(0, 10, 1):
+                            print(f"Client lost connection to server - Waiting 30 seconds and trying again.")
+                            _time.sleep(30)
+                            try:
+                                idx_text = _requests.get(idx_url).text
+                                break
+                            except Exception as e:
+                                i = i
+                                if i >= 9:
+                                    print(f"Client cannot establish connection to server - System Exit.")
+                                    _sys.exit(1)
+                                
+                else:
+                    try:
+                        idx_text = _requests.get(idx_url, proxies=proxies).text
+                    except Exception as e:
+                        for i in range(0, 10, 1):
+                            print(f"Client lost connection to server - Waiting 30 seconds and trying again.")
+                            _time.sleep(30)
+                            try:
+                                idx_text = _requests.get(idx_url, proxies=proxies).text
+                                break
+                            except Exception as e:
+                                i = i
+                                if i >= 9:
+                                    print(f"Client cannot establish connection to server - System Exit.")
+                                    _sys.exit(1)
                     
-    else:
-        try:
-            idx_text = _requests.get(idx_url, proxies=proxies).text
-        except Exception as e:
-            for i in range(0, 10, 1):
-                print(f"Client lost connection to server - Waiting 30 seconds and trying again.")
-                _time.sleep(30)
-                try:
-                    idx_text = _requests.get(idx_url, proxies=proxies).text
-                    break
-                except Exception as e:
-                    i = i
-                    if i >= 9:
-                        print(f"Client cannot establish connection to server - System Exit.")
+                records = []
+                for line in idx_text.strip().splitlines():
+                    parts = line.split(':')
+                    try:
+                        msg_no = int(parts[0])
+                    except Exception as e:
+                        msg_no = float(parts[0])
+                    try:
+                        offset = int(parts[1])
+                    except Exception as e:
+                        offset = float(parts[1])
+                    var = parts[3]
+                    lev = parts[4]
+                    records.append({
+                        "msg": msg_no,
+                        "offset": offset,
+                        "var": var,
+                        "lev": lev
+                    })
+                    
+                req_levels, levels = _get_level_expression(levels,
+                                                            level_type)
+                
+                if levels is not None:
+                    reqs = list(_itertools.product(variables, req_levels))
+                else:
+                    reqs = []
+                    for v in variables:
+                        req = (v, req_levels)
+                        reqs.append(req)
+
+                ranges = {}
+                for v, l in reqs:
+                    matches = [r for r in records if r["var"] == v and r["lev"] == l]
+                    if not matches:
+                        print(f"{v} is not a valid variable OR {l} is not a valid level.")
+                        print(f"Please visit {idx_url} to look at the variables in the GRIB file meta-data")
                         _sys.exit(1)
-        
-    records = []
-    for line in idx_text.strip().splitlines():
-        parts = line.split(':')
-        try:
-            msg_no = int(parts[0])
-        except Exception as e:
-            msg_no = float(parts[0])
-        try:
-            offset = int(parts[1])
-        except Exception as e:
-            offset = float(parts[1])
-        var = parts[3]
-        lev = parts[4]
-        records.append({
-            "msg": msg_no,
-            "offset": offset,
-            "var": var,
-            "lev": lev
-        })
-        
-    req_levels, levels = _get_level_expression(levels,
-                                                level_type)
-    
-    if levels is not None:
-        reqs = list(_itertools.product(variables, req_levels))
-    else:
-        reqs = []
-        for v in variables:
-            req = (v, req_levels)
-            reqs.append(req)
+                    else:
+                        pass
 
-    ranges = {}
-    for v, l in reqs:
-        matches = [r for r in records if r["var"] == v and r["lev"] == l]
-        if not matches:
-            print(f"{v} is not a valid variable OR {l} is not a valid level.")
-            print(f"Please visit {idx_url} to look at the variables in the GRIB file meta-data")
-            _sys.exit(1)
-        else:
-            pass
+                    rec = matches[0]
+                    start = rec["offset"]
 
-        rec = matches[0]
-        start = rec["offset"]
+                    idx = records.index(rec)
+                    if idx < len(records) - 1:
+                        end = records[idx + 1]["offset"] - 1
+                    else:
+                        end = None
 
-        idx = records.index(rec)
-        if idx < len(records) - 1:
-            end = records[idx + 1]["offset"] - 1
-        else:
-            end = None
-
-        ranges[(v, l)] = (start, end)
-    
-    _download_grib_data_by_byte_range(ranges,
-                             chunk_size,
-                             path,
-                             filename,
-                             grib_url,
-                             start,
-                             end,
-                             proxies)
-    
-    if notifications == 'on':
-        print(f"{filename} saved to {path}")
+                    ranges[(v, l)] = (start, end)
+                
+                _download_grib_data_by_byte_range(ranges,
+                                        chunk_size,
+                                        path,
+                                        filename,
+                                        grib_url,
+                                        start,
+                                        end,
+                                        proxies)
+                
+                if notifications == 'on':
+                    print(f"{filename} saved to {path}")
+                    
+                break
+            except Exception as e:
+                i = i
         
     
         

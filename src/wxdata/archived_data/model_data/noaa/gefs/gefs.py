@@ -1281,13 +1281,15 @@ def _gefs_0p25_client(date,
         for member in members:
             fpath = f"{path}/{date.strftime('%Y%m%d')}/{run}/{cat.upper()}/{member}" 
             paths.append(fpath)   
-        
-        for path, a in zip(paths, aa):
+       
+        for path in paths:     
             try:
                 for file in _os.listdir(f"{path}"):
                     _os.remove(f"{path}/{file}")
             except Exception as e:
                 pass
+        
+        for path, a in zip(paths, aa):
             for i in range(0, final_forecast_hour + step, step):
                 if i < 10:
                     byte_range_request(f"{url}ge{a}.t{run}z.pgrb2s.0p25.f00{i}",

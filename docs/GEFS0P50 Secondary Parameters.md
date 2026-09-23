@@ -168,8 +168,8 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
 16) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
     Set convert_to='fahrenheit' for Fahrenheit. 
     
-17) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
-    Default = f:ECMWF/IFS/WAVE
+17) custom_directory (String or None) - Default=None. The directory path where the GEFS0P50 Secondary Parameters files will be saved to.
+        Default = f:GEFS SECONDARY PARAMETERS/{cat}
     
 18) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
 

@@ -1002,8 +1002,6 @@ def byte_range_request(grib_url,
             print(f"{filename} saved to {path}")
             
     except Exception as e:
-        print(f"Error: An issue occurred parsing the index file.")
-        print(f"Waiting 30 seconds and trying again in case this was from redirects.")
         for i in range(0, 10, 1):
             _time.sleep(30)
             try:

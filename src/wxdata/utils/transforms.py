@@ -38,7 +38,11 @@ def grib_to_netcdf(ds,
         _os.makedirs(path, exist_ok=True)
         
         ds.to_netcdf(f"{path}/{filename}")
+        
+        print(f"{filename} saved to {path}")
     except Exception as e:
         _os.makedirs(path, exist_ok=True)
         
         ds.to_netcdf(f"{path}/{filename}")
+        
+        print(f"{filename} saved to {path}")

@@ -9,6 +9,7 @@ import warnings as _warnings
 _warnings.filterwarnings('ignore')
 import wxdata.post_processors.cmc_post_processing as _cmc_post_processing
 
+from wxdata.utils.transforms import grib_to_netcdf as _grib_to_netcdf
 from wxdata.model_data.cmc.utils.file_scanner import scan_local_machine as _scan_local_machine
 from wxdata.model_data.cmc.gdps.url_scanner import gdps_url_scanner as _gdps_url_scanner
 from wxdata.model_data.cmc.utils.cmc_keys import gdps_rdps_variable_keys as _gdps_rdps_variable_keys
@@ -652,7 +653,11 @@ def gdps(final_forecast_hour=240,
              clear_data=False,
             variable='geopotential height',
             level=500,
-            layer=[1000, 500]):
+            layer=[1000, 500],
+            to_netcdf=False,
+            netcdf_path=f"GDPS/NETCDF",
+            netcdf_filename=f"geopotential_height.nc",
+            return_values=True):
     
     """
     This function retrieves the latest GDPS data from https://dd.weather.gc.ca/ and returns an xarray.array of specified data.
@@ -687,9 +692,7 @@ def gdps(final_forecast_hour=240,
     9) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
         with each run of the program you are calling WxData. This setting is to help preserve memory on the machine.
         
-    10) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
-       data via their own external method, set process_data=False which means the data will be downloaded but not processed and no values
-       returned to the user.
+    10) process_data (Boolean) - Default=True. When set to True, WxData will clean up and decode the GRIB2 keys into plain language.
        
     11) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
@@ -729,6 +732,15 @@ def gdps(final_forecast_hour=240,
         level_type='pressure layer': -> layer=[lower level, upper level] (i.e. layer=[1000, 500] for 1000mb to 500mb layer).
         
         level_type='depth below surface': -> layer=[upper level, lower level] (i.e. layer=[0, 10] for 0cm to 10cm below the surface).
+        
+    20) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    
+    21) netcdf_path (String) - Default='GDPS/NETCDF". The directory where the converted netCDF (.nc) file will be written to.
+    
+    22) netcdf_filename (String) - Default='geopotential_height.nc'. The name of the netCDF (.nc) file. A good practice is to 
+        name this netCDF file using the variable name. 
+        
+    23) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
     
     
     ***Variables & Proper level_type & level***
@@ -1209,7 +1221,18 @@ def gdps(final_forecast_hour=240,
                 print(f"GDPS Data Processing Complete: {variable.upper()} - {layer[0]}to{layer[1]}cm")
         else:
             print(f"GDPS Data Processing Complete: {variable.upper()} - surface")
-        return ds
+            
+        if to_netcdf == True:
+            _grib_to_netcdf(ds,
+                            netcdf_path,
+                            netcdf_filename)
+        else:
+            pass
+        
+        if return_values == True:    
+            return ds
+        else:
+            pass
     else:
         pass
                 

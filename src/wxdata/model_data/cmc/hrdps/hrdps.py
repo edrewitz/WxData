@@ -9,6 +9,7 @@ import warnings as _warnings
 _warnings.filterwarnings('ignore')
 import wxdata.post_processors.cmc_post_processing as _cmc_post_processing
 
+from wxdata.utils.transforms import grib_to_netcdf as _grib_to_netcdf
 from wxdata.model_data.cmc.utils.file_scanner import scan_local_machine as _scan_local_machine
 from wxdata.model_data.cmc.hrdps.url_scanner import hrdps_url_scanner as _hrdps_url_scanner
 from wxdata.model_data.cmc.utils.cmc_keys import hrdps_variable_keys as _hrdps_variable_keys
@@ -673,7 +674,12 @@ def hrdps(final_forecast_hour=48,
              clear_data=False,
             variable='geopotential height',
             level=500,
-            layer=[1000, 500]):
+            layer=[1000, 500],
+            to_netcdf=False,
+            netcdf_path=f"HRDPS/NETCDF",
+            netcdf_filename=f"geopotential_height.nc",
+            delete_previous_netcdf_file=True,
+            return_values=True):
     
     """
     This function retrieves the latest HRDPS data from https://dd.weather.gc.ca/ and returns an xarray.array of specified data.
@@ -744,6 +750,17 @@ def hrdps(final_forecast_hour=48,
         
         level_type='depth below surface': -> layer=[upper level, lower level] (i.e. layer=[0, 10] for 0cm to 10cm below the surface).
     
+    16) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    
+    17) netcdf_path (String) - Default='HRDPS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    
+    18) netcdf_filename (String) - Default='geopotential_height.nc'. The name of the netCDF (.nc) file. A good practice is to 
+        name this netCDF file using the variable name. 
+        
+    19) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+        new netCDF file. For users who want to archive all data set this to False. 
+        
+    20) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
     
     ***Variables & Proper level_type & level***
     

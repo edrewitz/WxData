@@ -1254,7 +1254,24 @@ def hrdps(final_forecast_hour=48,
                 print(f"HRDPS Data Processing Complete: {variable.upper()} - {layer[0]}to{layer[1]}cm")
         else:
             print(f"HRDPS Data Processing Complete: {variable.upper()} - surface")
-        return ds
+        if to_netcdf == True:
+            
+            if delete_previous_netcdf_file == True:
+                try:
+                    _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                except Exception as e:
+                    pass
+            
+            _grib_to_netcdf(ds,
+                            netcdf_path,
+                            netcdf_filename)
+        else:
+            pass
+        
+        if return_values == True:    
+            return ds
+        else:
+            pass
     else:
         pass
                 

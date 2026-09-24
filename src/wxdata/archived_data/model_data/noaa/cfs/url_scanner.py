@@ -28,7 +28,7 @@ def cfs_flux_url_scanner(date,
     
     Required Arguments:
     
-    1) date (String or datetime) - The date of the model run.
+    1) date (String or datetime) - The date of the model run. Format: "YYYY-mm-dd".
     
     2) run (Integer) - The model runtime in UTC (0, 6, 12, 18).
     
@@ -52,6 +52,7 @@ def cfs_flux_url_scanner(date,
     """
     
     if type(date) != type(start):
+        date = f"{date[0:4]}{date[5:7]}{date[8:10]}"
         date = datetime.strptime(date, "%Y%m%d")
     else:
         date = date

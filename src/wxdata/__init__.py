@@ -338,6 +338,9 @@ from wxdata.utils.tools import(
 # This function executes a list of Python scripts in the order the user lists them
 from wxdata.utils.scripts import run_external_scripts
 
+# This function transforms an xarray.array in GRIB2 format to netCDF4 format and writes a netCDF (.nc) file to a user-specified file path. 
+from wxdata.utils.transforms import grib_to_netcdf
+
 """
 ***************************************************************************
 

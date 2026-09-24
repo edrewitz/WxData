@@ -674,6 +674,30 @@ def process_rtma_data(
                 
         ds1 = _shift_longitude_regrid(ds1)
         
+        ds1 = ds1.rename("field")
+        ds1 = ds1.to_dataset()
+        keep = {"time", "latitude", "longitude"}
+        coords_to_convert = [c for c in ds1.coords if c not in keep]
+
+        ds1 = ds1.reset_coords(names=coords_to_convert, drop=False)
+        
+        ds1 = ds1.drop_vars("field")
+        
+        ds1['orography'] = ds1['orography'].metpy.dequantify()
+        ds1['surface_pressure'] = ds1['surface_pressure'].metpy.dequantify()
+        ds1['2m_temperature'] = ds1['2m_temperature'].metpy.dequantify()
+        ds1['2m_dew_point'] = ds1['2m_dew_point'].metpy.dequantify()
+        ds1['2m_relative_humidity'] = ds1['2m_relative_humidity'].metpy.dequantify()
+        ds1['2m_specific_humidity'] = ds1['2m_specific_humidity'].metpy.dequantify()
+        ds1['surface_visibility'] = ds1['surface_visibility'].metpy.dequantify()
+        ds1['cloud_ceiling_height'] = ds1['cloud_ceiling_height'].metpy.dequantify()
+        ds1['total_cloud_cover'] = ds1['total_cloud_cover'].metpy.dequantify()
+        ds1['10m_u_wind_component'] = ds1['10m_u_wind_component'].metpy.dequantify()
+        ds1['10m_v_wind_component'] = ds1['10m_v_wind_component'].metpy.dequantify()
+        ds1['10m_wind_direction'] = ds1['10m_wind_direction'].metpy.dequantify()
+        ds1['10m_wind_speed'] = ds1['10m_wind_speed'].metpy.dequantify()
+        ds1['10m_wind_gust'] = ds1['10m_wind_gust'].metpy.dequantify()
+        
         return ds1
         
     else:

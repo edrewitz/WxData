@@ -247,6 +247,20 @@ def _FIX_1D_GRIB_DATA(ds_short,
     
     ds_extended = _xr.DataArray(ds_list_extended, coords=extended_coords, dims=dims)
     
+    ds_short = ds_short.rename(varKey)
+    ds_short = ds_short.to_dataset()
+    keep = {"step", "latitude", "longitude"}
+    coords_to_convert = [c for c in ds_short.coords if c not in keep]
+
+    ds_short = ds_short.reset_coords(names=coords_to_convert, drop=False)
+    
+    ds_extended = ds_extended.rename(varKey)
+    ds_extended = ds_extended.to_dataset()
+    keep = {"step", "latitude", "longitude"}
+    coords_to_convert = [c for c in ds_extended.coords if c not in keep]
+
+    ds_extended = ds_extended.reset_coords(names=coords_to_convert, drop=False)
+    
     return ds_short, ds_extended
 
 def _get_parameters(parameter):

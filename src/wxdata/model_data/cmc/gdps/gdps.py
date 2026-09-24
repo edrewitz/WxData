@@ -736,7 +736,7 @@ def gdps(final_forecast_hour=240,
         
     20) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
     
-    21) netcdf_path (String) - Default='GDPS/NETCDF". The directory where the converted netCDF (.nc) file will be written to.
+    21) netcdf_path (String) - Default='GDPS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
     
     22) netcdf_filename (String) - Default='geopotential_height.nc'. The name of the netCDF (.nc) file. A good practice is to 
         name this netCDF file using the variable name. 

@@ -657,6 +657,7 @@ def gdps(final_forecast_hour=240,
             to_netcdf=False,
             netcdf_path=f"GDPS/NETCDF",
             netcdf_filename=f"geopotential_height.nc",
+            delete_previous_netcdf_file=True,
             return_values=True):
     
     """
@@ -740,7 +741,10 @@ def gdps(final_forecast_hour=240,
     22) netcdf_filename (String) - Default='geopotential_height.nc'. The name of the netCDF (.nc) file. A good practice is to 
         name this netCDF file using the variable name. 
         
-    23) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+    23) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+        new netCDF file. For users who want to archive all data set this to False. 
+        
+    24) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
     
     
     ***Variables & Proper level_type & level***
@@ -1223,6 +1227,13 @@ def gdps(final_forecast_hour=240,
             print(f"GDPS Data Processing Complete: {variable.upper()} - surface")
             
         if to_netcdf == True:
+            
+            if delete_previous_netcdf_file == True:
+                try:
+                    _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                except Exception as e:
+                    pass
+            
             _grib_to_netcdf(ds,
                             netcdf_path,
                             netcdf_filename)

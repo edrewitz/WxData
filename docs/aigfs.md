@@ -86,14 +86,11 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
 12) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
     Set convert_to='fahrenheit' for Fahrenheit. 
     
-13) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
-    Default = f:ECMWF/IFS/WAVE
-    
-14) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+13) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
 
-15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+14) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
 
-16) level_type (String) - Default='pressure'. The type of level the data is in.
+15) level_type (String) - Default='pressure'. The type of level the data is in.
     
         Types of Levels
         ---------------
@@ -101,10 +98,10 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
         1) pressure
         2) surface
     
-17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
     When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
         
-18) variables (String List) level_type must be set to pressure -> `level_type='pressure'` - Default=['geopotential height',
+17) variables (String List) level_type must be set to pressure -> `level_type='pressure'` - Default=['geopotential height',
                                                                   'specific humidity',
                                                                   'temperature',
                                                                   'u-component of wind',
@@ -114,7 +111,7 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
 When the level_type = 'pressure', the user can filter by variable to the variable they want. (Surface level files are very small 
 compared to pressure level files).
         
-19) levels (Integer List) level_type must be set to pressure -> `level_type='pressure'`
+18) levels (Integer List) level_type must be set to pressure -> `level_type='pressure'`
                                                             Default=[1000,
                                                                       925,
                                                                       850,

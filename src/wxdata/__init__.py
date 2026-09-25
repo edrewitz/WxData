@@ -64,9 +64,9 @@ from wxdata.archived_data.model_data.noaa.gefs.gefs import(
 # - CFS Flux Products
 # - CFS Pressure Products
 from wxdata.archived_data.model_data.noaa.cfs.cfs import(
-    get_archived_cfs_flux
+    get_archived_cfs_flux,
+    get_archived_cfs_pressure
 )
-
 
 
 """

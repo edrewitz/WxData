@@ -131,16 +131,14 @@ proxies=None ---> proxies={
 16) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
     Set convert_to='fahrenheit' for Fahrenheit. 
     
-17) custom_directory (String or None) - Default=None. The directory path where the GEFS0P25 files will be saved to.
-    
-18) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+17) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
 
-19) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+18) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
 
-20) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+19) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
     When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
 
-21) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+20) source (String) - Default='noaa'. The data server the user wants to connect the client to.
 
     Server List
     -----------
@@ -149,7 +147,7 @@ proxies=None ---> proxies={
     2) Amazon AWS - source='aws'
     3) Google Cloud - source='google'
     
-22) level_type (String) - Default='height above ground'. The type of level for the variable.
+21) level_type (String) - Default='height above ground'. The type of level for the variable.
 
         Level Types
         -----------
@@ -162,7 +160,7 @@ proxies=None ---> proxies={
         'cloud ceiling'
         'pressure above ground'
     
-23) levels (String, Integer or Float List) - Default=[2] 
+22) levels (String, Integer or Float List) - Default=[2] 
                                                         
     The pressure, height or depth levels.
     

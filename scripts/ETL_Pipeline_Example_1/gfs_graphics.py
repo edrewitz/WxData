@@ -82,15 +82,41 @@ for i in range(0, len(ds['step']), 1):
     
     # Add our 850mb temperature contours converted to Celsius from Kelvin
     # Let's also apply smooth_gaussian() from metpy.calc to smooth our contour lines
-    c = ax.contour(ds['longitude'], 
+    # Let's have black solid contours for above freezing temperatures
+    # Let's have a solid thicker grey line for the 0°C isotherm
+    # Let's have white dashed contours for below freezing temperatures
+    
+    # Isotherms for 850mb T > 0°C
+    c_above = ax.contour(ds['longitude'], 
                    ds['latitude'], 
                    (mpcalc.smooth_gaussian(ds['temperature'][i, :, :] - 273.15, n=8)), 
-                   levels=np.arange(-10, 35, 5), 
+                   levels=np.arange(0, 35, 5), 
                    transform=ccrs.PlateCarree(), 
                    colors='black', 
                    linewidths=0.75)
     
-    ax.clabel(c, fontsize=6, inline=True)
+    # Isotherm for 850mb T = 0°C
+    c_0_deg = ax.contour(ds['longitude'], 
+                   ds['latitude'], 
+                   (mpcalc.smooth_gaussian(ds['temperature'][i, :, :] - 273.15, n=8)), 
+                   levels=[0], 
+                   transform=ccrs.PlateCarree(), 
+                   colors='grey', 
+                   linewidths=1.5)
+    
+    # Isotherms for 850mb T < 0°C
+    c_below = ax.contour(ds['longitude'], 
+                   ds['latitude'], 
+                   (mpcalc.smooth_gaussian(ds['temperature'][i, :, :] - 273.15, n=8)), 
+                   levels=np.arange(-40, 0, 5), 
+                   transform=ccrs.PlateCarree(), 
+                   colors='white', 
+                   linestyles='dashed',
+                   linewidths=0.75)
+    
+    ax.clabel(c_above, fontsize=6, inline=True)
+    ax.clabel(c_0_deg, fontsize=6, inline=True)
+    ax.clabel(c_below, fontsize=6, inline=True)
     # Add our filled contours for 850mb temperature converted to Celsius from Kelvin
     cs = ax.contourf(ds['longitude'], 
                    ds['latitude'], 

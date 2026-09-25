@@ -14,6 +14,7 @@ import warnings as _warnings
 import wxdata.post_processors.gfs_post_processing as _gfs_post_processing
 _warnings.filterwarnings('ignore')
 
+from wxdata.utils.transforms import grib_to_netcdf as _grib_to_netcdf
 from wxdata.model_data.noaa.gfs.paths import build_directory as _build_directory
 from wxdata.model_data.noaa.gfs.url_scanners import(
     gfs_0p50_url_scanner as _gfs_0p50_url_scanner,
@@ -1710,7 +1711,12 @@ def gfs_0p25(final_forecast_hour=384,
                     200,
                     100,
                     50,
-                    10]):
+                    10],
+            to_netcdf=False,
+            netcdf_path=f"GFS0P25/NETCDF",
+            netcdf_filename=f"gfs_0p25.nc",
+            delete_previous_netcdf_file=True,
+            return_values=True):
     
     """
     This function downloads GFS0P25 data and saves it to a folder. 
@@ -1858,17 +1864,14 @@ def gfs_0p25(final_forecast_hour=384,
     13) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    14) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
-        Default = f:ECMWF/IFS/WAVE
-        
-    15) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    14) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
-    16) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
         
-    18) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+    17) source (String) - Default='noaa'. The data server the user wants to connect the client to.
     
         Server List
         -----------
@@ -1877,7 +1880,7 @@ def gfs_0p25(final_forecast_hour=384,
         2) Amazon AWS - source='aws'
         3) Google Cloud - source='google'
         
-    19) level_type (String) - Default='pressure'. The type of level for the variable.
+    18) level_type (String) - Default='pressure'. The type of level for the variable.
     
         Level Types
         -----------
@@ -1912,7 +1915,7 @@ def gfs_0p25(final_forecast_hour=384,
         'pressure above ground'
         'potential vorticity surface'
         
-    20) levels (String, Integer or Float List) - Default=[1000,
+    19) levels (String, Integer or Float List) - Default=[1000,
                                                             925,
                                                             850,
                                                             700,
@@ -1926,6 +1929,18 @@ def gfs_0p25(final_forecast_hour=384,
                                                             10]   
                                                             
         The pressure, height or depth levels.
+        
+    20) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    
+    21) netcdf_path (String) - Default='GFS0P25/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    
+    22) netcdf_filename (String) - Default='gfs_0p25.nc'. The name of the netCDF (.nc) file. A good practice is to 
+        name this netCDF file using the variable name. 
+        
+    23) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+        new netCDF file. For users who want to archive all data set this to False. 
+        
+    24) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned.
     
     Returns
     -------
@@ -1974,25 +1989,46 @@ def gfs_0p25(final_forecast_hour=384,
     """
     
     try:
-        ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
-                            western_bound=western_bound, 
-                            eastern_bound=eastern_bound, 
-                            northern_bound=northern_bound, 
-                            southern_bound=southern_bound, 
-                            step=step,
-                            process_data=process_data,
-                            proxies=proxies, 
-                            variables=variables,
-                            custom_directory=custom_directory,
-                            clear_recycle_bin=clear_recycle_bin,
-                            convert_temperature=convert_temperature,
-                            convert_to=convert_to,
-                            chunk_size=chunk_size,
-                            notifications=notifications,
-                            clear_data=clear_data,
-                            source=source,
-                            level_type=level_type,
-                            levels=levels)
+        if process_data == True:
+            ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                                western_bound=western_bound, 
+                                eastern_bound=eastern_bound, 
+                                northern_bound=northern_bound, 
+                                southern_bound=southern_bound, 
+                                step=step,
+                                process_data=process_data,
+                                proxies=proxies, 
+                                variables=variables,
+                                custom_directory=custom_directory,
+                                clear_recycle_bin=clear_recycle_bin,
+                                convert_temperature=convert_temperature,
+                                convert_to=convert_to,
+                                chunk_size=chunk_size,
+                                notifications=notifications,
+                                clear_data=clear_data,
+                                source=source,
+                                level_type=level_type,
+                                levels=levels)
+        else:
+            _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                                western_bound=western_bound, 
+                                eastern_bound=eastern_bound, 
+                                northern_bound=northern_bound, 
+                                southern_bound=southern_bound, 
+                                step=step,
+                                process_data=process_data,
+                                proxies=proxies, 
+                                variables=variables,
+                                custom_directory=custom_directory,
+                                clear_recycle_bin=clear_recycle_bin,
+                                convert_temperature=convert_temperature,
+                                convert_to=convert_to,
+                                chunk_size=chunk_size,
+                                notifications=notifications,
+                                clear_data=clear_data,
+                                source=source,
+                                level_type=level_type,
+                                levels=levels)
         
         rotate = False
     except Exception as e:
@@ -2005,25 +2041,46 @@ def gfs_0p25(final_forecast_hour=384,
             print("Rotating to Amazon AWS Server.")
             
             try:
-                ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    step=step,
-                                    process_data=process_data,
-                                    proxies=proxies, 
-                                    variables=variables,
-                                    custom_directory=custom_directory,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='aws',
-                                    level_type=level_type,
-                                    levels=levels)
+                if process_data == True:
+                    ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='aws',
+                                        level_type=level_type,
+                                        levels=levels)
+                else:
+                    _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                                western_bound=western_bound, 
+                                eastern_bound=eastern_bound, 
+                                northern_bound=northern_bound, 
+                                southern_bound=southern_bound, 
+                                step=step,
+                                process_data=process_data,
+                                proxies=proxies, 
+                                variables=variables,
+                                custom_directory=custom_directory,
+                                clear_recycle_bin=clear_recycle_bin,
+                                convert_temperature=convert_temperature,
+                                convert_to=convert_to,
+                                chunk_size=chunk_size,
+                                notifications=notifications,
+                                clear_data=clear_data,
+                                source='aws',
+                                level_type=level_type,
+                                levels=levels)
                 rotate = False
             except Exception as e:
                 rotate = True
@@ -2034,25 +2091,46 @@ def gfs_0p25(final_forecast_hour=384,
             print("Rotating to NOAA/NCEP/NOMADS Server.")
             
             try:
-                ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    step=step,
-                                    process_data=process_data,
-                                    proxies=proxies, 
-                                    variables=variables,
-                                    custom_directory=custom_directory,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='noaa',
-                                    level_type=level_type,
-                                    levels=levels)
+                if process_data == True:
+                    ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='noaa',
+                                        level_type=level_type,
+                                        levels=levels)
+                else:
+                    _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='noaa',
+                                        level_type=level_type,
+                                        levels=levels)
                 rotate = False
             except Exception as e:
                 rotate = True
@@ -2063,25 +2141,46 @@ def gfs_0p25(final_forecast_hour=384,
             print("Rotating to NOAA/NCEP/NOMADS Server.")
             
             try:
-                ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    step=step,
-                                    process_data=process_data,
-                                    proxies=proxies, 
-                                    variables=variables,
-                                    custom_directory=custom_directory,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='noaa',
-                                    level_type=level_type,
-                                    levels=levels)
+                if process_data == True:
+                    ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='noaa',
+                                        level_type=level_type,
+                                        levels=levels)
+                else:
+                    _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='noaa',
+                                        level_type=level_type,
+                                        levels=levels)
                 rotate = False
             except Exception as e:
                 rotate = True
@@ -2096,25 +2195,46 @@ def gfs_0p25(final_forecast_hour=384,
             print("Rotating to Google Cloud Server.")
             
             try:
-                ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    step=step,
-                                    process_data=process_data,
-                                    proxies=proxies, 
-                                    variables=variables,
-                                    custom_directory=custom_directory,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='google',
-                                    level_type=level_type,
-                                    levels=levels)
+                if process_data == True:
+                    ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='google',
+                                        level_type=level_type,
+                                        levels=levels)
+                else:
+                    _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='google',
+                                        level_type=level_type,
+                                        levels=levels)
                 rotate = False
             except Exception as e:
                 rotate = True
@@ -2125,25 +2245,46 @@ def gfs_0p25(final_forecast_hour=384,
             print("Rotating to Google Cloud Server.")
             
             try:
-                ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    step=step,
-                                    process_data=process_data,
-                                    proxies=proxies, 
-                                    variables=variables,
-                                    custom_directory=custom_directory,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='google',
-                                    level_type=level_type,
-                                    levels=levels)
+                if process_data == True:
+                    ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='google',
+                                        level_type=level_type,
+                                        levels=levels)
+                else:
+                    _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='google',
+                                        level_type=level_type,
+                                        levels=levels)
                 rotate = False
             except Exception as e:
                 rotate = True
@@ -2154,25 +2295,46 @@ def gfs_0p25(final_forecast_hour=384,
             print("Rotating to Amazon AWS Server.")
             
             try:
-                ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    step=step,
-                                    process_data=process_data,
-                                    proxies=proxies, 
-                                    variables=variables,
-                                    custom_directory=custom_directory,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='aws',
-                                    level_type=level_type,
-                                    levels=levels)
+                if process_data == True:
+                    ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='aws',
+                                        level_type=level_type,
+                                        levels=levels)
+                else:
+                    _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='aws',
+                                        level_type=level_type,
+                                        levels=levels)
                 rotate = False
             except Exception as e:
                 print("Client cannot connect to any server.")
@@ -2183,7 +2345,25 @@ def gfs_0p25(final_forecast_hour=384,
     else:
         pass
     
-    return ds
+    if process_data == True:
+        if to_netcdf == True:
+            
+            if delete_previous_netcdf_file == True:
+                try:
+                    _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                except Exception as e:
+                    pass
+            
+            _grib_to_netcdf(ds,
+                            netcdf_path,
+                            netcdf_filename)
+        else:
+            pass
+        
+        if return_values == True:    
+            return ds
+        else:
+            pass
 
 def gfs_0p50(final_forecast_hour=384, 
             western_bound=-180, 
@@ -2239,7 +2419,12 @@ def gfs_0p50(final_forecast_hour=384,
                     5,
                     3,
                     2,
-                    1]):
+                    1],
+            to_netcdf=False,
+            netcdf_path=f"GFS0P50/NETCDF",
+            netcdf_filename=f"gfs_0p50.nc",
+            delete_previous_netcdf_file=True,
+            return_values=True):
     
     """
     This function downloads GFS0P50 data and saves it to a folder. 
@@ -2388,17 +2573,14 @@ def gfs_0p50(final_forecast_hour=384,
     13) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    14) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
-        Default = f:ECMWF/IFS/WAVE
-        
-    15) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    14) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
-    16) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
-    18) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+    17) source (String) - Default='noaa'. The data server the user wants to connect the client to.
     
         Server List
         -----------
@@ -2407,7 +2589,7 @@ def gfs_0p50(final_forecast_hour=384,
         2) Amazon AWS - source='aws'
         3) Google Cloud - source='google'
         
-    19) level_type (String) - Default='pressure'. The type of level for the variable.
+    18) level_type (String) - Default='pressure'. The type of level for the variable.
     
         Level Types
         -----------
@@ -2443,7 +2625,7 @@ def gfs_0p50(final_forecast_hour=384,
         'potential vorticity surface'
         
         
-    20) levels (String, Integer or Float List) - Default=levels=[1000,
+    19) levels (String, Integer or Float List) - Default=levels=[1000,
                                                                     975,
                                                                     950,
                                                                     925,
@@ -2478,6 +2660,18 @@ def gfs_0p50(final_forecast_hour=384,
                                                                     1]
                                                             
         The pressure, height or depth levels.
+        
+    20) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    
+    21) netcdf_path (String) - Default='GFS0P50/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    
+    22) netcdf_filename (String) - Default='gfs_0p50.nc'. The name of the netCDF (.nc) file. A good practice is to 
+        name this netCDF file using the variable name. 
+        
+    23) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+        new netCDF file. For users who want to archive all data set this to False. 
+        
+    24) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned.
     
     Returns
     -------
@@ -2567,25 +2761,46 @@ def gfs_0p50(final_forecast_hour=384,
     """
     
     try:
-        ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
-                            western_bound=western_bound, 
-                            eastern_bound=eastern_bound, 
-                            northern_bound=northern_bound, 
-                            southern_bound=southern_bound, 
-                            step=step,
-                            process_data=process_data,
-                            proxies=proxies, 
-                            variables=variables,
-                            custom_directory=custom_directory,
-                            clear_recycle_bin=clear_recycle_bin,
-                            convert_temperature=convert_temperature,
-                            convert_to=convert_to,
-                            chunk_size=chunk_size,
-                            notifications=notifications,
-                            clear_data=clear_data,
-                            source=source,
-                            level_type=level_type,
-                            levels=levels)
+        if process_data == True:
+            ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                                western_bound=western_bound, 
+                                eastern_bound=eastern_bound, 
+                                northern_bound=northern_bound, 
+                                southern_bound=southern_bound, 
+                                step=step,
+                                process_data=process_data,
+                                proxies=proxies, 
+                                variables=variables,
+                                custom_directory=custom_directory,
+                                clear_recycle_bin=clear_recycle_bin,
+                                convert_temperature=convert_temperature,
+                                convert_to=convert_to,
+                                chunk_size=chunk_size,
+                                notifications=notifications,
+                                clear_data=clear_data,
+                                source=source,
+                                level_type=level_type,
+                                levels=levels)
+        else:
+            _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                                western_bound=western_bound, 
+                                eastern_bound=eastern_bound, 
+                                northern_bound=northern_bound, 
+                                southern_bound=southern_bound, 
+                                step=step,
+                                process_data=process_data,
+                                proxies=proxies, 
+                                variables=variables,
+                                custom_directory=custom_directory,
+                                clear_recycle_bin=clear_recycle_bin,
+                                convert_temperature=convert_temperature,
+                                convert_to=convert_to,
+                                chunk_size=chunk_size,
+                                notifications=notifications,
+                                clear_data=clear_data,
+                                source=source,
+                                level_type=level_type,
+                                levels=levels)
         
         rotate = False
     except Exception as e:
@@ -2598,25 +2813,46 @@ def gfs_0p50(final_forecast_hour=384,
             print("Rotating to Amazon AWS Server.")
             
             try:
-                ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    step=step,
-                                    process_data=process_data,
-                                    proxies=proxies, 
-                                    variables=variables,
-                                    custom_directory=custom_directory,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='aws',
-                                    level_type=level_type,
-                                    levels=levels)
+                if process_data == True:
+                    ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='aws',
+                                        level_type=level_type,
+                                        levels=levels)
+                else:
+                    _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='aws',
+                                        level_type=level_type,
+                                        levels=levels)
                 rotate = False
             except Exception as e:
                 rotate = True
@@ -2627,25 +2863,46 @@ def gfs_0p50(final_forecast_hour=384,
             print("Rotating to NOAA/NCEP/NOMADS Server.")
             
             try:
-                ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    step=step,
-                                    process_data=process_data,
-                                    proxies=proxies, 
-                                    variables=variables,
-                                    custom_directory=custom_directory,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='noaa',
-                                    level_type=level_type,
-                                    levels=levels)
+                if process_data == True:
+                    ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='noaa',
+                                        level_type=level_type,
+                                        levels=levels)
+                else:
+                    _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='noaa',
+                                        level_type=level_type,
+                                        levels=levels)
                 rotate = False
             except Exception as e:
                 rotate = True
@@ -2656,25 +2913,46 @@ def gfs_0p50(final_forecast_hour=384,
             print("Rotating to NOAA/NCEP/NOMADS Server.")
             
             try:
-                ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    step=step,
-                                    process_data=process_data,
-                                    proxies=proxies, 
-                                    variables=variables,
-                                    custom_directory=custom_directory,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='noaa',
-                                    level_type=level_type,
-                                    levels=levels)
+                if process_data == True:
+                    ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='noaa',
+                                        level_type=level_type,
+                                        levels=levels)
+                else:
+                    _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='noaa',
+                                        level_type=level_type,
+                                        levels=levels)
                 rotate = False
             except Exception as e:
                 rotate = True
@@ -2689,25 +2967,46 @@ def gfs_0p50(final_forecast_hour=384,
             print("Rotating to Google Cloud Server.")
             
             try:
-                ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    step=step,
-                                    process_data=process_data,
-                                    proxies=proxies, 
-                                    variables=variables,
-                                    custom_directory=custom_directory,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='google',
-                                    level_type=level_type,
-                                    levels=levels)
+                if process_data == True:
+                    ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='google',
+                                        level_type=level_type,
+                                        levels=levels)
+                else:
+                    _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='google',
+                                        level_type=level_type,
+                                        levels=levels)
                 rotate = False
             except Exception as e:
                 rotate = True
@@ -2718,25 +3017,46 @@ def gfs_0p50(final_forecast_hour=384,
             print("Rotating to Google Cloud Server.")
             
             try:
-                ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    step=step,
-                                    process_data=process_data,
-                                    proxies=proxies, 
-                                    variables=variables,
-                                    custom_directory=custom_directory,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='google',
-                                    level_type=level_type,
-                                    levels=levels)
+                if process_data == True:
+                    ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='google',
+                                        level_type=level_type,
+                                        levels=levels)
+                else:
+                    _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='google',
+                                        level_type=level_type,
+                                        levels=levels)
                 rotate = False
             except Exception as e:
                 rotate = True
@@ -2747,25 +3067,46 @@ def gfs_0p50(final_forecast_hour=384,
             print("Rotating to Amazon AWS Server.")
             
             try:
-                ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    step=step,
-                                    process_data=process_data,
-                                    proxies=proxies, 
-                                    variables=variables,
-                                    custom_directory=custom_directory,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='aws',
-                                    level_type=level_type,
-                                    levels=levels)
+                if process_data == True:
+                    ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='aws',
+                                        level_type=level_type,
+                                        levels=levels)
+                else:
+                    _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='aws',
+                                        level_type=level_type,
+                                        levels=levels)
                 rotate = False
             except Exception as e:
                 print("Client cannot connect to any server.")
@@ -2776,7 +3117,25 @@ def gfs_0p50(final_forecast_hour=384,
     else:
         pass
     
-    return ds
+    if process_data == True:
+        if to_netcdf == True:
+            
+            if delete_previous_netcdf_file == True:
+                try:
+                    _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                except Exception as e:
+                    pass
+            
+            _grib_to_netcdf(ds,
+                            netcdf_path,
+                            netcdf_filename)
+        else:
+            pass
+        
+        if return_values == True:    
+            return ds
+        else:
+            pass
 
 def gfs_0p25_secondary_parameters(final_forecast_hour=384, 
             western_bound=-180, 
@@ -2820,7 +3179,12 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
                     5,
                     3,
                     2,
-                    1]):
+                    1],
+            to_netcdf=False,
+            netcdf_path=f"GFS0P25 SECONDARY PARAMETERS/NETCDF",
+            netcdf_filename=f"gfs_0p25_secondary_parameters.nc",
+            delete_previous_netcdf_file=True,
+            return_values=True):
     
     """
     This function downloads GFS0P25 SECONDARY PARAMETERS data and saves it to a folder. 
@@ -2902,17 +3266,14 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
     13) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    14) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
-        Default = f:ECMWF/IFS/WAVE
-        
-    15) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    14) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
-    16) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
-    18) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+    17) source (String) - Default='noaa'. The data server the user wants to connect the client to.
     
         Server List
         -----------
@@ -2921,7 +3282,7 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
         2) Amazon AWS - source='aws'
         3) Google Cloud - source='google'
         
-    19) level_type (String) - Default='pressure'. The type of level for the variable.
+    18) level_type (String) - Default='pressure'. The type of level for the variable.
     
         Level Types
         -----------
@@ -2934,7 +3295,7 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
         'pressure above ground'
         'potential vorticity surface'
         
-    20) levels (String, Integer or Float List) - Default=[875,
+    19) levels (String, Integer or Float List) - Default=[875,
                                                             825,
                                                             775,
                                                             725,
@@ -2957,6 +3318,18 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
                                                             1]
                                                             
         The pressure, height or depth levels.
+        
+    20) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    
+    21) netcdf_path (String) - Default='GFS0P25 SECONDARY PARAMETERS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    
+    22) netcdf_filename (String) - Default='gfs_0p25_secondary_parameters.nc'. The name of the netCDF (.nc) file. A good practice is to 
+        name this netCDF file using the variable name. 
+        
+    23) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+        new netCDF file. For users who want to archive all data set this to False. 
+        
+    24) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned.
     
     Returns
     -------
@@ -3002,25 +3375,46 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
     """
     
     try:
-        ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
-                            western_bound=western_bound, 
-                            eastern_bound=eastern_bound, 
-                            northern_bound=northern_bound, 
-                            southern_bound=southern_bound, 
-                            step=step,
-                            process_data=process_data,
-                            proxies=proxies, 
-                            variables=variables,
-                            custom_directory=custom_directory,
-                            clear_recycle_bin=clear_recycle_bin,
-                            convert_temperature=convert_temperature,
-                            convert_to=convert_to,
-                            chunk_size=chunk_size,
-                            notifications=notifications,
-                            clear_data=clear_data,
-                            source=source,
-                            level_type=level_type,
-                            levels=levels)
+        if process_data == True:
+            ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                                western_bound=western_bound, 
+                                eastern_bound=eastern_bound, 
+                                northern_bound=northern_bound, 
+                                southern_bound=southern_bound, 
+                                step=step,
+                                process_data=process_data,
+                                proxies=proxies, 
+                                variables=variables,
+                                custom_directory=custom_directory,
+                                clear_recycle_bin=clear_recycle_bin,
+                                convert_temperature=convert_temperature,
+                                convert_to=convert_to,
+                                chunk_size=chunk_size,
+                                notifications=notifications,
+                                clear_data=clear_data,
+                                source=source,
+                                level_type=level_type,
+                                levels=levels)
+        else:
+            _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                                western_bound=western_bound, 
+                                eastern_bound=eastern_bound, 
+                                northern_bound=northern_bound, 
+                                southern_bound=southern_bound, 
+                                step=step,
+                                process_data=process_data,
+                                proxies=proxies, 
+                                variables=variables,
+                                custom_directory=custom_directory,
+                                clear_recycle_bin=clear_recycle_bin,
+                                convert_temperature=convert_temperature,
+                                convert_to=convert_to,
+                                chunk_size=chunk_size,
+                                notifications=notifications,
+                                clear_data=clear_data,
+                                source=source,
+                                level_type=level_type,
+                                levels=levels)
         
         rotate = False
     except Exception as e:
@@ -3033,25 +3427,46 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
             print("Rotating to Amazon AWS Server.")
             
             try:
-                ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    step=step,
-                                    process_data=process_data,
-                                    proxies=proxies, 
-                                    variables=variables,
-                                    custom_directory=custom_directory,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='aws',
-                                    level_type=level_type,
-                                    levels=levels)
+                if process_data == True:
+                    ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='aws',
+                                        level_type=level_type,
+                                        levels=levels)
+                else:
+                    _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='aws',
+                                        level_type=level_type,
+                                        levels=levels)
                 rotate = False
             except Exception as e:
                 rotate = True
@@ -3062,25 +3477,46 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
             print("Rotating to NOAA/NCEP/NOMADS Server.")
             
             try:
-                ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    step=step,
-                                    process_data=process_data,
-                                    proxies=proxies, 
-                                    variables=variables,
-                                    custom_directory=custom_directory,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='noaa',
-                                    level_type=level_type,
-                                    levels=levels)
+                if process_data == True:
+                    ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='noaa',
+                                        level_type=level_type,
+                                        levels=levels)
+                else:
+                    _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='noaa',
+                                        level_type=level_type,
+                                        levels=levels)
                 rotate = False
             except Exception as e:
                 rotate = True
@@ -3091,25 +3527,46 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
             print("Rotating to NOAA/NCEP/NOMADS Server.")
             
             try:
-                ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    step=step,
-                                    process_data=process_data,
-                                    proxies=proxies, 
-                                    variables=variables,
-                                    custom_directory=custom_directory,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='noaa',
-                                    level_type=level_type,
-                                    levels=levels)
+                if process_data == True:
+                    ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='noaa',
+                                        level_type=level_type,
+                                        levels=levels)
+                else:
+                    _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='noaa',
+                                        level_type=level_type,
+                                        levels=levels)
                 rotate = False
             except Exception as e:
                 rotate = True
@@ -3124,25 +3581,46 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
             print("Rotating to Google Cloud Server.")
             
             try:
-                ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    step=step,
-                                    process_data=process_data,
-                                    proxies=proxies, 
-                                    variables=variables,
-                                    custom_directory=custom_directory,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='google',
-                                    level_type=level_type,
-                                    levels=levels)
+                if process_data == True:
+                    ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='google',
+                                        level_type=level_type,
+                                        levels=levels)
+                else:
+                    _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='google',
+                                        level_type=level_type,
+                                        levels=levels)
                 rotate = False
             except Exception as e:
                 rotate = True
@@ -3153,25 +3631,46 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
             print("Rotating to Google Cloud Server.")
             
             try:
-                ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    step=step,
-                                    process_data=process_data,
-                                    proxies=proxies, 
-                                    variables=variables,
-                                    custom_directory=custom_directory,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='google',
-                                    level_type=level_type,
-                                    levels=levels)
+                if process_data == True:
+                    ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='google',
+                                        level_type=level_type,
+                                        levels=levels)
+                else:
+                    _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='google',
+                                        level_type=level_type,
+                                        levels=levels)
                 rotate = False
             except Exception as e:
                 rotate = True
@@ -3182,25 +3681,46 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
             print("Rotating to Amazon AWS Server.")
             
             try:
-                ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
-                                    western_bound=western_bound, 
-                                    eastern_bound=eastern_bound, 
-                                    northern_bound=northern_bound, 
-                                    southern_bound=southern_bound, 
-                                    step=step,
-                                    process_data=process_data,
-                                    proxies=proxies, 
-                                    variables=variables,
-                                    custom_directory=custom_directory,
-                                    clear_recycle_bin=clear_recycle_bin,
-                                    convert_temperature=convert_temperature,
-                                    convert_to=convert_to,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications,
-                                    clear_data=clear_data,
-                                    source='aws',
-                                    level_type=level_type,
-                                    levels=levels)
+                if process_data == True:
+                    ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='aws',
+                                        level_type=level_type,
+                                        levels=levels)
+                else:
+                    _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        custom_directory=custom_directory,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_data=clear_data,
+                                        source='aws',
+                                        level_type=level_type,
+                                        levels=levels)
                 rotate = False
             except Exception as e:
                 print("Client cannot connect to any server.")
@@ -3211,4 +3731,22 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
     else:
         pass
     
-    return ds
+    if process_data == True:
+        if to_netcdf == True:
+            
+            if delete_previous_netcdf_file == True:
+                try:
+                    _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                except Exception as e:
+                    pass
+            
+            _grib_to_netcdf(ds,
+                            netcdf_path,
+                            netcdf_filename)
+        else:
+            pass
+        
+        if return_values == True:    
+            return ds
+        else:
+            pass

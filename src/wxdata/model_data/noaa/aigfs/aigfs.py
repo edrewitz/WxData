@@ -11,6 +11,7 @@ import wxdata.post_processors.aigfs_post_processing as _aigfs_post_processing
 import warnings as _warnings
 _warnings.filterwarnings('ignore')
 
+from wxdata.utils.transforms import grib_to_netcdf as _grib_to_netcdf
 from wxdata.model_data.noaa.aigfs.url_scanners import aigfs_url_scanner as _aigfs_url_scanner
 from wxdata.model_data.noaa.aigfs.paths import build_aigfs_directory as _build_aigfs_directory
 from wxdata.utils.file_funcs import(
@@ -372,7 +373,13 @@ def aigfs(final_forecast_hour=384,
                     150,
                     100,
                     50],
-            source='noaa'):
+            source='noaa',
+            to_netcdf=False,
+            netcdf_path=f"AIGFS/NETCDF",
+            netcdf_filename=f"aigfs.nc",
+            delete_previous_netcdf_file=True,
+            return_values=True):
+    
     
     """
     This function downloads, pre-processes and post-processes the latest AIGFS Data. 
@@ -421,14 +428,11 @@ def aigfs(final_forecast_hour=384,
     12) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    13) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
-        Default = f:ECMWF/IFS/WAVE
-        
-    14) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    13) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
-    15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    14) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    16) level_type (String) - Default='pressure'. The type of level the data is in.
+    15) level_type (String) - Default='pressure'. The type of level the data is in.
     
         Types of Levels
         ---------------
@@ -436,10 +440,10 @@ def aigfs(final_forecast_hour=384,
         1) pressure
         2) surface
     
-    17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
         
-    18) variables (String List) **level_type='pressure'** - Default=['geopotential height',
+    17) variables (String List) **level_type='pressure'** - Default=['geopotential height',
                                                                         'specific humidity',
                                                                         'temperature',
                                                                         'u-component of wind',
@@ -449,7 +453,7 @@ def aigfs(final_forecast_hour=384,
         When the level_type = 'pressure', the user can filter by variable to the variable they want. (Surface level files are very small 
         compared to pressure level files).
         
-    19) levels (Integer List) **level_type='pressure'** - Default=[1000,
+    18) levels (Integer List) **level_type='pressure'** - Default=[1000,
                                                                         925,
                                                                         850,
                                                                         700,
@@ -465,12 +469,24 @@ def aigfs(final_forecast_hour=384,
         When the level_type = 'pressure', the user can filter by level to the level they want. (Surface level files are very small 
         compared to pressure level files).
         
-    20) source (String) - Default='noaa'. The servers to pull the data from.
+    19) source (String) - Default='noaa'. The servers to pull the data from.
 
         ***Server Choices***
         
         'noaa' = NCEP/NOMADS
         'aws' = Amazon Web Services
+        
+    20) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    
+    21) netcdf_path (String) - Default='AIGFS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    
+    22) netcdf_filename (String) - Default='aigfs.nc'. The name of the netCDF (.nc) file. A good practice is to 
+        name this netCDF file using the variable name. 
+        
+    23) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+        new netCDF file. For users who want to archive all data set this to False. 
+        
+    24) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
     
     Returns
     -------
@@ -628,9 +644,25 @@ def aigfs(final_forecast_hour=384,
             except Exception as e:
                 print(f"Client unable to establish a connection with either server. - System Exit.")
                 _sys.exit(1)
-                
     if process_data == True:
-        return ds
+        if to_netcdf == True:
+            
+            if delete_previous_netcdf_file == True:
+                try:
+                    _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                except Exception as e:
+                    pass
+            
+            _grib_to_netcdf(ds,
+                            netcdf_path,
+                            netcdf_filename)
+        else:
+            pass
+        
+        if return_values == True:    
+            return ds
+        else:
+            pass
     else:
         pass
                 

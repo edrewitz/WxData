@@ -17,6 +17,7 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import numpy as np
 import pandas as pd
+import metpy.calc as mpcalc
 
 from wxdata import gfs_post_processing
 from datetime import datetime, timedelta, UTC
@@ -80,10 +81,11 @@ for i in range(0, len(ds['step']), 1):
     ax.add_feature(province_boundaries, linewidth=0.5, zorder=5)
     
     # Add our 850mb temperature contours converted to Celsius from Kelvin
+    # Let's also apply smooth_gaussian() from metpy.calc to smooth our contour lines
     c = ax.contour(ds['longitude'], 
                    ds['latitude'], 
-                   (ds['temperature'][i, :, :] - 273.15), 
-                   levels=np.arange(0, 40, 10), 
+                   (mpcalc.smooth_gaussian(ds['temperature'][i, :, :] - 273.15, n=8)), 
+                   levels=np.arange(-10, 35, 5), 
                    transform=ccrs.PlateCarree(), 
                    colors='black', 
                    linewidths=0.75)
@@ -93,7 +95,7 @@ for i in range(0, len(ds['step']), 1):
     cs = ax.contourf(ds['longitude'], 
                    ds['latitude'], 
                    (ds['temperature'][i, :, :] - 273.15), 
-                   levels=np.arange(0, 31, 1), 
+                   levels=np.arange(-10, 31, 1), 
                    transform=ccrs.PlateCarree(),
                    alpha=0.25,
                    cmap='jet',
@@ -103,7 +105,7 @@ for i in range(0, len(ds['step']), 1):
     fig.colorbar(cs, 
                  shrink=0.5, 
                  pad=0.01,
-                 ticks=np.arange(0, 40, 10))
+                 ticks=np.arange(-10, 35, 5))
     
 
     # Plot title

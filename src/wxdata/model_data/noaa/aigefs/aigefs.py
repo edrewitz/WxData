@@ -578,14 +578,11 @@ def aigefs_single(final_forecast_hour=384,
     12) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    13) custom_directory (String or None) - Default=None. The directory path where the AIGEFS Single data files will be stored
-        if the user does not use the default paths. 
-        
-    14) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    13 chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
-    15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    14) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    16) cat (String) - Default='mean'. The category of the data.
+    15) cat (String) - Default='mean'. The category of the data.
     
         Catagories
         ----------
@@ -593,7 +590,7 @@ def aigefs_single(final_forecast_hour=384,
         1) mean
         2) spread
         
-    17) level_type (String) - Default='pressure'. The type of level the data is in.
+    16) level_type (String) - Default='pressure'. The type of level the data is in.
     
         Types of Levels
         ---------------
@@ -601,11 +598,11 @@ def aigefs_single(final_forecast_hour=384,
         1) pressure
         2) surface
         
-    18) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+    17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
     
-    19) variables (String List) **level_type='pressure'** - Default=['geopotential height',
+    18) variables (String List) **level_type='pressure'** - Default=['geopotential height',
                                                                         'specific humidity',
                                                                         'temperature',
                                                                         'u-component of wind',
@@ -615,7 +612,7 @@ def aigefs_single(final_forecast_hour=384,
         When the level_type = 'pressure', the user can filter by variable to the variable they want. (Surface level files are very small 
         compared to pressure level files).
         
-    20) levels (Integer List) **level_type='pressure'** - Default=[1000,
+    19) levels (Integer List) **level_type='pressure'** - Default=[1000,
                                                                         925,
                                                                         850,
                                                                         700,
@@ -631,17 +628,17 @@ def aigefs_single(final_forecast_hour=384,
         When the level_type = 'pressure', the user can filter by level to the level they want. (Surface level files are very small 
         compared to pressure level files).
         
-    21) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    20) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
     
-    22) netcdf_path (String) - Default='AIGEFS SINGLE/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    21) netcdf_path (String) - Default='AIGEFS SINGLE/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
     
-    23) netcdf_filename (String) - Default='aigefs_single.nc'. The name of the netCDF (.nc) file. A good practice is to 
+    22) netcdf_filename (String) - Default='aigefs_single.nc'. The name of the netCDF (.nc) file. A good practice is to 
         name this netCDF file using the variable name. 
         
-    24) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+    23) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
         new netCDF file. For users who want to archive all data set this to False. 
         
-    25) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+    24) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
     
     **Returns**
     
@@ -932,17 +929,14 @@ def aigefs_pressure_members(final_forecast_hour=384,
     13) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    14) custom_directory (String or None) - Default=None. The directory path where the AIGEFS Pressure Member data files will be stored
-        if the user does not use the default paths. 
-        
-    15) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    14) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
     16) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+    15) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
         
-    18) variables (String List) Default=['geopotential height',
+    16) variables (String List) Default=['geopotential height',
                                         'specific humidity',
                                         'temperature',
                                         'u-component of wind',
@@ -950,7 +944,7 @@ def aigefs_pressure_members(final_forecast_hour=384,
                                         'vertical velocity (pressure)']
                        
         
-    19) levels (Integer List) - Default=[1000,
+    17) levels (Integer List) - Default=[1000,
                                         925,
                                         850,
                                         700,
@@ -963,24 +957,24 @@ def aigefs_pressure_members(final_forecast_hour=384,
                                         100,
                                         50]
                                         
-    15) source (String) - Default='noaa'. The servers to pull the data from.
+    18) source (String) - Default='noaa'. The servers to pull the data from.
 
     ***Server Choices***
     
     'noaa' = NCEP/NOMADS
     'aws' = Amazon Web Services
     
-    16) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    19) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
     
-    17) netcdf_path (String) - Default='AIGEFS PRESSURE MEMBERS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    20) netcdf_path (String) - Default='AIGEFS PRESSURE MEMBERS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
     
-    18) netcdf_filename (String) - Default='aigefs_pressure_members.nc'. The name of the netCDF (.nc) file. A good practice is to 
+    21) netcdf_filename (String) - Default='aigefs_pressure_members.nc'. The name of the netCDF (.nc) file. A good practice is to 
         name this netCDF file using the variable name. 
         
-    19) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+    22) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
         new netCDF file. For users who want to archive all data set this to False. 
         
-    20) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+    23) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
     
     **Returns**
     
@@ -1225,34 +1219,31 @@ def aigefs_surface_members(final_forecast_hour=384,
     13) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    14) custom_directory (String or None) - Default=None. The directory path where the AIGEFS Surface Member data files will be stored
-        if the user does not use the default paths. 
-        
-    15) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    14) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
-    16) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
         
-    18) source (String) - Default='noaa'. The servers to pull the data from.
+    17) source (String) - Default='noaa'. The servers to pull the data from.
 
     ***Server Choices***
     
     'noaa' = NCEP/NOMADS
     'aws' = Amazon Web Services
     
-    19) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    18) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
     
-    20) netcdf_path (String) - Default='AIGEFS SURFACE MEMBERS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    19) netcdf_path (String) - Default='AIGEFS SURFACE MEMBERS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
     
-    21) netcdf_filename (String) - Default='aigefs_surface_members.nc'. The name of the netCDF (.nc) file. A good practice is to 
+    20) netcdf_filename (String) - Default='aigefs_surface_members.nc'. The name of the netCDF (.nc) file. A good practice is to 
         name this netCDF file using the variable name. 
         
-    22) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+    21) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
         new netCDF file. For users who want to archive all data set this to False. 
         
-    23) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+    22) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
     
     
     Returns

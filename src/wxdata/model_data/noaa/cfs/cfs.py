@@ -17,6 +17,7 @@ from wxdata.model_data.noaa.cfs.url_scanners import(
     cfs_flux_url_scanner as _cfs_flux_url_scanner,
     cfs_pressure_url_scanner as _cfs_pressure_url_scanner
 )
+from wxdata.utils.transforms import grib_to_netcdf as _grib_to_netcdf
 from wxdata.utils.warnings import eccodes_warning as _eccodes_warning
 from wxdata.model_data.noaa.cfs.file_scanner import cfs_file_scanner as _cfs_file_scanner
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
@@ -735,7 +736,12 @@ def cfs_flux(western_bound=-180,
             source='aws',
             level_type='height above ground',
             variable='temperature',
-            levels=[2]):
+            levels=[2],
+            to_netcdf=False,
+            netcdf_path=f"CFS FLUX/NETCDF",
+            netcdf_filename=f"cfs_flux.nc",
+            delete_previous_netcdf_file=True,
+            return_values=True):
     
     """
     This function is an end-to-end client that downloads, pre-processes, post-processes CFS Flux data.
@@ -889,7 +895,18 @@ def cfs_flux(western_bound=-180,
     18) levels (Integer List) - Default=[2].
     
     The units for the level in the atmosphere (i.e. levels=[2] -> 2-meters above ground)
+
+    19) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
     
+    20) netcdf_path (String) - Default='CFS FLUX/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    
+    21) netcdf_filename (String) - Default='cfs_flux.nc'. The name of the netCDF (.nc) file. A good practice is to 
+        name this netCDF file using the variable name. 
+        
+    22) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+        new netCDF file. For users who want to archive all data set this to False. 
+        
+    23) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
             
     **Returns**
     
@@ -1122,7 +1139,23 @@ def cfs_flux(western_bound=-180,
                 _sys.exit(1)
                 
     if process_data == True:
-        return ds
+        if to_netcdf == True:
+            if delete_previous_netcdf_file == True:
+                try:
+                    _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                except Exception as e:
+                    pass
+            
+            _grib_to_netcdf(ds,
+                            netcdf_path,
+                            netcdf_filename)
+        else:
+            pass
+        
+        if return_values == True:    
+            return ds
+        else:
+            pass
     else:
         pass
                 
@@ -1149,7 +1182,12 @@ def cfs_pressure(western_bound=-180,
                     700, 
                     500, 
                     300, 
-                    250]):
+                    250],
+            to_netcdf=False,
+            netcdf_path=f"CFS PRESSURE/NETCDF",
+            netcdf_filename=f"cfs_pressure.nc",
+            delete_previous_netcdf_file=True,
+            return_values=True):
     
     """
     This function is an end-to-end client that downloads, pre-processes, post-processes CFS Pressure data.
@@ -1312,6 +1350,18 @@ def cfs_pressure(western_bound=-180,
         3
         2
         1
+        
+    19) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    
+    20) netcdf_path (String) - Default='CFS PRESSURE/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    
+    21) netcdf_filename (String) - Default='cfs_pressure.nc'. The name of the netCDF (.nc) file. A good practice is to 
+        name this netCDF file using the variable name. 
+        
+    22) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+        new netCDF file. For users who want to archive all data set this to False. 
+        
+    23) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
             
     **Returns**
     
@@ -1534,6 +1584,22 @@ def cfs_pressure(western_bound=-180,
                 _sys.exit(1)
                 
     if process_data == True:
-        return ds
+        if to_netcdf == True:
+            if delete_previous_netcdf_file == True:
+                try:
+                    _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                except Exception as e:
+                    pass
+            
+            _grib_to_netcdf(ds,
+                            netcdf_path,
+                            netcdf_filename)
+        else:
+            pass
+        
+        if return_values == True:    
+            return ds
+        else:
+            pass
     else:
         pass

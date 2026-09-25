@@ -38,7 +38,7 @@ def get_archived_cfs_flux(
              variable='temperature',
              levels=[2],
             to_netcdf=False,
-            netcdf_path=f"CFS FLUX/NETCDF",
+            netcdf_path=f"CFS FLUX/Archive/NETCDF",
             netcdf_filename=f"cfs_flux.nc",
             delete_previous_netcdf_file=True,
             return_values=True):
@@ -191,7 +191,7 @@ def get_archived_cfs_flux(
     
     16) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
     
-    17) netcdf_path (String) - Default='CFS FLUX/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    17) netcdf_path (String) - Default='CFS FLUX/Archive/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
     
     18) netcdf_filename (String) - Default='cfs_flux.nc'. The name of the netCDF (.nc) file. A good practice is to 
         name this netCDF file using the variable name. 
@@ -391,7 +391,7 @@ def get_archived_cfs_pressure(
                     300, 
                     250],
             to_netcdf=False,
-            netcdf_path=f"CFS PRESSURE/NETCDF",
+            netcdf_path=f"CFS PRESSURE/Archive/NETCDF",
             netcdf_filename=f"cfs_pressure.nc",
             delete_previous_netcdf_file=True,
             return_values=True):
@@ -553,7 +553,7 @@ def get_archived_cfs_pressure(
     
     16) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
     
-    17) netcdf_path (String) - Default='CFS PRESSURE/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    17) netcdf_path (String) - Default='CFS PRESSURE/Archive/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
     
     18) netcdf_filename (String) - Default='cfs_pressure.nc'. The name of the netCDF (.nc) file. A good practice is to 
         name this netCDF file using the variable name. 

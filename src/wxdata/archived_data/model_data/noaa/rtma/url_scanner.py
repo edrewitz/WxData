@@ -108,8 +108,6 @@ def rtma_url_scanner(date,
     else:
         file = f"{directory}.t{run}z.2dvar{f_cat}_ndfd.grb2"
     
-    
-    print(f"{url}{file}")
     try:
         if proxies == None:
             response = requests.get(f"{url}{file}",

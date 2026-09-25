@@ -68,6 +68,8 @@ from wxdata.archived_data.model_data.noaa.cfs.cfs import(
     get_archived_cfs_pressure
 )
 
+# Real-Time Mesoscale Analysis (RTMA)
+from wxdata.archived_data.model_data.noaa.rtma.rtma import rtma as archived_rtma
 
 """
 

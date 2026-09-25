@@ -21,7 +21,7 @@ from wxdata.model_data.noaa.rtma.url_scanners import(
     rtma_url_scanner as _rtma_url_scanner,
     rtma_comparison_url_scanner as _rtma_comparison_url_scanner
 )
-
+from wxdata.utils.transforms import grib_to_netcdf as _grib_to_netcdf
 from wxdata.utils.warnings import eccodes_warning as _eccodes_warning
 from wxdata.utils.file_funcs import custom_branch as _custom_branch
 from wxdata.calc.derived_fields import rtma_derived_fields as _rtma_derived_fields
@@ -47,7 +47,12 @@ def rtma(model='rtma',
          clear_data=False,
          chunk_size=8192,
          notifications='off',
-         source='noaa'):
+         source='noaa',
+        to_netcdf=False,
+        netcdf_path=f"RTMA/NETCDF",
+        netcdf_filename=f"rtma.nc",
+        delete_previous_netcdf_file=True,
+        return_values=True):
     
     """
     This function downloads the latest RTMA Dataset and returns it as an xarray data array. 
@@ -112,6 +117,18 @@ def rtma(model='rtma',
         
         1) NCEP/NOMADS - source='noaa'
         2) Amazon AWS - source='aws'
+        
+    13) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    
+    14) netcdf_path (String) - Default='RTMA/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    
+    15) netcdf_filename (String) - Default='rtma.nc'. The name of the netCDF (.nc) file. A good practice is to 
+        name this netCDF file using the variable name. 
+        
+    16) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+        new netCDF file. For users who want to archive all data set this to False. 
+        
+    17) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
         
     **If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
         establish a connection there.**
@@ -269,7 +286,24 @@ def rtma(model='rtma',
         _clear_idx_files(path)
         
         print(f"{model.upper()} Data Processing Complete.")
-        return ds
+        if to_netcdf == True:
+            
+            if delete_previous_netcdf_file == True:
+                try:
+                    _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                except Exception as e:
+                    pass
+            
+            _grib_to_netcdf(ds,
+                            netcdf_path,
+                            netcdf_filename)
+        else:
+            pass
+        
+        if return_values == True:    
+            return ds
+        else:
+            pass
     
     else:
         pass
@@ -286,7 +320,13 @@ def rtma_comparison(model='rtma',
          custom_directory=None,
          chunk_size=8192,
          notifications='off',
-         source='noaa'):
+         source='noaa',
+        to_netcdf=False,
+        netcdf_path=f"RTMA COMPARISON/NETCDF",
+        netcdf_filename_1=f"rtma_data_1.nc",
+        netcdf_filename_2=f"rtma_data_2.nc",
+        delete_previous_netcdf_file=True,
+        return_values=True):
     
     """
     This function downloads the latest RTMA Dataset and the RTMA dataset from 24 hours prior to the current RTMA dataset and returns it as two xarray data arrays. 
@@ -356,6 +396,19 @@ def rtma_comparison(model='rtma',
         
         **If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
         establish a connection there.**
+        
+    14) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    
+    15) netcdf_path (String) - Default='RTMA/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    
+    16) netcdf_filename_1 (String) - Default='rtma_data_1.nc'. The name of the first netCDF (.nc) file. 
+        
+    17) netcdf_filename_2 (String) - Default='rtma_data_2.nc'. The name of the second (comparison) netCDF (.nc) file. 
+        
+    18) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+        new netCDF file. For users who want to archive all data set this to False. 
+        
+    19) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
     
     Returns
     -------
@@ -536,7 +589,33 @@ def rtma_comparison(model='rtma',
         _clear_idx_files(path)
         
         print(f"{model.upper()} Data Processing Complete.")
-        return ds, ds_dt
+        if to_netcdf == True:
+            
+            if delete_previous_netcdf_file == True:
+                try:
+                    _os.remove(f"{netcdf_path}/{netcdf_filename_1}")
+                except Exception as e:
+                    pass
+                
+                try:
+                    _os.remove(f"{netcdf_path}/{netcdf_filename_2}")
+                except Exception as e:
+                    pass
+            
+            _grib_to_netcdf(ds,
+                            netcdf_path,
+                            netcdf_filename_1)
+            
+            _grib_to_netcdf(ds_dt,
+                            netcdf_path,
+                            netcdf_filename_1)
+        else:
+            pass
+        
+        if return_values == True:    
+            return ds, ds_dt
+        else:
+            pass
     
     else:
         pass

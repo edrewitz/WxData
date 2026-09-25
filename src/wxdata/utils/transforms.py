@@ -8,7 +8,8 @@ import pandas as _pd
 
 def grib_to_netcdf(ds,
                    path,
-                   filename):
+                   filename,
+                   rtma=False):
     
     """
     This function converts an xarray.array in GRIB2 format transforms the xarray.array into a netCDF4 format and writes a
@@ -22,6 +23,11 @@ def grib_to_netcdf(ds,
     
     3) filename (String) - The filename of the netCDF (.nc) file.
     
+    Optional Arguments:
+    
+    1) rtma (Boolean) - Default=False. Set to True when working with RTMA data.
+        Keep set to False when working with forecast model data. 
+    
     **Returns**
     
     Saves a netCDF (.nc) file of the cleaned up GRIB2 data to {path}    
@@ -30,7 +36,18 @@ def grib_to_netcdf(ds,
     try:    
         if "dtype" in ds["step"].attrs:
             del ds["step"].attrs["dtype"]
-        base_time = _pd.to_datetime(ds['time'].values)   
+        base_time = _pd.to_datetime(ds['time'].values) 
+        
+        if rtma == True:
+            try:
+                for c in ds.coords:
+                    for bad in ["dtype", "units", "scale_factor", "add_offset"]:
+                        ds[c].encoding.pop(bad, None)
+                ds = ds.drop('step')
+            except Exception as e:
+                pass  
+        else:
+            pass
 
         new_time = base_time + _pd.to_timedelta(ds.step.values, unit="h")
         ds = ds.assign_coords(time=new_time)
@@ -42,6 +59,14 @@ def grib_to_netcdf(ds,
         print(f"{filename} saved to {path}")
     except Exception as e:
         _os.makedirs(path, exist_ok=True)
+        
+        try:
+            for c in ds.coords:
+                for bad in ["dtype", "units", "scale_factor", "add_offset"]:
+                    ds[c].encoding.pop(bad, None)
+            ds = ds.drop('step')
+        except Exception as e:
+            pass
         
         ds.to_netcdf(f"{path}/{filename}")
         

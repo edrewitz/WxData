@@ -296,7 +296,8 @@ def rtma(model='rtma',
             
             _grib_to_netcdf(ds,
                             netcdf_path,
-                            netcdf_filename)
+                            netcdf_filename,
+                            rtma=True)
         else:
             pass
         
@@ -604,11 +605,13 @@ def rtma_comparison(model='rtma',
             
             _grib_to_netcdf(ds,
                             netcdf_path,
-                            netcdf_filename_1)
+                            netcdf_filename_1,
+                            rtma=True)
             
             _grib_to_netcdf(ds_dt,
                             netcdf_path,
-                            netcdf_filename_1)
+                            netcdf_filename_1,
+                            rtma=True)
         else:
             pass
         

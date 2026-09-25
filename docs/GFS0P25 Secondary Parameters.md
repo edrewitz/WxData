@@ -129,17 +129,14 @@ The variables the user wishes to query.
 13) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
     Set convert_to='fahrenheit' for Fahrenheit. 
     
-14) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
-    Default = f:ECMWF/IFS/WAVE
-    
-15) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+14) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
 
-16) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
 
-17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
     When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
 
-18) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+17) source (String) - Default='noaa'. The data server the user wants to connect the client to.
     
         Server List
         -----------
@@ -148,7 +145,7 @@ The variables the user wishes to query.
         2) Amazon AWS - source='aws'
         3) Google Cloud - source='google'
         
-19) level_type (String) - Default='pressure'. The type of level for the variable.
+18) level_type (String) - Default='pressure'. The type of level for the variable.
     
         Level Types
         -----------
@@ -161,7 +158,7 @@ The variables the user wishes to query.
         'pressure above ground'
         'potential vorticity surface'
         
-20) levels (String, Integer or Float List) - Default=[875,
+19) levels (String, Integer or Float List) - Default=[875,
                                                         825,
                                                         775,
                                                         725,

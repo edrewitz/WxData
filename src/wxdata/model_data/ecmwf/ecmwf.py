@@ -2993,46 +2993,6 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
                     pass
                 else:
                     break
-                            
-            for i in range(144, final_forecast_hour + 6, 6):
-                f = _io.StringIO()
-                with _contextlib.redirect_stdout(f):
-                    try:
-                        client.retrieve(date=valid_date,
-                                        time=run,
-                                        step=i,
-                                        stream=stream,
-                                        type="fc",
-                                        param=params,
-                                        target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                        success = True
-                    except Exception as e:
-                        for k in range(0, 3, 1):
-                            print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                            print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                            _time.sleep(3)
-                            try:
-                                client.retrieve(date=valid_date,
-                                        time=run,
-                                        step=i,
-                                        stream=stream,
-                                        type="fc",
-                                        param=params,
-                                        target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                                success = True
-                                break
-                            except Exception as e:
-                                k = k
-                                if k >= 2:
-                                    success = False
-                                    break
-                if success == True:                                           
-                    if notifications == True:
-                        print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
-                    else:
-                        pass
-                else:
-                    break
 
         if success == True:
             print(f"ECMWF IFS-WAVE Download Complete.")   
@@ -3433,47 +3393,11 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
                                     if k >= 2:
                                         success = False
                                         pass
-                                
                     if success == True:
                         pass
                     else:
                         break
-                            
-            for i in range(144, final_forecast_hour + 6, 6):
-                f = _io.StringIO()
-                with _contextlib.redirect_stdout(f):
-                    try:
-                        client.retrieve(date=valid_date,
-                                        time=run,
-                                        step=i,
-                                        stream='waef',
-                                        type="ef",
-                                        param=params,
-                                        number=members,
-                                        target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
-                        success = True
-                    except Exception as e:
-                        for k in range(0, 3, 1):
-                            print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                            print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                            _time.sleep(3)
-                            try:
-                                client.retrieve(date=valid_date,
-                                        time=run,
-                                        step=i,
-                                        stream='waef',
-                                        type="ef",
-                                        param=params,
-                                        number=members,
-                                        target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
-                                success = True
-                                break
-                            except Exception as e:
-                                k = k
-                                if k >= 2:
-                                    success = False
-                                    pass
-                                
+                                                                
                     if success == True:
                         if notifications == 'on':
                             print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-waef-fc.grib2 saved to {path}", file=original_stdout)
@@ -3481,6 +3405,7 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
                             pass
                     else:
                         break
+
                                                                            
         if success == True:
             print(f"ECMWF IFS-WAVE ENSEMBLE Download Complete.")    

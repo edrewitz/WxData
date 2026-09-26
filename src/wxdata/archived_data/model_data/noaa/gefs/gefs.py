@@ -253,7 +253,6 @@ def _gefs_0p50_client(date,
     'v_wind_component'
     
     """
-    
     if run == 18 or run == '18':
         run = '18'
     elif run == 12 or run == '12':
@@ -2535,30 +2534,29 @@ def gefs_0p25(date,
     
     source = source.lower()
     
-    #try:
-    if process_data == True:
-        ds = _gefs_0p25_client(date,
-                                run,
-                                cat=cat, 
-            final_forecast_hour=final_forecast_hour, 
-            western_bound=western_bound, 
-            eastern_bound=eastern_bound, 
-            northern_bound=northern_bound, 
-            southern_bound=southern_bound, 
-            proxies=proxies, 
-            step=step, 
-            members=members,
-            process_data=process_data,
-            clear_recycle_bin=clear_recycle_bin,
-            variables=variables,
-            convert_temperature=convert_temperature,
-            convert_to=convert_to,
-            chunk_size=chunk_size,
-            notifications=notifications,
-            source=source,
-            level_type=level_type,
-            levels=levels)
-    """
+    try:
+        if process_data == True:
+            ds = _gefs_0p25_client(date,
+                                    run,
+                                    cat=cat, 
+                final_forecast_hour=final_forecast_hour, 
+                western_bound=western_bound, 
+                eastern_bound=eastern_bound, 
+                northern_bound=northern_bound, 
+                southern_bound=southern_bound, 
+                proxies=proxies, 
+                step=step, 
+                members=members,
+                process_data=process_data,
+                clear_recycle_bin=clear_recycle_bin,
+                variables=variables,
+                convert_temperature=convert_temperature,
+                convert_to=convert_to,
+                chunk_size=chunk_size,
+                notifications=notifications,
+                source=source,
+                level_type=level_type,
+                levels=levels)
             
         else:
             _gefs_0p25_client(date,
@@ -2692,7 +2690,6 @@ def gefs_0p25(date,
                     print(f"Error: Data unavailible for {date} {run}z. - System Exit.")
                 _sys.exit(1)
                 
-    """
     if process_data == True:
         return ds
     else:

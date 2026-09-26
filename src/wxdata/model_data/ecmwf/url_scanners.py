@@ -103,7 +103,7 @@ def ecmwf_ifs_url_scanner(final_forecast_hour,
         file_06z_today = f"{now.strftime('%Y%m%d')}060000-{final_forecast_hour}h-scda-fc.grib2"
         file_18z_yesterday = f"{yd.strftime('%Y%m%d')}180000-{final_forecast_hour}h-scda-fc.grib2"
         file_06z_yesterday = f"{yd.strftime('%Y%m%d')}060000-{final_forecast_hour}h-scda-fc.grib2"
-    
+        
     try:
         t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
                             stream=True)

@@ -1,13 +1,9 @@
 """
-This file hosts the function that downloads and returns RTMA Data from the NCEP/NOMADS Server. 
-
-1) rtma
-2) rtma_comparison
+This file hosts the function that downloads and returns RTMA Data from the Amazon Web Services NOAA archive. 
 
 (C) Eric J. Drewitz 2025-2026
 """
 import os as _os
-import sys as _sys
 import warnings as _warnings
 import wxdata.client.client as _client
 _warnings.filterwarnings('ignore')

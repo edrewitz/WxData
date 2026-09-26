@@ -29,3 +29,4 @@ dist/
 *.csv
 *.idx
 *.bin
+*.grib

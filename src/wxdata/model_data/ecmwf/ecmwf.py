@@ -66,40 +66,6 @@ _eccodes_warning()
 
 original_stdout = _sys.stdout
 
-def _check_forecast_hour(stream,
-                         final_forecast_hour):
-    
-    """
-    This function checks to make sure the final_forecast_hour is valid.
-    
-    The 00z and 12z runs are in steps of 3 hours between 0 and 144 hours then 6 hour steps from 144 to 360 hours.
-    
-    The 06z and 18z runs are in steps of 3 hours between 0 and 144 hours. These runs only go out to 144 hours.
-    
-    Required Arguments:
-    
-    1) stream (String) - 'oper' for 00z and 12z runs and 'scda' for 06z and 18z runs.
-    
-    2) final_forecast_hour (Integer) - The last forecast hour the user wishes to download. 
-    
-    Optional Arguments: None
-    
-    Returns
-    -------
-    
-    A corrected final_forecast_hour if necessary.
-    """
-    
-    if stream == 'oper' or stream == 'wave':
-        final_forecast_hour = final_forecast_hour
-    else:
-        if final_forecast_hour <= 144:
-            final_forecast_hour = final_forecast_hour
-        else:
-            final_forecast_hour = 144
-            print(f"User has a final_forecast_hour > 144. The 06z and 18z runs only have the first 144 hours. Defaulting to 144.")
-            
-    return final_forecast_hour
 
 def _get_stream(model,
                 run):
@@ -607,9 +573,7 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
     stream = _get_stream('ifs',
                          run)
     
-    final_forecast_hour = _check_forecast_hour(stream,
-                                                final_forecast_hour)
-    
+
     valid_date = _parse_date(url,
                              'ifs')
     
@@ -624,7 +588,10 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
 
     date = _parse_filename(filename)
     
-    levels = _get_levels(levels)
+    if level_type == 'pl':
+        levels = _get_levels(levels)
+    else:
+        pass
     
     client = _Client(source=source,
                      model='ifs')
@@ -713,85 +680,7 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                 else:
                     break
         else:
-            for i in range(0, 144 + step, step):
-                f = _io.StringIO()
-                with _contextlib.redirect_stdout(f):
-                    if level_type == 'pl':
-                        try:
-                            client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="fc",
-                                            levtype=level_type,
-                                            param=params,
-                                            levelist=levels,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                            success = False
-                        except Exception as e:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="fc",
-                                            levtype=level_type,
-                                            param=params,
-                                            levelist=levels,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                                    success = False
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
-                                        break
-                                        
-                    else:
-                        try:
-                            client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="fc",
-                                            levtype=level_type,
-                                            param=params,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                            success = True
-                        except Exception as e:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="fc",
-                                            levtype=level_type,
-                                            param=params,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
-                                        break
-                if success == True:                              
-                    if notifications == True:
-                        print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
-                    else:
-                        pass
-                else:
-                    break
-                                
-            for i in range(144, final_forecast_hour + 6, 6):
+            for i in range(0, final_forecast_hour + step, step):
                 f = _io.StringIO()
                 with _contextlib.redirect_stdout(f):
                     if level_type == 'pl':
@@ -807,27 +696,31 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
                             success = True
                         except Exception as e:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="fc",
-                                            levtype=level_type,
-                                            param=params,
-                                            levelist=levels,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
-                                        break                       
+                            if i % 6 != 0 and i > 144:
+                                pass
+                            else:
+                                for k in range(0, 3, 1):
+                                    print(f"Server Connection Unstable - Retrying.", file=original_stdout)
+                                    print(f"Remaining Attempts: {3 - k}", file=original_stdout)
+                                    _time.sleep(3)
+                                    try:
+                                        client.retrieve(date=valid_date,
+                                                    time=run,
+                                                    step=i,
+                                                    stream=stream,
+                                                    type="fc",
+                                                    levtype=level_type,
+                                                    param=params,
+                                                    levelist=levels,
+                                                    target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                                        success = True
+                                        break
+                                    except Exception as e:
+                                        k = k
+                                        if k >= 2:
+                                            success = False
+                                            pass
+      
                     else:
                         try:
                             client.retrieve(date=valid_date,
@@ -840,39 +733,37 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
                             success = True
                         except Exception as e:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="fc",
-                                            levtype=level_type,
-                                            param=params,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
+                            if i % 6 != 0 and i > 144:
+                                pass
+                            else:
+                                for k in range(0, 3, 1):
+                                    print(f"Server Connection Unstable - Retrying.", file=original_stdout)
+                                    print(f"Remaining Attempts: {3 - k}", file=original_stdout)
+                                    _time.sleep(3)
+                                    try:
+                                        client.retrieve(date=valid_date,
+                                                time=run,
+                                                step=i,
+                                                stream=stream,
+                                                type="fc",
+                                                levtype=level_type,
+                                                param=params,
+                                                target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                                        success = True
                                         break
-                
-                if success == True:                       
+                                    except Exception as e:
+                                        k = k
+                                        if k >= 2:
+                                            success = False
+                                            pass
+                            
+                if success == True:
                     if notifications == True:
                         print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
                     else:
                         pass
                 else:
                     break
-
-        if success == True:
-            print(f"ECMWF IFS Download Complete.")   
-        else:
-            pass 
         
     else:
         print(f"ECMWF IFS Data is up to date. Skipping download...")    
@@ -1362,8 +1253,7 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
     stream = _get_stream('ifs-ensemble',
                          run)
     
-    final_forecast_hour = _check_forecast_hour(stream,
-                                                final_forecast_hour)
+
     valid_date = _parse_date(url,
                              'ifs-ensemble')
     
@@ -1378,8 +1268,10 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
 
     date = _parse_filename(filename)
     
-    levels = _get_levels(levels)
-    
+    if level_type == 'pl':
+        levels = _get_levels(levels)
+    else:
+        pass
     client = _Client(source=source,
                      model='ifs')
     if download == True:
@@ -1469,7 +1361,7 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                 else:
                     break
         else:
-            for i in range(0, 144 + step, step):
+            for i in range(0, final_forecast_hour + step, step):
                 f = _io.StringIO()
                 with _contextlib.redirect_stdout(f):
                     if level_type == 'pl':
@@ -1486,28 +1378,31 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
                             success = True
                         except Exception as e:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="ef",
-                                            levtype=level_type,
-                                            param=params,
-                                            levelist=levels,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
+                            if i % 6 != 0 and i > 144:
+                                pass
+                            else:
+                                for k in range(0, 3, 1):
+                                    print(f"Server Connection Unstable - Retrying.", file=original_stdout)
+                                    print(f"Remaining Attempts: {3 - k}", file=original_stdout)
+                                    _time.sleep(3)
+                                    try:
+                                        client.retrieve(date=valid_date,
+                                                time=run,
+                                                step=i,
+                                                stream=stream,
+                                                type="ef",
+                                                levtype=level_type,
+                                                param=params,
+                                                levelist=levels,
+                                                number=members,
+                                                target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
+                                        success = True
                                         break
+                                    except Exception as e:
+                                        k = k
+                                        if k >= 2:
+                                            success = False
+                                            break
                     else:
                         try:
                             client.retrieve(date=valid_date,
@@ -1521,27 +1416,30 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
                             success = True
                         except Exception as e:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="ef",
-                                            levtype=level_type,
-                                            param=params,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
+                            if i % 6 != 0 and i > 144:
+                                pass
+                            else:
+                                for k in range(0, 3, 1):
+                                    print(f"Server Connection Unstable - Retrying.", file=original_stdout)
+                                    print(f"Remaining Attempts: {3 - k}", file=original_stdout)
+                                    _time.sleep(3)
+                                    try:
+                                        client.retrieve(date=valid_date,
+                                                time=run,
+                                                step=i,
+                                                stream=stream,
+                                                type="ef",
+                                                levtype=level_type,
+                                                param=params,
+                                                number=members,
+                                                target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
+                                        success = True
                                         break
+                                    except Exception as e:
+                                        k = k
+                                        if k >= 2:
+                                            success = False
+                                            break
                 if success == True:                    
                     if notifications == True:
                         print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
@@ -1549,80 +1447,7 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                         pass
                 else:
                     break
-                                
-            for i in range(144, final_forecast_hour + 6, 6):
-                f = _io.StringIO()
-                with _contextlib.redirect_stdout(f):
-                    if level_type == 'pl':
-                        try:
-                            client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="ef",
-                                            levtype=level_type,
-                                            param=params,
-                                            levelist=levels,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
-                            success = True
-                        except Exception as e:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="ef",
-                                            levtype=level_type,
-                                            param=params,
-                                            levelist=levels,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
-                                        break                 
-                    else:
-                        try:
-                            client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="ef",
-                                            levtype=level_type,
-                                            param=params,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
-                            success = True
-                        except Exception as e:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="ef",
-                                            levtype=level_type,
-                                            param=params,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
-                                        break
+                            
                 if success == True:                   
                     if notifications == True:
                         print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
@@ -3066,9 +2891,7 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
     
     stream = _get_stream('ifs-wave',
                          run)
-    
-    final_forecast_hour = _check_forecast_hour(stream,
-                                                final_forecast_hour)
+
     valid_date = _parse_date(url,
                              'ifs-wave')
     
@@ -3131,7 +2954,7 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
                     break                 
                                 
         else:
-            for i in range(0, 144 + step, step):
+            for i in range(0, final_forecast_hour + step, step):
                 f = _io.StringIO()
                 with _contextlib.redirect_stdout(f):
                     try:
@@ -3144,25 +2967,28 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
                                         target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
                         success = True
                     except Exception as e:
-                        for k in range(0, 3, 1):
-                            print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                            print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                            _time.sleep(3)
-                            try:
-                                client.retrieve(date=valid_date,
-                                        time=run,
-                                        step=i,
-                                        stream=stream,
-                                        type="fc",
-                                        param=params,
-                                        target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                                success = True
-                                break
-                            except Exception as e:
-                                k = k
-                                if k >= 2:
-                                    success = False
+                        if i % 6 != 0 and i > 144:
+                            pass
+                        else:
+                            for k in range(0, 3, 1):
+                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
+                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
+                                _time.sleep(3)
+                                try:
+                                    client.retrieve(date=valid_date,
+                                            time=run,
+                                            step=i,
+                                            stream=stream,
+                                            type="fc",
+                                            param=params,
+                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                                    success = True
                                     break
+                                except Exception as e:
+                                    k = k
+                                    if k >= 2:
+                                        success = False
+                                        break
                 if success == True:
                     pass
                 else:
@@ -3570,7 +3396,7 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
                                                  
                                 
         else:
-            for i in range(0, 144 + step, step):
+            for i in range(0, final_forecast_hour + step, step):
                 f = _io.StringIO()
                 with _contextlib.redirect_stdout(f):
                     try:
@@ -3584,26 +3410,29 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
                                         target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
                         success = True
                     except Exception as e:
-                        for k in range(0, 3, 1):
-                            print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                            print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                            _time.sleep(3)
-                            try:
-                                client.retrieve(date=valid_date,
-                                        time=run,
-                                        step=i,
-                                        stream='waef',
-                                        type="ef",
-                                        param=params,
-                                        number=members,
-                                        target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
-                                success = True
-                                break
-                            except Exception as e:
-                                k = k
-                                if k >= 2:
-                                    success = False
-                                    pass
+                        if i % 6 != 0 and i > 144:
+                            pass
+                        else:
+                            for k in range(0, 3, 1):
+                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
+                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
+                                _time.sleep(3)
+                                try:
+                                    client.retrieve(date=valid_date,
+                                            time=run,
+                                            step=i,
+                                            stream='waef',
+                                            type="ef",
+                                            param=params,
+                                            number=members,
+                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
+                                    success = True
+                                    break
+                                except Exception as e:
+                                    k = k
+                                    if k >= 2:
+                                        success = False
+                                        pass
                                 
                     if success == True:
                         pass

@@ -2602,6 +2602,8 @@ def gefs_0p50(cat='mean',
             return ds
         else:
             pass
+    else:
+        pass
 
 
 def gefs_0p50_secondary_parameters(cat='control', 
@@ -3319,6 +3321,8 @@ def gefs_0p50_secondary_parameters(cat='control',
             return ds
         else:
             pass
+    else:
+        pass
 
 
 def gefs_0p25(cat='mean', 
@@ -3950,3 +3954,5 @@ def gefs_0p25(cat='mean',
             return ds
         else:
             pass
+    else:
+        pass

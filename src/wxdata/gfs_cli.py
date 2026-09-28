@@ -1,5 +1,6 @@
 import click as _click
 import sys as _sys
+import netcdf4 as _netcdf4
 
 from datetime import datetime as _datetime
 from wxdata.model_data.noaa.gfs.gfs import(
@@ -672,7 +673,8 @@ def gfs0p25_fetch(final_forecast_hour,
                             level_type=level_type,
                             to_netcdf=netcdf,
                             netcdf_path=ncdir,
-                            netcdf_filename=ncfname)
+                            netcdf_filename=ncfname,
+                            return_values=False)
             
         else:
             
@@ -688,7 +690,8 @@ def gfs0p25_fetch(final_forecast_hour,
                             level_type=level_type,
                             to_netcdf=netcdf,
                             netcdf_path=ncdir,
-                            netcdf_filename=ncfname)
+                            netcdf_filename=ncfname,
+                            return_values=False)
         
         if custom_directory == True:
             _click.echo(f"GFS0P25 {category.upper()} latest download complete, data files saved to {custom_directory}")
@@ -942,7 +945,8 @@ def archived_gfs0p25_fetch(
                             level_type=level_type,
                             to_netcdf=netcdf,
                             netcdf_path=ncdir,
-                            netcdf_filename=ncfname)
+                            netcdf_filename=ncfname,
+                            return_values=False)
             
         else:
             
@@ -961,7 +965,8 @@ def archived_gfs0p25_fetch(
                             level_type=level_type,
                             to_netcdf=netcdf,
                             netcdf_path=ncdir,
-                            netcdf_filename=ncfname)
+                            netcdf_filename=ncfname,
+                            return_values=False)
         
         d = _parse_date(date)
         if custom_directory != "none":

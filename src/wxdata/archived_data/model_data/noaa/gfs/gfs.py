@@ -1,6 +1,8 @@
 """
 This file hosts the functions the user interacts with to download GFS data. 
 
+These clients download archived GFS data from either Amazon Web Services (AWS) or Google Cloud.
+
 1) gfs_0p25
 2) gfs_0p25_secondary_parameters
 3) gfs_0p50

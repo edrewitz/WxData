@@ -1,6 +1,18 @@
 import click as _click
 import sys as _sys
-import netcdf4 as _netcdf4
+import os as _os
+
+if _sys.platform == "win32":
+    # Locate the active environment's binary directory (where netcdf.dll lives)
+    conda_bin = _os.path.join(_sys.prefix, "Library", "bin")
+    
+    # If using a standard virtualenv/pip layout instead of Conda:
+    venv_bin = _os.path.join(_sys.prefix, "Scripts")
+    
+    if _os.path.exists(conda_bin):
+        _os.add_dll_directory(conda_bin)
+    elif _os.path.exists(venv_bin):
+        _os.add_dll_directory(venv_bin)
 
 from datetime import datetime as _datetime
 from wxdata.model_data.noaa.gfs.gfs import(

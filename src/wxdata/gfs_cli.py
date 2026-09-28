@@ -50,7 +50,7 @@ def _parse_proxy(value):
 # ---------------------------------------------------------------------
 @_click.group(context_settings={"help_option_names": ["-h", "--help"]})
 def gfs_data():
-    """GFScommand line utilities."""
+    """GFS command line utilities."""
     pass
 
 # ---------------------------------------------------------------------

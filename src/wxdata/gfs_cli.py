@@ -106,6 +106,10 @@ def gfs0p25():
     
     -cd = Clear Data (Default=False).
     
+    ***Only for wxdata-gfs 0p25 latest***
+    
+    ***Archived Clients Automatically Clear Old Data***
+    
     When set to False the scanner safeguard that prevents repetative downloads is enabled.
     Set -cd False to disable this safety feature.
     

@@ -826,15 +826,6 @@ def gfs0p25_fetch(final_forecast_hour,
 )
 
 @_click.option(
-    "--clear_data",
-    "-cd",
-    default=False,
-    show_default=True,
-    type=bool,
-    help="To bypass the safety scanner set --clear data to False."
-)
-
-@_click.option(
     "--source",
     "-s",
     default="noaa",
@@ -991,7 +982,6 @@ def archived_gfs0p25_fetch(
                   proxy,
                   clear_recycle_bin,
                   custom_directory,
-                  clear_data,
                   source,
                   variables,
                   levels,
@@ -1033,7 +1023,6 @@ def archived_gfs0p25_fetch(
                             process_data=process,
                             proxies=proxy,
                             clear_recycle_bin=clear_recycle_bin,
-                            clear_data=clear_data,
                             source=source,
                             variables=vars_fixed,
                             levels=levels,
@@ -1057,7 +1046,6 @@ def archived_gfs0p25_fetch(
                             process_data=process,
                             proxies=proxy,
                             clear_recycle_bin=clear_recycle_bin,
-                            clear_data=clear_data,
                             source=source,
                             variables=vars_fixed,
                             levels=levels,

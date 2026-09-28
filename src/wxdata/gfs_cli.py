@@ -3,16 +3,20 @@ import sys as _sys
 import os as _os
 
 if _sys.platform == "win32":
-    # Locate the active environment's binary directory (where netcdf.dll lives)
-    conda_bin = _os.path.join(_sys.prefix, "Library", "bin")
+    # 1. Force Conda to respect DLL path overrides inside entrypoint executables
+    _os.environ["CONDA_DLL_SEARCH_MODIFICATION_ENABLE"] = "1"
     
-    # If using a standard virtualenv/pip layout instead of Conda:
+    conda_bin = _os.path.join(_sys.prefix, "Library", "bin")
     venv_bin = _os.path.join(_sys.prefix, "Scripts")
     
+    # 2. Add via API
     if _os.path.exists(conda_bin):
         _os.add_dll_directory(conda_bin)
+        # 3. Prepend directly to PATH as a fallback for conda-forge Python builds
+        _os.environ["PATH"] = conda_bin + _os.pathsep + _os.environ.get("PATH", "")
     elif _os.path.exists(venv_bin):
         _os.add_dll_directory(venv_bin)
+        _os.environ["PATH"] = venv_bin + _os.pathsep + _os.environ.get("PATH", "")
 
 from datetime import datetime as _datetime
 from wxdata.model_data.noaa.gfs.gfs import(

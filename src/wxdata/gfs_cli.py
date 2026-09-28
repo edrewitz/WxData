@@ -90,7 +90,7 @@ def gfs0p25():
     Selects the primary data server to use.
     If the primary server is unavailable the client will rotate and try other servers.
     
-    **Server Choices For Latest Data**
+    ***Server Choices For Latest Data***
     
     noaa - NCEP/NOMADS
     
@@ -98,7 +98,7 @@ def gfs0p25():
     
     google - Google Cloud Servers
     
-    **Server Choices For Archived Data**
+    ***Server Choices For Archived Data***
     
     aws - Amazon Web Services
     

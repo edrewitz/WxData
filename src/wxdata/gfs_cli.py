@@ -124,6 +124,14 @@ def gfs0p25():
     Setting -cr True clears your recycle bin with each run of the script. 
     This ensures if any old files are moved to the recycle bin are deleted if they are not already.
     
+    -wb = Western Bound - The western bound for subsetting the data range is from -180 to 180 degrees longitude. (Default=-180)
+    
+    -eb = Eastern Bound - The eastern bound for subsetting the data range is from -180 to 180 degrees longitude. (Default=180)
+    
+    -nb = Northern Bound - The northern bound for subsetting the data range is from -90 to 90 degrees latitude. (Default=90)
+    
+    -sb = Southern Bound - The southern bound for subsetting the data range is from -90 to 90 degrees latitude. (Default=-90)
+    
     -v = Variables(Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']) 
                        
     The list of variables the user wants to query.
@@ -519,6 +527,42 @@ def gfs0p25():
     type=str,
     help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"
 )
+
+@_click.option(
+    "--western_bound",
+    "-wb",
+    default=-180,
+    show_default=True,
+    type=int,
+    help="Western Bound for subsetting the data. Range: -180 to 180 in Degrees Longitude. Default=-180."
+)
+
+@_click.option(
+    "--eastern_bound",
+    "-eb",
+    default=180,
+    show_default=True,
+    type=int,
+    help="Eastern Bound for subsetting the data. Range: -180 to 180 in Degrees Longitude. Default=180."
+)
+
+@_click.option(
+    "--northern_bound",
+    "-nb",
+    default=90,
+    show_default=True,
+    type=int,
+    help="Northern Bound for subsetting the data. Range: -90 to 90 in Degrees Latitude. Default=90."
+)
+
+@_click.option(
+    "--southern_bound",
+    "-sb",
+    default=-90,
+    show_default=True,
+    type=int,
+    help="Southern Bound for subsetting the data. Range: -90 to 90 in Degrees Latitude. Default=-90."
+)
         
 @_click.option('--variables', 
               '-v', 
@@ -639,7 +683,11 @@ def gfs0p25_fetch(final_forecast_hour,
                   netcdf,
                   ncdir,
                   ncfname,
-                  process):
+                  process,
+                  western_bound,
+                  eastern_bound,
+                  northern_bound,
+                  southern_bound):
     
     """Downloads Latest GFS 0.25x0.25 Data"""
     
@@ -673,7 +721,11 @@ def gfs0p25_fetch(final_forecast_hour,
                             to_netcdf=netcdf,
                             netcdf_path=ncdir,
                             netcdf_filename=ncfname,
-                            return_values=False)
+                            return_values=False,
+                            western_bound=western_bound,
+                            eastern_bound=eastern_bound,
+                            northern_bound=northern_bound,
+                            southern_bound=southern_bound)
             
         else:
             
@@ -690,7 +742,11 @@ def gfs0p25_fetch(final_forecast_hour,
                             to_netcdf=netcdf,
                             netcdf_path=ncdir,
                             netcdf_filename=ncfname,
-                            return_values=False)
+                            return_values=False,
+                            western_bound=western_bound,
+                            eastern_bound=eastern_bound,
+                            northern_bound=northern_bound,
+                            southern_bound=southern_bound)
         
         if custom_directory == True:
             _click.echo(f"GFS0P25 {category.upper()} latest download complete, data files saved to {custom_directory}")
@@ -785,6 +841,42 @@ def gfs0p25_fetch(final_forecast_hour,
     show_default=True,
     type=str,
     help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"
+)
+
+@_click.option(
+    "--western_bound",
+    "-wb",
+    default=-180,
+    show_default=True,
+    type=int,
+    help="Western Bound for subsetting the data. Range: -180 to 180 in Degrees Longitude. Default=-180."
+)
+
+@_click.option(
+    "--eastern_bound",
+    "-eb",
+    default=180,
+    show_default=True,
+    type=int,
+    help="Eastern Bound for subsetting the data. Range: -180 to 180 in Degrees Longitude. Default=180."
+)
+
+@_click.option(
+    "--northern_bound",
+    "-nb",
+    default=90,
+    show_default=True,
+    type=int,
+    help="Northern Bound for subsetting the data. Range: -90 to 90 in Degrees Latitude. Default=90."
+)
+
+@_click.option(
+    "--southern_bound",
+    "-sb",
+    default=-90,
+    show_default=True,
+    type=int,
+    help="Southern Bound for subsetting the data. Range: -90 to 90 in Degrees Latitude. Default=-90."
 )
         
 @_click.option('--variables', 
@@ -908,7 +1000,11 @@ def archived_gfs0p25_fetch(
                   netcdf,
                   ncdir,
                   ncfname,
-                  process):
+                  process,
+                  western_bound,
+                  eastern_bound,
+                  northern_bound,
+                  southern_bound):
     
     """Downloads Archived GFS 0.25x0.25 Data For A Specified Date and Run"""
     
@@ -945,7 +1041,11 @@ def archived_gfs0p25_fetch(
                             to_netcdf=netcdf,
                             netcdf_path=ncdir,
                             netcdf_filename=ncfname,
-                            return_values=False)
+                            return_values=False,
+                            western_bound=western_bound,
+                            eastern_bound=eastern_bound,
+                            northern_bound=northern_bound,
+                            southern_bound=southern_bound)
             
         else:
             
@@ -965,7 +1065,11 @@ def archived_gfs0p25_fetch(
                             to_netcdf=netcdf,
                             netcdf_path=ncdir,
                             netcdf_filename=ncfname,
-                            return_values=False)
+                            return_values=False,
+                            western_bound=western_bound,
+                            eastern_bound=eastern_bound,
+                            northern_bound=northern_bound,
+                            southern_bound=southern_bound)
         
         d = _parse_date(date)
         if custom_directory != "none":

@@ -819,10 +819,10 @@ def gfs0p25_fetch(final_forecast_hour,
 @_click.option(
     "--custom_directory",
     "-cdir",
-    default="none",
+    default="GFS0P25/Archive",
     show_default=True,
     type=str,
-    help="If you want to save the files in a custom directory - enter the full path here."
+    help="The path of the directory where the archived GFS0P25 data saves to."
 )
 
 @_click.option(
@@ -1028,11 +1028,11 @@ def archived_gfs0p25_fetch(
             _fetch_archived_gfs_0p25(
                             date,
                             run,
+                            path=custom_directory,
                             final_forecast_hour=final_forecast_hour,
                             process_data=process,
                             proxies=proxy,
                             clear_recycle_bin=clear_recycle_bin,
-                            custom_directory=custom_directory,
                             clear_data=clear_data,
                             source=source,
                             variables=vars_fixed,
@@ -1052,11 +1052,11 @@ def archived_gfs0p25_fetch(
             _fetch_archived_gfs_0p25_secondary_parameters(
                             date,
                             run,
+                            path=custom_directory,
                             final_forecast_hour=final_forecast_hour,
                             process_data=process,
                             proxies=proxy,
                             clear_recycle_bin=clear_recycle_bin,
-                            custom_directory=custom_directory,
                             clear_data=clear_data,
                             source=source,
                             variables=vars_fixed,
@@ -1072,10 +1072,7 @@ def archived_gfs0p25_fetch(
                             southern_bound=southern_bound)
         
         d = _parse_date(date)
-        if custom_directory != "none":
-            _click.echo(f"GFS0P25 {category.upper()} download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {custom_directory}")
-        else:
-            _click.echo(f"GFS0P25 {category.upper()} download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to GFS0P25/ATMOSPHERIC")
+        _click.echo(f"GFS0P25 {category.upper()} download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {custom_directory}")
             
     except SystemExit as e:
         _command_error_message('gfs0p25')

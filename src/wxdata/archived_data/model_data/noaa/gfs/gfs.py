@@ -81,7 +81,7 @@ def _gfs_0p25_client(
             path=f"GFS0P25/Archive"):
     
     """
-    This function downloads GFS0P25 data and saves it to a folder. 
+    This function downloads archived GFS0P25 data and saves it to a folder. 
     
     Required Argumemnts: 
     
@@ -532,7 +532,7 @@ def _gfs_0p25_secondary_parameters_client(
             path=f"GFS0P25 SECONDARY PARAMETERS/Archive"):
     
     """
-    This function downloads GFS0P25 SECONDARY PARAMETERS data and saves it to a folder. 
+    This function downloads archived GFS0P25 SECONDARY PARAMETERS data and saves it to a folder. 
     
     Required Arguments:
     
@@ -915,7 +915,7 @@ def _gfs_0p50_client(
             path=f"GFS0P50/Archive"):
     
     """
-    This function downloads GFS0P50 data and saves it to a folder. 
+    This function downloads archived GFS0P50 data and saves it to a folder. 
     
     Required Arguments:
     
@@ -1442,7 +1442,7 @@ def gfs_0p25(date,
             return_values=True):
     
     """
-    This function downloads GFS0P25 data and saves it to a folder. 
+    This function downloads archived GFS0P25 data and saves it to a folder. 
     
     Required Argumemnts: 
     
@@ -1947,7 +1947,7 @@ def gfs_0p50(
             return_values=True):
     
     """
-    This function downloads GFS0P50 data and saves it to a folder. 
+    This function downloads archived GFS0P50 data and saves it to a folder. 
     
     Required Arguments:
     
@@ -2505,7 +2505,7 @@ def gfs_0p25_secondary_parameters(
             return_values=True):
     
     """
-    This function downloads GFS0P25 SECONDARY PARAMETERS data and saves it to a folder. 
+    This function downloads archived GFS0P25 SECONDARY PARAMETERS data and saves it to a folder. 
     
     Required Arguments:
     

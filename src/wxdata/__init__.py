@@ -55,9 +55,9 @@ These functions do the following:
 # - GFS 0.25x0.25 Degree Secondary Parameters
 # - GFS 0.5x0.5 Degree
 from wxdata.archived_data.model_data.noaa.gfs.gfs import(
-    gfs_0p25,
-    gfs_0p25_secondary_parameters,
-    gfs_0p50
+    gfs_0p25 as archived_gfs_0p25,
+    gfs_0p25_secondary_parameters as archived_gfs_0p25_secondary_parameters,
+    gfs_0p50 as archived_gfs_0p50
 )
 
 # Global Ensemble Forecast System (GEFS)

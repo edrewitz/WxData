@@ -7,6 +7,7 @@ from wxdata.model_data.noaa.gfs.gfs import(
     gfs_0p50 as _fetch_gfs_0p50
 )
 
+
 def _command_error_message(model):
     
     """Error Message For Invalid Commands"""

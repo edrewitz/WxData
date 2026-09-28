@@ -1,31 +1,5 @@
 import click as _click
 import sys as _sys
-import os as _os 
-import shutil as _shutil
-
-if _sys.platform == "win32":
-    # Locate the active environment's library binaries
-    conda_bin = _os.path.join(_sys.prefix, "Library", "bin")
-    
-    # Locate where the netCDF4 python files live
-    import site as _site
-    site_packages = _site.getsitepackages()[0]
-    netcdf_pkg_dir = _os.path.join(site_packages, "netCDF4")
-    
-    if _os.path.exists(conda_bin) and _os.path.exists(netcdf_pkg_dir):
-        # Critical DLLs that netCDF4 depends on
-        target_dlls = ["netcdf.dll", "hdf5.dll", "hdf5_hl.dll"]
-        
-        for dll in target_dlls:
-            source_path = _os.path.join(conda_bin, dll)
-            dest_path = _os.path.join(netcdf_pkg_dir, dll)
-            
-            # Copy the correct DLL files straight into the package folder if missing
-            if _os.path.exists(source_path) and not _os.path.exists(dest_path):
-                try:
-                    _shutil.copy2(source_path, dest_path)
-                except Exception:
-                    pass
 
 from datetime import datetime as _datetime
 from wxdata.model_data.noaa.gfs.gfs import(

@@ -73,7 +73,11 @@ def _gefs_0p50_client(date,
     """
     This function downloads the archived GEFS0P50 data for a region specified by the user
     
-    Required Arguments: None
+    Required Arguments:
+    
+    1) date (String or datetime) - The date of the model run.
+    
+    2) run (Integer) - The model runtime in UTC (0, 6, 12, 18).
     
     Optional Arguments:
     
@@ -522,7 +526,11 @@ def _gefs_0p50_secondary_parameters_client(date,
     """
     This function downloads the archived GEFS0P50 Secondary Parameters data for a region specified by the user
     
-    Required Arguments: None
+    Required Arguments:
+    
+    1) date (String or datetime) - The date of the model run.
+    
+    2) run (Integer) - The model runtime in UTC (0, 6, 12, 18).
     
     Optional Arguments:
     
@@ -1041,7 +1049,11 @@ def _gefs_0p25_client(date,
     """
     This function downloads the archived GEFS0P25 data for a region specified by the user
     
-    Required Arguments: None
+    Required Arguments:
+    
+    1) date (String or datetime) - The date of the model run.
+    
+    2) run (Integer) - The model runtime in UTC (0, 6, 12, 18).
     
     Optional Arguments:
     
@@ -1483,7 +1495,11 @@ def gefs_0p50(date,
     """
     This function downloads the archived GEFS0P50 data for a region specified by the user
     
-    Required Arguments: None
+    Required Arguments:
+    
+    1) date (String or datetime) - The date of the model run.
+    
+    2) run (Integer) - The model runtime in UTC (0, 6, 12, 18).
     
     Optional Arguments:
     
@@ -1580,12 +1596,9 @@ def gefs_0p50(date,
                 
     17) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
-    18) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    18) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}.
     
-    29) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
-        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
-    
-    20) source (String) - Default='aws'. The data server the user wants to connect the client to.
+    19) source (String) - Default='aws'. The data server the user wants to connect the client to.
     
         Server List
         -----------
@@ -1593,7 +1606,7 @@ def gefs_0p50(date,
         1) Amazon AWS - source='aws'
         2) Google Cloud - source='google'
         
-    21) level_type (String) - Default='pressure'. The type of level for the variable.
+    20) level_type (String) - Default='pressure'. The type of level for the variable.
     
         Level Types
         -----------
@@ -1608,7 +1621,7 @@ def gefs_0p50(date,
         
         
         
-    22) levels (String, Integer or Float List) - Default=[1000,
+    21) levels (String, Integer or Float List) - Default=[1000,
                                                             925,
                                                             850,
                                                             700,
@@ -1623,17 +1636,17 @@ def gefs_0p50(date,
                                                             
         The pressure, height or depth levels.
         
-    23) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    22) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
     
-    24) netcdf_path (String) - Default='GEFS0P50/Archive/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    23) netcdf_path (String) - Default='GEFS0P50/Archive/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
     
-    25) netcdf_filename (String) - Default='gefs_0p50.nc'. The name of the netCDF (.nc) file. A good practice is to 
+    24) netcdf_filename (String) - Default='gefs_0p50.nc'. The name of the netCDF (.nc) file. A good practice is to 
         name this netCDF file using the variable name. 
         
-    26) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+    25) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
         new netCDF file. For users who want to archive all data set this to False. 
         
-    27) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+    26) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
     
     Returns
     -------
@@ -1904,7 +1917,11 @@ def gefs_0p50_secondary_parameters(date,
     """
     This function downloads the archived GEFS0P50 SECONDARY PARAMETERS data for a region specified by the user
     
-    Required Arguments: None
+    Required Arguments:
+    
+    1) date (String or datetime) - The date of the model run.
+    
+    2) run (Integer) - The model runtime in UTC (0, 6, 12, 18).
     
     Optional Arguments:
     
@@ -2039,12 +2056,9 @@ def gefs_0p50_secondary_parameters(date,
         
     17) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
-    18) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    18) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}.
     
-    19) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
-        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
-    
-    20) source (String) - Default='aws'. The data server the user wants to connect the client to.
+    19) source (String) - Default='aws'. The data server the user wants to connect the client to.
     
         Server List
         -----------
@@ -2052,7 +2066,7 @@ def gefs_0p50_secondary_parameters(date,
         1) Amazon AWS - source='aws'
         2) Google Cloud - source='google'
         
-    21) level_type (String) - Default='mean sea level'. The type of level for the variable.
+    20) level_type (String) - Default='mean sea level'. The type of level for the variable.
     
         Level Types
         -----------
@@ -2077,21 +2091,21 @@ def gefs_0p50_secondary_parameters(date,
         'isentropic level'
         'potential vorticity surface'
         
-    22) levels (String, Integer or Float List or None) - Default=None. 
+    21) levels (String, Integer or Float List or None) - Default=None. 
                                                             
         The pressure, height or depth levels. Set to None when the level_type only has one level (i.e. 'surface').
         
-    23) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    22) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
     
-    24) netcdf_path (String) - Default='GEFS0P50 SECONDARY PARAMETERS/Archive/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    23) netcdf_path (String) - Default='GEFS0P50 SECONDARY PARAMETERS/Archive/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
     
-    25) netcdf_filename (String) - Default='gefs_0p50_secondary_parameters.nc'. The name of the netCDF (.nc) file. A good practice is to 
+    24) netcdf_filename (String) - Default='gefs_0p50_secondary_parameters.nc'. The name of the netCDF (.nc) file. A good practice is to 
         name this netCDF file using the variable name. 
         
-    26) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+    25) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
         new netCDF file. For users who want to archive all data set this to False. 
         
-    27) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+    26) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
     
     Returns
     -------
@@ -2413,7 +2427,11 @@ def gefs_0p25(date,
     """
     This function downloads the archived GEFS0P25 data for a region specified by the user
     
-    Required Arguments: None
+    Required Arguments:
+    
+    1) date (String or datetime) - The date of the model run.
+    
+    2) run (Integer) - The model runtime in UTC (0, 6, 12, 18).
     
     Optional Arguments:
     
@@ -2514,10 +2532,7 @@ def gefs_0p25(date,
     
     18) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    19) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
-        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
-    
-    20) source (String) - Default='aws'. The data server the user wants to connect the client to.
+    19) source (String) - Default='aws'. The data server the user wants to connect the client to.
     
         Server List
         -----------
@@ -2525,7 +2540,7 @@ def gefs_0p25(date,
         1) Amazon AWS - source='aws'
         2) Google Cloud - source='google'
         
-    21) level_type (String) - Default='height above ground'. The type of level for the variable.
+    20) level_type (String) - Default='height above ground'. The type of level for the variable.
     
         Level Types
         -----------
@@ -2538,21 +2553,21 @@ def gefs_0p25(date,
         'cloud ceiling'
         'pressure above ground'
         
-    22) levels (String, Integer or Float List) - Default=[2] 
+    21) levels (String, Integer or Float List) - Default=[2] 
                                                             
         The pressure, height or depth levels.
     
-    23) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    22) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
     
-    24) netcdf_path (String) - Default='GEFS0P25/Archive/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    23) netcdf_path (String) - Default='GEFS0P25/Archive/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
     
-    25) netcdf_filename (String) - Default='gefs_0p25.nc'. The name of the netCDF (.nc) file. A good practice is to 
+    24) netcdf_filename (String) - Default='gefs_0p25.nc'. The name of the netCDF (.nc) file. A good practice is to 
         name this netCDF file using the variable name. 
         
-    26) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+    25) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
         new netCDF file. For users who want to archive all data set this to False. 
         
-    27) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+    26) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
     
     Returns
     -------

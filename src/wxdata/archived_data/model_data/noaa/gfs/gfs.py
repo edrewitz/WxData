@@ -8,15 +8,15 @@ This file hosts the functions the user interacts with to download GFS data.
 (C) Eric J. Drewitz 2025-2026
 """
 import sys as _sys
-import wxdata.client.client as _client
 import os as _os
 import warnings as _warnings
 import wxdata.post_processors.gfs_post_processing as _gfs_post_processing
 _warnings.filterwarnings('ignore')
 
+from wxdata.client.client import byte_range_request as _byte_range_request
 from wxdata.utils.transforms import grib_to_netcdf as _grib_to_netcdf
 from wxdata.model_data.noaa.gfs.paths import build_directory as _build_directory
-from wxdata.model_data.noaa.gfs.url_scanners import(
+from wxdata.archived_data.model_data.noaa.gfs.url_scanners import(
     gfs_0p50_url_scanner as _gfs_0p50_url_scanner,
     gfs_0p25_url_scanner as _gfs_0p25_url_scanner,
     gfs_0p25_secondary_parameters_url_scanner as _gfs_0p25_secondary_parameters_url_scanner
@@ -26,6 +26,7 @@ from wxdata.utils.warnings import(
     eccodes_warning as _eccodes_warning,
     version_warning as _version_warning
 )
+from datetime import datetime as _datetime
 from wxdata.utils.file_funcs import clear_old_data as _clear_old_data
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
 from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
@@ -35,9 +36,15 @@ from wxdata.utils.recycle_bin import(
     clear_trash_bin_linux as _clear_trash_bin_linux
 )
 
+start = _datetime.strptime("2021-01-01:00", "%Y-%m-%d:%H")
+
+
 _eccodes_warning()
 
-def _gfs_0p25_client(final_forecast_hour=384, 
+def _gfs_0p25_client(
+            date,
+            run,
+            final_forecast_hour=384, 
             western_bound=-180, 
             eastern_bound=180, 
             northern_bound=90, 
@@ -50,14 +57,12 @@ def _gfs_0p25_client(final_forecast_hour=384,
                        'relative humidity',
                        'u-component of wind',
                        'v-component of wind'],
-            custom_directory=None,
             clear_recycle_bin=False,
             convert_temperature=True,
             convert_to='celsius',
             chunk_size=8192,
             notifications='off',
-            clear_data=False,
-            source='noaa',
+            source='aws',
             level_type='pressure',
             levels=[1000,
                     925,
@@ -70,12 +75,17 @@ def _gfs_0p25_client(final_forecast_hour=384,
                     200,
                     100,
                     50,
-                    10]):
+                    10],
+            path=f"GFS0P25/Archive"):
     
     """
     This function downloads GFS0P25 data and saves it to a folder. 
     
-    Required Argumemnts: None
+    Required Argumemnts: 
+    
+    1) date (String or datetime) - The date of the model run.
+    
+    2) run (Integer) - The model runtime in UTC (0, 6, 12, 18).
     
     Optional Arguments:
     
@@ -202,10 +212,8 @@ def _gfs_0p25_client(final_forecast_hour=384,
         'water runoff'
         'water equivalent of accumulated snow depth'
         'wilting point'          
-    
-    10) custom_directory (String or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
-        the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
-        be used. 
+        
+    10) path (String) - Default="GFS0P25/Archive". The local directory where the archived GFS data will be stored. 
     
     11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
@@ -220,20 +228,16 @@ def _gfs_0p25_client(final_forecast_hour=384,
     14) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
     15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
-    
-    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
-        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
         
-    17) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+    16) source (String) - Default='aws'. The data server the user wants to connect the client to.
     
         Server List
         -----------
         
-        1) NOAA/NCEP/NOMADS - source='noaa'
-        2) Amazon AWS - source='aws'
-        3) Google Cloud - source='google'
+        1) Amazon AWS - source='aws'
+        2) Google Cloud - source='google'
         
-    18) level_type (String) - Default='pressure'. The type of level for the variable.
+    17) level_type (String) - Default='pressure'. The type of level for the variable.
     
         Level Types
         -----------
@@ -268,7 +272,7 @@ def _gfs_0p25_client(final_forecast_hour=384,
         'pressure above ground'
         'potential vorticity surface'
         
-    19) levels (String, Integer or Float List) - Default=[1000,
+    18) levels (String, Integer or Float List) - Default=[1000,
                                                             925,
                                                             850,
                                                             700,
@@ -329,6 +333,21 @@ def _gfs_0p25_client(final_forecast_hour=384,
     
     """
     
+    if type(date) == type(start):
+        date = date
+    else:
+        date = f"{date[0:4]}{date[5:7]}{date[8:10]}"
+        date = _datetime.strptime(date, "%Y%m%d")
+    
+    if run == 18 or run == '18':
+        run = '18'
+    elif run == 12 or run == '12':
+        run = '12'
+    elif run == 6 or run == '06':
+        run = '06'
+    else:
+        run = '00'
+    
     source = source.lower()
     
     if clear_recycle_bin == True:
@@ -337,223 +356,113 @@ def _gfs_0p25_client(final_forecast_hour=384,
         _clear_trash_bin_linux()
     else:
         pass
-    
-    if custom_directory==None:
-        path = _build_directory('gfs0p25',
-                               'atmospheric')
-        
-    else:
-        try:
-            _os.makedirs(f"{custom_directory}")
-        except Exception as e:
-            pass
-        
-        path = custom_directory
-        
-    if clear_data == True:
-        _clear_old_data(path)
-    else:
-        pass
-        
-    if source == 'noaa':
-        try:
-            url, filename, run = _gfs_0p25_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    source)
-        except Exception as e:
-            filename = None
-            
-        if filename == None:
-            print("NCEP/NOMADS Server Is Down.")
-            print("Rotating to Amazon AWS Server.")
-            try:
-                url, filename, run = _gfs_0p25_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    'aws')
-                print("Amazon AWS Server Online - Connected.")
-            except Exception as e:
-                filename = None
-                
-            if filename == None:
-                print("Amazon AWS Server Is Down.")
-                print("Rotating to Google Cloud Server.")
-                try:
-                    url, filename, run = _gfs_0p25_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    'google')
-                    print("Google Cloud Server Online - Connected.")
-                except Exception as e:
-                    print("Error: All Servers Appear Down.")
-                    print("System Exit")
-                    _sys.exit(1)
-            else:
-                pass
-        
-        else:
-            pass
-        
-    if source == 'aws':
-        try:
-            url, filename, run = _gfs_0p25_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    source)
-        except Exception as e:
-            filename = None
-            
-        if filename == None:
-            print("NCEP/NOMADS Server Is Down.")
-            print("Rotating to NCEP/NOMADS Server.")
-            try:
-                url, filename, run = _gfs_0p25_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    'noaa')
-                print("NCEP/NOMADS Server Online - Connected.")
-            except Exception as e:
-                filename = None
-                
-            if filename == None:
-                print("Amazon NCEP/NOMADS Is Down.")
-                print("Rotating to Google Cloud Server.")
-                try:
-                    url, filename, run = _gfs_0p25_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    'google')
-                    print("Google Cloud Server Online - Connected.")
-                except Exception as e:
-                    print("Error: All Servers Appear Down.")
-                    print("System Exit")
-                    _sys.exit(1)
-            else:
-                pass
-        
-        else:
-            pass
-        
-    
-    if source == 'google':
-        try:
-            url, filename, run = _gfs_0p25_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    source)
-        except Exception as e:
-            filename = None
-            
-        if filename == None:
-            print("Google Cloud Server Is Down.")
-            print("Rotating to NCEP/NOMADS Server.")
-            try:
-                url, filename, run = _gfs_0p25_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    'noaa')
-                print("Google Cloud Server Online - Connected.")
-            except Exception as e:
-                filename = None
-                
-            if filename == None:
-                print("Amazon NCEP/NOMADS Is Down.")
-                print("Rotating to Amazon AWS Server.")
-                try:
-                    url, filename, run = _gfs_0p25_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    'aws')
-                    print("Amazon AWS Server Online - Connected.")
-                except Exception as e:
-                    print("Error: All Servers Appear Down.")
-                    print("System Exit")
-                    _sys.exit(1)
-            else:
-                pass
-        
-        else:
-            pass        
-        
-    
-    download = _local_file_scanner(path, 
-                                    filename,
-                                    'nomads',
-                                    run)   
-    
-    if download == True:
-        print(f"Downloading GFS0P25...")
-        
-        if run < 10:
-            run = f"0{run}"
-        else:
-            run = run
-        
-        _clear_old_data(path)
-        
-        cont = False
 
-        for i in range(0, final_forecast_hour + step, step):
-            if i < 10:
-                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2.0p25.f00{i}",
-                                            f"{url}gfs.t{run}z.pgrb2.0p25.f00{i}.idx",
-                                            variables,
-                                            levels,
-                                            level_type,
-                                            path,
-                                            f"gfs.t{run}z.pgrb2.0p25.f00{i}.grib2",
-                                            proxies=proxies,
-                                            chunk_size=chunk_size,
-                                            notifications=notifications,
-                                            clear_recycle_bin=clear_recycle_bin) 
-                
-            elif i >= 10 and i < (99 + step):
-                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2.0p25.f0{i}",
-                                            f"{url}gfs.t{run}z.pgrb2.0p25.f0{i}.idx",
-                                            variables,
-                                            levels,
-                                            level_type,
-                                            path,
-                                            f"gfs.t{run}z.pgrb2.0p25.f0{i}.grib2",
-                                            proxies=proxies,
-                                            chunk_size=chunk_size,
-                                            notifications=notifications,
-                                            clear_recycle_bin=clear_recycle_bin)   
-                
-            elif i >= 102 and i < (240 + step):
-                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2.0p25.f{i}",
-                                            f"{url}gfs.t{run}z.pgrb2.0p25.f{i}.idx",
-                                            variables,
-                                            levels,
-                                            level_type,
-                                            path,
-                                            f"gfs.t{run}z.pgrb2.0p25.f{i}.grib2",
-                                            proxies=proxies,
-                                            chunk_size=chunk_size,
-                                            notifications=notifications,
-                                            clear_recycle_bin=clear_recycle_bin)    
-                
-            else:
-                cont = True
-                break
-            
-        if cont == True:
-            for i in range(240, final_forecast_hour + 6, 6):
-                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2.0p25.f{i}",
-                                            f"{url}gfs.t{run}z.pgrb2.0p25.f{i}.idx",
-                                            variables,
-                                            levels,
-                                            level_type,
-                                            path,
-                                            f"gfs.t{run}z.pgrb2.0p25.f{i}.grib2",
-                                            proxies=proxies,
-                                            chunk_size=chunk_size,
-                                            notifications=notifications,
-                                            clear_recycle_bin=clear_recycle_bin) 
-        else:
-            pass      
+    _clear_old_data(f"{path}/{date.strftime('%Y%m%d')}/{run}")
         
-        print("GFS0P25 Download Complete") 
+    try:
+        url = _gfs_0p25_url_scanner(date,
+                        run,
+                        final_forecast_hour, 
+                        proxies, 
+                        source)
+    except Exception as e:
+        print(f"Error: Data not found on {source.upper()} server OR {source.upper()} server could be down.")
+        if source == 'aws':
+            print(f"Rotating to Google Cloud and Retrying.")
+            try:
+                url = _gfs_0p25_url_scanner(date,
+                                            run,
+                                            final_forecast_hour, 
+                                            proxies, 
+                                            'google')
+            except Exception as e:
+                print(f"Error: Client is unable to connect to either server.")
+                print(f"Tip: Double check the date for typos. Record begins at: {start.strftime('%Y%m%d')} 00z")
+                print("System Exit")
+                _sys.exit(1)
+                
+        else:
+            print(f"Rotating to AWS and Retrying.")
+            try:
+                url = _gfs_0p25_url_scanner(date,
+                                            run,
+                                            final_forecast_hour, 
+                                            proxies, 
+                                            'aws')
+            except Exception as e:
+                print(f"Error: Client is unable to connect to either server.")
+                print(f"Tip: Double check the date for typos. Record begins at: {start.strftime('%Y%m%d')} 00z")
+                print("System Exit")
+                _sys.exit(1)
+                
+    print(f"Downloading GFS0P25 data for {date.strftime('%Y%m%d')} {run}z")
+                
+    for i in range(0, final_forecast_hour + step, step):
+        if i < 10:
+            _byte_range_request(f"{url}gfs.t{run}z.pgrb2.0p25.f00{i}",
+                                        f"{url}gfs.t{run}z.pgrb2.0p25.f00{i}.idx",
+                                        variables,
+                                        levels,
+                                        level_type,
+                                        f"{path}/{date.strftime('%Y%m%d')}/{run}",
+                                        f"gfs.t{run}z.pgrb2.0p25.f00{i}.grib2",
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_recycle_bin=clear_recycle_bin) 
             
+        elif i >= 10 and i < (99 + step):
+            _byte_range_request(f"{url}gfs.t{run}z.pgrb2.0p25.f0{i}",
+                                        f"{url}gfs.t{run}z.pgrb2.0p25.f0{i}.idx",
+                                        variables,
+                                        levels,
+                                        level_type,
+                                        f"{path}/{date.strftime('%Y%m%d')}/{run}",
+                                        f"gfs.t{run}z.pgrb2.0p25.f0{i}.grib2",
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_recycle_bin=clear_recycle_bin)   
+            
+        elif i >= 102 and i < (240 + step):
+            _byte_range_request(f"{url}gfs.t{run}z.pgrb2.0p25.f{i}",
+                                        f"{url}gfs.t{run}z.pgrb2.0p25.f{i}.idx",
+                                        variables,
+                                        levels,
+                                        level_type,
+                                        f"{path}/{date.strftime('%Y%m%d')}/{run}",
+                                        f"gfs.t{run}z.pgrb2.0p25.f{i}.grib2",
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_recycle_bin=clear_recycle_bin)    
+            
+        else:
+            cont = True
+            break
+        
+    if cont == True:
+        for i in range(240, final_forecast_hour + 6, 6):
+            _byte_range_request(f"{url}gfs.t{run}z.pgrb2.0p25.f{i}",
+                                        f"{url}gfs.t{run}z.pgrb2.0p25.f{i}.idx",
+                                        variables,
+                                        levels,
+                                        level_type,
+                                        f"{path}/{date.strftime('%Y%m%d')}/{run}",
+                                        f"gfs.t{run}z.pgrb2.0p25.f{i}.grib2",
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_recycle_bin=clear_recycle_bin) 
     else:
-        print(f"GFS0P25 Data is up to date. Skipping download...") 
+        pass      
     
+    print(f"GFS0P25 Download Complete for {date.strftime('%Y%m%d')} {run}z") 
+            
     if process_data == True:
         print(f"GFS0P25 Data Processing...")
         
-        ds = _gfs_post_processing.primary_gfs_post_processing(path,
+        ds = _gfs_post_processing.primary_gfs_post_processing(f"{path}/{date.strftime('%Y%m%d')}/{run}",
                                                               western_bound,
                                                               eastern_bound,
                                                               southern_bound,
@@ -566,7 +475,7 @@ def _gfs_0p25_client(final_forecast_hour=384,
         else:
             pass
         
-        print(f"GFS0P25 Data Processing Complete.")
+        print(f"GFS0P25 Data Processing Complete for {date.strftime('%Y%m%d')} {run}z.")
         return ds
     
     else:
@@ -574,7 +483,10 @@ def _gfs_0p25_client(final_forecast_hour=384,
     
     
     
-def _gfs_0p25_secondary_parameters_client(final_forecast_hour=384, 
+def _gfs_0p25_secondary_parameters_client(
+            date,
+            run,
+            final_forecast_hour=384, 
             western_bound=-180, 
             eastern_bound=180, 
             northern_bound=90, 
@@ -587,14 +499,12 @@ def _gfs_0p25_secondary_parameters_client(final_forecast_hour=384,
                        'relative humidity',
                        'u-component of wind',
                        'v-component of wind'],
-            custom_directory=None,
             clear_recycle_bin=False,
             convert_temperature=True,
             convert_to='celsius',
             chunk_size=8192,
             notifications='off',
-            clear_data=False,
-            source='noaa',
+            source='aws',
             level_type='pressure',
             levels=[875,
                     825,
@@ -616,12 +526,17 @@ def _gfs_0p25_secondary_parameters_client(final_forecast_hour=384,
                     5,
                     3,
                     2,
-                    1]):
+                    1],
+            path=f"GFS0P25 SECONDARY PARAMETERS/Archive"):
     
     """
     This function downloads GFS0P25 SECONDARY PARAMETERS data and saves it to a folder. 
     
-    Required Argumemnts: None
+    Required Arguments:
+    
+    1) date (String or datetime) - The date of the model run.
+    
+    2) run (Integer) - The model runtime in UTC (0, 6, 12, 18).
     
     Optional Arguments:
     
@@ -684,9 +599,7 @@ def _gfs_0p25_secondary_parameters_client(final_forecast_hour=384,
         'vertical velocity (pressure)'
         'vertical speed shear'      
     
-    10) custom_directory (String or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
-        the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
-        be used. 
+    10) path (String) - Default="GFS0P25 SECONDARY PARAMETERS/Archive". The local directory where the archived GFS data will be stored. 
     
     11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
@@ -702,19 +615,15 @@ def _gfs_0p25_secondary_parameters_client(final_forecast_hour=384,
     
     15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
-        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
-    
-    17) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+    16) source (String) - Default='noaa'. The data server the user wants to connect the client to.
     
         Server List
         -----------
         
-        1) NOAA/NCEP/NOMADS - source='noaa'
-        2) Amazon AWS - source='aws'
-        3) Google Cloud - source='google'
+        1) Amazon AWS - source='aws'
+        2) Google Cloud - source='google'
         
-    18) level_type (String) - Default='pressure'. The type of level for the variable.
+    17) level_type (String) - Default='pressure'. The type of level for the variable.
     
         Level Types
         -----------
@@ -727,7 +636,7 @@ def _gfs_0p25_secondary_parameters_client(final_forecast_hour=384,
         'pressure above ground'
         'potential vorticity surface'
         
-    19) levels (String, Integer or Float List) - Default=[875,
+    18) levels (String, Integer or Float List) - Default=[875,
                                                             825,
                                                             775,
                                                             725,
@@ -793,6 +702,20 @@ def _gfs_0p25_secondary_parameters_client(final_forecast_hour=384,
     'potential_vorticity_level_vertical_speed_shear' 
     
     """
+    if type(date) == type(start):
+        date = date
+    else:
+        date = f"{date[0:4]}{date[5:7]}{date[8:10]}"
+        date = _datetime.strptime(date, "%Y%m%d")
+    
+    if run == 18 or run == '18':
+        run = '18'
+    elif run == 12 or run == '12':
+        run = '12'
+    elif run == 6 or run == '06':
+        run = '06'
+    else:
+        run = '00'
     
     source = source.lower()
     
@@ -803,221 +726,114 @@ def _gfs_0p25_secondary_parameters_client(final_forecast_hour=384,
     else:
         pass
     
-    if custom_directory==None:
-        path = _build_directory('gfs0p25 secondary parameters',
-                               'atmospheric')
         
-    else:
-        try:
-            _os.makedirs(f"{custom_directory}")
-        except Exception as e:
-            pass
-        
-        path = custom_directory
-        
-    if clear_data == True:
-        _clear_old_data(path)
-    else:
-        pass
-        
-    if source == 'noaa':
-        try:
-            url, filename, run = _gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    source)
-        except Exception as e:
-            filename = None
-            
-        if filename == None:
-            print("NCEP/NOMADS Server Is Down.")
-            print("Rotating to Amazon AWS Server.")
-            try:
-                url, filename, run = _gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    'aws')
-                print("Amazon AWS Server Online - Connected.")
-            except Exception as e:
-                filename = None
-                
-            if filename == None:
-                print("Amazon AWS Server Is Down.")
-                print("Rotating to Google Cloud Server.")
-                try:
-                    url, filename, run = _gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    'google')
-                    print("Google Cloud Server Online - Connected.")
-                except Exception as e:
-                    print("Error: All Servers Appear Down.")
-                    print("System Exit")
-                    _sys.exit(1)
-            else:
-                pass
-        
-        else:
-            pass
-        
-    if source == 'aws':
-        try:
-            url, filename, run = _gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    source)
-        except Exception as e:
-            filename = None
-            
-        if filename == None:
-            print("NCEP/NOMADS Server Is Down.")
-            print("Rotating to NCEP/NOMADS Server.")
-            try:
-                url, filename, run = _gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    'noaa')
-                print("NCEP/NOMADS Server Online - Connected.")
-            except Exception as e:
-                filename = None
-                
-            if filename == None:
-                print("Amazon NCEP/NOMADS Is Down.")
-                print("Rotating to Google Cloud Server.")
-                try:
-                    url, filename, run = _gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    'google')
-                    print("Google Cloud Server Online - Connected.")
-                except Exception as e:
-                    print("Error: All Servers Appear Down.")
-                    print("System Exit")
-                    _sys.exit(1)
-            else:
-                pass
-        
-        else:
-            pass
-        
-    
-    if source == 'google':
-        try:
-            url, filename, run = _gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    source)
-        except Exception as e:
-            filename = None
-            
-        if filename == None:
-            print("Google Cloud Server Is Down.")
-            print("Rotating to NCEP/NOMADS Server.")
-            try:
-                url, filename, run = _gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    'noaa')
-                print("Google Cloud Server Online - Connected.")
-            except Exception as e:
-                filename = None
-                
-            if filename == None:
-                print("Amazon NCEP/NOMADS Is Down.")
-                print("Rotating to Amazon AWS Server.")
-                try:
-                    url, filename, run = _gfs_0p25_secondary_parameters_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    'aws')
-                    print("Amazon AWS Server Online - Connected.")
-                except Exception as e:
-                    print("Error: All Servers Appear Down.")
-                    print("System Exit")
-                    _sys.exit(1)
-            else:
-                pass
-        
-        else:
-            pass        
-    
-    download = _local_file_scanner(path, 
-                                    filename,
-                                    'nomads',
-                                    run)   
-    
-    if download == True:
-        print(f"Downloading GFS0P25 Secondary Parameters...")
-        
-        _clear_old_data(path)
-        
-        if run < 10:
-            run = f"0{run}"
-        else:
-            run = run
-        
-        cont = False
+    _clear_old_data(f"{path}/{date.strftime('%Y%m%d')}/{run}")
 
-        for i in range(0, final_forecast_hour + step, step):
-            if i < 10:
-                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2b.0p25.f00{i}",
-                                            f"{url}gfs.t{run}z.pgrb2b.0p25.f00{i}.idx",
-                                            variables,
-                                            levels,
-                                            level_type,
-                                            path,
-                                            f"gfs.t{run}z.pgrb2b.0p25.f00{i}.grib2",
-                                            proxies=proxies,
-                                            chunk_size=chunk_size,
-                                            notifications=notifications,
-                                            clear_recycle_bin=clear_recycle_bin) 
+        
+    try:
+        url = _gfs_0p25_secondary_parameters_url_scanner(date,
+                        run,
+                        final_forecast_hour, 
+                        proxies, 
+                        source)
+    except Exception as e:
+        print(f"Error: Data not found on {source.upper()} server OR {source.upper()} server could be down.")
+        if source == 'aws':
+            print(f"Rotating to Google Cloud and Retrying.")
+            try:
+                url = _gfs_0p25_secondary_parameters_url_scanner(date,
+                                            run,
+                                            final_forecast_hour, 
+                                            proxies, 
+                                            'google')
+            except Exception as e:
+                print(f"Error: Client is unable to connect to either server.")
+                print(f"Tip: Double check the date for typos. Record begins at: {start.strftime('%Y%m%d')} 00z")
+                print("System Exit")
+                _sys.exit(1)
                 
-            elif i >= 10 and i < (99 + step):
-                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2b.0p25.f0{i}",
-                                            f"{url}gfs.t{run}z.pgrb2b.0p25.f0{i}.idx",
-                                            variables,
-                                            levels,
-                                            level_type,
-                                            path,
-                                            f"gfs.t{run}z.pgrb2b.0p25.f0{i}.grib2",
-                                            proxies=proxies,
-                                            chunk_size=chunk_size,
-                                            notifications=notifications,
-                                            clear_recycle_bin=clear_recycle_bin)   
-                
-            elif i >= 102 and i < (240 + step):
-                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2b.0p25.f{i}",
-                                            f"{url}gfs.t{run}z.pgrb2b.0p25.f{i}.idx",
-                                            variables,
-                                            levels,
-                                            level_type,
-                                            path,
-                                            f"gfs.t{run}z.pgrb2b.0p25.f{i}.grib2",
-                                            proxies=proxies,
-                                            chunk_size=chunk_size,
-                                            notifications=notifications,
-                                            clear_recycle_bin=clear_recycle_bin)    
-                
-            else:
-                cont = True
-                break
-            
-        if cont == True:
-            for i in range(240, final_forecast_hour + 6, 6):
-                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2b.0p25.f{i}",
-                                            f"{url}gfs.t{run}z.pgrb2b.0p25.f{i}.idx",
-                                            variables,
-                                            levels,
-                                            level_type,
-                                            path,
-                                            f"gfs.t{run}z.pgrb2b.0p25.f{i}.grib2",
-                                            proxies=proxies,
-                                            chunk_size=chunk_size,
-                                            notifications=notifications,
-                                            clear_recycle_bin=clear_recycle_bin) 
         else:
-            pass      
+            print(f"Rotating to AWS and Retrying.")
+            try:
+                url = _gfs_0p25_secondary_parameters_url_scanner(date,
+                                            run,
+                                            final_forecast_hour, 
+                                            proxies, 
+                                            'aws')
+            except Exception as e:
+                print(f"Error: Client is unable to connect to either server.")
+                print(f"Tip: Double check the date for typos. Record begins at: {start.strftime('%Y%m%d')} 00z")
+                print("System Exit")
+                _sys.exit(1)
+                
+    print(f"Downloading GFS0P25 SECONDARY PARAMETERS data for {date.strftime('%Y%m%d')} {run}z")
+
+    for i in range(0, final_forecast_hour + step, step):
+        if i < 10:
+            _byte_range_request(f"{url}gfs.t{run}z.pgrb2b.0p25.f00{i}",
+                                        f"{url}gfs.t{run}z.pgrb2b.0p25.f00{i}.idx",
+                                        variables,
+                                        levels,
+                                        level_type,
+                                        f"{path}/{date.strftime('%Y%m%d')}/{run}",
+                                        f"gfs.t{run}z.pgrb2b.0p25.f00{i}.grib2",
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_recycle_bin=clear_recycle_bin) 
             
-        print("GFS0P25 Secondary Parameters Download Complete") 
+        elif i >= 10 and i < (99 + step):
+            _byte_range_request(f"{url}gfs.t{run}z.pgrb2b.0p25.f0{i}",
+                                        f"{url}gfs.t{run}z.pgrb2b.0p25.f0{i}.idx",
+                                        variables,
+                                        levels,
+                                        level_type,
+                                        f"{path}/{date.strftime('%Y%m%d')}/{run}",
+                                        f"gfs.t{run}z.pgrb2b.0p25.f0{i}.grib2",
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_recycle_bin=clear_recycle_bin)   
             
+        elif i >= 102 and i < (240 + step):
+            _byte_range_request(f"{url}gfs.t{run}z.pgrb2b.0p25.f{i}",
+                                        f"{url}gfs.t{run}z.pgrb2b.0p25.f{i}.idx",
+                                        variables,
+                                        levels,
+                                        level_type,
+                                        f"{path}/{date.strftime('%Y%m%d')}/{run}",
+                                        f"gfs.t{run}z.pgrb2b.0p25.f{i}.grib2",
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_recycle_bin=clear_recycle_bin)    
+            
+        else:
+            cont = True
+            break
+        
+    if cont == True:
+        for i in range(240, final_forecast_hour + 6, 6):
+            _byte_range_request(f"{url}gfs.t{run}z.pgrb2b.0p25.f{i}",
+                                        f"{url}gfs.t{run}z.pgrb2b.0p25.f{i}.idx",
+                                        variables,
+                                        levels,
+                                        level_type,
+                                        f"{path}/{date.strftime('%Y%m%d')}/{run}",
+                                        f"gfs.t{run}z.pgrb2b.0p25.f{i}.grib2",
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_recycle_bin=clear_recycle_bin) 
     else:
-        print(f"GFS0P25 Secondary Parameters Data is up to date. Skipping download...") 
+        pass      
+        
+    print(f"GFS0P25 Secondary Parameters Download Complete for {date.strftime('%Y%m%d')} {run}z") 
     
     if process_data == True:
         print(f"GFS0P25 Secondary Parameters Data Processing...")
         
-        ds = _gfs_post_processing.secondary_gfs_post_processing(path,
+        ds = _gfs_post_processing.secondary_gfs_post_processing(f"{path}/{date.strftime('%Y%m%d')}/{run}",
                                                                 western_bound,
                                                                 eastern_bound,
                                                                 southern_bound,
@@ -1030,7 +846,7 @@ def _gfs_0p25_secondary_parameters_client(final_forecast_hour=384,
         else:
             pass
         
-        print(f"GFS0P25 Secondary Parameters Data Processing Complete.")
+        print(f"GFS0P25 SECONDARY PARAMETERS Data Processing Complete.")
         return ds
     
     else:
@@ -1038,7 +854,10 @@ def _gfs_0p25_secondary_parameters_client(final_forecast_hour=384,
     
         
         
-def _gfs_0p50_client(final_forecast_hour=384, 
+def _gfs_0p50_client(
+            date,
+            run,
+            final_forecast_hour=384, 
             western_bound=-180, 
             eastern_bound=180, 
             northern_bound=90, 
@@ -1051,13 +870,11 @@ def _gfs_0p50_client(final_forecast_hour=384,
                        'relative humidity',
                        'u-component of wind',
                        'v-component of wind'],
-            custom_directory=None,
             clear_recycle_bin=False,
             convert_temperature=True,
             convert_to='celsius',
             chunk_size=8192,
             notifications='off',
-            clear_data=False,
             source='noaa',
             level_type='pressure',
             levels=[1000,
@@ -1092,12 +909,17 @@ def _gfs_0p50_client(final_forecast_hour=384,
                     5,
                     3,
                     2,
-                    1]):
+                    1],
+            path=f"GFS0P50/Archive"):
     
     """
     This function downloads GFS0P50 data and saves it to a folder. 
     
-    Required Argumemnts: None
+    Required Arguments:
+    
+    1) date (String or datetime) - The date of the model run.
+    
+    2) run (Integer) - The model runtime in UTC (0, 6, 12, 18).
     
     Optional Arguments:
     
@@ -1227,9 +1049,7 @@ def _gfs_0p50_client(final_forecast_hour=384,
         'clear sky uv-b downward solar flux'
         'uv-b downward solar flux'       
     
-    10) custom_directory (String or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
-        the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
-        be used. 
+    10) path (String) - Default="GFS0P50/Archive". The local directory where the archived GFS data will be stored. 
     
     11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
@@ -1245,10 +1065,7 @@ def _gfs_0p50_client(final_forecast_hour=384,
     
     15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
-        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
-    
-    17) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+    16) source (String) - Default='noaa'. The data server the user wants to connect the client to.
     
         Server List
         -----------
@@ -1257,7 +1074,7 @@ def _gfs_0p50_client(final_forecast_hour=384,
         2) Amazon AWS - source='aws'
         3) Google Cloud - source='google'
         
-    18) level_type (String) - Default='pressure'. The type of level for the variable.
+    17) level_type (String) - Default='pressure'. The type of level for the variable.
     
         Level Types
         -----------
@@ -1293,7 +1110,7 @@ def _gfs_0p50_client(final_forecast_hour=384,
         'potential vorticity surface'
         
         
-    19) levels (String, Integer or Float List) - Default=levels=[1000,
+    18) levels (String, Integer or Float List) - Default=levels=[1000,
                                                                     975,
                                                                     950,
                                                                     925,
@@ -1430,7 +1247,23 @@ def _gfs_0p50_client(final_forecast_hour=384,
     'potential_vorticity_level_vertical_speed_shear'
     
     """
+    if type(date) == type(start):
+        date = date
+    else:
+        date = f"{date[0:4]}{date[5:7]}{date[8:10]}"
+        date = _datetime.strptime(date, "%Y%m%d")
+    
+    if run == 18 or run == '18':
+        run = '18'
+    elif run == 12 or run == '12':
+        run = '12'
+    elif run == 6 or run == '06':
+        run = '06'
+    else:
+        run = '00'
+    
     source = source.lower()
+    
     if clear_recycle_bin == True:
         _clear_recycle_bin_windows()
         _clear_trash_bin_mac()
@@ -1438,218 +1271,114 @@ def _gfs_0p50_client(final_forecast_hour=384,
     else:
         pass
     
-    if custom_directory==None:
-        path = _build_directory('gfs0p50',
-                               'atmospheric')
         
-    else:
-        try:
-            _os.makedirs(f"{custom_directory}")
-        except Exception as e:
-            pass
-        
-        path = custom_directory
-        
-    if clear_data == True:
-        _clear_old_data(path)
-    else:
-        pass
-        
-    if source == 'noaa':
-        try:
-            url, filename, run = _gfs_0p50_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    source)
-        except Exception as e:
-            filename = None
-            
-        if filename == None:
-            print("NCEP/NOMADS Server Is Down.")
-            print("Rotating to Amazon AWS Server.")
-            try:
-                url, filename, run = _gfs_0p50_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    'aws')
-                print("Amazon AWS Server Online - Connected.")
-            except Exception as e:
-                filename = None
-                
-            if filename == None:
-                print("Amazon AWS Server Is Down.")
-                print("Rotating to Google Cloud Server.")
-                try:
-                    url, filename, run = _gfs_0p50_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    'google')
-                    print("Google Cloud Server Online - Connected.")
-                except Exception as e:
-                    print("Error: All Servers Appear Down.")
-                    print("System Exit")
-                    _sys.exit(1)
-            else:
-                pass
-        
-        else:
-            pass
-        
-    if source == 'aws':
-        try:
-            url, filename, run = _gfs_0p50_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    source)
-        except Exception as e:
-            filename = None
-            
-        if filename == None:
-            print("NCEP/NOMADS Server Is Down.")
-            print("Rotating to NCEP/NOMADS Server.")
-            try:
-                url, filename, run = _gfs_0p50_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    'noaa')
-                print("NCEP/NOMADS Server Online - Connected.")
-            except Exception as e:
-                filename = None
-                
-            if filename == None:
-                print("Amazon NCEP/NOMADS Is Down.")
-                print("Rotating to Google Cloud Server.")
-                try:
-                    url, filename, run = _gfs_0p50_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    'google')
-                    print("Google Cloud Server Online - Connected.")
-                except Exception as e:
-                    print("Error: All Servers Appear Down.")
-                    print("System Exit")
-                    _sys.exit(1)
-            else:
-                pass
-        
-        else:
-            pass
-        
-    
-    if source == 'google':
-        try:
-            url, filename, run = _gfs_0p50_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    source)
-        except Exception as e:
-            filename = None
-            
-        if filename == None:
-            print("Google Cloud Server Is Down.")
-            print("Rotating to NCEP/NOMADS Server.")
-            try:
-                url, filename, run = _gfs_0p50_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    'noaa')
-                print("Google Cloud Server Online - Connected.")
-            except Exception as e:
-                filename = None
-                
-            if filename == None:
-                print("Amazon NCEP/NOMADS Is Down.")
-                print("Rotating to Amazon AWS Server.")
-                try:
-                    url, filename, run = _gfs_0p50_url_scanner(final_forecast_hour,
-                                                    proxies, 
-                                                    'aws')
-                    print("Amazon AWS Server Online - Connected.")
-                except Exception as e:
-                    print("Error: All Servers Appear Down.")
-                    print("System Exit")
-                    _sys.exit(1)
-            else:
-                pass
-        
-        else:
-            pass     
-    
-    download = _local_file_scanner(path, 
-                                    filename,
-                                    'nomads',
-                                    run)   
-    
-    if download == True:
-        print(f"Downloading GFS0P50...")
-        
-        _clear_old_data(path)
-        if run < 10:
-            run = f"0{run}"
-        else:
-            run = run
-        
-        cont = False
+    _clear_old_data(f"{path}/{date.strftime('%Y%m%d')}/{run}")
 
-        for i in range(0, final_forecast_hour + step, step):
-            if i < 10:
-                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2full.0p50.f00{i}",
-                                            f"{url}gfs.t{run}z.pgrb2full.0p50.f00{i}.idx",
-                                            variables,
-                                            levels,
-                                            level_type,
-                                            path,
-                                            f"gfs.t{run}z.pgrb2full.0p50.f00{i}.grib2",
-                                            proxies=proxies,
-                                            chunk_size=chunk_size,
-                                            notifications=notifications,
-                                            clear_recycle_bin=clear_recycle_bin) 
+        
+    try:
+        url = _gfs_0p50_url_scanner(date,
+                        run,
+                        final_forecast_hour, 
+                        proxies, 
+                        source)
+    except Exception as e:
+        print(f"Error: Data not found on {source.upper()} server OR {source.upper()} server could be down.")
+        if source == 'aws':
+            print(f"Rotating to Google Cloud and Retrying.")
+            try:
+                url = _gfs_0p50_url_scanner(date,
+                                            run,
+                                            final_forecast_hour, 
+                                            proxies, 
+                                            'google')
+            except Exception as e:
+                print(f"Error: Client is unable to connect to either server.")
+                print(f"Tip: Double check the date for typos. Record begins at: {start.strftime('%Y%m%d')} 00z")
+                print("System Exit")
+                _sys.exit(1)
                 
-            elif i >= 10 and i < (99 + step):
-                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2full.0p50.f0{i}",
-                                            f"{url}gfs.t{run}z.pgrb2full.0p50.f0{i}.idx",
-                                            variables,
-                                            levels,
-                                            level_type,
-                                            path,
-                                            f"gfs.t{run}z.pgrb2full.0p50.f0{i}.grib2",
-                                            proxies=proxies,
-                                            chunk_size=chunk_size,
-                                            notifications=notifications,
-                                            clear_recycle_bin=clear_recycle_bin)   
-                
-            elif i >= 102 and i < (240 + step):
-                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2full.0p50.f{i}",
-                                            f"{url}gfs.t{run}z.pgrb2full.0p50.f{i}.idx",
-                                            variables,
-                                            levels,
-                                            level_type,
-                                            path,
-                                            f"gfs.t{run}z.pgrb2full.0p50.f{i}.grib2",
-                                            proxies=proxies,
-                                            chunk_size=chunk_size,
-                                            notifications=notifications,
-                                            clear_recycle_bin=clear_recycle_bin)    
-                
-            else:
-                cont = True
-                break
-            
-        if cont == True:
-            for i in range(240, final_forecast_hour + 6, 6):
-                _client.byte_range_request(f"{url}gfs.t{run}z.pgrb2full.0p50.f{i}",
-                                            f"{url}gfs.t{run}z.pgrb2full.0p50.f{i}.idx",
-                                            variables,
-                                            levels,
-                                            level_type,
-                                            path,
-                                            f"gfs.t{run}z.pgrb2full.0p50.f{i}.grib2",
-                                            proxies=proxies,
-                                            chunk_size=chunk_size,
-                                            notifications=notifications,
-                                            clear_recycle_bin=clear_recycle_bin) 
         else:
-            pass      
+            print(f"Rotating to AWS and Retrying.")
+            try:
+                url = _gfs_0p50_url_scanner(date,
+                                            run,
+                                            final_forecast_hour, 
+                                            proxies, 
+                                            'aws')
+            except Exception as e:
+                print(f"Error: Client is unable to connect to either server.")
+                print(f"Tip: Double check the date for typos. Record begins at: {start.strftime('%Y%m%d')} 00z")
+                print("System Exit")
+                _sys.exit(1)
+                
+    print(f"Downloading GFS0P50 data for {date.strftime('%Y%m%d')} {run}z")
+
+    for i in range(0, final_forecast_hour + step, step):
+        if i < 10:
+            _byte_range_request(f"{url}gfs.t{run}z.pgrb2full.0p50.f00{i}",
+                                        f"{url}gfs.t{run}z.pgrb2full.0p50.f00{i}.idx",
+                                        variables,
+                                        levels,
+                                        level_type,
+                                        f"{path}/{date.strftime('%Y%m%d')}/{run}",
+                                        f"gfs.t{run}z.pgrb2full.0p50.f00{i}.grib2",
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_recycle_bin=clear_recycle_bin) 
             
+        elif i >= 10 and i < (99 + step):
+            _byte_range_request(f"{url}gfs.t{run}z.pgrb2full.0p50.f0{i}",
+                                        f"{url}gfs.t{run}z.pgrb2full.0p50.f0{i}.idx",
+                                        variables,
+                                        levels,
+                                        level_type,
+                                        f"{path}/{date.strftime('%Y%m%d')}/{run}",
+                                        f"gfs.t{run}z.pgrb2full.0p50.f0{i}.grib2",
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_recycle_bin=clear_recycle_bin)   
+            
+        elif i >= 102 and i < (240 + step):
+            _byte_range_request(f"{url}gfs.t{run}z.pgrb2full.0p50.f{i}",
+                                        f"{url}gfs.t{run}z.pgrb2full.0p50.f{i}.idx",
+                                        variables,
+                                        levels,
+                                        level_type,
+                                        f"{path}/{date.strftime('%Y%m%d')}/{run}",
+                                        f"gfs.t{run}z.pgrb2full.0p50.f{i}.grib2",
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_recycle_bin=clear_recycle_bin)    
+            
+        else:
+            cont = True
+            break
+        
+    if cont == True:
+        for i in range(240, final_forecast_hour + 6, 6):
+            _byte_range_request(f"{url}gfs.t{run}z.pgrb2full.0p50.f{i}",
+                                        f"{url}gfs.t{run}z.pgrb2full.0p50.f{i}.idx",
+                                        variables,
+                                        levels,
+                                        level_type,
+                                        f"{path}/{date.strftime('%Y%m%d')}/{run}",
+                                        f"gfs.t{run}z.pgrb2full.0p50.f{i}.grib2",
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        clear_recycle_bin=clear_recycle_bin) 
     else:
-        print(f"GFS0P50 Data is up to date. Skipping download...") 
+        pass      
+        
+    print(f"GFS0P50 Download Complete for {date.strftime('%Y%m%d')} {run}z") 
     
     if process_data == True:
         print(f"GFS0P50 Data Processing...")
         
-        ds = _gfs_post_processing.primary_gfs_post_processing(path,
+        ds = _gfs_post_processing.primary_gfs_post_processing(f"{path}/{date.strftime('%Y%m%d')}/{run}",
                                                                 western_bound,
                                                                 eastern_bound,
                                                                 southern_bound,
@@ -1669,7 +1398,10 @@ def _gfs_0p50_client(final_forecast_hour=384,
         pass      
     
 
-def gfs_0p25(final_forecast_hour=384, 
+def gfs_0p25(date,
+             run,
+            path=f"GFS0P25/Archive",
+            final_forecast_hour=384, 
             western_bound=-180, 
             eastern_bound=180, 
             northern_bound=90, 
@@ -1682,14 +1414,12 @@ def gfs_0p25(final_forecast_hour=384,
                        'relative humidity',
                        'u-component of wind',
                        'v-component of wind'],
-            custom_directory=None,
             clear_recycle_bin=False,
             convert_temperature=True,
             convert_to='celsius',
             chunk_size=8192,
             notifications='off',
-            clear_data=False,
-            source='noaa',
+            source='aws',
             level_type='pressure',
             levels=[1000,
                     925,
@@ -1704,7 +1434,7 @@ def gfs_0p25(final_forecast_hour=384,
                     50,
                     10],
             to_netcdf=False,
-            netcdf_path=f"GFS0P25/NETCDF",
+            netcdf_path=f"GFS0P25/Archive/NETCDF",
             netcdf_filename=f"gfs_0p25.nc",
             delete_previous_netcdf_file=True,
             return_values=True):
@@ -1712,7 +1442,11 @@ def gfs_0p25(final_forecast_hour=384,
     """
     This function downloads GFS0P25 data and saves it to a folder. 
     
-    Required Argumemnts: None
+    Required Argumemnts: 
+    
+    1) date (String or datetime) - The date of the model run.
+    
+    2) run (Integer) - The model runtime in UTC (0, 6, 12, 18).
     
     Optional Arguments:
     
@@ -1841,9 +1575,7 @@ def gfs_0p25(final_forecast_hour=384,
         'water equivalent of accumulated snow depth'
         'wilting point'          
     
-    10) custom_directory (String or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
-        the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
-        be used. 
+    10) path (String) - Default="GFS0P25/Archive". The local directory where the archived GFS data will be stored. 
     
     11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
@@ -1858,20 +1590,16 @@ def gfs_0p25(final_forecast_hour=384,
     14) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
     15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
-    
-    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
-        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
         
-    17) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+    16) source (String) - Default='noaa'. The data server the user wants to connect the client to.
     
         Server List
         -----------
         
-        1) NOAA/NCEP/NOMADS - source='noaa'
-        2) Amazon AWS - source='aws'
-        3) Google Cloud - source='google'
+        1) Amazon AWS - source='aws'
+        2) Google Cloud - source='google'
         
-    18) level_type (String) - Default='pressure'. The type of level for the variable.
+    17) level_type (String) - Default='pressure'. The type of level for the variable.
     
         Level Types
         -----------
@@ -1906,7 +1634,7 @@ def gfs_0p25(final_forecast_hour=384,
         'pressure above ground'
         'potential vorticity surface'
         
-    19) levels (String, Integer or Float List) - Default=[1000,
+    18) levels (String, Integer or Float List) - Default=[1000,
                                                             925,
                                                             850,
                                                             700,
@@ -1921,17 +1649,17 @@ def gfs_0p25(final_forecast_hour=384,
                                                             
         The pressure, height or depth levels.
         
-    20) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    19) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
     
-    21) netcdf_path (String) - Default='GFS0P25/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    20) netcdf_path (String) - Default='GFS0P25/Archive/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
     
-    22) netcdf_filename (String) - Default='gfs_0p25.nc'. The name of the netCDF (.nc) file. A good practice is to 
+    21) netcdf_filename (String) - Default='gfs_0p25.nc'. The name of the netCDF (.nc) file. A good practice is to 
         name this netCDF file using the variable name. 
         
-    23) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+    22) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
         new netCDF file. For users who want to archive all data set this to False. 
         
-    24) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned.
+    23) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned.
     
     Returns
     -------
@@ -1981,7 +1709,9 @@ def gfs_0p25(final_forecast_hour=384,
     
     try:
         if process_data == True:
-            ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+            ds = _gfs_0p25_client(date,
+                                  run,
+                                  final_forecast_hour=final_forecast_hour, 
                                 western_bound=western_bound, 
                                 eastern_bound=eastern_bound, 
                                 northern_bound=northern_bound, 
@@ -1990,18 +1720,19 @@ def gfs_0p25(final_forecast_hour=384,
                                 process_data=process_data,
                                 proxies=proxies, 
                                 variables=variables,
-                                custom_directory=custom_directory,
+                                path=path,
                                 clear_recycle_bin=clear_recycle_bin,
                                 convert_temperature=convert_temperature,
                                 convert_to=convert_to,
                                 chunk_size=chunk_size,
                                 notifications=notifications,
-                                clear_data=clear_data,
                                 source=source,
                                 level_type=level_type,
                                 levels=levels)
         else:
-            _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+            _gfs_0p25_client(date,
+                                run,
+                                final_forecast_hour=final_forecast_hour, 
                                 western_bound=western_bound, 
                                 eastern_bound=eastern_bound, 
                                 northern_bound=northern_bound, 
@@ -2010,30 +1741,27 @@ def gfs_0p25(final_forecast_hour=384,
                                 process_data=process_data,
                                 proxies=proxies, 
                                 variables=variables,
-                                custom_directory=custom_directory,
+                                path=path,
                                 clear_recycle_bin=clear_recycle_bin,
                                 convert_temperature=convert_temperature,
                                 convert_to=convert_to,
                                 chunk_size=chunk_size,
                                 notifications=notifications,
-                                clear_data=clear_data,
                                 source=source,
                                 level_type=level_type,
                                 levels=levels)
         
-        rotate = False
     except Exception as e:
-        rotate = True
         
-    if rotate == True:
-        if source == 'noaa':
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to Amazon AWS Server.")
-            
+        print(f"Error: Client lost connection to {source.upper()} Server.")
+        
+        if source == 'aws':
+            print(f"Rotating to Google Cloud server.")
             try:
                 if process_data == True:
-                    ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                    ds = _gfs_0p25_client(date,
+                                        run,
+                                        final_forecast_hour=final_forecast_hour, 
                                         western_bound=western_bound, 
                                         eastern_bound=eastern_bound, 
                                         northern_bound=northern_bound, 
@@ -2042,18 +1770,19 @@ def gfs_0p25(final_forecast_hour=384,
                                         process_data=process_data,
                                         proxies=proxies, 
                                         variables=variables,
-                                        custom_directory=custom_directory,
+                                        path=path,
                                         clear_recycle_bin=clear_recycle_bin,
                                         convert_temperature=convert_temperature,
                                         convert_to=convert_to,
                                         chunk_size=chunk_size,
                                         notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='aws',
+                                        source='google',
                                         level_type=level_type,
                                         levels=levels)
                 else:
-                    _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
+                    _gfs_0p25_client(date,
+                                run,
+                                final_forecast_hour=final_forecast_hour, 
                                 western_bound=western_bound, 
                                 eastern_bound=eastern_bound, 
                                 northern_bound=northern_bound, 
@@ -2062,279 +1791,73 @@ def gfs_0p25(final_forecast_hour=384,
                                 process_data=process_data,
                                 proxies=proxies, 
                                 variables=variables,
-                                custom_directory=custom_directory,
+                                path=path,
                                 clear_recycle_bin=clear_recycle_bin,
                                 convert_temperature=convert_temperature,
                                 convert_to=convert_to,
                                 chunk_size=chunk_size,
                                 notifications=notifications,
-                                clear_data=clear_data,
+                                source='google',
+                                level_type=level_type,
+                                levels=levels)
+            except Exception as e:
+                print(f"Error: Client is unable to establish a connection to either server.")
+                print(f"Tip: Try double checking the date and run for typos. Data record begins at: {start.strftime('%Y%m%d')} 00z.")
+                _version_warning()
+                print("System Exit")
+                _sys.exit(1)
+
+                
+        else:
+            print(f"Rotating to AWS server.")
+            try:
+                if process_data == True:
+                    ds = _gfs_0p25_client(date,
+                                        run,
+                                        final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        path=path,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        source='aws',
+                                        level_type=level_type,
+                                        levels=levels)
+                else:
+                    _gfs_0p25_client(date,
+                                run,
+                                final_forecast_hour=final_forecast_hour, 
+                                western_bound=western_bound, 
+                                eastern_bound=eastern_bound, 
+                                northern_bound=northern_bound, 
+                                southern_bound=southern_bound, 
+                                step=step,
+                                process_data=process_data,
+                                proxies=proxies, 
+                                variables=variables,
+                                path=path,
+                                clear_recycle_bin=clear_recycle_bin,
+                                convert_temperature=convert_temperature,
+                                convert_to=convert_to,
+                                chunk_size=chunk_size,
+                                notifications=notifications,
                                 source='aws',
                                 level_type=level_type,
                                 levels=levels)
-                rotate = False
             except Exception as e:
-                rotate = True
-                
-        if source == 'aws':
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to NOAA/NCEP/NOMADS Server.")
-            
-            try:
-                if process_data == True:
-                    ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='noaa',
-                                        level_type=level_type,
-                                        levels=levels)
-                else:
-                    _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='noaa',
-                                        level_type=level_type,
-                                        levels=levels)
-                rotate = False
-            except Exception as e:
-                rotate = True
-                
-        else:
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to NOAA/NCEP/NOMADS Server.")
-            
-            try:
-                if process_data == True:
-                    ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='noaa',
-                                        level_type=level_type,
-                                        levels=levels)
-                else:
-                    _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='noaa',
-                                        level_type=level_type,
-                                        levels=levels)
-                rotate = False
-            except Exception as e:
-                rotate = True
-    
-    else:
-        pass
-    
-    if rotate == True:
-        if source == 'noaa':
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to Google Cloud Server.")
-            
-            try:
-                if process_data == True:
-                    ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='google',
-                                        level_type=level_type,
-                                        levels=levels)
-                else:
-                    _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='google',
-                                        level_type=level_type,
-                                        levels=levels)
-                rotate = False
-            except Exception as e:
-                rotate = True
-                
-        if source == 'aws':
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to Google Cloud Server.")
-            
-            try:
-                if process_data == True:
-                    ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='google',
-                                        level_type=level_type,
-                                        levels=levels)
-                else:
-                    _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='google',
-                                        level_type=level_type,
-                                        levels=levels)
-                rotate = False
-            except Exception as e:
-                rotate = True
-                
-        else:
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to Amazon AWS Server.")
-            
-            try:
-                if process_data == True:
-                    ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='aws',
-                                        level_type=level_type,
-                                        levels=levels)
-                else:
-                    _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='aws',
-                                        level_type=level_type,
-                                        levels=levels)
-                rotate = False
-            except Exception as e:
-                print("Client cannot connect to any server.")
-                _version_warning()
-                print("System Exit.")
+                print(f"Error: Client is unable to establish a connection to either server.")
+                print(f"Tip: Try double checking the date and run for typos. Data record begins at: {start.strftime('%Y%m%d')} 00z.")
+                print("System Exit")
                 _sys.exit(1)
-    
-    else:
-        pass
     
     if process_data == True:
         if to_netcdf == True:
@@ -2355,8 +1878,14 @@ def gfs_0p25(final_forecast_hour=384,
             return ds
         else:
             pass
+    else:
+        pass
 
-def gfs_0p50(final_forecast_hour=384, 
+def gfs_0p50(
+            date,
+            run,
+            path=f"GFS0P50/Archive",
+            final_forecast_hour=384, 
             western_bound=-180, 
             eastern_bound=180, 
             northern_bound=90, 
@@ -2369,14 +1898,12 @@ def gfs_0p50(final_forecast_hour=384,
                        'relative humidity',
                        'u-component of wind',
                        'v-component of wind'],
-            custom_directory=None,
             clear_recycle_bin=False,
             convert_temperature=True,
             convert_to='celsius',
             chunk_size=8192,
             notifications='off',
-            clear_data=False,
-            source='noaa',
+            source='aws',
             level_type='pressure',
             levels=[1000,
                     975,
@@ -2412,7 +1939,7 @@ def gfs_0p50(final_forecast_hour=384,
                     2,
                     1],
             to_netcdf=False,
-            netcdf_path=f"GFS0P50/NETCDF",
+            netcdf_path=f"GFS0P50/Archive/NETCDF",
             netcdf_filename=f"gfs_0p50.nc",
             delete_previous_netcdf_file=True,
             return_values=True):
@@ -2420,7 +1947,11 @@ def gfs_0p50(final_forecast_hour=384,
     """
     This function downloads GFS0P50 data and saves it to a folder. 
     
-    Required Argumemnts: None
+    Required Arguments:
+    
+    1) date (String or datetime) - The date of the model run.
+    
+    2) run (Integer) - The model runtime in UTC (0, 6, 12, 18).
     
     Optional Arguments:
     
@@ -2550,9 +2081,7 @@ def gfs_0p50(final_forecast_hour=384,
         'clear sky uv-b downward solar flux'
         'uv-b downward solar flux'       
     
-    10) custom_directory (String or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
-        the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
-        be used. 
+    10) path (String) - Default="GFS0P25/Archive". The local directory where the archived GFS data will be stored.
     
     11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
@@ -2568,10 +2097,7 @@ def gfs_0p50(final_forecast_hour=384,
     
     15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
-        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
-    
-    17) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+    16) source (String) - Default='noaa'. The data server the user wants to connect the client to.
     
         Server List
         -----------
@@ -2580,7 +2106,7 @@ def gfs_0p50(final_forecast_hour=384,
         2) Amazon AWS - source='aws'
         3) Google Cloud - source='google'
         
-    18) level_type (String) - Default='pressure'. The type of level for the variable.
+    17) level_type (String) - Default='pressure'. The type of level for the variable.
     
         Level Types
         -----------
@@ -2616,7 +2142,7 @@ def gfs_0p50(final_forecast_hour=384,
         'potential vorticity surface'
         
         
-    19) levels (String, Integer or Float List) - Default=levels=[1000,
+    18) levels (String, Integer or Float List) - Default=levels=[1000,
                                                                     975,
                                                                     950,
                                                                     925,
@@ -2652,17 +2178,17 @@ def gfs_0p50(final_forecast_hour=384,
                                                             
         The pressure, height or depth levels.
         
-    20) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    19) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
     
-    21) netcdf_path (String) - Default='GFS0P50/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    20) netcdf_path (String) - Default='GFS0P50/Archive/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
     
-    22) netcdf_filename (String) - Default='gfs_0p50.nc'. The name of the netCDF (.nc) file. A good practice is to 
+    21) netcdf_filename (String) - Default='gfs_0p50.nc'. The name of the netCDF (.nc) file. A good practice is to 
         name this netCDF file using the variable name. 
         
-    23) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+    22) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
         new netCDF file. For users who want to archive all data set this to False. 
         
-    24) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned.
+    23) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned.
     
     Returns
     -------
@@ -2753,7 +2279,9 @@ def gfs_0p50(final_forecast_hour=384,
     
     try:
         if process_data == True:
-            ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+            ds = _gfs_0p50_client(date,
+                                  run,
+                                  final_forecast_hour=final_forecast_hour, 
                                 western_bound=western_bound, 
                                 eastern_bound=eastern_bound, 
                                 northern_bound=northern_bound, 
@@ -2762,18 +2290,19 @@ def gfs_0p50(final_forecast_hour=384,
                                 process_data=process_data,
                                 proxies=proxies, 
                                 variables=variables,
-                                custom_directory=custom_directory,
+                                path=path,
                                 clear_recycle_bin=clear_recycle_bin,
                                 convert_temperature=convert_temperature,
                                 convert_to=convert_to,
                                 chunk_size=chunk_size,
                                 notifications=notifications,
-                                clear_data=clear_data,
                                 source=source,
                                 level_type=level_type,
                                 levels=levels)
         else:
-            _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+            _gfs_0p50_client(date,
+                                run,
+                                final_forecast_hour=final_forecast_hour, 
                                 western_bound=western_bound, 
                                 eastern_bound=eastern_bound, 
                                 northern_bound=northern_bound, 
@@ -2782,80 +2311,27 @@ def gfs_0p50(final_forecast_hour=384,
                                 process_data=process_data,
                                 proxies=proxies, 
                                 variables=variables,
-                                custom_directory=custom_directory,
+                                path=path,
                                 clear_recycle_bin=clear_recycle_bin,
                                 convert_temperature=convert_temperature,
                                 convert_to=convert_to,
                                 chunk_size=chunk_size,
                                 notifications=notifications,
-                                clear_data=clear_data,
                                 source=source,
                                 level_type=level_type,
                                 levels=levels)
         
-        rotate = False
     except Exception as e:
-        rotate = True
         
-    if rotate == True:
-        if source == 'noaa':
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to Amazon AWS Server.")
-            
-            try:
-                if process_data == True:
-                    ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='aws',
-                                        level_type=level_type,
-                                        levels=levels)
-                else:
-                    _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='aws',
-                                        level_type=level_type,
-                                        levels=levels)
-                rotate = False
-            except Exception as e:
-                rotate = True
-                
+        print(f"Error: Client lost connection to {source.upper()} Server.")
+        
         if source == 'aws':
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to NOAA/NCEP/NOMADS Server.")
-            
+            print(f"Rotating to Google Cloud server.")
             try:
                 if process_data == True:
-                    ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
+                    ds = _gfs_0p50_client(date,
+                                        run,
+                                        final_forecast_hour=final_forecast_hour, 
                                         western_bound=western_bound, 
                                         eastern_bound=eastern_bound, 
                                         northern_bound=northern_bound, 
@@ -2864,249 +2340,94 @@ def gfs_0p50(final_forecast_hour=384,
                                         process_data=process_data,
                                         proxies=proxies, 
                                         variables=variables,
-                                        custom_directory=custom_directory,
+                                        path=path,
                                         clear_recycle_bin=clear_recycle_bin,
                                         convert_temperature=convert_temperature,
                                         convert_to=convert_to,
                                         chunk_size=chunk_size,
                                         notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='noaa',
-                                        level_type=level_type,
-                                        levels=levels)
-                else:
-                    _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='noaa',
-                                        level_type=level_type,
-                                        levels=levels)
-                rotate = False
-            except Exception as e:
-                rotate = True
-                
-        else:
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to NOAA/NCEP/NOMADS Server.")
-            
-            try:
-                if process_data == True:
-                    ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='noaa',
-                                        level_type=level_type,
-                                        levels=levels)
-                else:
-                    _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='noaa',
-                                        level_type=level_type,
-                                        levels=levels)
-                rotate = False
-            except Exception as e:
-                rotate = True
-    
-    else:
-        pass
-    
-    if rotate == True:
-        if source == 'noaa':
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to Google Cloud Server.")
-            
-            try:
-                if process_data == True:
-                    ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
                                         source='google',
                                         level_type=level_type,
                                         levels=levels)
                 else:
-                    _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='google',
-                                        level_type=level_type,
-                                        levels=levels)
-                rotate = False
+                    _gfs_0p50_client(date,
+                                run,
+                                final_forecast_hour=final_forecast_hour, 
+                                western_bound=western_bound, 
+                                eastern_bound=eastern_bound, 
+                                northern_bound=northern_bound, 
+                                southern_bound=southern_bound, 
+                                step=step,
+                                process_data=process_data,
+                                proxies=proxies, 
+                                variables=variables,
+                                path=path,
+                                clear_recycle_bin=clear_recycle_bin,
+                                convert_temperature=convert_temperature,
+                                convert_to=convert_to,
+                                chunk_size=chunk_size,
+                                notifications=notifications,
+                                source='google',
+                                level_type=level_type,
+                                levels=levels)
             except Exception as e:
-                rotate = True
-                
-        if source == 'aws':
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to Google Cloud Server.")
-            
-            try:
-                if process_data == True:
-                    ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='google',
-                                        level_type=level_type,
-                                        levels=levels)
-                else:
-                    _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='google',
-                                        level_type=level_type,
-                                        levels=levels)
-                rotate = False
-            except Exception as e:
-                rotate = True
-                
-        else:
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to Amazon AWS Server.")
-            
-            try:
-                if process_data == True:
-                    ds = _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='aws',
-                                        level_type=level_type,
-                                        levels=levels)
-                else:
-                    _gfs_0p50_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='aws',
-                                        level_type=level_type,
-                                        levels=levels)
-                rotate = False
-            except Exception as e:
-                print("Client cannot connect to any server.")
+                print(f"Error: Client is unable to establish a connection to either server.")
+                print(f"Tip: Try double checking the date and run for typos. Data record begins at: {start.strftime('%Y%m%d')} 00z.")
                 _version_warning()
-                print("System Exit.")
+                print("System Exit")
                 _sys.exit(1)
-    
-    else:
-        pass
+
+                
+        else:
+            print(f"Rotating to AWS server.")
+            try:
+                if process_data == True:
+                    ds = _gfs_0p50_client(date,
+                                        run,
+                                        final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        path=path,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        source='aws',
+                                        level_type=level_type,
+                                        levels=levels)
+                else:
+                    _gfs_0p50_client(date,
+                                run,
+                                final_forecast_hour=final_forecast_hour, 
+                                western_bound=western_bound, 
+                                eastern_bound=eastern_bound, 
+                                northern_bound=northern_bound, 
+                                southern_bound=southern_bound, 
+                                step=step,
+                                process_data=process_data,
+                                proxies=proxies, 
+                                variables=variables,
+                                path=path,
+                                clear_recycle_bin=clear_recycle_bin,
+                                convert_temperature=convert_temperature,
+                                convert_to=convert_to,
+                                chunk_size=chunk_size,
+                                notifications=notifications,
+                                source='aws',
+                                level_type=level_type,
+                                levels=levels)
+            except Exception as e:
+                print(f"Error: Client is unable to establish a connection to either server.")
+                print(f"Tip: Try double checking the date and run for typos. Data record begins at: {start.strftime('%Y%m%d')} 00z.")
+                print("System Exit")
+                _sys.exit(1)
     
     if process_data == True:
         if to_netcdf == True:
@@ -3127,8 +2448,14 @@ def gfs_0p50(final_forecast_hour=384,
             return ds
         else:
             pass
+    else:
+        pass
 
-def gfs_0p25_secondary_parameters(final_forecast_hour=384, 
+def gfs_0p25_secondary_parameters(
+            date,
+            run,
+            path=f"GFS0P25 SECONDARY PARAMETERS/Archive",
+            final_forecast_hour=384, 
             western_bound=-180, 
             eastern_bound=180, 
             northern_bound=90, 
@@ -3141,13 +2468,11 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
                        'relative humidity',
                        'u-component of wind',
                        'v-component of wind'],
-            custom_directory=None,
             clear_recycle_bin=False,
             convert_temperature=True,
             convert_to='celsius',
             chunk_size=8192,
             notifications='off',
-            clear_data=False,
             source='noaa',
             level_type='pressure',
             levels=[875,
@@ -3172,7 +2497,7 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
                     2,
                     1],
             to_netcdf=False,
-            netcdf_path=f"GFS0P25 SECONDARY PARAMETERS/NETCDF",
+            netcdf_path=f"GFS0P25 SECONDARY PARAMETERS/Archive/NETCDF",
             netcdf_filename=f"gfs_0p25_secondary_parameters.nc",
             delete_previous_netcdf_file=True,
             return_values=True):
@@ -3180,7 +2505,11 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
     """
     This function downloads GFS0P25 SECONDARY PARAMETERS data and saves it to a folder. 
     
-    Required Argumemnts: None
+    Required Arguments:
+    
+    1) date (String or datetime) - The date of the model run.
+    
+    2) run (Integer) - The model runtime in UTC (0, 6, 12, 18).
     
     Optional Arguments:
     
@@ -3243,9 +2572,7 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
         'vertical velocity (pressure)'
         'vertical speed shear'      
     
-    10) custom_directory (String or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
-        the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
-        be used. 
+    10) path (String) - Default="GFS0P25 SECONDARY PARAMETERS/Archive". The local directory where the archived GFS data will be stored. 
     
     11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
@@ -3261,10 +2588,7 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
     
     15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
-        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
-    
-    17) source (String) - Default='noaa'. The data server the user wants to connect the client to.
+    16) source (String) - Default='noaa'. The data server the user wants to connect the client to.
     
         Server List
         -----------
@@ -3273,7 +2597,7 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
         2) Amazon AWS - source='aws'
         3) Google Cloud - source='google'
         
-    18) level_type (String) - Default='pressure'. The type of level for the variable.
+    17) level_type (String) - Default='pressure'. The type of level for the variable.
     
         Level Types
         -----------
@@ -3286,7 +2610,7 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
         'pressure above ground'
         'potential vorticity surface'
         
-    19) levels (String, Integer or Float List) - Default=[875,
+    18) levels (String, Integer or Float List) - Default=[875,
                                                             825,
                                                             775,
                                                             725,
@@ -3310,17 +2634,17 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
                                                             
         The pressure, height or depth levels.
         
-    20) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    19) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
     
-    21) netcdf_path (String) - Default='GFS0P25 SECONDARY PARAMETERS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    20) netcdf_path (String) - Default='GFS0P25 SECONDARY PARAMETERS/Archive/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
     
-    22) netcdf_filename (String) - Default='gfs_0p25_secondary_parameters.nc'. The name of the netCDF (.nc) file. A good practice is to 
+    21) netcdf_filename (String) - Default='gfs_0p25_secondary_parameters.nc'. The name of the netCDF (.nc) file. A good practice is to 
         name this netCDF file using the variable name. 
         
-    23) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+    22) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
         new netCDF file. For users who want to archive all data set this to False. 
         
-    24) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned.
+    23) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned.
     
     Returns
     -------
@@ -3367,7 +2691,9 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
     
     try:
         if process_data == True:
-            ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+            ds = _gfs_0p25_secondary_parameters_client(date,
+                                  run,
+                                  final_forecast_hour=final_forecast_hour, 
                                 western_bound=western_bound, 
                                 eastern_bound=eastern_bound, 
                                 northern_bound=northern_bound, 
@@ -3376,18 +2702,19 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
                                 process_data=process_data,
                                 proxies=proxies, 
                                 variables=variables,
-                                custom_directory=custom_directory,
+                                path=path,
                                 clear_recycle_bin=clear_recycle_bin,
                                 convert_temperature=convert_temperature,
                                 convert_to=convert_to,
                                 chunk_size=chunk_size,
                                 notifications=notifications,
-                                clear_data=clear_data,
                                 source=source,
                                 level_type=level_type,
                                 levels=levels)
         else:
-            _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+            _gfs_0p25_secondary_parameters_client(date,
+                                run,
+                                final_forecast_hour=final_forecast_hour, 
                                 western_bound=western_bound, 
                                 eastern_bound=eastern_bound, 
                                 northern_bound=northern_bound, 
@@ -3396,80 +2723,27 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
                                 process_data=process_data,
                                 proxies=proxies, 
                                 variables=variables,
-                                custom_directory=custom_directory,
+                                path=path,
                                 clear_recycle_bin=clear_recycle_bin,
                                 convert_temperature=convert_temperature,
                                 convert_to=convert_to,
                                 chunk_size=chunk_size,
                                 notifications=notifications,
-                                clear_data=clear_data,
                                 source=source,
                                 level_type=level_type,
                                 levels=levels)
         
-        rotate = False
     except Exception as e:
-        rotate = True
         
-    if rotate == True:
-        if source == 'noaa':
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to Amazon AWS Server.")
-            
-            try:
-                if process_data == True:
-                    ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='aws',
-                                        level_type=level_type,
-                                        levels=levels)
-                else:
-                    _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='aws',
-                                        level_type=level_type,
-                                        levels=levels)
-                rotate = False
-            except Exception as e:
-                rotate = True
-                
+        print(f"Error: Client lost connection to {source.upper()} Server.")
+        
         if source == 'aws':
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to NOAA/NCEP/NOMADS Server.")
-            
+            print(f"Rotating to Google Cloud server.")
             try:
                 if process_data == True:
-                    ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
+                    ds = _gfs_0p25_secondary_parameters_client(date,
+                                        run,
+                                        final_forecast_hour=final_forecast_hour, 
                                         western_bound=western_bound, 
                                         eastern_bound=eastern_bound, 
                                         northern_bound=northern_bound, 
@@ -3478,249 +2752,94 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
                                         process_data=process_data,
                                         proxies=proxies, 
                                         variables=variables,
-                                        custom_directory=custom_directory,
+                                        path=path,
                                         clear_recycle_bin=clear_recycle_bin,
                                         convert_temperature=convert_temperature,
                                         convert_to=convert_to,
                                         chunk_size=chunk_size,
                                         notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='noaa',
-                                        level_type=level_type,
-                                        levels=levels)
-                else:
-                    _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='noaa',
-                                        level_type=level_type,
-                                        levels=levels)
-                rotate = False
-            except Exception as e:
-                rotate = True
-                
-        else:
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to NOAA/NCEP/NOMADS Server.")
-            
-            try:
-                if process_data == True:
-                    ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='noaa',
-                                        level_type=level_type,
-                                        levels=levels)
-                else:
-                    _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='noaa',
-                                        level_type=level_type,
-                                        levels=levels)
-                rotate = False
-            except Exception as e:
-                rotate = True
-    
-    else:
-        pass
-    
-    if rotate == True:
-        if source == 'noaa':
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to Google Cloud Server.")
-            
-            try:
-                if process_data == True:
-                    ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
                                         source='google',
                                         level_type=level_type,
                                         levels=levels)
                 else:
-                    _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='google',
-                                        level_type=level_type,
-                                        levels=levels)
-                rotate = False
+                    _gfs_0p25_secondary_parameters_client(date,
+                                run,
+                                final_forecast_hour=final_forecast_hour, 
+                                western_bound=western_bound, 
+                                eastern_bound=eastern_bound, 
+                                northern_bound=northern_bound, 
+                                southern_bound=southern_bound, 
+                                step=step,
+                                process_data=process_data,
+                                proxies=proxies, 
+                                variables=variables,
+                                path=path,
+                                clear_recycle_bin=clear_recycle_bin,
+                                convert_temperature=convert_temperature,
+                                convert_to=convert_to,
+                                chunk_size=chunk_size,
+                                notifications=notifications,
+                                source='google',
+                                level_type=level_type,
+                                levels=levels)
             except Exception as e:
-                rotate = True
-                
-        if source == 'aws':
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to Google Cloud Server.")
-            
-            try:
-                if process_data == True:
-                    ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='google',
-                                        level_type=level_type,
-                                        levels=levels)
-                else:
-                    _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='google',
-                                        level_type=level_type,
-                                        levels=levels)
-                rotate = False
-            except Exception as e:
-                rotate = True
-                
-        else:
-            print("Error: Corrupted File Cannot Process.")
-            print("Clearing Out Data.")
-            print("Rotating to Amazon AWS Server.")
-            
-            try:
-                if process_data == True:
-                    ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='aws',
-                                        level_type=level_type,
-                                        levels=levels)
-                else:
-                    _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 
-                                        western_bound=western_bound, 
-                                        eastern_bound=eastern_bound, 
-                                        northern_bound=northern_bound, 
-                                        southern_bound=southern_bound, 
-                                        step=step,
-                                        process_data=process_data,
-                                        proxies=proxies, 
-                                        variables=variables,
-                                        custom_directory=custom_directory,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        chunk_size=chunk_size,
-                                        notifications=notifications,
-                                        clear_data=clear_data,
-                                        source='aws',
-                                        level_type=level_type,
-                                        levels=levels)
-                rotate = False
-            except Exception as e:
-                print("Client cannot connect to any server.")
+                print(f"Error: Client is unable to establish a connection to either server.")
+                print(f"Tip: Try double checking the date and run for typos. Data record begins at: {start.strftime('%Y%m%d')} 00z.")
                 _version_warning()
-                print("System Exit.")
+                print("System Exit")
                 _sys.exit(1)
-    
-    else:
-        pass
+
+                
+        else:
+            print(f"Rotating to AWS server.")
+            try:
+                if process_data == True:
+                    ds = _gfs_0p25_secondary_parameters_client(date,
+                                        run,
+                                        final_forecast_hour=final_forecast_hour, 
+                                        western_bound=western_bound, 
+                                        eastern_bound=eastern_bound, 
+                                        northern_bound=northern_bound, 
+                                        southern_bound=southern_bound, 
+                                        step=step,
+                                        process_data=process_data,
+                                        proxies=proxies, 
+                                        variables=variables,
+                                        path=path,
+                                        clear_recycle_bin=clear_recycle_bin,
+                                        convert_temperature=convert_temperature,
+                                        convert_to=convert_to,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications,
+                                        source='aws',
+                                        level_type=level_type,
+                                        levels=levels)
+                else:
+                    _gfs_0p25_secondary_parameters_client(date,
+                                run,
+                                final_forecast_hour=final_forecast_hour, 
+                                western_bound=western_bound, 
+                                eastern_bound=eastern_bound, 
+                                northern_bound=northern_bound, 
+                                southern_bound=southern_bound, 
+                                step=step,
+                                process_data=process_data,
+                                proxies=proxies, 
+                                variables=variables,
+                                path=path,
+                                clear_recycle_bin=clear_recycle_bin,
+                                convert_temperature=convert_temperature,
+                                convert_to=convert_to,
+                                chunk_size=chunk_size,
+                                notifications=notifications,
+                                source='aws',
+                                level_type=level_type,
+                                levels=levels)
+            except Exception as e:
+                print(f"Error: Client is unable to establish a connection to either server.")
+                print(f"Tip: Try double checking the date and run for typos. Data record begins at: {start.strftime('%Y%m%d')} 00z.")
+                print("System Exit")
+                _sys.exit(1)
     
     if process_data == True:
         if to_netcdf == True:
@@ -3741,3 +2860,5 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
             return ds
         else:
             pass
+    else:
+        pass

@@ -377,7 +377,9 @@ def gfs0p25():
     -l = Levels (Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10])
                             
     
-    Here is a sample of how to query geopotential height and temperature at 850 and 500mb `gfs 0p25 latest -v geopotential_height -v temperature -l 850 -l 500`
+    Here is a sample of how to query geopotential height and temperature at 850 and 500mb 
+    
+    `wxdata-gfs 0p25 latest -v geopotential_height -v temperature -l 850 -l 500`
     
     The default setting of levels assume pressure levels are being used and that the category is set to primary.
     
@@ -1334,7 +1336,9 @@ def gfs0p50():
     -l = Levels (Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10])
                             
     
-    Here is a sample of how to query geopotential height and temperature at 850 and 500mb `gfs 0p50 latest -v geopotential_height -v temperature -l 850 -l 500`
+    Here is a sample of how to query geopotential height and temperature at 850 and 500mb 
+    
+    `wxdata-gfs 0p50 latest -v geopotential_height -v temperature -l 850 -l 500`
     
     The default setting of levels assume pressure levels are being used and that the category is set to primary.
     

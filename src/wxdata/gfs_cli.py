@@ -1893,7 +1893,7 @@ def archived_gfs0p50_fetch(
                         southern_bound=southern_bound)
         
         d = _parse_date(date)
-        _click.echo(f"GFS0P50 {category.upper()} download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {custom_directory}")
+        _click.echo(f"GFS0P50 download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {custom_directory}")
             
     except SystemExit as e:
         _command_error_message('gfs0p50')

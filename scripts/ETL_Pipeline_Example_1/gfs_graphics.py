@@ -22,6 +22,13 @@ import metpy.calc as mpcalc
 from wxdata import gfs_post_processing
 from datetime import datetime, timedelta, UTC
 
+# Get the absolute directory where this python script lives
+# This is necessary for automating Python scripts via Windows Powershell
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Join it with your folder name to create an absolute path for where the graphics will save
+target_folder = os.path.join(script_dir, "GFS 850mb Temperature Forecast")
+
 # Extract the current time in UTC
 now = datetime.now(UTC)
 
@@ -29,7 +36,13 @@ now = datetime.now(UTC)
 mpl.rcParams['font.weight'] = 'bold'
 
 # Create our graphics directory
-os.makedirs(f"GFS 850mb Temperature Forecast", exist_ok=True)
+os.makedirs(target_folder, exist_ok=True)
+
+try:
+    for file in os.listdir(target_folder):
+        os.remove(f"{target_folder}/{file}")
+except Exception as e:
+    pass
 
 # Defines our directory where the data is stored
 path_to_data = f"GFS0P25/Temperature"
@@ -171,9 +184,9 @@ for i in range(0, len(ds['step']), 1):
     filename = f"{forecast_time.strftime('%m%d%Y%H')}.png"
     
     # Saves our frame to our graphics directory
-    fig.savefig(f"GFS 850mb Temperature Forecast/{filename}", bbox_inches='tight')
+    fig.savefig(f"{target_folder}/{filename}", bbox_inches='tight')
     
-print("GFS0P25 850MB Temperature Forecast Graphics Saved To: f:GFS 850mb Temperature Forecast/")
+print(f"GFS0P25 850MB Temperature Forecast Graphics Saved To: f:{target_folder}")
 
 
 

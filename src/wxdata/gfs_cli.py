@@ -1003,11 +1003,6 @@ def archived_gfs0p25_fetch(
     """Downloads Archived GFS 0.25x0.25 Data For A Specified Date and Run"""
     
     try:
-        if custom_directory.lower() == "none":
-            custom_directory = None
-        else:
-            custom_directory = custom_directory
-        
         vars_fixed = []
         for v in variables:
             v = v.replace('_', ' ')
@@ -1404,14 +1399,6 @@ def gfs0p50():
 )
 
 @_click.option(
-    "--proxy",
-    default=None,
-    callback=lambda _, __, v: _parse_proxy(v),
-    show_default=True,
-    help="Proxy URL (e.g., https://address:port). Default: no proxy.",
-)
-
-@_click.option(
     "--clear_recycle_bin",
     "-cr",
     default=False,
@@ -1446,6 +1433,306 @@ def gfs0p50():
     type=str,
     help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"
 )
+
+@_click.option(
+    "--western_bound",
+    "-wb",
+    default=-180,
+    show_default=True,
+    type=int,
+    help="Western Bound for subsetting the data. Range: -180 to 180 in Degrees Longitude. Default=-180."
+)
+
+@_click.option(
+    "--eastern_bound",
+    "-eb",
+    default=180,
+    show_default=True,
+    type=int,
+    help="Eastern Bound for subsetting the data. Range: -180 to 180 in Degrees Longitude. Default=180."
+)
+
+@_click.option(
+    "--northern_bound",
+    "-nb",
+    default=90,
+    show_default=True,
+    type=int,
+    help="Northern Bound for subsetting the data. Range: -90 to 90 in Degrees Latitude. Default=90."
+)
+
+@_click.option(
+    "--southern_bound",
+    "-sb",
+    default=-90,
+    show_default=True,
+    type=int,
+    help="Southern Bound for subsetting the data. Range: -90 to 90 in Degrees Latitude. Default=-90."
+)
+        
+@_click.option('--variables', 
+              '-v', 
+              default=['geopotential_height',
+                       'temperature',
+                       'relative_humidity',
+                       'u-component_of_wind'
+                       'v-component_of_wind'],
+              multiple=True, 
+              type=str,
+              help=(
+                  """Variables to pass into the function. 
+                  
+                  Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']
+                  
+                  See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
+                  
+                  )
+)
+
+@_click.option(
+    '--levels', 
+    '-l', 
+    default=[1000,
+            925,
+            850,
+            700,
+            500,
+            400,
+            300,
+            250,
+            200,
+            100,
+            50,
+            10],
+    multiple=True, 
+    type=int,  
+    help=("""Levels for pressure, height, PVU etc. 
+          
+          Pressure (hPa)
+          
+          Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10]
+          
+          See https://edrewitz.github.io/WxData/GFS0P25 for available levels.
+          
+          """)
+)
+
+@_click.option(
+    '--level_type', 
+    '-lt', 
+    default="pressure",
+    type=str,
+    show_default=True,
+    help=("""Type of level (i.e. pressure, height above ground etc.). 
+        
+          Default='pressure'.
+          
+          See https://edrewitz.github.io/WxData/GFS0P25 for available level types.
+          
+          """)
+)
+
+@_click.option(
+    "--proxy",
+    default=None,
+    callback=lambda _, __, v: _parse_proxy(v),
+    show_default=True,
+    help="Proxy URL (e.g., https://address:port). Default: no proxy.",
+)
+
+@_click.option(
+    "--process",
+    default=True,
+    type=bool,
+    show_default=True,
+    help=("""This flag when set to True will process the data in addition to downloading the data. (Default=True)
+          """),
+)
+
+@_click.option(
+    "--netcdf",
+    default=False,
+    type=bool,
+    show_default=True,
+    help=("""This flag when set to True will create a netCDF (.nc) file for all the data ingested from the GRIB files.
+          """),
+)
+
+@_click.option(
+    "--ncdir",
+    default=f"GFS0P50/NETCDF",
+    type=str,
+    show_default=True,
+    help=("""This flag is needed when --netcdf True to define the directory where the netCDF (.nc) file will save to.
+          """),
+)
+
+@_click.option(
+    "--ncfname",
+    default=f"gfs_0p50.nc",
+    type=str,
+    show_default=True,
+    help=("""This flag is needed when --netcdf True to define the filename for the netCDF (.nc) file. 
+          """),
+)
+
+def gfs0p50_fetch(final_forecast_hour,
+                  proxy,
+                  clear_recycle_bin,
+                  custom_directory,
+                  clear_data,
+                  source,
+                  variables,
+                  levels,
+                  level_type,
+                  netcdf,
+                  ncdir,
+                  ncfname,
+                  process,
+                  western_bound,
+                  eastern_bound,
+                  northern_bound,
+                  southern_bound):
+    
+    """Downloads Latest GFS 0.50x0.50 Data"""
+    
+    try:
+        if custom_directory.lower() == "none":
+            custom_directory = None
+        else:
+            custom_directory = custom_directory
+        
+        vars_fixed = []
+        for v in variables:
+            v = v.replace('_', ' ')
+            vars_fixed.append(v)
+            
+        level_type = level_type.replace('_', ' ')
+                
+        
+        _fetch_gfs_0p50(final_forecast_hour=final_forecast_hour,
+                        process_data=process,
+                        proxies=proxy,
+                        clear_recycle_bin=clear_recycle_bin,
+                        custom_directory=custom_directory,
+                        clear_data=clear_data,
+                        source=source,
+                        variables=vars_fixed,
+                        levels=levels,
+                        level_type=level_type,
+                        to_netcdf=netcdf,
+                        netcdf_path=ncdir,
+                        netcdf_filename=ncfname,
+                        return_values=False,
+                        western_bound=western_bound,
+                        eastern_bound=eastern_bound,
+                        northern_bound=northern_bound,
+                        southern_bound=southern_bound)
+        
+        if custom_directory == True:
+            _click.echo(f"GFS0P50 latest download complete, data files saved to {custom_directory}")
+        else:
+            _click.echo(f"GFS0P50 latest download complete, data files saved to GFS0P50/ATMOSPHERIC")
+            
+    except SystemExit as e:
+        _command_error_message('gfs0p50')
+        _sys.exit(1)
+        
+@gfs0p50.command("archived")
+@_click.option(
+    "--date",
+    "-d",
+    type=str,
+    help=("""This is a mandatory field. The date must be entered in the form of YYYY-mm-dd
+          
+          (i.e. December 25th, 2025 is 2025-12-25)
+          
+          """
+    )
+)
+
+@_click.option(
+    "--run",
+    "-r",
+    type=int,
+    help=("""This is a mandatory field. The the model runtime must be entered as an integer corresponding to the run in UTC (0, 6, 12, 18)
+                    
+          """
+    )
+)
+
+@_click.option(
+    "--final_forecast_hour",
+    "-f",
+    default=384,
+    show_default=True,
+    type=int,
+    help="This is the final forecast hour requested in the dataset."
+)
+
+
+@_click.option(
+    "--clear_recycle_bin",
+    "-cr",
+    default=False,
+    show_default=True,
+    type=bool,
+    help="To clear your recycle bin with each run of the script set to True."
+)
+
+@_click.option(
+    "--custom_directory",
+    "-cdir",
+    default="GFS0P50/Archive",
+    show_default=True,
+    type=str,
+    help="The path of the directory where the archived GFS0P25 data saves to."
+)
+
+@_click.option(
+    "--source",
+    "-s",
+    default="noaa",
+    show_default=True,
+    type=str,
+    help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"
+)
+
+@_click.option(
+    "--western_bound",
+    "-wb",
+    default=-180,
+    show_default=True,
+    type=int,
+    help="Western Bound for subsetting the data. Range: -180 to 180 in Degrees Longitude. Default=-180."
+)
+
+@_click.option(
+    "--eastern_bound",
+    "-eb",
+    default=180,
+    show_default=True,
+    type=int,
+    help="Eastern Bound for subsetting the data. Range: -180 to 180 in Degrees Longitude. Default=180."
+)
+
+@_click.option(
+    "--northern_bound",
+    "-nb",
+    default=90,
+    show_default=True,
+    type=int,
+    help="Northern Bound for subsetting the data. Range: -90 to 90 in Degrees Latitude. Default=90."
+)
+
+@_click.option(
+    "--southern_bound",
+    "-sb",
+    default=-90,
+    show_default=True,
+    type=int,
+    help="Southern Bound for subsetting the data. Range: -90 to 90 in Degrees Latitude. Default=-90."
+)
         
 @_click.option('--variables', 
               '-v', 
@@ -1470,38 +1757,17 @@ def gfs0p50():
     '--levels', 
     '-l', 
     default=[1000,
-            975,
-            950,
             925,
-            900,
             850,
-            800,
-            750,
             700,
-            650,
-            600,
-            550,
             500,
-            450,
             400,
-            350,
             300,
             250,
             200,
-            150,
             100,
-            70,
             50,
-            40,
-            30,
-            20,
-            15,
-            10,
-            7,
-            5,
-            3,
-            2,
-            1],
+            10],
     multiple=True, 
     type=int,  
     help=("""Levels for pressure, height, PVU etc. 
@@ -1529,47 +1795,105 @@ def gfs0p50():
           """)
 )
 
-def gfs0p50_fetch(final_forecast_hour,
+@_click.option(
+    "--proxy",
+    default=None,
+    callback=lambda _, __, v: _parse_proxy(v),
+    show_default=True,
+    help="Proxy URL (e.g., https://address:port). Default: no proxy.",
+)
+
+@_click.option(
+    "--process",
+    default=True,
+    type=bool,
+    show_default=True,
+    help=("""This flag when set to True will process the data in addition to downloading the data. (Default=True)
+          """),
+)
+
+@_click.option(
+    "--netcdf",
+    default=False,
+    type=bool,
+    show_default=True,
+    help=("""This flag when set to True will create a netCDF (.nc) file for all the data ingested from the GRIB files.
+          """),
+)
+
+@_click.option(
+    "--ncdir",
+    default=f"GFS0P50/NETCDF",
+    type=str,
+    show_default=True,
+    help=("""This flag is needed when --netcdf True to define the directory where the netCDF (.nc) file will save to.
+          """),
+)
+
+@_click.option(
+    "--ncfname",
+    default=f"gfs_0p50.nc",
+    type=str,
+    show_default=True,
+    help=("""This flag is needed when --netcdf True to define the filename for the netCDF (.nc) file. 
+          """),
+)
+
+def archived_gfs0p50_fetch(
+                  date,
+                  run,
+                  final_forecast_hour,
                   proxy,
                   clear_recycle_bin,
                   custom_directory,
-                  clear_data,
                   source,
                   variables,
                   levels,
-                  level_type):
+                  level_type,
+                  netcdf,
+                  ncdir,
+                  ncfname,
+                  process,
+                  western_bound,
+                  eastern_bound,
+                  northern_bound,
+                  southern_bound):
     
-    """Downloads Latest GFS 0.50x0.50 Data"""
+    """Downloads Archived GFS 0.50x0.50 Data For A Specified Date and Run"""
     
     try:
-        if custom_directory.lower() == "none":
-            custom_directory = None
-        else:
-            custom_directory = custom_directory
-        
         vars_fixed = []
         for v in variables:
             v = v.replace('_', ' ')
             vars_fixed.append(v)
             
         level_type = level_type.replace('_', ' ')
-                
         
-        _fetch_gfs_0p50(final_forecast_hour=final_forecast_hour,
-                        process_data=False,
+        
+        
+        _fetch_archived_gfs_0p50(
+                        date,
+                        run,
+                        path=custom_directory,
+                        final_forecast_hour=final_forecast_hour,
+                        process_data=process,
                         proxies=proxy,
                         clear_recycle_bin=clear_recycle_bin,
-                        custom_directory=custom_directory,
-                        clear_data=clear_data,
                         source=source,
                         variables=vars_fixed,
                         levels=levels,
-                        level_type=level_type)
+                        level_type=level_type,
+                        to_netcdf=netcdf,
+                        netcdf_path=ncdir,
+                        netcdf_filename=ncfname,
+                        return_values=False,
+                        western_bound=western_bound,
+                        eastern_bound=eastern_bound,
+                        northern_bound=northern_bound,
+                        southern_bound=southern_bound)
         
-        if custom_directory == True:
-            _click.echo(f"GFS0P50 latest download complete, data files saved to {custom_directory}")
-        else:
-            _click.echo(f"GFS0P50 latest download complete, data files saved to GFS0P50/ATMOSPHERIC")
+        d = _parse_date(date)
+        _click.echo(f"GFS0P50 {category.upper()} download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {custom_directory}")
             
     except SystemExit as e:
         _command_error_message('gfs0p50')

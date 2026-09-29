@@ -20,6 +20,7 @@ import time as _time
 import sys as _sys
 import wxdata.post_processors.ecmwf_post_processing as _ecmwf_post_processing
 
+from wxdata.utils.transforms import grib_to_netcdf as _grib_to_netcdf
 from ecmwf.opendata import Client as _Client
 from wxdata.model_data.ecmwf.url_scanners import(
     ecmwf_ifs_url_scanner as _ecmwf_ifs_url_scanner, 
@@ -65,40 +66,6 @@ _eccodes_warning()
 
 original_stdout = _sys.stdout
 
-def _check_forecast_hour(stream,
-                         final_forecast_hour):
-    
-    """
-    This function checks to make sure the final_forecast_hour is valid.
-    
-    The 00z and 12z runs are in steps of 3 hours between 0 and 144 hours then 6 hour steps from 144 to 360 hours.
-    
-    The 06z and 18z runs are in steps of 3 hours between 0 and 144 hours. These runs only go out to 144 hours.
-    
-    Required Arguments:
-    
-    1) stream (String) - 'oper' for 00z and 12z runs and 'scda' for 06z and 18z runs.
-    
-    2) final_forecast_hour (Integer) - The last forecast hour the user wishes to download. 
-    
-    Optional Arguments: None
-    
-    Returns
-    -------
-    
-    A corrected final_forecast_hour if necessary.
-    """
-    
-    if stream == 'oper' or stream == 'wave':
-        final_forecast_hour = final_forecast_hour
-    else:
-        if final_forecast_hour <= 144:
-            final_forecast_hour = final_forecast_hour
-        else:
-            final_forecast_hour = 144
-            print(f"User has a final_forecast_hour > 144. The 06z and 18z runs only have the first 144 hours. Defaulting to 144.")
-            
-    return final_forecast_hour
 
 def _get_stream(model,
                 run):
@@ -606,9 +573,7 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
     stream = _get_stream('ifs',
                          run)
     
-    final_forecast_hour = _check_forecast_hour(stream,
-                                                final_forecast_hour)
-    
+
     valid_date = _parse_date(url,
                              'ifs')
     
@@ -623,7 +588,10 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
 
     date = _parse_filename(filename)
     
-    levels = _get_levels(levels)
+    if level_type == 'pl':
+        levels = _get_levels(levels)
+    else:
+        pass
     
     client = _Client(source=source,
                      model='ifs')
@@ -712,85 +680,7 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                 else:
                     break
         else:
-            for i in range(0, 144 + step, step):
-                f = _io.StringIO()
-                with _contextlib.redirect_stdout(f):
-                    if level_type == 'pl':
-                        try:
-                            client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="fc",
-                                            levtype=level_type,
-                                            param=params,
-                                            levelist=levels,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                            success = False
-                        except Exception as e:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="fc",
-                                            levtype=level_type,
-                                            param=params,
-                                            levelist=levels,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                                    success = False
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
-                                        break
-                                        
-                    else:
-                        try:
-                            client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="fc",
-                                            levtype=level_type,
-                                            param=params,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                            success = True
-                        except Exception as e:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="fc",
-                                            levtype=level_type,
-                                            param=params,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
-                                        break
-                if success == True:                              
-                    if notifications == True:
-                        print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
-                    else:
-                        pass
-                else:
-                    break
-                                
-            for i in range(144, final_forecast_hour + 6, 6):
+            for i in range(0, final_forecast_hour + step, step):
                 f = _io.StringIO()
                 with _contextlib.redirect_stdout(f):
                     if level_type == 'pl':
@@ -806,27 +696,31 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
                             success = True
                         except Exception as e:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="fc",
-                                            levtype=level_type,
-                                            param=params,
-                                            levelist=levels,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
-                                        break                       
+                            if i % 6 != 0 and i > 144:
+                                pass
+                            else:
+                                for k in range(0, 3, 1):
+                                    print(f"Server Connection Unstable - Retrying.", file=original_stdout)
+                                    print(f"Remaining Attempts: {3 - k}", file=original_stdout)
+                                    _time.sleep(3)
+                                    try:
+                                        client.retrieve(date=valid_date,
+                                                    time=run,
+                                                    step=i,
+                                                    stream=stream,
+                                                    type="fc",
+                                                    levtype=level_type,
+                                                    param=params,
+                                                    levelist=levels,
+                                                    target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                                        success = True
+                                        break
+                                    except Exception as e:
+                                        k = k
+                                        if k >= 2:
+                                            success = False
+                                            pass
+      
                     else:
                         try:
                             client.retrieve(date=valid_date,
@@ -839,39 +733,37 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
                             success = True
                         except Exception as e:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="fc",
-                                            levtype=level_type,
-                                            param=params,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
+                            if i % 6 != 0 and i > 144:
+                                pass
+                            else:
+                                for k in range(0, 3, 1):
+                                    print(f"Server Connection Unstable - Retrying.", file=original_stdout)
+                                    print(f"Remaining Attempts: {3 - k}", file=original_stdout)
+                                    _time.sleep(3)
+                                    try:
+                                        client.retrieve(date=valid_date,
+                                                time=run,
+                                                step=i,
+                                                stream=stream,
+                                                type="fc",
+                                                levtype=level_type,
+                                                param=params,
+                                                target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                                        success = True
                                         break
-                
-                if success == True:                       
+                                    except Exception as e:
+                                        k = k
+                                        if k >= 2:
+                                            success = False
+                                            pass
+                            
+                if success == True:
                     if notifications == True:
                         print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
                     else:
                         pass
                 else:
                     break
-
-        if success == True:
-            print(f"ECMWF IFS Download Complete.")   
-        else:
-            pass 
         
     else:
         print(f"ECMWF IFS Data is up to date. Skipping download...")    
@@ -1361,8 +1253,7 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
     stream = _get_stream('ifs-ensemble',
                          run)
     
-    final_forecast_hour = _check_forecast_hour(stream,
-                                                final_forecast_hour)
+
     valid_date = _parse_date(url,
                              'ifs-ensemble')
     
@@ -1377,8 +1268,10 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
 
     date = _parse_filename(filename)
     
-    levels = _get_levels(levels)
-    
+    if level_type == 'pl':
+        levels = _get_levels(levels)
+    else:
+        pass
     client = _Client(source=source,
                      model='ifs')
     if download == True:
@@ -1468,7 +1361,7 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                 else:
                     break
         else:
-            for i in range(0, 144 + step, step):
+            for i in range(0, final_forecast_hour + step, step):
                 f = _io.StringIO()
                 with _contextlib.redirect_stdout(f):
                     if level_type == 'pl':
@@ -1485,28 +1378,31 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
                             success = True
                         except Exception as e:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="ef",
-                                            levtype=level_type,
-                                            param=params,
-                                            levelist=levels,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
+                            if i % 6 != 0 and i > 144:
+                                pass
+                            else:
+                                for k in range(0, 3, 1):
+                                    print(f"Server Connection Unstable - Retrying.", file=original_stdout)
+                                    print(f"Remaining Attempts: {3 - k}", file=original_stdout)
+                                    _time.sleep(3)
+                                    try:
+                                        client.retrieve(date=valid_date,
+                                                time=run,
+                                                step=i,
+                                                stream=stream,
+                                                type="ef",
+                                                levtype=level_type,
+                                                param=params,
+                                                levelist=levels,
+                                                number=members,
+                                                target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
+                                        success = True
                                         break
+                                    except Exception as e:
+                                        k = k
+                                        if k >= 2:
+                                            success = False
+                                            break
                     else:
                         try:
                             client.retrieve(date=valid_date,
@@ -1520,27 +1416,30 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                                             target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
                             success = True
                         except Exception as e:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="ef",
-                                            levtype=level_type,
-                                            param=params,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
+                            if i % 6 != 0 and i > 144:
+                                pass
+                            else:
+                                for k in range(0, 3, 1):
+                                    print(f"Server Connection Unstable - Retrying.", file=original_stdout)
+                                    print(f"Remaining Attempts: {3 - k}", file=original_stdout)
+                                    _time.sleep(3)
+                                    try:
+                                        client.retrieve(date=valid_date,
+                                                time=run,
+                                                step=i,
+                                                stream=stream,
+                                                type="ef",
+                                                levtype=level_type,
+                                                param=params,
+                                                number=members,
+                                                target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
+                                        success = True
                                         break
+                                    except Exception as e:
+                                        k = k
+                                        if k >= 2:
+                                            success = False
+                                            break
                 if success == True:                    
                     if notifications == True:
                         print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
@@ -1548,80 +1447,7 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                         pass
                 else:
                     break
-                                
-            for i in range(144, final_forecast_hour + 6, 6):
-                f = _io.StringIO()
-                with _contextlib.redirect_stdout(f):
-                    if level_type == 'pl':
-                        try:
-                            client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="ef",
-                                            levtype=level_type,
-                                            param=params,
-                                            levelist=levels,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
-                            success = True
-                        except Exception as e:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="ef",
-                                            levtype=level_type,
-                                            param=params,
-                                            levelist=levels,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
-                                        break                 
-                    else:
-                        try:
-                            client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="ef",
-                                            levtype=level_type,
-                                            param=params,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
-                            success = True
-                        except Exception as e:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="ef",
-                                            levtype=level_type,
-                                            param=params,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
-                                        break
+                            
                 if success == True:                   
                     if notifications == True:
                         print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
@@ -3065,9 +2891,7 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
     
     stream = _get_stream('ifs-wave',
                          run)
-    
-    final_forecast_hour = _check_forecast_hour(stream,
-                                                final_forecast_hour)
+
     valid_date = _parse_date(url,
                              'ifs-wave')
     
@@ -3130,7 +2954,7 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
                     break                 
                                 
         else:
-            for i in range(0, 144 + step, step):
+            for i in range(0, final_forecast_hour + step, step):
                 f = _io.StringIO()
                 with _contextlib.redirect_stdout(f):
                     try:
@@ -3143,67 +2967,30 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
                                         target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
                         success = True
                     except Exception as e:
-                        for k in range(0, 3, 1):
-                            print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                            print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                            _time.sleep(3)
-                            try:
-                                client.retrieve(date=valid_date,
-                                        time=run,
-                                        step=i,
-                                        stream=stream,
-                                        type="fc",
-                                        param=params,
-                                        target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                                success = True
-                                break
-                            except Exception as e:
-                                k = k
-                                if k >= 2:
-                                    success = False
+                        if i % 6 != 0 and i > 144:
+                            pass
+                        else:
+                            for k in range(0, 3, 1):
+                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
+                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
+                                _time.sleep(3)
+                                try:
+                                    client.retrieve(date=valid_date,
+                                            time=run,
+                                            step=i,
+                                            stream=stream,
+                                            type="fc",
+                                            param=params,
+                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
+                                    success = True
                                     break
+                                except Exception as e:
+                                    k = k
+                                    if k >= 2:
+                                        success = False
+                                        break
                 if success == True:
                     pass
-                else:
-                    break
-                            
-            for i in range(144, final_forecast_hour + 6, 6):
-                f = _io.StringIO()
-                with _contextlib.redirect_stdout(f):
-                    try:
-                        client.retrieve(date=valid_date,
-                                        time=run,
-                                        step=i,
-                                        stream=stream,
-                                        type="fc",
-                                        param=params,
-                                        target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                        success = True
-                    except Exception as e:
-                        for k in range(0, 3, 1):
-                            print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                            print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                            _time.sleep(3)
-                            try:
-                                client.retrieve(date=valid_date,
-                                        time=run,
-                                        step=i,
-                                        stream=stream,
-                                        type="fc",
-                                        param=params,
-                                        target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                                success = True
-                                break
-                            except Exception as e:
-                                k = k
-                                if k >= 2:
-                                    success = False
-                                    break
-                if success == True:                                           
-                    if notifications == True:
-                        print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
-                    else:
-                        pass
                 else:
                     break
 
@@ -3569,7 +3356,7 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
                                                  
                                 
         else:
-            for i in range(0, 144 + step, step):
+            for i in range(0, final_forecast_hour + step, step):
                 f = _io.StringIO()
                 with _contextlib.redirect_stdout(f):
                     try:
@@ -3583,67 +3370,34 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
                                         target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
                         success = True
                     except Exception as e:
-                        for k in range(0, 3, 1):
-                            print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                            print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                            _time.sleep(3)
-                            try:
-                                client.retrieve(date=valid_date,
-                                        time=run,
-                                        step=i,
-                                        stream='waef',
-                                        type="ef",
-                                        param=params,
-                                        number=members,
-                                        target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
-                                success = True
-                                break
-                            except Exception as e:
-                                k = k
-                                if k >= 2:
-                                    success = False
-                                    pass
-                                
+                        if i % 6 != 0 and i > 144:
+                            pass
+                        else:
+                            for k in range(0, 3, 1):
+                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
+                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
+                                _time.sleep(3)
+                                try:
+                                    client.retrieve(date=valid_date,
+                                            time=run,
+                                            step=i,
+                                            stream='waef',
+                                            type="ef",
+                                            param=params,
+                                            number=members,
+                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
+                                    success = True
+                                    break
+                                except Exception as e:
+                                    k = k
+                                    if k >= 2:
+                                        success = False
+                                        pass
                     if success == True:
                         pass
                     else:
                         break
-                            
-            for i in range(144, final_forecast_hour + 6, 6):
-                f = _io.StringIO()
-                with _contextlib.redirect_stdout(f):
-                    try:
-                        client.retrieve(date=valid_date,
-                                        time=run,
-                                        step=i,
-                                        stream='waef',
-                                        type="ef",
-                                        param=params,
-                                        number=members,
-                                        target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
-                        success = True
-                    except Exception as e:
-                        for k in range(0, 3, 1):
-                            print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                            print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                            _time.sleep(3)
-                            try:
-                                client.retrieve(date=valid_date,
-                                        time=run,
-                                        step=i,
-                                        stream='waef',
-                                        type="ef",
-                                        param=params,
-                                        number=members,
-                                        target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
-                                success = True
-                                break
-                            except Exception as e:
-                                k = k
-                                if k >= 2:
-                                    success = False
-                                    pass
-                                
+                                                                
                     if success == True:
                         if notifications == 'on':
                             print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-waef-fc.grib2 saved to {path}", file=original_stdout)
@@ -3651,6 +3405,7 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
                             pass
                     else:
                         break
+
                                                                            
         if success == True:
             print(f"ECMWF IFS-WAVE ENSEMBLE Download Complete.")    
@@ -3696,63 +3451,14 @@ def ecmwf_ifs(final_forecast_hour=144,
               custom_directory=None,
               notifications='off',
               source='ecmwf',
-              level_type='surface',
+              level_type='pressure',
               clear_data=False,
-              variables=['Geopotential (step 0)',
-                        'Standard deviation of sub-gridscale orography (step 0)',
-                        '10-meter u-wind component',
-                        '10-meter v-wind component',
-                        '100-meter u-wind component',
-                        '100-meter v-wind component',
-                        'maximum 10-meter wind gust step 0',
-                        'maximum 10-meter wind gust steps 3-144',
-                        '2-meter temperature',
-                        '2-meter dewpoint temperature',
-                        'mean sea level pressure',
-                        'mean zero-crossing wave period',
-                        'mean wave direction',
-                        'mean wave period',
-                        'peak wave period',
-                        'significant wave height',
-                        'runoff',
-                        'total precipitation',
-                        'surface pressure',
-                        'total column vertically integrated water vapor',
-                        'total cloud cover',
-                        'snow depth water equivalent',
-                        'snowfall water equivalent',
-                        'land sea mask',
-                        'volumetric soil moisture content',
-                        'soil temperature',
-                        'most unstable cape',
-                        'snow albedo',
-                        '3-hour minimum 2-meter temperature',
-                        '3-hour maximum 2-meter temperature',
-                        '6-hour minimum 2-meter temperature',
-                        '6-hour maximum 2-meter temperature',
-                        'total precipitation rate',
-                        'precipitation type',
-                        'top net longwave thermal radiation',
-                        'snow density',
-                        'surface net longwave thermal radiation',
-                        'surface net shortwave solar radiation',
-                        'surface shortwave radiation downward',
-                        'surface longwave radiation downward',
-                        'northward turbulent surface stress',
-                        'eastward turbulent surface stress',
-                        'eastward surface sea water velocity',
-                        'northward surface sea water velocity',
-                        'sea ice thickness',
-                        'sea surface height',
-                        'divergence',
-                        'geopotential height',
+              variables=['geopotential height',
                         'specific humidity',
                         'relative humidity',
                         'temperature',
                         'u-wind component',
-                        'v-wind component',
-                        'vertical velocity',
-                        'relative vorticity'],
+                        'v-wind component'],
               levels=[1000, 
                       925, 
                       850, 
@@ -3765,7 +3471,12 @@ def ecmwf_ifs(final_forecast_hour=144,
                       200, 
                       150, 
                       100, 
-                      50]):
+                      50],
+            to_netcdf=False,
+            netcdf_path=f"ECMWF IFS/NETCDF",
+            netcdf_filename=f"ecmwf_ifs.nc",
+            delete_previous_netcdf_file=True,
+            return_values=True):
     
     """
     This function scans for the latest ECMWF IFS dataset. If the dataset on the computer is old, the old data will be deleted
@@ -3834,7 +3545,7 @@ def ecmwf_ifs(final_forecast_hour=144,
         - Amazon AWS Server = 'aws'
         - Google Cloud Server = 'google'
     
-    15) level_type (String) - Default='surface'. The level of the parameters being queried. 
+    15) level_type (String) - Default='pressure'. The level of the parameters being queried. 
     
         level_types
         -----------
@@ -3846,7 +3557,14 @@ def ecmwf_ifs(final_forecast_hour=144,
     16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
         
-    17) variables (String List) - Default is all variables. The list of variable names in plain-language. 
+    17) variables (String List) - Default=['geopotential height',
+                                            'specific humidity',
+                                            'relative humidity',
+                                            'temperature',
+                                            'u-wind component',
+                                            'v-wind component'].
+                        
+        The list of variable names in plain-language. 
     
         variables
         ---------
@@ -3911,6 +3629,18 @@ def ecmwf_ifs(final_forecast_hour=144,
         When level_type='pressure', this is the list of the pressure levels. 
         
         Example: User wants only the 500 mb level: levels=[500]
+        
+    19) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    
+    20) netcdf_path (String) - Default='ECMWF IFS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    
+    21) netcdf_filename (String) - Default='ecmwf_ifs.nc'. The name of the netCDF (.nc) file. A good practice is to 
+        name this netCDF file using the variable name. 
+        
+    22) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+        new netCDF file. For users who want to archive all data set this to False. 
+        
+    23) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
         
     Returns
     -------
@@ -3978,27 +3708,65 @@ def ecmwf_ifs(final_forecast_hour=144,
         server = 'Google Cloud Server'
     
     try: 
-        ds = _ecmwf_ifs_client(final_forecast_hour=final_forecast_hour,
-              western_bound=western_bound,
-              eastern_bound=eastern_bound,
-              northern_bound=northern_bound,
-              southern_bound=southern_bound,
-              step=step,
-              proxies=proxies,
-              process_data=process_data,
-              clear_recycle_bin=clear_recycle_bin,
-              convert_temperature=convert_temperature,
-              convert_to=convert_to,
-              custom_directory=custom_directory,
-              notifications=notifications,
-              source=source,
-              level_type=level_type,
-              clear_data=clear_data,
-              variables=variables,
-              levels=levels)
-        
-        rotate = False
-        return ds
+        if process_data == True:
+            ds = _ecmwf_ifs_client(final_forecast_hour=final_forecast_hour,
+                western_bound=western_bound,
+                eastern_bound=eastern_bound,
+                northern_bound=northern_bound,
+                southern_bound=southern_bound,
+                step=step,
+                proxies=proxies,
+                process_data=process_data,
+                clear_recycle_bin=clear_recycle_bin,
+                convert_temperature=convert_temperature,
+                convert_to=convert_to,
+                custom_directory=custom_directory,
+                notifications=notifications,
+                source=source,
+                level_type=level_type,
+                clear_data=clear_data,
+                variables=variables,
+                levels=levels)
+            
+            rotate = False
+            if to_netcdf == True:
+                
+                if delete_previous_netcdf_file == True:
+                    try:
+                        _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                    except Exception as e:
+                        pass
+                
+                _grib_to_netcdf(ds,
+                                netcdf_path,
+                                netcdf_filename)
+            else:
+                pass
+            
+            if return_values == True:    
+                return ds
+            else:
+                pass
+        else:
+            _ecmwf_ifs_client(final_forecast_hour=final_forecast_hour,
+                western_bound=western_bound,
+                eastern_bound=eastern_bound,
+                northern_bound=northern_bound,
+                southern_bound=southern_bound,
+                step=step,
+                proxies=proxies,
+                process_data=process_data,
+                clear_recycle_bin=clear_recycle_bin,
+                convert_temperature=convert_temperature,
+                convert_to=convert_to,
+                custom_directory=custom_directory,
+                notifications=notifications,
+                source=source,
+                level_type=level_type,
+                clear_data=clear_data,
+                variables=variables,
+                levels=levels)
+            rotate = False
     except Exception as e:
         print(f"Client cannot establish a connection to {server}.")
         rotate = True
@@ -4007,26 +3775,64 @@ def ecmwf_ifs(final_forecast_hour=144,
         if source == 'google':
             print(f"Rotating to ECMWF Open-Data Server.")
             try:
-                ds = _ecmwf_ifs_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        step=step,
-                                        proxies=proxies,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='ecmwf',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='ecmwf',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='ecmwf',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to ECMWF Open-Data Server.")
                 rotate = True
@@ -4034,26 +3840,44 @@ def ecmwf_ifs(final_forecast_hour=144,
         elif source == 'aws':
             print(f"Rotating to ECMWF Open-Data Server.")
             try:
-                ds = _ecmwf_ifs_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        step=step,
-                                        proxies=proxies,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='ecmwf',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='ecmwf',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
             except Exception as e:
                 print("Client cannot establish a connection to ECMWF Open-Data Server.")
                 rotate = True
@@ -4061,26 +3885,64 @@ def ecmwf_ifs(final_forecast_hour=144,
         else:
             print(f"Rotating to Amazon AWS Server.")
             try:
-                ds = _ecmwf_ifs_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        step=step,
-                                        proxies=proxies,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='aws',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='aws',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='aws',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to Amazon AWS Server.")
                 rotate = True        
@@ -4092,26 +3954,64 @@ def ecmwf_ifs(final_forecast_hour=144,
         if source == 'google':
             print(f"Rotating to Amazon AWS Server.")
             try:
-                ds = _ecmwf_ifs_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        step=step,
-                                        proxies=proxies,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='aws',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='aws',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='aws',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
                 _version_warning()
@@ -4121,26 +4021,64 @@ def ecmwf_ifs(final_forecast_hour=144,
         elif source == 'aws':
             print(f"Rotating to Google Cloud Server.")
             try:
-                ds = _ecmwf_ifs_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        step=step,
-                                        proxies=proxies,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='google',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='google',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='google',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
                 _version_warning()
@@ -4150,26 +4088,64 @@ def ecmwf_ifs(final_forecast_hour=144,
         else:
             print(f"Rotating to Google Cloud Server.")
             try:
-                ds = _ecmwf_ifs_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        step=step,
-                                        proxies=proxies,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='google',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='google',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='google',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
                 _version_warning()
@@ -4195,63 +4171,14 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
               custom_directory=None,
               notifications='off',
               source='ecmwf',
-              level_type='surface',
+              level_type='pressure',
               clear_data=False,
-              variables=['Geopotential (step 0)',
-                        'Standard deviation of sub-gridscale orography (step 0)',
-                        '10-meter u-wind component',
-                        '10-meter v-wind component',
-                        '100-meter u-wind component',
-                        '100-meter v-wind component',
-                        'maximum 10-meter wind gust step 0',
-                        'maximum 10-meter wind gust steps 3-144',
-                        '2-meter temperature',
-                        '2-meter dewpoint temperature',
-                        'mean sea level pressure',
-                        'mean zero-crossing wave period',
-                        'mean wave direction',
-                        'mean wave period',
-                        'peak wave period',
-                        'significant wave height',
-                        'runoff',
-                        'total precipitation',
-                        'surface pressure',
-                        'total column vertically integrated water vapor',
-                        'total cloud cover',
-                        'snow depth water equivalent',
-                        'snowfall water equivalent',
-                        'land sea mask',
-                        'volumetric soil moisture content',
-                        'soil temperature',
-                        'most unstable cape',
-                        'snow albedo',
-                        '3-hour minimum 2-meter temperature',
-                        '3-hour maximum 2-meter temperature',
-                        '6-hour minimum 2-meter temperature',
-                        '6-hour maximum 2-meter temperature',
-                        'total precipitation rate',
-                        'precipitation type',
-                        'top net longwave thermal radiation',
-                        'snow density',
-                        'surface net longwave thermal radiation',
-                        'surface net shortwave solar radiation',
-                        'surface shortwave radiation downward',
-                        'surface longwave radiation downward',
-                        'northward turbulent surface stress',
-                        'eastward turbulent surface stress',
-                        'eastward surface sea water velocity',
-                        'northward surface sea water velocity',
-                        'sea ice thickness',
-                        'sea surface height',
-                        'divergence',
-                        'geopotential height',
+              variables=['geopotential height',
                         'specific humidity',
                         'relative humidity',
                         'temperature',
                         'u-wind component',
-                        'v-wind component',
-                        'vertical velocity',
-                        'relative vorticity'],
+                        'v-wind component'],
               levels=[1000, 
                       925, 
                       850, 
@@ -4269,7 +4196,12 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
                       11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                       21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
                       31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 
-                      41, 42, 43, 44, 45, 46, 47, 48, 49, 50]):
+                      41, 42, 43, 44, 45, 46, 47, 48, 49, 50],
+                to_netcdf=False,
+                netcdf_path=f"ECMWF IFS ENSEMBLE/NETCDF",
+                netcdf_filename=f"ecmwf_ifs_ensemble.nc",
+                delete_previous_netcdf_file=True,
+                return_values=True):
     
     """
     This function scans for the latest ECMWF IFS Ensemble dataset. If the dataset on the computer is old, the old data will be deleted
@@ -4338,7 +4270,7 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
         - Amazon AWS Server = 'aws'
         - Google Cloud Server = 'google'
         
-    15) level_type (String) - Default='surface'. The level of the parameters being queried. 
+    15) level_type (String) - Default='pressure'. The level of the parameters being queried. 
     
         level_types
         -----------
@@ -4350,7 +4282,14 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
     16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
         
-    17) variables (String List) - Default is all variables. The list of variable names in plain-language. 
+    17) variables (String List) - Default=['geopotential height',
+                                            'specific humidity',
+                                            'relative humidity',
+                                            'temperature',
+                                            'u-wind component',
+                                            'v-wind component'].
+                        
+        The list of variable names in plain-language. 
     
         variables
         ---------
@@ -4425,6 +4364,18 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
         The ECMWF IFS Ensemble consists of 50 members. 
         
         Example: User wants only the first 5 members: members=[1,2,3,4,5]
+        
+    20) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    
+    21) netcdf_path (String) - Default='ECMWF IFS ENSEMBLE/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    
+    22) netcdf_filename (String) - Default='ecmwf_ifs_ensemble.nc'. The name of the netCDF (.nc) file. A good practice is to 
+        name this netCDF file using the variable name. 
+        
+    23) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+        new netCDF file. For users who want to archive all data set this to False. 
+        
+    24) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
             
     Returns
     -------
@@ -4493,28 +4444,68 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
         server = 'Google Cloud Server'
     
     try:
-        ds = _ecmwf_ifs_ens_client(final_forecast_hour=final_forecast_hour,
-              western_bound=western_bound,
-              eastern_bound=eastern_bound,
-              northern_bound=northern_bound,
-              southern_bound=southern_bound,
-              step=step,
-              proxies=proxies,
-              process_data=process_data,
-              clear_recycle_bin=clear_recycle_bin,
-              convert_temperature=convert_temperature,
-              convert_to=convert_to,
-              custom_directory=custom_directory,
-              notifications=notifications,
-              source=source,
-              level_type=level_type,
-              clear_data=clear_data,
-              variables=variables,
-              levels=levels,
-              members=members)
-        
-        rotate = False
-        return ds
+        if process_data == True:
+            ds = _ecmwf_ifs_ens_client(final_forecast_hour=final_forecast_hour,
+                western_bound=western_bound,
+                eastern_bound=eastern_bound,
+                northern_bound=northern_bound,
+                southern_bound=southern_bound,
+                step=step,
+                proxies=proxies,
+                process_data=process_data,
+                clear_recycle_bin=clear_recycle_bin,
+                convert_temperature=convert_temperature,
+                convert_to=convert_to,
+                custom_directory=custom_directory,
+                notifications=notifications,
+                source=source,
+                level_type=level_type,
+                clear_data=clear_data,
+                variables=variables,
+                levels=levels,
+                members=members)
+            
+            rotate = False
+            if to_netcdf == True:
+                
+                if delete_previous_netcdf_file == True:
+                    try:
+                        _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                    except Exception as e:
+                        pass
+                
+                _grib_to_netcdf(ds,
+                                netcdf_path,
+                                netcdf_filename)
+            else:
+                pass
+            
+            if return_values == True:    
+                return ds
+            else:
+                pass
+        else:
+            _ecmwf_ifs_ens_client(final_forecast_hour=final_forecast_hour,
+                western_bound=western_bound,
+                eastern_bound=eastern_bound,
+                northern_bound=northern_bound,
+                southern_bound=southern_bound,
+                step=step,
+                proxies=proxies,
+                process_data=process_data,
+                clear_recycle_bin=clear_recycle_bin,
+                convert_temperature=convert_temperature,
+                convert_to=convert_to,
+                custom_directory=custom_directory,
+                notifications=notifications,
+                source=source,
+                level_type=level_type,
+                clear_data=clear_data,
+                variables=variables,
+                levels=levels,
+                members=members)
+            
+            rotate = False
     except Exception as e:
         print(f"Client cannot establish a connection to {server}.")
         rotate = True
@@ -4523,27 +4514,66 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
         if source == 'google':
             print(f"Rotating to ECMWF Open-Data Server.")
             try:
-                ds = _ecmwf_ifs_ens_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        step=step,
-                                        proxies=proxies,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='ecmwf',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels,
-                                        members=members)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='ecmwf',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='ecmwf',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to ECMWF Open-Data Server.")
                 rotate = True
@@ -4551,27 +4581,66 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
         elif source == 'aws':
             print(f"Rotating to ECMWF Open-Data Server.")
             try:
-                ds = _ecmwf_ifs_ens_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        step=step,
-                                        proxies=proxies,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='ecmwf',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels,
-                                        members=members)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='ecmwf',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='ecmwf',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to ECMWF Open-Data Server.")
                 rotate = True
@@ -4579,27 +4648,67 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
         else:
             print(f"Rotating to Amazon AWS Server.")
             try:
-                ds = _ecmwf_ifs_ens_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        step=step,
-                                        proxies=proxies,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='aws',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels,
-                                        members=members)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='aws',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                    
+                else:
+                    _ecmwf_ifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='aws',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to Amazon AWS Server.")
                 rotate = True        
@@ -4611,27 +4720,66 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
         if source == 'google':
             print(f"Rotating to Amazon AWS Server.")
             try:
-                ds = _ecmwf_ifs_ens_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        step=step,
-                                        proxies=proxies,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='aws',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels,
-                                        members=members)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='aws',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='aws',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
                 _version_warning()
@@ -4641,27 +4789,66 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
         elif source == 'aws':
             print(f"Rotating to Google Cloud Server.")
             try:
-                ds = _ecmwf_ifs_ens_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        step=step,
-                                        proxies=proxies,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='google',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels,
-                                        members=members)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='google',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='google',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
                 _version_warning()
@@ -4671,27 +4858,66 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
         else:
             print(f"Rotating to Google Cloud Server.")
             try:
-                ds = _ecmwf_ifs_ens_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        step=step,
-                                        proxies=proxies,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='google',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels,
-                                        members=members)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='google',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            step=step,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='google',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
                 _version_warning()
@@ -4761,7 +4987,12 @@ def ecmwf_aifs(final_forecast_hour=360,
                             200, 
                             150, 
                             100, 
-                            50]):
+                            50],
+                to_netcdf=False,
+                netcdf_path=f"ECMWF AIFS/NETCDF",
+                netcdf_filename=f"ecmwf_aifs.nc",
+                delete_previous_netcdf_file=True,
+                return_values=True):
 
     """
     This function scans for the latest ECMWF AIFS dataset. If the dataset on the computer is old, the old data will be deleted
@@ -4879,6 +5110,18 @@ def ecmwf_aifs(final_forecast_hour=360,
         
         Example: User wants only the 500 mb level: levels=[500]
         
+    19) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    
+    20) netcdf_path (String) - Default='ECMWF AIFS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    
+    21) netcdf_filename (String) - Default='ecmwf_aifs.nc'. The name of the netCDF (.nc) file. A good practice is to 
+        name this netCDF file using the variable name. 
+        
+    22) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+        new netCDF file. For users who want to archive all data set this to False. 
+        
+    23) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+        
     Returns
     -------
     
@@ -4934,26 +5177,64 @@ def ecmwf_aifs(final_forecast_hour=360,
         server = 'Google Cloud Server'
     
     try: 
-        ds = _ecmwf_aifs_client(final_forecast_hour=final_forecast_hour,
-              western_bound=western_bound,
-              eastern_bound=eastern_bound,
-              northern_bound=northern_bound,
-              southern_bound=southern_bound,
-              proxies=proxies,
-              process_data=process_data,
-              clear_recycle_bin=clear_recycle_bin,
-              convert_temperature=convert_temperature,
-              convert_to=convert_to,
-              custom_directory=custom_directory,
-              notifications=notifications,
-              source=source,
-              level_type=level_type,
-              clear_data=clear_data,
-              variables=variables,
-              levels=levels)
-        
-        rotate = False
-        return ds
+        if process_data == True:
+            ds = _ecmwf_aifs_client(final_forecast_hour=final_forecast_hour,
+                western_bound=western_bound,
+                eastern_bound=eastern_bound,
+                northern_bound=northern_bound,
+                southern_bound=southern_bound,
+                proxies=proxies,
+                process_data=process_data,
+                clear_recycle_bin=clear_recycle_bin,
+                convert_temperature=convert_temperature,
+                convert_to=convert_to,
+                custom_directory=custom_directory,
+                notifications=notifications,
+                source=source,
+                level_type=level_type,
+                clear_data=clear_data,
+                variables=variables,
+                levels=levels)
+            
+            rotate = False
+            if to_netcdf == True:
+                
+                if delete_previous_netcdf_file == True:
+                    try:
+                        _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                    except Exception as e:
+                        pass
+                
+                _grib_to_netcdf(ds,
+                                netcdf_path,
+                                netcdf_filename)
+            else:
+                pass
+            
+            if return_values == True:    
+                return ds
+            else:
+                pass
+        else:
+            _ecmwf_aifs_client(final_forecast_hour=final_forecast_hour,
+                western_bound=western_bound,
+                eastern_bound=eastern_bound,
+                northern_bound=northern_bound,
+                southern_bound=southern_bound,
+                proxies=proxies,
+                process_data=process_data,
+                clear_recycle_bin=clear_recycle_bin,
+                convert_temperature=convert_temperature,
+                convert_to=convert_to,
+                custom_directory=custom_directory,
+                notifications=notifications,
+                source=source,
+                level_type=level_type,
+                clear_data=clear_data,
+                variables=variables,
+                levels=levels)
+            
+            rotate = False
     except Exception as e:
         print(f"Client cannot establish a connection to {server}.")
         rotate = True
@@ -4962,25 +5243,62 @@ def ecmwf_aifs(final_forecast_hour=360,
         if source == 'google':
             print(f"Rotating to ECMWF Open-Data Server.")
             try:
-                ds = _ecmwf_aifs_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        proxies=proxies,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='ecmwf',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_aifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='ecmwf',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_aifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='ecmwf',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to ECMWF Open-Data Server.")
                 rotate = True
@@ -4988,25 +5306,62 @@ def ecmwf_aifs(final_forecast_hour=360,
         elif source == 'aws':
             print(f"Rotating to ECMWF Open-Data Server.")
             try:
-                ds = _ecmwf_aifs_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        proxies=proxies,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='ecmwf',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_aifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='ecmwf',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_aifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='ecmwf',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to ECMWF Open-Data Server.")
                 rotate = True
@@ -5014,25 +5369,62 @@ def ecmwf_aifs(final_forecast_hour=360,
         else:
             print(f"Rotating to Amazon AWS Server.")
             try:
-                ds = _ecmwf_aifs_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        proxies=proxies,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='aws',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_aifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='aws',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_aifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='aws',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to Amazon AWS Server.")
                 rotate = True        
@@ -5044,25 +5436,62 @@ def ecmwf_aifs(final_forecast_hour=360,
         if source == 'google':
             print(f"Rotating to Amazon AWS Server.")
             try:
-                ds = _ecmwf_aifs_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        proxies=proxies,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='aws',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_aifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='aws',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_aifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='aws',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
                 _version_warning()
@@ -5072,25 +5501,62 @@ def ecmwf_aifs(final_forecast_hour=360,
         elif source == 'aws':
             print(f"Rotating to Google Cloud Server.")
             try:
-                ds = _ecmwf_aifs_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        proxies=proxies,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='google',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_aifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='google',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_aifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='google',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
                 _version_warning()
@@ -5100,25 +5566,62 @@ def ecmwf_aifs(final_forecast_hour=360,
         else:
             print(f"Rotating to Google Cloud Server.")
             try:
-                ds = _ecmwf_aifs_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        proxies=proxies,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='google',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_aifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='google',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_aifs_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='google',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
                 _version_warning()
@@ -5194,7 +5697,12 @@ def ecmwf_aifs_ens(final_forecast_hour=360,
                       11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                       21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
                       31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 
-                      41, 42, 43, 44, 45, 46, 47, 48, 49, 50]):
+                      41, 42, 43, 44, 45, 46, 47, 48, 49, 50],
+                to_netcdf=False,
+                netcdf_path=f"ECMWF AIFS ENSEMBLE/NETCDF",
+                netcdf_filename=f"ecmwf_aifs_ensemble.nc",
+                delete_previous_netcdf_file=True,
+                return_values=True):
 
     """
     This function scans for the latest ECMWF AIFS Ensemble dataset. If the dataset on the computer is old, the old data will be deleted
@@ -5328,6 +5836,18 @@ def ecmwf_aifs_ens(final_forecast_hour=360,
         
         Example: User wants only the first 5 members: members=[1,2,3,4,5]
         
+    22) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    
+    23) netcdf_path (String) - Default='ECMWF AIFS ENSEMBLE/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    
+    24) netcdf_filename (String) - Default='ecmwf_aifs_ensemble.nc'. The name of the netCDF (.nc) file. A good practice is to 
+        name this netCDF file using the variable name. 
+        
+    25) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+        new netCDF file. For users who want to archive all data set this to False. 
+        
+    26) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+        
     Returns
     -------
     
@@ -5383,28 +5903,68 @@ def ecmwf_aifs_ens(final_forecast_hour=360,
         server = 'Google Cloud Server'
     
     try:
-        ds = _ecmwf_aifs_ens_client(final_forecast_hour=final_forecast_hour,
-              western_bound=western_bound,
-              eastern_bound=eastern_bound,
-              northern_bound=northern_bound,
-              southern_bound=southern_bound,
-              cat=cat,
-              proxies=proxies,
-              process_data=process_data,
-              clear_recycle_bin=clear_recycle_bin,
-              convert_temperature=convert_temperature,
-              convert_to=convert_to,
-              custom_directory=custom_directory,
-              notifications=notifications,
-              source=source,
-              level_type=level_type,
-              clear_data=clear_data,
-              variables=variables,
-              levels=levels,
-              members=members)
-        
-        rotate = False
-        return ds
+        if process_data == True:
+            ds = _ecmwf_aifs_ens_client(final_forecast_hour=final_forecast_hour,
+                western_bound=western_bound,
+                eastern_bound=eastern_bound,
+                northern_bound=northern_bound,
+                southern_bound=southern_bound,
+                cat=cat,
+                proxies=proxies,
+                process_data=process_data,
+                clear_recycle_bin=clear_recycle_bin,
+                convert_temperature=convert_temperature,
+                convert_to=convert_to,
+                custom_directory=custom_directory,
+                notifications=notifications,
+                source=source,
+                level_type=level_type,
+                clear_data=clear_data,
+                variables=variables,
+                levels=levels,
+                members=members)
+            
+            rotate = False
+            if to_netcdf == True:
+                
+                if delete_previous_netcdf_file == True:
+                    try:
+                        _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                    except Exception as e:
+                        pass
+                
+                _grib_to_netcdf(ds,
+                                netcdf_path,
+                                netcdf_filename)
+            else:
+                pass
+            
+            if return_values == True:    
+                return ds
+            else:
+                pass
+        else:
+            _ecmwf_aifs_ens_client(final_forecast_hour=final_forecast_hour,
+                western_bound=western_bound,
+                eastern_bound=eastern_bound,
+                northern_bound=northern_bound,
+                southern_bound=southern_bound,
+                cat=cat,
+                proxies=proxies,
+                process_data=process_data,
+                clear_recycle_bin=clear_recycle_bin,
+                convert_temperature=convert_temperature,
+                convert_to=convert_to,
+                custom_directory=custom_directory,
+                notifications=notifications,
+                source=source,
+                level_type=level_type,
+                clear_data=clear_data,
+                variables=variables,
+                levels=levels,
+                members=members)
+            
+            rotate = False
     except Exception as e:
         print(f"Client cannot establish a connection to {server}.")
         rotate = True
@@ -5413,27 +5973,66 @@ def ecmwf_aifs_ens(final_forecast_hour=360,
         if source == 'google':
             print(f"Rotating to ECMWF Open-Data Server.")
             try:
-                ds = _ecmwf_aifs_ens_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        proxies=proxies,
-                                        cat=cat,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='ecmwf',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels,
-                                        members=members)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_aifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            cat=cat,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='ecmwf',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_aifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            cat=cat,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='ecmwf',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to ECMWF Open-Data Server.")
                 rotate = True
@@ -5441,27 +6040,66 @@ def ecmwf_aifs_ens(final_forecast_hour=360,
         elif source == 'aws':
             print(f"Rotating to ECMWF Open-Data Server.")
             try:
-                ds = _ecmwf_aifs_ens_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        proxies=proxies,
-                                        cat=cat,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='ecmwf',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels,
-                                        members=members)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_aifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            cat=cat,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='ecmwf',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_aifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            cat=cat,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='ecmwf',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to ECMWF Open-Data Server.")
                 rotate = True
@@ -5469,27 +6107,66 @@ def ecmwf_aifs_ens(final_forecast_hour=360,
         else:
             print(f"Rotating to Amazon AWS Server.")
             try:
-                ds = _ecmwf_aifs_ens_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        proxies=proxies,
-                                        cat=cat,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='aws',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels,
-                                        members=members)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_aifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            cat=cat,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='aws',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_aifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            cat=cat,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='aws',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to Amazon AWS Server.")
                 rotate = True        
@@ -5501,27 +6178,66 @@ def ecmwf_aifs_ens(final_forecast_hour=360,
         if source == 'google':
             print(f"Rotating to Amazon AWS Server.")
             try:
-                ds = _ecmwf_aifs_ens_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        proxies=proxies,
-                                        cat=cat,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='aws',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels,
-                                        members=members)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_aifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            cat=cat,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='aws',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_aifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            cat=cat,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='aws',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
                 _version_warning()
@@ -5531,27 +6247,66 @@ def ecmwf_aifs_ens(final_forecast_hour=360,
         elif source == 'aws':
             print(f"Rotating to Google Cloud Server.")
             try:
-                ds = _ecmwf_aifs_ens_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        proxies=proxies,
-                                        cat=cat,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='google',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels,
-                                        members=members)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_aifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            cat=cat,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='google',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_aifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            cat=cat,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='google',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
                 _version_warning()
@@ -5561,27 +6316,66 @@ def ecmwf_aifs_ens(final_forecast_hour=360,
         else:
             print(f"Rotating to Google Cloud Server.")
             try:
-                ds = _ecmwf_aifs_ens_client(final_forecast_hour=final_forecast_hour,
-                                        western_bound=western_bound,
-                                        eastern_bound=eastern_bound,
-                                        northern_bound=northern_bound,
-                                        southern_bound=southern_bound,
-                                        proxies=proxies,
-                                        cat=cat,
-                                        process_data=process_data,
-                                        clear_recycle_bin=clear_recycle_bin,
-                                        convert_temperature=convert_temperature,
-                                        convert_to=convert_to,
-                                        custom_directory=custom_directory,
-                                        notifications=notifications,
-                                        source='google',
-                                        level_type=level_type,
-                                        clear_data=clear_data,
-                                        variables=variables,
-                                        levels=levels,
-                                        members=members)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_aifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            cat=cat,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='google',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_aifs_ens_client(final_forecast_hour=final_forecast_hour,
+                                            western_bound=western_bound,
+                                            eastern_bound=eastern_bound,
+                                            northern_bound=northern_bound,
+                                            southern_bound=southern_bound,
+                                            proxies=proxies,
+                                            cat=cat,
+                                            process_data=process_data,
+                                            clear_recycle_bin=clear_recycle_bin,
+                                            convert_temperature=convert_temperature,
+                                            convert_to=convert_to,
+                                            custom_directory=custom_directory,
+                                            notifications=notifications,
+                                            source='google',
+                                            level_type=level_type,
+                                            clear_data=clear_data,
+                                            variables=variables,
+                                            levels=levels,
+                                            members=members)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
                 _version_warning()
@@ -5608,7 +6402,12 @@ def ecmwf_ifs_wave(final_forecast_hour=144,
                                'significant wave height',
                                 'mean wave direction',
                                 'mean wave period',
-                                'peak wave period']):
+                                'peak wave period'],
+                to_netcdf=False,
+                netcdf_path=f"ECMWF IFS WAVE/NETCDF",
+                netcdf_filename=f"ecmwf_ifs_wave.nc",
+                delete_previous_netcdf_file=True,
+                return_values=True):
     
     """
     This function scans for the latest ECMWF IFS Wave dataset. If the dataset on the computer is old, the old data will be deleted
@@ -5691,6 +6490,18 @@ def ecmwf_ifs_wave(final_forecast_hour=144,
         'mean wave period'
         'peak wave period'
         
+    17) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    
+    18) netcdf_path (String) - Default='ECMWF IFS WAVE/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    
+    19) netcdf_filename (String) - Default='ecmwf_ifs_wave.nc'. The name of the netCDF (.nc) file. A good practice is to 
+        name this netCDF file using the variable name. 
+        
+    20) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+        new netCDF file. For users who want to archive all data set this to False. 
+        
+    21) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+        
     Returns
     -------
     
@@ -5717,23 +6528,58 @@ def ecmwf_ifs_wave(final_forecast_hour=144,
         server = 'Google Cloud Server'
     
     try:
-        ds = _ecmwf_ifs_wave_client(final_forecast_hour=final_forecast_hour,
-                    western_bound=western_bound,
-                    eastern_bound=eastern_bound,
-                    northern_bound=northern_bound,
-                    southern_bound=southern_bound,
-                    step=step,
-                    proxies=proxies,
-                    process_data=process_data,
-                    clear_recycle_bin=clear_recycle_bin,
-                    custom_directory=custom_directory,
-                    notifications=notifications,
-                    source=source,
-                    clear_data=clear_data,
-                    variables=variables)
-        
-        rotate = False
-        return ds
+        if process_data == True:
+            ds = _ecmwf_ifs_wave_client(final_forecast_hour=final_forecast_hour,
+                        western_bound=western_bound,
+                        eastern_bound=eastern_bound,
+                        northern_bound=northern_bound,
+                        southern_bound=southern_bound,
+                        step=step,
+                        proxies=proxies,
+                        process_data=process_data,
+                        clear_recycle_bin=clear_recycle_bin,
+                        custom_directory=custom_directory,
+                        notifications=notifications,
+                        source=source,
+                        clear_data=clear_data,
+                        variables=variables)
+            
+            rotate = False
+            if to_netcdf == True:
+                
+                if delete_previous_netcdf_file == True:
+                    try:
+                        _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                    except Exception as e:
+                        pass
+                
+                _grib_to_netcdf(ds,
+                                netcdf_path,
+                                netcdf_filename)
+            else:
+                pass
+            
+            if return_values == True:    
+                return ds
+            else:
+                pass
+        else:
+            _ecmwf_ifs_wave_client(final_forecast_hour=final_forecast_hour,
+                        western_bound=western_bound,
+                        eastern_bound=eastern_bound,
+                        northern_bound=northern_bound,
+                        southern_bound=southern_bound,
+                        step=step,
+                        proxies=proxies,
+                        process_data=process_data,
+                        clear_recycle_bin=clear_recycle_bin,
+                        custom_directory=custom_directory,
+                        notifications=notifications,
+                        source=source,
+                        clear_data=clear_data,
+                        variables=variables)
+            
+            rotate = False
     except Exception as e:
         print(f"Client cannot establish a connection to {server}.")
         rotate = True
@@ -5742,22 +6588,56 @@ def ecmwf_ifs_wave(final_forecast_hour=144,
         if source == 'google':
             print(f"Rotating to ECMWF Open-Data Server.")
             try:
-                ds = _ecmwf_ifs_wave_client(final_forecast_hour=final_forecast_hour,
-                                            western_bound=western_bound,
-                                            eastern_bound=eastern_bound,
-                                            northern_bound=northern_bound,
-                                            southern_bound=southern_bound,
-                                            step=step,
-                                            proxies=proxies,
-                                            process_data=process_data,
-                                            clear_recycle_bin=clear_recycle_bin,
-                                            custom_directory=custom_directory,
-                                            notifications=notifications,
-                                            source='ecmwf',
-                                            clear_data=clear_data,
-                                            variables=variables)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                step=step,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='ecmwf',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                step=step,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='ecmwf',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to ECMWF Open-Data Server.")
                 rotate = True
@@ -5765,22 +6645,56 @@ def ecmwf_ifs_wave(final_forecast_hour=144,
         elif source == 'aws':
             print(f"Rotating to ECMWF Open-Data Server.")
             try:
-                ds = _ecmwf_ifs_wave_client(final_forecast_hour=final_forecast_hour,
-                                            western_bound=western_bound,
-                                            eastern_bound=eastern_bound,
-                                            northern_bound=northern_bound,
-                                            southern_bound=southern_bound,
-                                            step=step,
-                                            proxies=proxies,
-                                            process_data=process_data,
-                                            clear_recycle_bin=clear_recycle_bin,
-                                            custom_directory=custom_directory,
-                                            notifications=notifications,
-                                            source='ecmwf',
-                                            clear_data=clear_data,
-                                            variables=variables)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                step=step,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='ecmwf',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                step=step,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='ecmwf',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to ECMWF Open-Data Server.")
                 rotate = True
@@ -5788,22 +6702,56 @@ def ecmwf_ifs_wave(final_forecast_hour=144,
         else:
             print(f"Rotating to Amazon AWS Server.")
             try:
-                ds = _ecmwf_ifs_wave_client(final_forecast_hour=final_forecast_hour,
-                                            western_bound=western_bound,
-                                            eastern_bound=eastern_bound,
-                                            northern_bound=northern_bound,
-                                            southern_bound=southern_bound,
-                                            step=step,
-                                            proxies=proxies,
-                                            process_data=process_data,
-                                            clear_recycle_bin=clear_recycle_bin,
-                                            custom_directory=custom_directory,
-                                            notifications=notifications,
-                                            source='aws',
-                                            clear_data=clear_data,
-                                            variables=variables)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                step=step,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='aws',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                step=step,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='aws',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to Amazon AWS Server.")
                 rotate = True        
@@ -5815,22 +6763,56 @@ def ecmwf_ifs_wave(final_forecast_hour=144,
         if source == 'google':
             print(f"Rotating to Amazon AWS Server.")
             try:
-                ds = _ecmwf_ifs_wave_client(final_forecast_hour=final_forecast_hour,
-                                            western_bound=western_bound,
-                                            eastern_bound=eastern_bound,
-                                            northern_bound=northern_bound,
-                                            southern_bound=southern_bound,
-                                            step=step,
-                                            proxies=proxies,
-                                            process_data=process_data,
-                                            clear_recycle_bin=clear_recycle_bin,
-                                            custom_directory=custom_directory,
-                                            notifications=notifications,
-                                            source='aws',
-                                            clear_data=clear_data,
-                                            variables=variables)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                step=step,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='aws',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                step=step,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='aws',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
                 _version_warning()
@@ -5840,22 +6822,56 @@ def ecmwf_ifs_wave(final_forecast_hour=144,
         elif source == 'aws':
             print(f"Rotating to Google Cloud Server.")
             try:
-                ds = _ecmwf_ifs_wave_client(final_forecast_hour=final_forecast_hour,
-                                            western_bound=western_bound,
-                                            eastern_bound=eastern_bound,
-                                            northern_bound=northern_bound,
-                                            southern_bound=southern_bound,
-                                            step=step,
-                                            proxies=proxies,
-                                            process_data=process_data,
-                                            clear_recycle_bin=clear_recycle_bin,
-                                            custom_directory=custom_directory,
-                                            notifications=notifications,
-                                            source='google',
-                                            clear_data=clear_data,
-                                            variables=variables)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                step=step,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='google',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                step=step,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='google',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
                 _version_warning()
@@ -5865,22 +6881,56 @@ def ecmwf_ifs_wave(final_forecast_hour=144,
         else:
             print(f"Rotating to Google Cloud Server.")
             try:
-                ds = _ecmwf_ifs_wave_client(final_forecast_hour=final_forecast_hour,
-                                            western_bound=western_bound,
-                                            eastern_bound=eastern_bound,
-                                            northern_bound=northern_bound,
-                                            southern_bound=southern_bound,
-                                            step=step,
-                                            proxies=proxies,
-                                            process_data=process_data,
-                                            clear_recycle_bin=clear_recycle_bin,
-                                            custom_directory=custom_directory,
-                                            notifications=notifications,
-                                            source='google',
-                                            clear_data=clear_data,
-                                            variables=variables)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                step=step,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='google',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                step=step,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='google',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
                 _version_warning()
@@ -5913,7 +6963,12 @@ def ecmwf_ifs_wave_ens(final_forecast_hour=144,
                       11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                       21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
                       31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 
-                      41, 42, 43, 44, 45, 46, 47, 48, 49, 50]):
+                      41, 42, 43, 44, 45, 46, 47, 48, 49, 50],
+                to_netcdf=False,
+                netcdf_path=f"ECMWF IFS WAVE ENSEMBLE/NETCDF",
+                netcdf_filename=f"ecmwf_ifs_wave_ensemble.nc",
+                delete_previous_netcdf_file=True,
+                return_values=True):
     
     """
     This function scans for the latest ECMWF IFS Wave Ensemble dataset. If the dataset on the computer is old, the old data will be deleted
@@ -5996,6 +7051,18 @@ def ecmwf_ifs_wave_ens(final_forecast_hour=144,
         'mean wave period'
         'peak wave period'
         
+    17) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    
+    18) netcdf_path (String) - Default='ECMWF IFS WAVE ENSEMBLE/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    
+    19) netcdf_filename (String) - Default='ecmwf_ifs_wave_ensemble.nc'. The name of the netCDF (.nc) file. A good practice is to 
+        name this netCDF file using the variable name. 
+        
+    20) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+        new netCDF file. For users who want to archive all data set this to False. 
+        
+    21) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+        
     Returns
     -------
     
@@ -6022,24 +7089,60 @@ def ecmwf_ifs_wave_ens(final_forecast_hour=144,
         server = 'Google Cloud Server'
     
     try:
-        ds = _ecmwf_ifs_wave_ens_client(final_forecast_hour=final_forecast_hour,
-                    western_bound=western_bound,
-                    eastern_bound=eastern_bound,
-                    northern_bound=northern_bound,
-                    southern_bound=southern_bound,
-                    step=step,
-                    proxies=proxies,
-                    process_data=process_data,
-                    clear_recycle_bin=clear_recycle_bin,
-                    custom_directory=custom_directory,
-                    notifications=notifications,
-                    source=source,
-                    clear_data=clear_data,
-                    variables=variables,
-                    members=members)
-        
-        rotate = False
-        return ds
+        if process_data == True:
+            ds = _ecmwf_ifs_wave_ens_client(final_forecast_hour=final_forecast_hour,
+                        western_bound=western_bound,
+                        eastern_bound=eastern_bound,
+                        northern_bound=northern_bound,
+                        southern_bound=southern_bound,
+                        step=step,
+                        proxies=proxies,
+                        process_data=process_data,
+                        clear_recycle_bin=clear_recycle_bin,
+                        custom_directory=custom_directory,
+                        notifications=notifications,
+                        source=source,
+                        clear_data=clear_data,
+                        variables=variables,
+                        members=members)
+            
+            rotate = False
+            if to_netcdf == True:
+                
+                if delete_previous_netcdf_file == True:
+                    try:
+                        _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                    except Exception as e:
+                        pass
+                
+                _grib_to_netcdf(ds,
+                                netcdf_path,
+                                netcdf_filename)
+            else:
+                pass
+            
+            if return_values == True:    
+                return ds
+            else:
+                pass
+        else:
+            _ecmwf_ifs_wave_ens_client(final_forecast_hour=final_forecast_hour,
+                        western_bound=western_bound,
+                        eastern_bound=eastern_bound,
+                        northern_bound=northern_bound,
+                        southern_bound=southern_bound,
+                        step=step,
+                        proxies=proxies,
+                        process_data=process_data,
+                        clear_recycle_bin=clear_recycle_bin,
+                        custom_directory=custom_directory,
+                        notifications=notifications,
+                        source=source,
+                        clear_data=clear_data,
+                        variables=variables,
+                        members=members)
+            
+            rotate = False
     except Exception as e:
         print(f"Client cannot establish a connection to {server}.")
         rotate = True
@@ -6048,23 +7151,58 @@ def ecmwf_ifs_wave_ens(final_forecast_hour=144,
         if source == 'google':
             print(f"Rotating to ECMWF Open-Data Server.")
             try:
-                ds = _ecmwf_ifs_wave_ens_client(final_forecast_hour=final_forecast_hour,
-                                                western_bound=western_bound,
-                                                eastern_bound=eastern_bound,
-                                                northern_bound=northern_bound,
-                                                southern_bound=southern_bound,
-                                                step=step,
-                                                proxies=proxies,
-                                                process_data=process_data,
-                                                clear_recycle_bin=clear_recycle_bin,
-                                                custom_directory=custom_directory,
-                                                notifications=notifications,
-                                                source='ecmwf',
-                                                clear_data=clear_data,
-                                                variables=variables,
-                                                members=members)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_wave_ens_client(final_forecast_hour=final_forecast_hour,
+                                                    western_bound=western_bound,
+                                                    eastern_bound=eastern_bound,
+                                                    northern_bound=northern_bound,
+                                                    southern_bound=southern_bound,
+                                                    step=step,
+                                                    proxies=proxies,
+                                                    process_data=process_data,
+                                                    clear_recycle_bin=clear_recycle_bin,
+                                                    custom_directory=custom_directory,
+                                                    notifications=notifications,
+                                                    source='ecmwf',
+                                                    clear_data=clear_data,
+                                                    variables=variables,
+                                                    members=members)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_wave_ens_client(final_forecast_hour=final_forecast_hour,
+                                                    western_bound=western_bound,
+                                                    eastern_bound=eastern_bound,
+                                                    northern_bound=northern_bound,
+                                                    southern_bound=southern_bound,
+                                                    step=step,
+                                                    proxies=proxies,
+                                                    process_data=process_data,
+                                                    clear_recycle_bin=clear_recycle_bin,
+                                                    custom_directory=custom_directory,
+                                                    notifications=notifications,
+                                                    source='ecmwf',
+                                                    clear_data=clear_data,
+                                                    variables=variables,
+                                                    members=members)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to ECMWF Open-Data Server.")
                 rotate = True
@@ -6072,23 +7210,58 @@ def ecmwf_ifs_wave_ens(final_forecast_hour=144,
         elif source == 'aws':
             print(f"Rotating to ECMWF Open-Data Server.")
             try:
-                ds = _ecmwf_ifs_wave_ens_client(final_forecast_hour=final_forecast_hour,
-                                                western_bound=western_bound,
-                                                eastern_bound=eastern_bound,
-                                                northern_bound=northern_bound,
-                                                southern_bound=southern_bound,
-                                                step=step,
-                                                proxies=proxies,
-                                                process_data=process_data,
-                                                clear_recycle_bin=clear_recycle_bin,
-                                                custom_directory=custom_directory,
-                                                notifications=notifications,
-                                                source='ecmwf',
-                                                clear_data=clear_data,
-                                                variables=variables,
-                                                members=members)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_wave_ens_client(final_forecast_hour=final_forecast_hour,
+                                                    western_bound=western_bound,
+                                                    eastern_bound=eastern_bound,
+                                                    northern_bound=northern_bound,
+                                                    southern_bound=southern_bound,
+                                                    step=step,
+                                                    proxies=proxies,
+                                                    process_data=process_data,
+                                                    clear_recycle_bin=clear_recycle_bin,
+                                                    custom_directory=custom_directory,
+                                                    notifications=notifications,
+                                                    source='ecmwf',
+                                                    clear_data=clear_data,
+                                                    variables=variables,
+                                                    members=members)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_wave_ens_client(final_forecast_hour=final_forecast_hour,
+                                                    western_bound=western_bound,
+                                                    eastern_bound=eastern_bound,
+                                                    northern_bound=northern_bound,
+                                                    southern_bound=southern_bound,
+                                                    step=step,
+                                                    proxies=proxies,
+                                                    process_data=process_data,
+                                                    clear_recycle_bin=clear_recycle_bin,
+                                                    custom_directory=custom_directory,
+                                                    notifications=notifications,
+                                                    source='ecmwf',
+                                                    clear_data=clear_data,
+                                                    variables=variables,
+                                                    members=members)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to ECMWF Open-Data Server.")
                 rotate = True
@@ -6096,23 +7269,58 @@ def ecmwf_ifs_wave_ens(final_forecast_hour=144,
         else:
             print(f"Rotating to Amazon AWS Server.")
             try:
-                ds = _ecmwf_ifs_wave_ens_client(final_forecast_hour=final_forecast_hour,
-                                                western_bound=western_bound,
-                                                eastern_bound=eastern_bound,
-                                                northern_bound=northern_bound,
-                                                southern_bound=southern_bound,
-                                                step=step,
-                                                proxies=proxies,
-                                                process_data=process_data,
-                                                clear_recycle_bin=clear_recycle_bin,
-                                                custom_directory=custom_directory,
-                                                notifications=notifications,
-                                                source='aws',
-                                                clear_data=clear_data,
-                                                variables=variables,
-                                                members=members)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_wave_ens_client(final_forecast_hour=final_forecast_hour,
+                                                    western_bound=western_bound,
+                                                    eastern_bound=eastern_bound,
+                                                    northern_bound=northern_bound,
+                                                    southern_bound=southern_bound,
+                                                    step=step,
+                                                    proxies=proxies,
+                                                    process_data=process_data,
+                                                    clear_recycle_bin=clear_recycle_bin,
+                                                    custom_directory=custom_directory,
+                                                    notifications=notifications,
+                                                    source='aws',
+                                                    clear_data=clear_data,
+                                                    variables=variables,
+                                                    members=members)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_wave_ens_client(final_forecast_hour=final_forecast_hour,
+                                                    western_bound=western_bound,
+                                                    eastern_bound=eastern_bound,
+                                                    northern_bound=northern_bound,
+                                                    southern_bound=southern_bound,
+                                                    step=step,
+                                                    proxies=proxies,
+                                                    process_data=process_data,
+                                                    clear_recycle_bin=clear_recycle_bin,
+                                                    custom_directory=custom_directory,
+                                                    notifications=notifications,
+                                                    source='aws',
+                                                    clear_data=clear_data,
+                                                    variables=variables,
+                                                    members=members)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to Amazon AWS Server.")
                 rotate = True        
@@ -6124,23 +7332,58 @@ def ecmwf_ifs_wave_ens(final_forecast_hour=144,
         if source == 'google':
             print(f"Rotating to Amazon AWS Server.")
             try:
-                ds = _ecmwf_ifs_wave_ens_client(final_forecast_hour=final_forecast_hour,
-                                                western_bound=western_bound,
-                                                eastern_bound=eastern_bound,
-                                                northern_bound=northern_bound,
-                                                southern_bound=southern_bound,
-                                                step=step,
-                                                proxies=proxies,
-                                                process_data=process_data,
-                                                clear_recycle_bin=clear_recycle_bin,
-                                                custom_directory=custom_directory,
-                                                notifications=notifications,
-                                                source='aws',
-                                                clear_data=clear_data,
-                                                variables=variables,
-                                                members=members)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_wave_ens_client(final_forecast_hour=final_forecast_hour,
+                                                    western_bound=western_bound,
+                                                    eastern_bound=eastern_bound,
+                                                    northern_bound=northern_bound,
+                                                    southern_bound=southern_bound,
+                                                    step=step,
+                                                    proxies=proxies,
+                                                    process_data=process_data,
+                                                    clear_recycle_bin=clear_recycle_bin,
+                                                    custom_directory=custom_directory,
+                                                    notifications=notifications,
+                                                    source='aws',
+                                                    clear_data=clear_data,
+                                                    variables=variables,
+                                                    members=members)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_wave_ens_client(final_forecast_hour=final_forecast_hour,
+                                                    western_bound=western_bound,
+                                                    eastern_bound=eastern_bound,
+                                                    northern_bound=northern_bound,
+                                                    southern_bound=southern_bound,
+                                                    step=step,
+                                                    proxies=proxies,
+                                                    process_data=process_data,
+                                                    clear_recycle_bin=clear_recycle_bin,
+                                                    custom_directory=custom_directory,
+                                                    notifications=notifications,
+                                                    source='aws',
+                                                    clear_data=clear_data,
+                                                    variables=variables,
+                                                    members=members)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
                 _version_warning()
@@ -6150,23 +7393,58 @@ def ecmwf_ifs_wave_ens(final_forecast_hour=144,
         elif source == 'aws':
             print(f"Rotating to Google Cloud Server.")
             try:
-                ds = _ecmwf_ifs_wave_ens_client(final_forecast_hour=final_forecast_hour,
-                                                western_bound=western_bound,
-                                                eastern_bound=eastern_bound,
-                                                northern_bound=northern_bound,
-                                                southern_bound=southern_bound,
-                                                step=step,
-                                                proxies=proxies,
-                                                process_data=process_data,
-                                                clear_recycle_bin=clear_recycle_bin,
-                                                custom_directory=custom_directory,
-                                                notifications=notifications,
-                                                source='google',
-                                                clear_data=clear_data,
-                                                variables=variables,
-                                                members=members)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_wave_ens_client(final_forecast_hour=final_forecast_hour,
+                                                    western_bound=western_bound,
+                                                    eastern_bound=eastern_bound,
+                                                    northern_bound=northern_bound,
+                                                    southern_bound=southern_bound,
+                                                    step=step,
+                                                    proxies=proxies,
+                                                    process_data=process_data,
+                                                    clear_recycle_bin=clear_recycle_bin,
+                                                    custom_directory=custom_directory,
+                                                    notifications=notifications,
+                                                    source='google',
+                                                    clear_data=clear_data,
+                                                    variables=variables,
+                                                    members=members)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_wave_ens_client(final_forecast_hour=final_forecast_hour,
+                                                    western_bound=western_bound,
+                                                    eastern_bound=eastern_bound,
+                                                    northern_bound=northern_bound,
+                                                    southern_bound=southern_bound,
+                                                    step=step,
+                                                    proxies=proxies,
+                                                    process_data=process_data,
+                                                    clear_recycle_bin=clear_recycle_bin,
+                                                    custom_directory=custom_directory,
+                                                    notifications=notifications,
+                                                    source='google',
+                                                    clear_data=clear_data,
+                                                    variables=variables,
+                                                    members=members)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
                 print("System Exit.")
@@ -6175,23 +7453,58 @@ def ecmwf_ifs_wave_ens(final_forecast_hour=144,
         else:
             print(f"Rotating to Google Cloud Server.")
             try:
-                ds = _ecmwf_ifs_wave_ens_client(final_forecast_hour=final_forecast_hour,
-                                                western_bound=western_bound,
-                                                eastern_bound=eastern_bound,
-                                                northern_bound=northern_bound,
-                                                southern_bound=southern_bound,
-                                                step=step,
-                                                proxies=proxies,
-                                                process_data=process_data,
-                                                clear_recycle_bin=clear_recycle_bin,
-                                                custom_directory=custom_directory,
-                                                notifications=notifications,
-                                                source='google',
-                                                clear_data=clear_data,
-                                                variables=variables,
-                                                members=members)
-                rotate = False
-                return ds
+                if process_data == True:
+                    ds = _ecmwf_ifs_wave_ens_client(final_forecast_hour=final_forecast_hour,
+                                                    western_bound=western_bound,
+                                                    eastern_bound=eastern_bound,
+                                                    northern_bound=northern_bound,
+                                                    southern_bound=southern_bound,
+                                                    step=step,
+                                                    proxies=proxies,
+                                                    process_data=process_data,
+                                                    clear_recycle_bin=clear_recycle_bin,
+                                                    custom_directory=custom_directory,
+                                                    notifications=notifications,
+                                                    source='google',
+                                                    clear_data=clear_data,
+                                                    variables=variables,
+                                                    members=members)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_ifs_wave_ens_client(final_forecast_hour=final_forecast_hour,
+                                                    western_bound=western_bound,
+                                                    eastern_bound=eastern_bound,
+                                                    northern_bound=northern_bound,
+                                                    southern_bound=southern_bound,
+                                                    step=step,
+                                                    proxies=proxies,
+                                                    process_data=process_data,
+                                                    clear_recycle_bin=clear_recycle_bin,
+                                                    custom_directory=custom_directory,
+                                                    notifications=notifications,
+                                                    source='google',
+                                                    clear_data=clear_data,
+                                                    variables=variables,
+                                                    members=members)
+                    rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
                 _version_warning()

@@ -9,6 +9,7 @@ import warnings as _warnings
 _warnings.filterwarnings('ignore')
 import wxdata.post_processors.cmc_post_processing as _cmc_post_processing
 
+from wxdata.utils.transforms import grib_to_netcdf as _grib_to_netcdf
 from wxdata.model_data.cmc.utils.file_scanner import scan_local_machine as _scan_local_machine
 from wxdata.model_data.cmc.cansips.forecast.url_scanner import cansips_url_scanner as _cansips_url_scanner
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
@@ -35,7 +36,12 @@ def cansips_forecast(western_bound=-180,
             clear_recycle_bin=False,
             convert_temperature=True,
             convert_to='celsius',
-            process_data=True):
+            process_data=True,
+            to_netcdf=False,
+            netcdf_path=f"CanSIPS/Forecast/NETCDF",
+            netcdf_filename=f"geopotential_height.nc",
+            delete_previous_netcdf_file=True,
+            return_values=True):
     
     """
     This function retrieves the latest CanSIPS data from https://dd.weather.gc.ca/ and returns an xarray.array of specified data.
@@ -126,6 +132,18 @@ def cansips_forecast(western_bound=-180,
     18) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed and no values
        returned to the user.
+       
+    19) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    
+    20) netcdf_path (String) - Default='CanSIPS/Forecast/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    
+    21) netcdf_filename (String) - Default='geopotential_height.nc'. The name of the netCDF (.nc) file. A good practice is to 
+        name this netCDF file using the variable name. 
+        
+    22) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+        new netCDF file. For users who want to archive all data set this to False. 
+        
+    23) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
        
     ***Variables & Proper level_type & level & category & period***
     
@@ -273,8 +291,25 @@ def cansips_forecast(western_bound=-180,
             ds = _convert_temperature_units(ds, 
                                         convert_to)
          
-        print("CanSIPS Forecast Data Processing Complete!")   
-        return ds
+        print("CanSIPS Forecast Data Processing Complete!")  
+        
+        if to_netcdf == True:
+            if delete_previous_netcdf_file == True:
+                try:
+                    _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                except Exception as e:
+                    pass
+                
+            _grib_to_netcdf(ds,
+                            netcdf_path,
+                            netcdf_filename)
+        else:
+            pass
+        
+        if return_values == True: 
+            return ds
+        else:
+            pass
     else:
         pass
         

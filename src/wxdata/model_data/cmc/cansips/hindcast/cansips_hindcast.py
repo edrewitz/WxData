@@ -9,6 +9,7 @@ import warnings as _warnings
 _warnings.filterwarnings('ignore')
 import wxdata.post_processors.cmc_post_processing as _cmc_post_processing
 
+from wxdata.utils.transforms import grib_to_netcdf as _grib_to_netcdf
 from wxdata.model_data.cmc.cansips.hindcast.file_sorter import sort_files as _sort_files
 from wxdata.model_data.cmc.utils.file_scanner import scan_local_machine as _scan_local_machine
 from wxdata.model_data.cmc.cansips.hindcast.url_scanner import cansips_hindcast_url_scanner as _cansips_hindcast_url_scanner
@@ -34,7 +35,12 @@ def cansips_hindcast(western_bound=-180,
                      path=f"CanSIPS/Hindcast",
                      chunk_size=8192,
                      notifications='off',
-                     clear_data=False):
+                     clear_data=False,
+                    to_netcdf=False,
+                    netcdf_path=f"CanSIPS/Hindcast/NETCDF",
+                    netcdf_filename=f"geopotential_height.nc",
+                    delete_previous_netcdf_file=True,
+                    return_values=True):
     
     """
     This function is a client that retrieves the CanSIPS Hindcast Data for the current month and calculates the
@@ -114,6 +120,18 @@ def cansips_hindcast(western_bound=-180,
     
     16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+        
+    17) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    
+    18) netcdf_path (String) - Default='CanSIPS/Hindcast/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    
+    19) netcdf_filename (String) - Default='geopotential_height.nc'. The name of the netCDF (.nc) file. A good practice is to 
+        name this netCDF file using the variable name. 
+        
+    20) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+        new netCDF file. For users who want to archive all data set this to False. 
+        
+    21) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
         
     ***Variables & Proper level_type & level & category & period***
     
@@ -217,7 +235,23 @@ def cansips_hindcast(western_bound=-180,
                                         convert_to)
          
         print("CanSIPS Hindcast Data Processing Complete!")   
-        return ds
+        if to_netcdf == True:
+            if delete_previous_netcdf_file == True:
+                try:
+                    _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                except Exception as e:
+                    pass
+                
+            _grib_to_netcdf(ds,
+                            netcdf_path,
+                            netcdf_filename)
+        else:
+            pass
+        
+        if return_values == True: 
+            return ds
+        else:
+            pass
     else:
         pass
         

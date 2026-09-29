@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# This script uses the CLI found in the WxData Python package to download the GFS 0.25x0.25 850mb Temperature Forecast from Amazon Web Services.
+# As soon as the GFS download completes, a Python script gfs_graphics.py will run and ingest our data and create a series of forecast graphics.
+
+# This script was written by Eric J. Drewitz
+
 # Exit immediately if a command exits with a non-zero status
 set -e
 
@@ -40,17 +45,10 @@ echo "Setup complete! Environment '$ENV_NAME' is ready."
 echo "To use it in your terminal, run: conda activate $ENV_NAME"
 echo "========================================="
 
-# Downloads the following datasets concurrently (in parallel)
-# - GFS 0.25x0.25 Degree Geopotential Height at 1000mb, 850mb, 700mb, 500mb and 250mb - Source = NOMADS
-# - GFS 0.25x0.25 Degree Temperature at 1000mb, 850mb, 700mb, 500mb and 250mb - Source = AWS
-# - GFS 0.25x0.25 Degree Relative Humidity at 1000mb, 850mb, 700mb, 500mb and 250mb - Source = Google
-#
-# In this example we will sort each set of files into their own directory based on variable.
-#
-# **IMPORTANT**
-# To prevent server rate limiting we are pulling from the different servers for each dataset.
-# This is a good practice as it prevents overloading a single server with too many requests. 
+# The following processes include
 
-gfs 0p25 latest -v geopotential_height -l 1000 -l 850 -l 700 -l 500 -l 250 -cdir GFS0P25/Geopotential_Height & \
-gfs 0p25 latest -v temperature -l 1000 -l 850 -l 700 -l 500 -l 250 -s aws -cdir GFS0P25/Temperature & \
-gfs 0p25 latest -v relative_humidity -l 1000 -l 850 -l 700 -l 500 -l 250 -s google -cdir GFS0P25/Relative_Humidity
+# 1 - Downloading the latest GFS 0.25x0.25 Degree 850mb Temperature Forecast to GFS0P25/Temperature
+wxdata-gfs 0p25 latest -v temperature -l 850 -s aws -cdir GFS0P25/Temperature
+
+# 2 - Executing a Python script that ingests the data and creates a set of forecast graphics
+python gfs_graphics.py

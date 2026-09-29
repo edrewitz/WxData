@@ -5,7 +5,7 @@ This file hosts the clients that download, pre-process and post-process HGEFS Da
 
 (C) Eric J. Drewitz 2025-2026
 """
-
+import os as _os
 import wxdata.client.client as _client
 import wxdata.post_processors.hgefs_post_processing as _hgefs_post_processing
 import warnings as _warnings
@@ -19,7 +19,7 @@ from wxdata.utils.file_funcs import(
     custom_branch as _custom_branch,
     clear_old_data as _clear_old_data
 )
-
+from wxdata.utils.transforms import grib_to_netcdf as _grib_to_netcdf
 from wxdata.utils.warnings import eccodes_warning as _eccodes_warning
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
 from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
@@ -65,7 +65,12 @@ def hgefs_mean_spread(final_forecast_hour=240,
                     250,
                     150,
                     100,
-                    50]):                   
+                    50],
+            to_netcdf=False,
+            netcdf_path=f"HGEFS/NETCDF",
+            netcdf_filename=f"hgefs.nc",
+            delete_previous_netcdf_file=True,
+            return_values=True):                   
     
     """
     This function downloads, pre-processes and post-processes the latest HGEFS Ensemble Mean or Ensemble Spread for either the Pressure or Surface Parameters. 
@@ -114,14 +119,11 @@ def hgefs_mean_spread(final_forecast_hour=240,
     12) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    13) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS Wave files will be saved to.
-        Default = f:ECMWF/IFS/WAVE
-        
-    14) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    13) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
-    15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    14) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    16) cat (String) - Default='mean'. The category of the data.
+    15) cat (String) - Default='mean'. The category of the data.
     
         Catagories
         ----------
@@ -129,7 +131,7 @@ def hgefs_mean_spread(final_forecast_hour=240,
         1) mean
         2) spread
         
-    17) level_type (String) - Default='pressure'. The type of level the data is in.
+    16) level_type (String) - Default='pressure'. The type of level the data is in.
     
         Types of Levels
         ---------------
@@ -137,10 +139,10 @@ def hgefs_mean_spread(final_forecast_hour=240,
         1) pressure
         2) surface
         
-    18) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+    17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
-    19) variables (String List) **level_type='pressure'** - Default=['geopotential height',
+    18) variables (String List) **level_type='pressure'** - Default=['geopotential height',
                                                                         'specific humidity',
                                                                         'temperature',
                                                                         'u-component of wind',
@@ -150,7 +152,7 @@ def hgefs_mean_spread(final_forecast_hour=240,
         When the level_type = 'pressure', the user can filter by variable to the variable they want. (Surface level files are very small 
         compared to pressure level files).
         
-    20) levels (Integer List) **level_type='pressure'** - Default=[1000,
+    19) levels (Integer List) **level_type='pressure'** - Default=[1000,
                                                                         925,
                                                                         850,
                                                                         700,
@@ -165,6 +167,18 @@ def hgefs_mean_spread(final_forecast_hour=240,
                                                                         
         When the level_type = 'pressure', the user can filter by level to the level they want. (Surface level files are very small 
         compared to pressure level files).
+        
+    20) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    
+    21) netcdf_path (String) - Default='HGEFS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    
+    22) netcdf_filename (String) - Default='hgefs.nc'. The name of the netCDF (.nc) file. A good practice is to 
+        name this netCDF file using the variable name. 
+        
+    23) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+        new netCDF file. For users who want to archive all data set this to False. 
+        
+    24) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
     
     Returns
     -------
@@ -330,6 +344,23 @@ def hgefs_mean_spread(final_forecast_hour=240,
                 
         
         print(f"HGEFS {level_type.upper()} {cat.upper()} Data Processing Complete.")
-        return ds
+        if to_netcdf == True:
+            
+            if delete_previous_netcdf_file == True:
+                try:
+                    _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                except Exception as e:
+                    pass
+            
+            _grib_to_netcdf(ds,
+                            netcdf_path,
+                            netcdf_filename)
+        else:
+            pass
+        
+        if return_values == True:    
+            return ds
+        else:
+            pass
     else:
         pass       

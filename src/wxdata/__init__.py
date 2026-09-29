@@ -49,14 +49,54 @@ These functions do the following:
 
 ***********************************************************************************************
 """
+
+# Global Forecast System (GFS)
+# - GFS 0.25x0.25 Degree Primary Parameters
+# - GFS 0.25x0.25 Degree Secondary Parameters
+# - GFS 0.5x0.5 Degree
+from wxdata.archived_data.model_data.noaa.gfs.gfs import(
+    gfs_0p25 as archived_gfs_0p25,
+    gfs_0p25_secondary_parameters as archived_gfs_0p25_secondary_parameters,
+    gfs_0p50 as archived_gfs_0p50
+)
+
+# Global Ensemble Forecast System (GEFS)
+# - GEFS 0.5x0.5 Degree Primary Parameters
+# - GEFS 0.5x0.5 Degree Secondary Parameters
+# - GEFS 0.25x0.25 Degree
+from wxdata.archived_data.model_data.noaa.gefs.gefs import(
+    gefs_0p50 as archived_gefs_0p50,
+    gefs_0p50_secondary_parameters as archived_gefs_0p50_secondary_parameters,
+    gefs_0p25 as archived_gefs_0p25
+)
+
 # Climate Forecast System (CFS)
 # - CFS Flux Products
 # - CFS Pressure Products
 from wxdata.archived_data.model_data.noaa.cfs.cfs import(
-    get_archived_cfs_flux
+    get_archived_cfs_flux,
+    get_archived_cfs_pressure
 )
 
+# Real-Time Mesoscale Analysis (RTMA)
+from wxdata.archived_data.model_data.noaa.rtma.rtma import rtma as archived_rtma
 
+"""
+
+***********************************************************************************************
+
+
+************  This section hosts the Archived Radar Data Clients ******************************
+
+
+***********************************************************************************************
+"""
+
+
+from wxdata.archived_data.radar_data.nexrad2 import(
+    download_archived_single_station_nexrad2_radar_data,
+    download_archived_multi_station_nexrad2_radar_data
+)
 
 """
 
@@ -326,6 +366,9 @@ from wxdata.utils.tools import(
 
 # This function executes a list of Python scripts in the order the user lists them
 from wxdata.utils.scripts import run_external_scripts
+
+# This function transforms an xarray.array in GRIB2 format to netCDF4 format and writes a netCDF (.nc) file to a user-specified file path. 
+from wxdata.utils.transforms import grib_to_netcdf
 
 """
 ***************************************************************************

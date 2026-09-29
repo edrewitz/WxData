@@ -1,18 +1,17 @@
-# Force GitHub to count Batch Scripts
+# 1. TELL LINGUIST TO IGNORE ALL MARKDOWN AND DOCS IN THE STATS
+*.md linguist-documentation
+README.md linguist-documentation
+docs/** linguist-documentation
+
+# 2. Force GitHub to count your automation scripts
 *.bat linguist-detectable linguist-language=Batchfile
 *.cmd linguist-detectable linguist-language=Batchfile
-
-# Force GitHub to count PowerShell scripts
 *.ps1 linguist-detectable linguist-language=PowerShell
 *.psm1 linguist-detectable linguist-language=PowerShell
-
-# Force GitHub to count Shell scripts
 *.sh linguist-detectable linguist-language=Shell
-
-# Force GitHub to count Python scripts
 *.py linguist-detectable linguist-language=Python
 
-# Git attributes for line endings and diff formatting
+# 3. Code formatting configurations
 *.py    text diff=python
 *.bat   text diff=batch
 *.cmd   text diff=batch

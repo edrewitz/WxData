@@ -461,7 +461,9 @@ def gfs0p25():
     
     If you are using a proxy server you can define it by using --proxy https://proxy-server-address:proxy-server-port
     
-    Example: `gfs 0p25 latest -v geopotential height -l 500 --proxy https://proxy-server-address:proxy-server-port`
+    Example: 
+    
+    `wxdata-gfs 0p25 latest -v geopotential height -l 500 --proxy https://proxy-server-address:proxy-server-port`
     
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     
@@ -1379,7 +1381,9 @@ def gfs0p50():
     
     If you are using a proxy server you can define it by using --proxy https://proxy-server-address:proxy-server-port
     
-    Example: `gfs 0p50 latest -v geopotential height -l 500 --proxy https://proxy-server-address:proxy-server-port`
+    Example: 
+    
+    `wxdata-gfs 0p50 latest -v geopotential height -l 500 --proxy https://proxy-server-address:proxy-server-port`
     
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     

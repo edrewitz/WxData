@@ -1,3 +1,49 @@
+# 1. Check if the script is already running in PowerShell 7+
+if ($PSVersionTable.PSVersion.Major -lt 7) {
+    Write-Host "Running in legacy PowerShell $($PSVersionTable.PSVersion.Major). Checking for PowerShell 7..." -ForegroundColor Yellow
+
+    # 2. Check if PowerShell 7 is already installed but not being used
+    $pwshPath = Get-Command pwsh.exe -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
+    if (-not $pwshPath) {
+        # Search common default installation paths if it's not in the PATH environment variable yet
+        $defaultPath = "$env:ProgramFiles\PowerShell\7\pwsh.exe"
+        if (Test-Path $defaultPath) { $pwshPath = $defaultPath }
+    }
+
+    # 3. If PowerShell 7 is not found, install it silently via Winget (or Microsoft's web installer)
+    if (-not $pwshPath) {
+        Write-Host "PowerShell 7 not found. Starting silent installation..." -ForegroundColor Cyan
+        
+        # Using winget (Recommended for Windows 10/11)
+        winget install --id Microsoft.PowerShell --source winget --silent --accept-source-agreements --accept-package-agreements
+        
+        # Fallback if winget is unavailable (e.g., Windows Server without Desktop Experience)
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "Winget failed or unavailable. Falling back to MSI web installer..." -ForegroundColor Yellow
+            Invoke-Expression "& { $(Invoke-RestMethod https://aka.ms) } -UseMSI -Quiet"
+        }
+
+        # Refresh path environment variable to find the newly installed pwsh.exe
+        $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+        $pwshPath = "$env:ProgramFiles\PowerShell\7\pwsh.exe"
+    }
+
+    # 4. Relaunch this exact script inside PowerShell 7 and exit the current PS5 session
+    if (Test-Path $pwshPath) {
+        Write-Host "Relaunching script inside PowerShell 7..." -ForegroundColor Green
+        & $pwshPath -File $PSCommandPath $args
+        Exit $LASTEXITCODE
+    } else {
+        Write-Error "Failed to install or locate PowerShell 7."
+        Exit 1
+    }
+}
+
+# ==============================================================================
+# YOUR ACTUAL POWERSHELL 7+ CODE GOES HERE
+# ==============================================================================
+Write-Host "Success! The script is now running inside PowerShell v$($PSVersionTable.PSVersion.Major)." -ForegroundColor Green
+
 # Stop execution on any error (equivalent to set -e)
 $ErrorActionPreference = "Stop"
 

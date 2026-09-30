@@ -108,8 +108,14 @@ Write-Output "Setup complete! Environment '$ENV_NAME' is ready."
 Write-Output "To use it in your terminal, run: conda activate $ENV_NAME"
 Write-Output "========================================="
 
-wxdata-gfs 0p25 latest -v geopotential_height -v temperature -v relative_humidity -v u-component_of_wind -v v-component_of_wind -l 1000 -l 850 -l 700 -l 500 -l 250
-wxdata-gfs 0p25 latest -c secondary -v geopotential_height -v temperature -v relative_humidity -v u-component_of_wind -v v-component_of_wind -l 875 -l 775 -l 675 -l 575 -l 475 -s google
-wxdata-gfs 0p50 latest -v temperature -v relative_humidity -l 2 -lt height_above_ground -s aws 
+# Gets our current directory
+$CURRENT_DIR = Get-Location
+
+# Sets our working directory
+$WORKING_DIR = "$CURRENT_DIR/scripts/Download_GFS"
+
+wxdata-gfs 0p25 latest -v geopotential_height -v temperature -v relative_humidity -v u-component_of_wind -v v-component_of_wind -l 1000 -l 850 -l 700 -l 500 -l 250 -cdir $WORKING_DIR/GFS0P25/Primary
+wxdata-gfs 0p25 latest -c secondary -v geopotential_height -v temperature -v relative_humidity -v u-component_of_wind -v v-component_of_wind -l 875 -l 775 -l 675 -l 575 -l 475 -s google -cdir $WORKING_DIR/GFS0P25/Secondary
+wxdata-gfs 0p50 latest -v temperature -v relative_humidity -l 2 -lt height_above_ground -s aws -cdir $WORKING_DIR/GFS0P50
 
 Write-Output "All downloads completed successfully."

@@ -757,7 +757,7 @@ def gfs0p25_fetch(final_forecast_hour,
                             northern_bound=northern_bound,
                             southern_bound=southern_bound)
         
-        if custom_directory == True:
+        if custom_directory != "none":
             _click.echo(f"GFS0P25 {category.upper()} latest download complete, data files saved to {custom_directory}")
         else:
             _click.echo(f"GFS0P25 {category.upper()} latest download complete, data files saved to GFS0P25/ATMOSPHERIC")
@@ -1636,7 +1636,7 @@ def gfs0p50_fetch(final_forecast_hour,
                         northern_bound=northern_bound,
                         southern_bound=southern_bound)
         
-        if custom_directory == True:
+        if custom_directory != "none":
             _click.echo(f"GFS0P50 latest download complete, data files saved to {custom_directory}")
         else:
             _click.echo(f"GFS0P50 latest download complete, data files saved to GFS0P50/ATMOSPHERIC")

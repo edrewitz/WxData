@@ -100,6 +100,14 @@ def rtma():
 )
 
 @_click.option(
+    "--proxy",
+    default=None,
+    callback=lambda _, __, v: _parse_proxy(v),
+    show_default=True,
+    help="Proxy URL (e.g., https://address:port). Default: no proxy.",
+)
+
+@_click.option(
     "--netcdf",
     default=False,
     type=bool,
@@ -137,7 +145,7 @@ def rtma_fetch(location,
                netcdf,
                ncdir,
                ncfname):
-    """Download RTMA GRIB2 data."""
+    """Download Latest Real Time Mesoscale Analysis."""
     
     location = location.lower()
     
@@ -154,25 +162,28 @@ def rtma_fetch(location,
     else:
         model = 'rtma'
 
-    _fetch_rtma(
-        model=model,
-        cat=category,
-        proxies=proxy,
-        clear_recycle_bin=clear_recycle_bin,
-        custom_directory=custom_directory,
-        clear_data=clear_data,
-        source=source,
-        process_data=process,
-        to_netcdf=netcdf,
-        netcdf_path=ncdir,
-        netcdf_filename=ncfname,
-        return_values=False
-    )
+    try:
+        _fetch_rtma(
+            model=model,
+            cat=category,
+            proxies=proxy,
+            clear_recycle_bin=clear_recycle_bin,
+            custom_directory=custom_directory,
+            clear_data=clear_data,
+            source=source,
+            process_data=process,
+            to_netcdf=netcdf,
+            netcdf_path=ncdir,
+            netcdf_filename=ncfname,
+            return_values=False
+        )
 
-    if custom_directory == True:
-        _click.echo(f"RTMA {location.upper()} fetch complete for model={model}, category={category}, saved to {custom_directory}")
-    else:
-        _click.echo(f"RTMA {location.upper()} fetch complete for model={model}, category={category}, saved to {model.upper()}/{category.upper()}")
+        if custom_directory != "none":
+            _click.echo(f"RTMA {location.upper()} fetch complete for model={model}, category={category}, saved to {custom_directory}")
+        else:
+            _click.echo(f"RTMA {location.upper()} fetch complete for model={model}, category={category}, saved to {model.upper()}/{category.upper()}")
+    except Exception as e:
+        _command_error_message(model)
         
 @rtma.command("archived")
 @_click.option(
@@ -240,6 +251,14 @@ def rtma_fetch(location,
 )
 
 @_click.option(
+    "--proxy",
+    default=None,
+    callback=lambda _, __, v: _parse_proxy(v),
+    show_default=True,
+    help="Proxy URL (e.g., https://address:port). Default: no proxy.",
+)
+
+@_click.option(
     "--netcdf",
     default=False,
     type=bool,
@@ -278,7 +297,7 @@ def archived_rtma_fetch(
                netcdf,
                ncdir,
                ncfname):
-    """Download RTMA GRIB2 data."""
+    """Download Archived Real Time Mesoscale Analysis."""
     
     location = location.lower()
     
@@ -295,23 +314,26 @@ def archived_rtma_fetch(
     else:
         model = 'rtma'
 
-    _fetch_archived_rtma(
-        model=model,
-        cat=category,
-        proxies=proxy,
-        clear_recycle_bin=clear_recycle_bin,
-        custom_directory=custom_directory,
-        process_data=process,
-        to_netcdf=netcdf,
-        netcdf_path=ncdir,
-        netcdf_filename=ncfname,
-        return_values=False
-    )
+    try:
+        _fetch_archived_rtma(
+            date,
+            run,
+            model=model,
+            cat=category,
+            proxies=proxy,
+            clear_recycle_bin=clear_recycle_bin,
+            path=custom_directory,
+            process_data=process,
+            to_netcdf=netcdf,
+            netcdf_path=ncdir,
+            netcdf_filename=ncfname,
+            return_values=False
+        )
 
-    if custom_directory == True:
         _click.echo(f"RTMA {location.upper()} fetch complete for model={model}, category={category}, saved to {custom_directory}")
-    else:
-        _click.echo(f"RTMA {location.upper()} fetch complete for model={model}, category={category}, saved to {model.upper()}/{category.upper()}")
+    except Exception as e:
+        _command_error_message(model)
+
         
 # ---------------------------------------------------------------------
 # Entry point

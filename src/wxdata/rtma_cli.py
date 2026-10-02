@@ -5,6 +5,18 @@ from wxdata.model_data.noaa.rtma.rtma import rtma as _fetch_rtma
 from wxdata.archived_data.model_data.noaa.rtma.rtma import rtma as _fetch_archived_rtma
 from datetime import datetime as _datetime
 
+def _parse_date(date):
+    
+    """Parses String Date Into DateTime Object"""
+    
+    if type(date) == type(_datetime.now()):
+        date = date
+    else:
+        date = f"{date[0:4]}{date[5:7]}{date[8:10]}"
+        date = _datetime.strptime(date, "%Y%m%d")
+        
+    return date
+
 def _command_error_message(model):
     
     """Error Message For Invalid Commands"""
@@ -184,6 +196,7 @@ def rtma_fetch(location,
             _click.echo(f"RTMA {location.upper()} fetch complete for model={model}, category={category}, saved to {model.upper()}/{category.upper()}")
     except Exception as e:
         _command_error_message(model)
+        _sys.exit(1)
         
 @rtma.command("archived")
 @_click.option(
@@ -329,10 +342,12 @@ def archived_rtma_fetch(
             netcdf_filename=ncfname,
             return_values=False
         )
-
-        _click.echo(f"RTMA {location.upper()} fetch complete for model={model}, category={category}, saved to {custom_directory}")
+        
+        d =  _parse_date(date)
+        _click.echo(f"RTMA {location.upper()} fetch complete for model={model} for {d.strftime('%Y-%m-%d')} {run}z, category={category}, saved to {custom_directory}")
     except Exception as e:
         _command_error_message(model)
+        _sys.exit(1)
 
         
 # ---------------------------------------------------------------------

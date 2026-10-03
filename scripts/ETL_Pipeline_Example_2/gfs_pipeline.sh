@@ -43,7 +43,7 @@ conda activate "$ENV_NAME"
 echo "========================================="
 echo "Installing wxdata package..."
 echo "========================================="
-conda install -n gfs_pipeline -y wxdata
+conda install -c conda-forge -n gfs_pipeline -y wxdata
 
 echo "========================================="
 echo "Setup complete! Environment '$ENV_NAME' is ready."

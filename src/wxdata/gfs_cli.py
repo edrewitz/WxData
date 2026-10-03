@@ -1021,6 +1021,11 @@ def archived_gfs0p25_fetch(
             v = v.replace('_', ' ')
             vars_fixed.append(v)
             
+        if current_os == "Windows":
+            custom_directory = custom_directory.replace('/', '\\')
+        else:
+            pass
+        
         level_type = level_type.replace('_', ' ')
         
         category = category.lower()
@@ -1616,6 +1621,10 @@ def gfs0p50_fetch(final_forecast_hour,
             custom_directory = None
         else:
             custom_directory = custom_directory
+            if current_os == "Windows":
+                custom_directory = custom_directory.replace('/', '\\')
+            else:
+                pass
         
         vars_fixed = []
         for v in variables:
@@ -1647,7 +1656,10 @@ def gfs0p50_fetch(final_forecast_hour,
         if custom_directory != "none":
             _click.echo(f"GFS0P50 latest download complete, data files saved to {custom_directory}")
         else:
-            _click.echo(f"GFS0P50 latest download complete, data files saved to GFS0P50/ATMOSPHERIC")
+            if current_os != "Windows":
+                _click.echo(f"GFS0P50 latest download complete, data files saved to GFS0P50/ATMOSPHERIC")
+            else:
+                _click.echo(f"GFS0P50 latest download complete, data files saved to GFS0P50/ATMOSPHERIC")
             
     except SystemExit as e:
         _command_error_message('gfs0p50')
@@ -1882,6 +1894,11 @@ def archived_gfs0p50_fetch(
             v = v.replace('_', ' ')
             vars_fixed.append(v)
             
+        if current_os == "Windows":
+            custom_directory = custom_directory.replace('/', '\\')
+        else:
+            pass
+
         level_type = level_type.replace('_', ' ')
         
         

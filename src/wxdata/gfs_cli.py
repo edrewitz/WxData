@@ -1,5 +1,7 @@
 import click as _click
 import sys as _sys
+import platform as _platform
+current_os = _platform.system()
 
 from datetime import datetime as _datetime
 from wxdata.model_data.noaa.gfs.gfs import(
@@ -705,6 +707,10 @@ def gfs0p25_fetch(final_forecast_hour,
             custom_directory = None
         else:
             custom_directory = custom_directory
+            if current_os == "Windows":
+                custom_directory = custom_directory.replace('/', '\\')
+            else:
+                pass
         
         vars_fixed = []
         for v in variables:
@@ -759,7 +765,10 @@ def gfs0p25_fetch(final_forecast_hour,
         if custom_directory != "none":
             _click.echo(f"GFS0P25 {category.upper()} latest download complete, data files saved to {custom_directory}")
         else:
-            _click.echo(f"GFS0P25 {category.upper()} latest download complete, data files saved to GFS0P25/ATMOSPHERIC")
+            if current_os != "Windows":
+                _click.echo(f"GFS0P25 {category.upper()} latest download complete, data files saved to GFS0P25/ATMOSPHERIC")
+            else:
+                _click.echo(rf"GFS0P25 {category.upper()} latest download complete, data files saved to GFS0P25\ATMOSPHERIC")
             
     except SystemExit as e:
         _command_error_message('gfs0p25')

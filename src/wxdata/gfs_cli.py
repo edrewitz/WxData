@@ -717,7 +717,7 @@ def gfs0p25_fetch(final_forecast_hour,
         
         if category == 'primary':
         
-            ds = _fetch_gfs_0p25(final_forecast_hour=final_forecast_hour,
+            _fetch_gfs_0p25(final_forecast_hour=final_forecast_hour,
                             process_data=process,
                             proxies=proxy,
                             clear_recycle_bin=clear_recycle_bin,
@@ -730,12 +730,11 @@ def gfs0p25_fetch(final_forecast_hour,
                             to_netcdf=netcdf,
                             netcdf_path=ncdir,
                             netcdf_filename=ncfname,
-                            return_values=True,
+                            return_values=False,
                             western_bound=western_bound,
                             eastern_bound=eastern_bound,
                             northern_bound=northern_bound,
                             southern_bound=southern_bound)
-            return ds
         else:
             
             _fetch_gfs_0p25_secondary_parameters(final_forecast_hour=final_forecast_hour,

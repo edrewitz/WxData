@@ -717,7 +717,7 @@ def gfs0p25_fetch(final_forecast_hour,
         
         if category == 'primary':
         
-            _fetch_gfs_0p25(final_forecast_hour=final_forecast_hour,
+            ds = _fetch_gfs_0p25(final_forecast_hour=final_forecast_hour,
                             process_data=process,
                             proxies=proxy,
                             clear_recycle_bin=clear_recycle_bin,
@@ -730,12 +730,12 @@ def gfs0p25_fetch(final_forecast_hour,
                             to_netcdf=netcdf,
                             netcdf_path=ncdir,
                             netcdf_filename=ncfname,
-                            return_values=False,
+                            return_values=True,
                             western_bound=western_bound,
                             eastern_bound=eastern_bound,
                             northern_bound=northern_bound,
                             southern_bound=southern_bound)
-            
+            return ds
         else:
             
             _fetch_gfs_0p25_secondary_parameters(final_forecast_hour=final_forecast_hour,
@@ -1019,7 +1019,7 @@ def archived_gfs0p25_fetch(
         
         if category == 'primary':
         
-            ds =_fetch_archived_gfs_0p25(
+            _fetch_archived_gfs_0p25(
                             date,
                             run,
                             path=custom_directory,
@@ -1034,12 +1034,11 @@ def archived_gfs0p25_fetch(
                             to_netcdf=netcdf,
                             netcdf_path=ncdir,
                             netcdf_filename=ncfname,
-                            return_values=True,
+                            return_values=False,
                             western_bound=western_bound,
                             eastern_bound=eastern_bound,
                             northern_bound=northern_bound,
                             southern_bound=southern_bound)
-            return ds
             
         else:
             

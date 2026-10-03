@@ -1,5 +1,7 @@
 import click as _click
 import sys as _sys
+import platform as _platform
+current_os = _platform.system()
 
 from datetime import datetime as _datetime
 from wxdata.model_data.noaa.gfs.gfs import(
@@ -705,6 +707,10 @@ def gfs0p25_fetch(final_forecast_hour,
             custom_directory = None
         else:
             custom_directory = custom_directory
+            if current_os == "Windows":
+                custom_directory = custom_directory.replace('/', '\\')
+            else:
+                pass
         
         vars_fixed = []
         for v in variables:
@@ -735,7 +741,6 @@ def gfs0p25_fetch(final_forecast_hour,
                             eastern_bound=eastern_bound,
                             northern_bound=northern_bound,
                             southern_bound=southern_bound)
-            
         else:
             
             _fetch_gfs_0p25_secondary_parameters(final_forecast_hour=final_forecast_hour,
@@ -757,10 +762,13 @@ def gfs0p25_fetch(final_forecast_hour,
                             northern_bound=northern_bound,
                             southern_bound=southern_bound)
         
-        if custom_directory == True:
+        if custom_directory != "none":
             _click.echo(f"GFS0P25 {category.upper()} latest download complete, data files saved to {custom_directory}")
         else:
-            _click.echo(f"GFS0P25 {category.upper()} latest download complete, data files saved to GFS0P25/ATMOSPHERIC")
+            if current_os != "Windows":
+                _click.echo(f"GFS0P25 {category.upper()} latest download complete, data files saved to GFS0P25/ATMOSPHERIC")
+            else:
+                _click.echo(rf"GFS0P25 {category.upper()} latest download complete, data files saved to GFS0P25\ATMOSPHERIC")
             
     except SystemExit as e:
         _command_error_message('gfs0p25')
@@ -1013,6 +1021,11 @@ def archived_gfs0p25_fetch(
             v = v.replace('_', ' ')
             vars_fixed.append(v)
             
+        if current_os == "Windows":
+            custom_directory = custom_directory.replace('/', '\\')
+        else:
+            pass
+        
         level_type = level_type.replace('_', ' ')
         
         category = category.lower()
@@ -1608,6 +1621,10 @@ def gfs0p50_fetch(final_forecast_hour,
             custom_directory = None
         else:
             custom_directory = custom_directory
+            if current_os == "Windows":
+                custom_directory = custom_directory.replace('/', '\\')
+            else:
+                pass
         
         vars_fixed = []
         for v in variables:
@@ -1636,10 +1653,13 @@ def gfs0p50_fetch(final_forecast_hour,
                         northern_bound=northern_bound,
                         southern_bound=southern_bound)
         
-        if custom_directory == True:
+        if custom_directory != "none":
             _click.echo(f"GFS0P50 latest download complete, data files saved to {custom_directory}")
         else:
-            _click.echo(f"GFS0P50 latest download complete, data files saved to GFS0P50/ATMOSPHERIC")
+            if current_os != "Windows":
+                _click.echo(f"GFS0P50 latest download complete, data files saved to GFS0P50/ATMOSPHERIC")
+            else:
+                _click.echo(f"GFS0P50 latest download complete, data files saved to GFS0P50/ATMOSPHERIC")
             
     except SystemExit as e:
         _command_error_message('gfs0p50')
@@ -1874,6 +1894,11 @@ def archived_gfs0p50_fetch(
             v = v.replace('_', ' ')
             vars_fixed.append(v)
             
+        if current_os == "Windows":
+            custom_directory = custom_directory.replace('/', '\\')
+        else:
+            pass
+
         level_type = level_type.replace('_', ' ')
         
         

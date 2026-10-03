@@ -1019,7 +1019,7 @@ def archived_gfs0p25_fetch(
         
         if category == 'primary':
         
-            _fetch_archived_gfs_0p25(
+            ds =_fetch_archived_gfs_0p25(
                             date,
                             run,
                             path=custom_directory,
@@ -1034,11 +1034,12 @@ def archived_gfs0p25_fetch(
                             to_netcdf=netcdf,
                             netcdf_path=ncdir,
                             netcdf_filename=ncfname,
-                            return_values=False,
+                            return_values=True,
                             western_bound=western_bound,
                             eastern_bound=eastern_bound,
                             northern_bound=northern_bound,
                             southern_bound=southern_bound)
+            return ds
             
         else:
             

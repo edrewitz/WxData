@@ -711,6 +711,12 @@ def gfs0p25_fetch(final_forecast_hour,
                 custom_directory = custom_directory.replace('/', '\\')
             else:
                 pass
+            
+        if netcdf == True:
+            if current_os == "Windows":
+                ncdir = ncdir.replace('/', '\\')
+            else:
+                pass
         
         vars_fixed = []
         for v in variables:
@@ -1025,6 +1031,12 @@ def archived_gfs0p25_fetch(
             custom_directory = custom_directory.replace('/', '\\')
         else:
             pass
+    
+        if netcdf == True:
+            if current_os == "Windows":
+                ncdir = ncdir.replace('/', '\\')
+            else:
+                pass
         
         level_type = level_type.replace('_', ' ')
         
@@ -1623,6 +1635,12 @@ def gfs0p50_fetch(final_forecast_hour,
             custom_directory = custom_directory
             if current_os == "Windows":
                 custom_directory = custom_directory.replace('/', '\\')
+            else:
+                pass
+        
+        if netcdf == True:
+            if current_os == "Windows":
+                ncdir = ncdir.replace('/', '\\')
             else:
                 pass
         

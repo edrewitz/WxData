@@ -54,7 +54,7 @@ def rtma():
     pass
 
 
-@rtma.command("latest")
+@realtime_mesoscale_analysis.command("latest")
 @_click.option(
     "--location",
     "-loc",
@@ -206,7 +206,7 @@ def rtma_fetch(location,
         _command_error_message(model)
         _sys.exit(1)
         
-@rtma.command("archived")
+@realtime_mesoscale_analysis.command("archived")
 @_click.option(
     "--date",
     "-d",

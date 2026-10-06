@@ -42,7 +42,7 @@ def _parse_proxy(value):
 # ---------------------------------------------------------------------
 @_click.group(context_settings={"help_option_names": ["-h", "--help"]})
 def realtime_mesoscale_analysis():
-    """RTMA command line utilities."""
+    """Real Time Mesoscale Analysis command line utilities."""
     pass
 
 # ---------------------------------------------------------------------
@@ -50,7 +50,7 @@ def realtime_mesoscale_analysis():
 # ---------------------------------------------------------------------
 @realtime_mesoscale_analysis.group()
 def rtma():
-    """RTMA utilities."""
+    """Real Time Mesoscale Analysis command line utilities."""
     pass
 
 
@@ -68,7 +68,7 @@ def rtma():
     "-c",
     default="analysis",
     show_default=True,
-    help="analysis - Latest RTMA Analysis | error - Latest RTMA Error | surface 1 hour forecast - RTMA Surface 1 Hour Forecast."
+    help="analysis - Latest RTMA Analysis | error - Latest RTMA Error | forecast - RTMA Surface 1 Hour Forecast."
 )
 
 
@@ -94,7 +94,7 @@ def rtma():
     "-cd",
     default=False,
     show_default=True,
-    help="To bypass the safety scanner set --clear data to False."
+    help="To bypass the safety scanner set --clear data to False: -cd False."
 )
 
 @_click.option(
@@ -162,6 +162,11 @@ def rtma_fetch(location,
     """Download Latest Real Time Mesoscale Analysis."""
     
     location = location.lower()
+    category = category.lower()
+    if category == 'forecast':
+        category = 'surface 1 hour forecast'
+    else:
+        category = category
     
     if location == 'conus':
         model = 'rtma'
@@ -242,7 +247,7 @@ def rtma_fetch(location,
     "-c",
     default="analysis",
     show_default=True,
-    help="analysis - Latest RTMA Analysis | error - Latest RTMA Error | surface 1 hour forecast - RTMA Surface 1 Hour Forecast."
+    help="analysis - Latest RTMA Analysis | error - Latest RTMA Error | forecast - RTMA Surface 1 Hour Forecast."
 )
 
 
@@ -321,6 +326,11 @@ def archived_rtma_fetch(
     """Download Archived Real Time Mesoscale Analysis."""
     
     location = location.lower()
+    category = category.lower()
+    if category == 'forecast':
+        category = 'surface 1 hour forecast'
+    else:
+        category = category
     
     if location == 'conus':
         model = 'rtma'

@@ -527,7 +527,7 @@ def gfs0p25():
     default=False,
     show_default=True,
     type=bool,
-    help="To bypass the safety scanner set --clear data to False."
+    help="To bypass the safety scanner set --clear data to False: -cd False."
 )
 
 @_click.option(

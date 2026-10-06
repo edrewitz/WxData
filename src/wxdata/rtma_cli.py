@@ -74,7 +74,7 @@ def rtma():
 
 @_click.option(
     "--clear_recycle_bin",
-    "cr",
+    "-cr",
     default=False,
     show_default=True,
     help="To clear your recycle bin with each run of the script set to True."
@@ -248,7 +248,7 @@ def rtma_fetch(location,
 
 @_click.option(
     "--clear_recycle_bin",
-    "cr",
+    "-cr",
     default=False,
     show_default=True,
     help="To clear your recycle bin with each run of the script set to True."

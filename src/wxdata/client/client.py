@@ -6,7 +6,6 @@ These functions are compatible with users on VPN/PROXY connections as well as no
 1) get_gridded_data
 2) get_csv_data
 3) get_excel_data
-4) get_xmacis_data
 5) get_open_aws_data
 6) byte_range_request
 

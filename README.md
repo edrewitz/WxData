@@ -433,23 +433,20 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 
 #### Raw Data Clients
 
-##### ***xmACIS2 Climate Data***
-1. [xmACIS2 Client](https://edrewitz.github.io/WxData/xmacis2_client)
-
 ##### ***Custom Gridded Data***
 1. [Gridded Data Client](https://edrewitz.github.io/WxData/get_gridded_data)
 
 ##### ***Custom CSV Data***
-1. [CSV Data Client](https://edrewitz.github.io/WxData/get_csv_data)
+2. [CSV Data Client](https://edrewitz.github.io/WxData/get_csv_data)
 
 ##### ***Custom Excel Data***
-1. [Excel Data Client](https://edrewitz.github.io/WxData/get_excel_data)
+3. [Excel Data Client](https://edrewitz.github.io/WxData/get_excel_data)
 
 ##### ***AWS Open Data***
-1. [AWS Open Data](https://edrewitz.github.io/WxData/get_open_aws_data)
+4. [AWS Open Data](https://edrewitz.github.io/WxData/get_open_aws_data)
 
 ##### ***Byte-Range Requests***
-1. [Byte-Range Requests](https://edrewitz.github.io/WxData/bytes_range_request)
+5. [Byte-Range Requests](https://edrewitz.github.io/WxData/bytes_range_request)
 
 ---------------------------------------------------------------
 
@@ -912,7 +909,6 @@ from wxdata.utils.scripts import run_external_scripts
 #  - get_gridded_data()
 #  - get_csv_data()
 #  - get_excel_data()
-#  - get_xmacis_data()
 #  - get_aws_open_data()
 #  - byte_range_request()
 import wxdata.client.client as client

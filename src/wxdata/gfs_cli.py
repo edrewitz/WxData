@@ -106,19 +106,6 @@ def gfs0p25():
     
     google - Google Cloud Servers
     
-    -cd = Clear Data (Default=False).
-    
-    ***Only for wxdata-gfs 0p25 latest***
-    
-    ***Archived Clients Automatically Clear Old Data***
-    
-    When set to False the scanner safeguard that prevents repetative downloads is enabled.
-    Set -cd False to disable this safety feature.
-    
-    WARNING: When this feature is disabled and the user submits too many requests in a short period of time the user risks
-    being rate-limited by the data server. If the user gets rate-limited, the user should wait approximately 5-10 minutes and
-    retry downloading the data. 
-    
     -cdir = Custom Directory (Default=None).
     
     If the user wishes to build their own directory to hold the data files set -cd directory_branch_path.
@@ -474,6 +461,22 @@ def gfs0p25():
     --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=GFS0P25/NETCDF). 
     
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=gfs_0p25.nc)
+    
+    Commands Only Valid for "latest"
+    --------------------------------
+    
+    -cd = Clear Data (Default=False).
+    
+    ***Only for wxdata-gfs 0p25 latest***
+    
+    ***Archived Clients Automatically Clear Old Data***
+    
+    When set to False the scanner safeguard that prevents repetative downloads is enabled.
+    Set -cd False to disable this safety feature.
+    
+    WARNING: When this feature is disabled and the user submits too many requests in a short period of time the user risks
+    being rate-limited by the data server. If the user gets rate-limited, the user should wait approximately 5-10 minutes and
+    retry downloading the data. 
     
     """
     

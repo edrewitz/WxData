@@ -539,6 +539,7 @@ def gefs0p50():
             11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
             21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
     show_default=True,
+    multiple=True,
     type=int,
     help="""The individual ensemble members to select. Defaults to all 30 members.
     
@@ -898,6 +899,7 @@ def gefs0p50_fetch(final_forecast_hour,
             11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
             21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
     show_default=True,
+    multiple=True,
     type=int,
     help="""The individual ensemble members to select. Defaults to all 30 members.
     
@@ -1550,6 +1552,7 @@ def gefs0p25():
             11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
             21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
     show_default=True,
+    multiple=True,
     type=int,
     help="""The individual ensemble members to select. Defaults to all 30 members.
     

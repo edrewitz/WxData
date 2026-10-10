@@ -39,6 +39,7 @@ dependencies = [
 [project.scripts]
 wxdata-rtma = "wxdata.rtma_cli:main"
 wxdata-gfs = "wxdata.gfs_cli:main"
+wxdata-gefs = "wxdata.gefs_cli:main"
 
 [build-system]
 requires = ["setuptools>=64.0.0", "wheel"]

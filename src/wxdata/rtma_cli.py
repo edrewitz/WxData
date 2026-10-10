@@ -1,3 +1,11 @@
+"""
+This file hosts the WxData Command Line Interface for retrieving Real-Time Mesoscale Analysis (RTMA) Data.
+
+Command Line Use: `wxdata-rtma **args`
+
+(C) Eric J. Drewitz 2025-2026
+"""
+
 import click as _click
 import sys as _sys
 import platform as _platform

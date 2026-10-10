@@ -1,27 +1,25 @@
 """
-This file hosts the WxData Command Line Interface for retrieving Global Forecast System (GFS) Data.
+This file hosts the WxData Command Line Interface for retrieving Global Ensemble Forecast System (GEFS) Data.
 
-Command Line Use: `wxdata-gfs **args`
+Command Line Use: `wxdata-gefs **args`
 
 (C) Eric J. Drewitz 2025-2026
 """
-
 import click as _click
 import sys as _sys
 import platform as _platform
 current_os = _platform.system()
 
 from datetime import datetime as _datetime
-from wxdata.model_data.noaa.gfs.gfs import(
-    gfs_0p25 as _fetch_gfs_0p25,
-    gfs_0p25_secondary_parameters as _fetch_gfs_0p25_secondary_parameters,
-    gfs_0p50 as _fetch_gfs_0p50
+from wxdata.model_data.noaa.gefs.gefs import(
+    gefs_0p50 as _fetch_gefs_0p50,
+    gefs_0p50_secondary_parameters as _fetch_gefs_0p50_secondary_parameters,
+    gefs_0p25 as _fetch_gefs_0p25
 )
-
-from wxdata.archived_data.model_data.noaa.gfs.gfs import(
-    gfs_0p25 as _fetch_archived_gfs_0p25,
-    gfs_0p25_secondary_parameters as _fetch_archived_gfs_0p25_secondary_parameters,
-    gfs_0p50 as _fetch_archived_gfs_0p50
+from wxdata.archived_data.model_data.noaa.gefs.gefs import(
+    gefs_0p50 as _fetch_archived_gefs_0p50,
+    gefs_0p50_secondary_parameters as _fetch_archived_gefs_0p50_secondary_parameters,
+    gefs_0p25 as _fetch_archived_gefs_0p25
 )
 
 def _parse_date(date):
@@ -54,22 +52,22 @@ def _parse_proxy(value):
             "http": value,
             "https": value,
         }
-
+        
 # ---------------------------------------------------------------------
 # Top-level CLI group
 # ---------------------------------------------------------------------
 @_click.group(context_settings={"help_option_names": ["-h", "--help"]})
-def gfs_data():
-    """GFS command line utilities."""
+def gefs_data():
+    """GEFS command line utilities."""
     pass
 
 # ---------------------------------------------------------------------
 # GFS 0.25x0.25 Commands
 # ---------------------------------------------------------------------
-@gfs_data.group(name='0p25')
-def gfs0p25():
+@gefs_data.group(name='0p50')
+def gefs0p50():
     """
-    GFS 0.25x0.25 Client.
+    GEFS 0.50x0.50 Client.
     
     Archived Required Commands
     --------------------------
@@ -488,10 +486,10 @@ def gfs0p25():
     
     """
     
-@gfs0p25.command("latest")
+@gefs0p50.command("latest")
 @_click.option(
-    "--category",
-    "-c",
+    "--type",
+    "-t",
     default="primary",
     type=str,
     show_default=True,
@@ -499,8 +497,28 @@ def gfs0p25():
           
           Default=primary
           
-          set -c secondary for secondary variables.
+          set -t secondary for secondary variables.
           
+          """
+    )
+)
+
+@_click.option(
+    "--category",
+    "-c",
+    default="mean",
+    type=str,
+    show_default=True,
+    help=("""The category of the ensemble data. Default='mean'.  
+    
+            Valid categories
+            -----------------
+            
+            1) mean
+            2) members
+            3) spread
+            4) control
+    
           """
     )
 )
@@ -512,6 +530,21 @@ def gfs0p25():
     show_default=True,
     type=int,
     help="This is the final forecast hour requested in the dataset."
+)
+
+@_click.option(
+    "--members",
+    "-m",
+    default=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+            11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+            21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+    show_default=True,
+    type=int,
+    help="""The individual ensemble members to select. Defaults to all 30 members.
+    
+            This is only necessary when category=members -> `-c members`
+    
+    """
 )
 
 @_click.option(
@@ -676,7 +709,7 @@ def gfs0p25():
 
 @_click.option(
     "--ncdir",
-    default=f"GFS0P25/NETCDF",
+    default=f"GEFS0P50/NETCDF",
     type=str,
     show_default=True,
     help=("""This flag is needed when --netcdf True to define the directory where the netCDF (.nc) file will save to.
@@ -685,14 +718,14 @@ def gfs0p25():
 
 @_click.option(
     "--ncfname",
-    default=f"gfs_0p25.nc",
+    default=f"gefs_0p50.nc",
     type=str,
     show_default=True,
     help=("""This flag is needed when --netcdf True to define the filename for the netCDF (.nc) file. 
           """),
 )
 
-def gfs0p25_fetch(final_forecast_hour,
+def gefs0p50_fetch(final_forecast_hour,
                   proxy,
                   clear_recycle_bin,
                   custom_directory,
@@ -702,6 +735,8 @@ def gfs0p25_fetch(final_forecast_hour,
                   levels,
                   level_type,
                   category,
+                  members,
+                  type,
                   netcdf,
                   ncdir,
                   ncfname,
@@ -711,7 +746,7 @@ def gfs0p25_fetch(final_forecast_hour,
                   northern_bound,
                   southern_bound):
     
-    """Downloads Latest GFS 0.25x0.25 Data"""
+    """Downloads Latest GEFS 0.50x0.50 Data"""
     
     try:
         if custom_directory.lower() == "none":
@@ -737,10 +772,13 @@ def gfs0p25_fetch(final_forecast_hour,
         level_type = level_type.replace('_', ' ')
         
         category = category.lower()
+        type = type.lower()
         
-        if category == 'primary':
+        if type == 'primary':
         
-            _fetch_gfs_0p25(final_forecast_hour=final_forecast_hour,
+            _fetch_gefs_0p50(cat=category,
+                             members=members,
+                            final_forecast_hour=final_forecast_hour,
                             process_data=process,
                             proxies=proxy,
                             clear_recycle_bin=clear_recycle_bin,
@@ -760,39 +798,41 @@ def gfs0p25_fetch(final_forecast_hour,
                             southern_bound=southern_bound)
         else:
             
-            _fetch_gfs_0p25_secondary_parameters(final_forecast_hour=final_forecast_hour,
-                            process_data=process,
-                            proxies=proxy,
-                            clear_recycle_bin=clear_recycle_bin,
-                            custom_directory=custom_directory,
-                            clear_data=clear_data,
-                            source=source,
-                            variables=vars_fixed,
-                            levels=levels,
-                            level_type=level_type,
-                            to_netcdf=netcdf,
-                            netcdf_path=ncdir,
-                            netcdf_filename=ncfname,
-                            return_values=False,
-                            western_bound=western_bound,
-                            eastern_bound=eastern_bound,
-                            northern_bound=northern_bound,
-                            southern_bound=southern_bound)
+            _fetch_gefs_0p50_secondary_parameters(cat=category,
+                                                  members=members,
+                                                  final_forecast_hour=final_forecast_hour,
+                                                    process_data=process,
+                                                    proxies=proxy,
+                                                    clear_recycle_bin=clear_recycle_bin,
+                                                    custom_directory=custom_directory,
+                                                    clear_data=clear_data,
+                                                    source=source,
+                                                    variables=vars_fixed,
+                                                    levels=levels,
+                                                    level_type=level_type,
+                                                    to_netcdf=netcdf,
+                                                    netcdf_path=ncdir,
+                                                    netcdf_filename=ncfname,
+                                                    return_values=False,
+                                                    western_bound=western_bound,
+                                                    eastern_bound=eastern_bound,
+                                                    northern_bound=northern_bound,
+                                                    southern_bound=southern_bound)
         
         if custom_directory != "none":
-            _click.echo(f"GFS0P25 {category.upper()} latest download complete, data files saved to {custom_directory}")
+            _click.echo(f"GEFS0P50 {category.upper()} latest download complete, data files saved to {custom_directory}")
         else:
             if current_os != "Windows":
-                _click.echo(f"GFS0P25 {category.upper()} latest download complete, data files saved to GFS0P25/ATMOSPHERIC")
+                _click.echo(f"GEFS0P50 {category.upper()} latest download complete, data files saved to GEFS0P50/ATMOSPHERIC")
             else:
-                _click.echo(rf"GFS0P25 {category.upper()} latest download complete, data files saved to GFS0P25\ATMOSPHERIC")
+                _click.echo(rf"GEFS0P50 {category.upper()} latest download complete, data files saved to GEFS0P50\ATMOSPHERIC")
             
     except SystemExit as e:
-        _command_error_message('gfs0p25')
+        _command_error_message('gefs0p50')
         _sys.exit(1)
         
         
-@gfs0p25.command("archived")
+@gefs0p50.command("archived")
 @_click.option(
     "--date",
     "-d",
@@ -816,8 +856,8 @@ def gfs0p25_fetch(final_forecast_hour,
 )
 
 @_click.option(
-    "--category",
-    "-c",
+    "--type",
+    "-t",
     default="primary",
     type=str,
     show_default=True,
@@ -825,10 +865,45 @@ def gfs0p25_fetch(final_forecast_hour,
           
           Default=primary
           
-          set -c secondary for secondary variables.
+          set -t secondary for secondary variables.
           
           """
     )
+)
+
+@_click.option(
+    "--category",
+    "-c",
+    default="mean",
+    type=str,
+    show_default=True,
+    help=("""The category of the ensemble data. Default='mean'.  
+    
+            Valid categories
+            -----------------
+            
+            1) mean
+            2) members
+            3) spread
+            4) control
+    
+          """
+    )
+)
+
+@_click.option(
+    "--members",
+    "-m",
+    default=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+            11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+            21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+    show_default=True,
+    type=int,
+    help="""The individual ensemble members to select. Defaults to all 30 members.
+    
+            This is only necessary when category=members -> `-c members`
+    
+    """
 )
 
 @_click.option(
@@ -853,7 +928,7 @@ def gfs0p25_fetch(final_forecast_hour,
 @_click.option(
     "--custom_directory",
     "-cdir",
-    default="GFS0P25/Archive",
+    default="GEFS0P50/Archive",
     show_default=True,
     type=str,
     help="The path of the directory where the archived GFS0P25 data saves to."
@@ -993,7 +1068,7 @@ def gfs0p25_fetch(final_forecast_hour,
 
 @_click.option(
     "--ncdir",
-    default=f"GFS0P25/NETCDF",
+    default=f"GEFS0P50/NETCDF",
     type=str,
     show_default=True,
     help=("""This flag is needed when --netcdf True to define the directory where the netCDF (.nc) file will save to.
@@ -1002,16 +1077,18 @@ def gfs0p25_fetch(final_forecast_hour,
 
 @_click.option(
     "--ncfname",
-    default=f"gfs_0p25.nc",
+    default=f"gefs_0p50.nc",
     type=str,
     show_default=True,
     help=("""This flag is needed when --netcdf True to define the filename for the netCDF (.nc) file. 
           """),
 )
 
-def archived_gfs0p25_fetch(
+def archived_gefs0p50_fetch(
                   date,
                   run,
+                  type,
+                  members,
                   final_forecast_hour,
                   proxy,
                   clear_recycle_bin,
@@ -1030,7 +1107,7 @@ def archived_gfs0p25_fetch(
                   northern_bound,
                   southern_bound):
     
-    """Downloads Archived GFS 0.25x0.25 Data For A Specified Date and Run"""
+    """Downloads Archived GEFS 0.50x0.50 Data For A Specified Date and Run"""
     
     try:
         vars_fixed = []
@@ -1052,12 +1129,15 @@ def archived_gfs0p25_fetch(
         level_type = level_type.replace('_', ' ')
         
         category = category.lower()
+        type = type.lower()
         
-        if category == 'primary':
+        if type == 'primary':
         
-            _fetch_archived_gfs_0p25(
+            _fetch_archived_gefs_0p50(
                             date,
                             run,
+                            cat=category,
+                            members=members,
                             path=custom_directory,
                             final_forecast_hour=final_forecast_hour,
                             process_data=process,
@@ -1078,9 +1158,11 @@ def archived_gfs0p25_fetch(
             
         else:
             
-            _fetch_archived_gfs_0p25_secondary_parameters(
+            _fetch_archived_gefs_0p50_secondary_parameters(
                             date,
                             run,
+                            cat=category,
+                            members=members,
                             path=custom_directory,
                             final_forecast_hour=final_forecast_hour,
                             process_data=process,
@@ -1100,17 +1182,17 @@ def archived_gfs0p25_fetch(
                             southern_bound=southern_bound)
         
         d = _parse_date(date)
-        _click.echo(f"GFS0P25 {category.upper()} download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {custom_directory}")
+        _click.echo(f"GEFS0P50 {category.upper()} download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {custom_directory}")
             
     except SystemExit as e:
-        _command_error_message('gfs0p25')
+        _command_error_message('gefs0p50')
         _sys.exit(1)
         
         
-@gfs_data.group(name='0p50')
-def gfs0p50():
+@gefs_data.group(name='0p25')
+def gefs0p25():
     """
-    GFS 0.50x0.50 Client.
+    GEFS 0.25x0.25 Client.
     
     Archived Required Commands
     --------------------------
@@ -1431,7 +1513,7 @@ def gfs0p50():
     
     """
     
-@gfs0p50.command("latest")
+@gefs0p25.command("latest")
 @_click.option(
     "--final_forecast_hour",
     "-f",
@@ -1439,6 +1521,41 @@ def gfs0p50():
     show_default=True,
     type=int,
     help="This is the final forecast hour requested in the dataset."
+)
+
+@_click.option(
+    "--category",
+    "-c",
+    default="mean",
+    type=str,
+    show_default=True,
+    help=("""The category of the ensemble data. Default='mean'.  
+    
+            Valid categories
+            -----------------
+            
+            1) mean
+            2) members
+            3) spread
+            4) control
+    
+          """
+    )
+)
+
+@_click.option(
+    "--members",
+    "-m",
+    default=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+            11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+            21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+    show_default=True,
+    type=int,
+    help="""The individual ensemble members to select. Defaults to all 30 members.
+    
+            This is only necessary when category=members -> `-c members`
+    
+    """
 )
 
 @_click.option(
@@ -1603,7 +1720,7 @@ def gfs0p50():
 
 @_click.option(
     "--ncdir",
-    default=f"GFS0P50/NETCDF",
+    default=f"GEFS0P25/NETCDF",
     type=str,
     show_default=True,
     help=("""This flag is needed when --netcdf True to define the directory where the netCDF (.nc) file will save to.
@@ -1612,14 +1729,16 @@ def gfs0p50():
 
 @_click.option(
     "--ncfname",
-    default=f"gfs_0p50.nc",
+    default=f"gefs_0p25.nc",
     type=str,
     show_default=True,
     help=("""This flag is needed when --netcdf True to define the filename for the netCDF (.nc) file. 
           """),
 )
 
-def gfs0p50_fetch(final_forecast_hour,
+def gefs0p25_fetch(members,
+                   category,
+                   final_forecast_hour,
                   proxy,
                   clear_recycle_bin,
                   custom_directory,
@@ -1637,7 +1756,7 @@ def gfs0p50_fetch(final_forecast_hour,
                   northern_bound,
                   southern_bound):
     
-    """Downloads Latest GFS 0.50x0.50 Data"""
+    """Downloads Latest GEFS 0.25x0.25 Data"""
     
     try:
         if custom_directory.lower() == "none":
@@ -1661,9 +1780,11 @@ def gfs0p50_fetch(final_forecast_hour,
             vars_fixed.append(v)
             
         level_type = level_type.replace('_', ' ')
-                
+        category = category.lower()        
         
-        _fetch_gfs_0p50(final_forecast_hour=final_forecast_hour,
+        _fetch_gefs_0p25(cat=category,
+                         members=members,
+                        final_forecast_hour=final_forecast_hour,
                         process_data=process,
                         proxies=proxy,
                         clear_recycle_bin=clear_recycle_bin,
@@ -1683,18 +1804,18 @@ def gfs0p50_fetch(final_forecast_hour,
                         southern_bound=southern_bound)
         
         if custom_directory != "none":
-            _click.echo(f"GFS0P50 latest download complete, data files saved to {custom_directory}")
+            _click.echo(f"GEFS0P25 latest download complete, data files saved to {custom_directory}")
         else:
             if current_os != "Windows":
-                _click.echo(f"GFS0P50 latest download complete, data files saved to GFS0P50/ATMOSPHERIC")
+                _click.echo(f"GEFS0P25 latest download complete, data files saved to GEFS0P25/ATMOSPHERIC")
             else:
-                _click.echo(f"GFS0P50 latest download complete, data files saved to GFS0P50/ATMOSPHERIC")
+                _click.echo(f"GEFS0P25 latest download complete, data files saved to GEFS0P25/ATMOSPHERIC")
             
     except SystemExit as e:
-        _command_error_message('gfs0p50')
+        _command_error_message('gefs0p25')
         _sys.exit(1)
         
-@gfs0p50.command("archived")
+@gefs0p25.command("archived")
 @_click.option(
     "--date",
     "-d",
@@ -1715,6 +1836,41 @@ def gfs0p50_fetch(final_forecast_hour,
                     
           """
     )
+)
+
+@_click.option(
+    "--category",
+    "-c",
+    default="mean",
+    type=str,
+    show_default=True,
+    help=("""The category of the ensemble data. Default='mean'.  
+    
+            Valid categories
+            -----------------
+            
+            1) mean
+            2) members
+            3) spread
+            4) control
+    
+          """
+    )
+)
+
+@_click.option(
+    "--members",
+    "-m",
+    default=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+            11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+            21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+    show_default=True,
+    type=int,
+    help="""The individual ensemble members to select. Defaults to all 30 members.
+    
+            This is only necessary when category=members -> `-c members`
+    
+    """
 )
 
 @_click.option(
@@ -1739,7 +1895,7 @@ def gfs0p50_fetch(final_forecast_hour,
 @_click.option(
     "--custom_directory",
     "-cdir",
-    default="GFS0P50/Archive",
+    default="GEFS0P25/Archive",
     show_default=True,
     type=str,
     help="The path of the directory where the archived GFS0P25 data saves to."
@@ -1879,7 +2035,7 @@ def gfs0p50_fetch(final_forecast_hour,
 
 @_click.option(
     "--ncdir",
-    default=f"GFS0P50/NETCDF",
+    default=f"GEFS0P25/NETCDF",
     type=str,
     show_default=True,
     help=("""This flag is needed when --netcdf True to define the directory where the netCDF (.nc) file will save to.
@@ -1888,7 +2044,7 @@ def gfs0p50_fetch(final_forecast_hour,
 
 @_click.option(
     "--ncfname",
-    default=f"gfs_0p50.nc",
+    default=f"gefs_0p25.nc",
     type=str,
     show_default=True,
     help=("""This flag is needed when --netcdf True to define the filename for the netCDF (.nc) file. 
@@ -1898,6 +2054,8 @@ def gfs0p50_fetch(final_forecast_hour,
 def archived_gfs0p50_fetch(
                   date,
                   run,
+                  category,
+                  members,
                   final_forecast_hour,
                   proxy,
                   clear_recycle_bin,
@@ -1915,7 +2073,7 @@ def archived_gfs0p50_fetch(
                   northern_bound,
                   southern_bound):
     
-    """Downloads Archived GFS 0.50x0.50 Data For A Specified Date and Run"""
+    """Downloads Archived GEFS 0.25x0.25 Data For A Specified Date and Run"""
     
     try:
         vars_fixed = []
@@ -1929,12 +2087,14 @@ def archived_gfs0p50_fetch(
             pass
 
         level_type = level_type.replace('_', ' ')
+        category = category.lower()
         
         
-        
-        _fetch_archived_gfs_0p50(
+        _fetch_archived_gefs_0p25(
                         date,
                         run,
+                        cat=category,
+                        members=members,
                         path=custom_directory,
                         final_forecast_hour=final_forecast_hour,
                         process_data=process,
@@ -1954,17 +2114,17 @@ def archived_gfs0p50_fetch(
                         southern_bound=southern_bound)
         
         d = _parse_date(date)
-        _click.echo(f"GFS0P50 download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {custom_directory}")
+        _click.echo(f"GEFS0P25 download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {custom_directory}")
             
     except SystemExit as e:
-        _command_error_message('gfs0p50')
+        _command_error_message('gefs0p25')
         _sys.exit(1)
 
 # ---------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------
 def main():
-    gfs_data()
+    gefs_data()
     
 if __name__ == "__main__":
     main()

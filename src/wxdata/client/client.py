@@ -28,6 +28,7 @@ from datetime import(
     timedelta as _timedelta
 )
 
+from wxdata.utils.verify import verify_file as _verify_file
 from wxdata.utils.nomads_gribfilter import key_list as _key_list
 from wxdata.client.level_coords import get_level_expression as _get_level_expression
 from wxdata.utils.progress_bar import progress_bar as _progress_bar
@@ -37,26 +38,6 @@ from wxdata.utils.recycle_bin import(
     clear_trash_bin_mac as _clear_trash_bin_mac,
     clear_trash_bin_linux as _clear_trash_bin_linux
 )
-
-# Getting yesterday's date for the default end date for the xmACIS2 client
-
-_now = _datetime.now()
-_yesterday = _now - _timedelta(days=1)
-
-_year = _yesterday.year
-_month = _yesterday.month
-_day = _yesterday.day
-
-if _month < 10:
-    if _day >= 10:
-        _yesterday = f"{_year}-0{_month}-{_day}"
-    else:
-        _yesterday = f"{_year}-0{_month}-0{_day}"   
-else:
-    if _day >= 10:
-        _yesterday = f"{_year}-{_month}-{_day}"
-    else:
-        _yesterday = f"{_year}-{_month}-0{_day}" 
 
 def get_gridded_data(url,
              path,
@@ -890,6 +871,39 @@ def byte_range_request(grib_url,
                 break
             except Exception as e:
                 i = i
+                
+    verify = _verify_file(path,
+                          filename)
+    
+    if verify == True:
+        pass
+    else:
+        try:
+            _os.remove(f"{path}/{filename}")
+        except Exception as e:
+            pass
+        for i in range(0, 10, 1):
+            try:
+                byte_range_request(grib_url,
+                            idx_url,
+                            variables,
+                            levels,
+                            level_type,
+                            path,
+                            filename,
+                            proxies=proxies,
+                            chunk_size=chunk_size,
+                            notifications=notifications,
+                            clear_recycle_bin=clear_recycle_bin)
+                break
+            except Exception as e:
+                i = i
+                if i >= 9:
+                    print(f"Client lost connection to server.")
+                    print(f"Multiple retries unsuccessful. - System Exit.")
+                    _sys.exit(1)
+                else:
+                    pass
         
     
         

@@ -39,8 +39,9 @@ def _command_error_message(model):
     """Error Message For Invalid Commands"""
     
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
-    print(f"Please run `gfs {model.lower()} -h to view the help documentation.")
-    print(f"Please visit: https://github.com/edrewitz/WxData/wiki#global-forecast-system-gfs for full detailed documentation.")
+    print(f"Model: {model.upper()}")
+    print(f"Please run `wxdata-gefs -h to view the help documentation.")
+    print(f"Please visit: https://github.com/edrewitz/WxData/wiki#global-ensemble-forecast-system-gefs for full detailed documentation.")
 
 def _parse_proxy(value):
     if value is None:

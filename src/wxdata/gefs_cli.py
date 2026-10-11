@@ -1970,7 +1970,7 @@ def gefs0p25_fetch(members,
 @_click.option(
     '--level_type', 
     '-lt', 
-    default="height above ground",
+    default="height_above_ground",
     type=str,
     show_default=True,
     help=("""Type of level (i.e. pressure, height above ground etc.). 

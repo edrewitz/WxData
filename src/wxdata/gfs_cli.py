@@ -491,8 +491,8 @@ def gfs0p25():
     
 @gfs0p25.command("latest")
 @_click.option(
-    "--category",
-    "-c",
+    "--type",
+    "-t",
     default="primary",
     type=str,
     show_default=True,
@@ -500,7 +500,7 @@ def gfs0p25():
           
           Default=primary
           
-          set -c secondary for secondary variables.
+          set -t secondary for secondary variables.
           
           """
     )
@@ -702,7 +702,7 @@ def gfs0p25_fetch(final_forecast_hour,
                   variables,
                   levels,
                   level_type,
-                  category,
+                  type,
                   netcdf,
                   ncdir,
                   ncfname,
@@ -737,9 +737,9 @@ def gfs0p25_fetch(final_forecast_hour,
             
         level_type = level_type.replace('_', ' ')
         
-        category = category.lower()
+        type = type.lower()
         
-        if category == 'primary':
+        if type == 'primary':
         
             _fetch_gfs_0p25(final_forecast_hour=final_forecast_hour,
                             process_data=process,
@@ -781,12 +781,12 @@ def gfs0p25_fetch(final_forecast_hour,
                             southern_bound=southern_bound)
         
         if custom_directory != "none":
-            _click.echo(f"GFS0P25 {category.upper()} latest download complete, data files saved to {custom_directory}")
+            _click.echo(f"GFS0P25 {type.upper()} latest download complete, data files saved to {custom_directory}")
         else:
             if current_os != "Windows":
-                _click.echo(f"GFS0P25 {category.upper()} latest download complete, data files saved to GFS0P25/ATMOSPHERIC")
+                _click.echo(f"GFS0P25 {type.upper()} latest download complete, data files saved to GFS0P25/ATMOSPHERIC")
             else:
-                _click.echo(rf"GFS0P25 {category.upper()} latest download complete, data files saved to GFS0P25\ATMOSPHERIC")
+                _click.echo(rf"GFS0P25 {type.upper()} latest download complete, data files saved to GFS0P25\ATMOSPHERIC")
             
     except SystemExit as e:
         _command_error_message('gfs0p25')
@@ -817,8 +817,8 @@ def gfs0p25_fetch(final_forecast_hour,
 )
 
 @_click.option(
-    "--category",
-    "-c",
+    "--type",
+    "-t",
     default="primary",
     type=str,
     show_default=True,
@@ -826,7 +826,7 @@ def gfs0p25_fetch(final_forecast_hour,
           
           Default=primary
           
-          set -c secondary for secondary variables.
+          set -t secondary for secondary variables.
           
           """
     )
@@ -1021,7 +1021,7 @@ def archived_gfs0p25_fetch(
                   variables,
                   levels,
                   level_type,
-                  category,
+                  type,
                   netcdf,
                   ncdir,
                   ncfname,
@@ -1052,9 +1052,9 @@ def archived_gfs0p25_fetch(
         
         level_type = level_type.replace('_', ' ')
         
-        category = category.lower()
+        type = type.lower()
         
-        if category == 'primary':
+        if type == 'primary':
         
             _fetch_archived_gfs_0p25(
                             date,

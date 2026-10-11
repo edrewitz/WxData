@@ -940,10 +940,10 @@ def gefs0p50_fetch(final_forecast_hour,
 @_click.option(
     "--source",
     "-s",
-    default="noaa",
+    default="aws",
     show_default=True,
     type=str,
-    help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"
+    help="Default aws is for Amazon Web Services - set to google to switch to Google Cloud"
 )
 
 @_click.option(
@@ -1893,10 +1893,10 @@ def gefs0p25_fetch(members,
 @_click.option(
     "--source",
     "-s",
-    default="noaa",
+    default="aws",
     show_default=True,
     type=str,
-    help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"
+    help="Default aws is for Amazon Web Services - set to google to switch to Google Cloud"
 )
 
 @_click.option(

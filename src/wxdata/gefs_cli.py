@@ -1520,7 +1520,7 @@ def gefs0p25():
 @_click.option(
     "--final_forecast_hour",
     "-f",
-    default=384,
+    default=240,
     show_default=True,
     type=int,
     help="This is the final forecast hour requested in the dataset."
@@ -1865,7 +1865,7 @@ def gefs0p25_fetch(members,
 @_click.option(
     "--final_forecast_hour",
     "-f",
-    default=384,
+    default=240,
     show_default=True,
     type=int,
     help="This is the final forecast hour requested in the dataset."

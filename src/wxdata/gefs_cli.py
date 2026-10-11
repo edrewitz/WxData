@@ -2050,50 +2050,50 @@ def archived_gfs0p50_fetch(
     
     """Downloads Archived GEFS 0.25x0.25 Data For A Specified Date and Run"""
     
-    try:
-        vars_fixed = []
-        for v in variables:
-            v = v.replace('_', ' ')
-            vars_fixed.append(v)
-            
-        if current_os == "Windows":
-            custom_directory = custom_directory.replace('/', '\\')
-        else:
-            pass
+    #try:
+    vars_fixed = []
+    for v in variables:
+        v = v.replace('_', ' ')
+        vars_fixed.append(v)
+        
+    if current_os == "Windows":
+        custom_directory = custom_directory.replace('/', '\\')
+    else:
+        pass
 
-        level_type = level_type.replace('_', ' ')
-        category = category.lower()
-        
-        
-        _fetch_archived_gefs_0p25(
-                        date,
-                        run,
-                        cat=category,
-                        members=members,
-                        path=custom_directory,
-                        final_forecast_hour=final_forecast_hour,
-                        process_data=process,
-                        proxies=proxy,
-                        clear_recycle_bin=clear_recycle_bin,
-                        source=source,
-                        variables=vars_fixed,
-                        levels=levels,
-                        level_type=level_type,
-                        to_netcdf=netcdf,
-                        netcdf_path=ncdir,
-                        netcdf_filename=ncfname,
-                        return_values=False,
-                        western_bound=western_bound,
-                        eastern_bound=eastern_bound,
-                        northern_bound=northern_bound,
-                        southern_bound=southern_bound)
-        
-        d = _parse_date(date)
-        _click.echo(f"GEFS0P25 download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {custom_directory}")
+    level_type = level_type.replace('_', ' ')
+    category = category.lower()
+    
+    
+    _fetch_archived_gefs_0p25(
+                    date,
+                    run,
+                    cat=category,
+                    members=members,
+                    path=custom_directory,
+                    final_forecast_hour=final_forecast_hour,
+                    process_data=process,
+                    proxies=proxy,
+                    clear_recycle_bin=clear_recycle_bin,
+                    source=source,
+                    variables=vars_fixed,
+                    levels=levels,
+                    level_type=level_type,
+                    to_netcdf=netcdf,
+                    netcdf_path=ncdir,
+                    netcdf_filename=ncfname,
+                    return_values=False,
+                    western_bound=western_bound,
+                    eastern_bound=eastern_bound,
+                    northern_bound=northern_bound,
+                    southern_bound=southern_bound)
+    
+    d = _parse_date(date)
+    _click.echo(f"GEFS0P25 download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {custom_directory}")
             
-    except SystemExit as e:
-        _command_error_message('gefs0p25')
-        _sys.exit(1)
+   # except SystemExit as e:
+    #    _command_error_message('gefs0p25')
+     #   _sys.exit(1)
 
 # ---------------------------------------------------------------------
 # Entry point

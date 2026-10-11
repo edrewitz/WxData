@@ -821,7 +821,7 @@ def gefs0p50_fetch(final_forecast_hour,
                                                     northern_bound=northern_bound,
                                                     southern_bound=southern_bound)
         
-        if custom_directory != "none":
+        if custom_directory != "none" and custom_directory != None:
             _click.echo(f"GEFS0P50 {category.upper()} latest download complete, data files saved to {custom_directory}")
         else:
             if current_os != "Windows":
@@ -1636,17 +1636,13 @@ def gefs0p25():
         
 @_click.option('--variables', 
               '-v', 
-              default=['geopotential_height',
-                       'temperature',
-                       'relative_humidity',
-                       'u-component_of_wind'
-                       'v-component_of_wind'],
+              default=['temperature'],
               multiple=True, 
               type=str,
               help=(
                   """Variables to pass into the function. 
                   
-                  Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']
+                  Default=['temperature']
                   
                   See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
                   
@@ -1656,25 +1652,14 @@ def gefs0p25():
 @_click.option(
     '--levels', 
     '-l', 
-    default=[1000,
-            925,
-            850,
-            700,
-            500,
-            400,
-            300,
-            250,
-            200,
-            100,
-            50,
-            10],
+    default=[2],
     multiple=True, 
     type=int,  
     help=("""Levels for pressure, height, PVU etc. 
           
-          Pressure (hPa)
+          Height Above Ground [m]
           
-          Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10]
+          Default=[2]
           
           See https://edrewitz.github.io/WxData/GFS0P25 for available levels.
           
@@ -1684,12 +1669,12 @@ def gefs0p25():
 @_click.option(
     '--level_type', 
     '-lt', 
-    default="pressure",
+    default="height above ground",
     type=str,
     show_default=True,
     help=("""Type of level (i.e. pressure, height above ground etc.). 
         
-          Default='pressure'.
+          Default='height above ground'.
           
           See https://edrewitz.github.io/WxData/GFS0P25 for available level types.
           
@@ -1807,7 +1792,7 @@ def gefs0p25_fetch(members,
                         northern_bound=northern_bound,
                         southern_bound=southern_bound)
         
-        if custom_directory != "none":
+        if custom_directory != "none" and custom_directory != None:
             _click.echo(f"GEFS0P25 latest download complete, data files saved to {custom_directory}")
         else:
             if current_os != "Windows":
@@ -1952,17 +1937,13 @@ def gefs0p25_fetch(members,
         
 @_click.option('--variables', 
               '-v', 
-              default=['geopotential_height',
-                       'temperature',
-                       'relative_humidity',
-                       'u-component_of_wind'
-                       'v-component_of_wind'],
+              default=['temperature'],
               multiple=True, 
               type=str,
               help=(
-                  """"Variables to pass into the function. 
+                  """Variables to pass into the function. 
                   
-                  Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']
+                  Default=['temperature']
                   
                   See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
                   
@@ -1972,25 +1953,14 @@ def gefs0p25_fetch(members,
 @_click.option(
     '--levels', 
     '-l', 
-    default=[1000,
-            925,
-            850,
-            700,
-            500,
-            400,
-            300,
-            250,
-            200,
-            100,
-            50,
-            10],
+    default=[2],
     multiple=True, 
     type=int,  
     help=("""Levels for pressure, height, PVU etc. 
           
-          Pressure (hPa)
+          Height Above Ground [m]
           
-          Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10]
+          Default=[2]
           
           See https://edrewitz.github.io/WxData/GFS0P25 for available levels.
           
@@ -2000,11 +1970,12 @@ def gefs0p25_fetch(members,
 @_click.option(
     '--level_type', 
     '-lt', 
-    default="pressure",
+    default="height above ground",
     type=str,
+    show_default=True,
     help=("""Type of level (i.e. pressure, height above ground etc.). 
         
-          Default='pressure'.
+          Default='height above ground'.
           
           See https://edrewitz.github.io/WxData/GFS0P25 for available level types.
           

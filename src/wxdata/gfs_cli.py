@@ -780,7 +780,7 @@ def gfs0p25_fetch(final_forecast_hour,
                             northern_bound=northern_bound,
                             southern_bound=southern_bound)
         
-        if custom_directory != "none":
+        if custom_directory != "none" and custom_directory != None:
             _click.echo(f"GFS0P25 {type.upper()} latest download complete, data files saved to {custom_directory}")
         else:
             if current_os != "Windows":
@@ -1101,7 +1101,7 @@ def archived_gfs0p25_fetch(
                             southern_bound=southern_bound)
         
         d = _parse_date(date)
-        _click.echo(f"GFS0P25 {category.upper()} download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {custom_directory}")
+        _click.echo(f"GFS0P25 {type.upper()} download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {custom_directory}")
             
     except SystemExit as e:
         _command_error_message('gfs0p25')
@@ -1683,7 +1683,7 @@ def gfs0p50_fetch(final_forecast_hour,
                         northern_bound=northern_bound,
                         southern_bound=southern_bound)
         
-        if custom_directory != "none":
+        if custom_directory != "none" and custom_directory != None:
             _click.echo(f"GFS0P50 latest download complete, data files saved to {custom_directory}")
         else:
             if current_os != "Windows":

@@ -62,46 +62,32 @@ def hgefs():
     ----------
     
     1) mean
-    
-    2) members
-    
-    3) spread
-    
-    4) control
-    
+        
+    2) spread
+        
     -f = Final Forecast Hour (Default=240).
      
     The last hour the user wishes to download in the dataset. GEFS0P25 has 240 forecast hours.
     
-    -s = Source (Default=noaa). 
-    
-    Selects the primary data server to use.
-    If the primary server is unavailable the client will rotate and try other servers.
-    
-    ***Server Choices For Latest Data***
-    
-    noaa - NCEP/NOMADS
-    
-    aws - Amazon Web Services
-    
-    google - Google Cloud Servers
-    
-    ***Server Choices For Archived Data***
-    
-    aws - Amazon Web Services
-    
-    google - Google Cloud Servers
-    
     -cdir = Custom Directory (Default=None).
     
     If the user wishes to build their own directory to hold the data files set -cd directory_branch_path.
-    The default path is f:GEFS0P25/{CATEGORY}. 
+    The default path is f:HGEFS/{CATEGORY}. 
     
     -cr = Clear Recycle Bin (Default=False).
     
     For users who want to ensure old files are completely deleted when automating data retrieval set -cr True.
     Setting -cr True clears your recycle bin with each run of the script. 
     This ensures if any old files are moved to the recycle bin are deleted if they are not already.
+    
+    -cd = Clear Data (Default=False).
+    
+    When set to False the scanner safeguard that prevents repetative downloads is enabled.
+    Set -cd False to disable this safety feature.
+    
+    WARNING: When this feature is disabled and the user submits too many requests in a short period of time the user risks
+    being rate-limited by the data server. If the user gets rate-limited, the user should wait approximately 5-10 minutes and
+    retry downloading the data.   
     
     -wb = Western Bound - The western bound for subsetting the data range is from -180 to 180 degrees longitude. (Default=-180)
     
@@ -111,87 +97,47 @@ def hgefs():
     
     -sb = Southern Bound - The southern bound for subsetting the data range is from -90 to 90 degrees latitude. (Default=-90)
     
-    -v = Variables(Default=['temperature']) 
+    -v = Variables(Default=['geopotential height',
+                       'specific humidity',
+                       'temperature',
+                       'u-component of_wind',
+                       'v-component of_wind',
+                       'vertical velocity']) 
                        
     The list of variables the user wants to query.
     
-    Here is a sample of how to query ensemble members 2-meter temperature and relative humidity and create a netCDF file:
+    Here is a sample of how to query mean 500mb geopotential height and create a netCDF file:
     
-    `wxdata-gefs 0p25 latest -c members -v geopotential_height -v temperature -l 2 --netcdf True --ncdir GEFS0P25/Members/NETCDF --ncfname gefs_t_rh.nc`
+    `wxdata-hgefs fetch latest -v geopotential_height -l 500 --netcdf True --ncdir HGEFS/Mean/NETCDF --ncfname gefs_gh500.nc`
     
     Variables
     
     ---------
     
-    'total precipitation'
-    
-    'convective available potential energy'
-    
-    'categorical freezing rain'
-    
-    'categorical ice pellets'
-    
-    'convective inhibition'
-    
-    'percent frozen precipitaion'
-    
-    'categorical rain'
-    
-    'categorical snow'
-    
-    'downward longwave radiation flux'
-    
-    'downward shortwave radiation flux'
-    
-    'dew point'
-    
-    'wind gust'
-    
     'geopotential height'
-    
-    'storm relative helicity'
-    
-    'ice thickness'
-    
-    'latent heat net flux'
-    
-    'pressure'
-    
-    'mean sea level pressure'
-    
-    'precipitable water'
-    
-    'relative humidity'
-    
-    'sensible heat net flux'
-    
-    'snow depth'
-    
-    'volumetric soil moisture content'
-    
-    'total cloud cover'
-    
-    'maximum temperature'
-    
-    'minimum temperature'
-    
+
+    'specific humidity'
+
     'temperature'
+
+    'u-component of_wind'
+
+    'v-component of_wind'
+
+    'vertical velocity'
     
-    'soil temperature'
-    
-    'u-component of wind'
-    
-    'upward longwave radiation flux'
-    
-    'upward shortwave radiation flux'
-    
-    'v-component of wind'
-    
-    'visibility'
-    
-    'water equivalent of accumulated snow depth'
-    
-    -l = Levels (Default=[2])
+    -l = Levels (Default=[1000,
+                            925,
+                            850,
+                            700,
+                            600,
+                            500,
+                            400,
+                            300,
+                            250,
+                            150,
+                            100,
+                            50])
     
     The default setting of levels assume height above ground levels are being used and that the category is set to primary.
     
@@ -205,17 +151,7 @@ def hgefs():
     
     'surface'
     
-    'mean sea level'
-    
-    'height above ground'
-    
-    'height below ground'
-    
-    'entire atmosphere (considered as a single layer)'
-    
-    'cloud ceiling'
-    
-    'pressure above ground'
+    'pressure'
 
     --process This flag when set to True will process the data in addition to downloading the data. (Default=True)
     
@@ -227,31 +163,15 @@ def hgefs():
     
     Example: 
     
-    `wxdata-gefs 0p25 latest -v temperature -l 2 --proxy https://proxy-server-address:proxy-server-port`
+    `wxdata-hgefs fetch latest -v temperature -l 850 --proxy https://proxy-server-address:proxy-server-port`
     
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     
     **Additional Relevant Flags when --netcdf True**
     
-    --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=GEFS0P25/NETCDF). 
+    --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=HGEFS/NETCDF). 
     
-    --ncfname = Defines the filename for the netCDF (.nc) file. (Default=gefs_0p25.nc)
-    
-    Commands Only Valid for "latest"
-    --------------------------------
-    
-    -cd = Clear Data (Default=False).
-    
-    ***Only for wxdata-gefs 0p25 latest***
-    
-    ***Archived Clients Automatically Clear Old Data***
-    
-    When set to False the scanner safeguard that prevents repetative downloads is enabled.
-    Set -cd False to disable this safety feature.
-    
-    WARNING: When this feature is disabled and the user submits too many requests in a short period of time the user risks
-    being rate-limited by the data server. If the user gets rate-limited, the user should wait approximately 5-10 minutes and
-    retry downloading the data.   
+    --ncfname = Defines the filename for the netCDF (.nc) file. (Default=hgefs.nc)
     
     """
 @hgefs.command("latest")

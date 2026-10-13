@@ -56,6 +56,7 @@ def hgefs_data():
 # ---------------------------------------------------------------------
 # GEFS 0.25x0.25 Commands
 # ---------------------------------------------------------------------
+@hgefs_data.group()
 def hgefs():
     """
     Hybrid Global Ensemble Forecast System (HGEFS) Client.

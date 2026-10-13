@@ -458,9 +458,9 @@ def hgefs_fetch(final_forecast_hour,
             _click.echo(f"HGEFS latest download complete, data files saved to {custom_directory}")
         else:
             if current_os != "Windows":
-                _click.echo(f"HGEFS latest download complete, data files saved to GEFS0P25/ATMOSPHERIC")
+                _click.echo(f"HGEFS latest download complete, data files saved to HGEFS/{category.upper()}")
             else:
-                _click.echo(f"HGEFS latest download complete, data files saved to GEFS0P25/ATMOSPHERIC")
+                _click.echo(f"HGEFS latest download complete, data files saved to HGEFS/{category.upper()}")
             
     except SystemExit as e:
         _command_error_message('hgefs')

@@ -88,9 +88,9 @@ def gfs0p25():
     
     -------------------------------------------------------
     
-    -c = Category (Default=primary).
+    -t = Type (Default=primary).
     
-    This determines the category of variables and levels.
+    This determines the type of variables and levels.
     
     -f = Final Forecast Hour (Default=384).
      

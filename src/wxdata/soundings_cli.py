@@ -14,11 +14,12 @@ from wxdata.observational_data.soundings.wyoming_soundings import get_observed_s
 
 def _command_error_message():
     
-    """Error Message For Invalid Commands"""
+    """Error Message For Invalid Commands OR No Data Available"""
     
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
     print(f"Please run `wxdata-soundings -h to view the help documentation.")
     print(f"Please visit: https://edrewitz.github.io/WxData/wyoming_soundings for full detailed documentation.")
+    print(f"There is also a chance there is no data available for this time. Please visit: https://weather.uwyo.edu/upperair/sounding.shtml for more information.")
 
 def _parse_proxy(value):
     if value is None:
@@ -54,7 +55,6 @@ def sounding():
     type=str,
     help="The station ID for the observed sounding site."
 )
-
 
 @_click.option(
     "--clear_recycle_bin",

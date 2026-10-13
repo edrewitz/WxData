@@ -63,7 +63,7 @@ def gefs_data():
     pass
 
 # ---------------------------------------------------------------------
-# GFS 0.25x0.25 Commands
+# GEFS 0.25x0.25 Commands
 # ---------------------------------------------------------------------
 @gefs_data.group(name='0p50')
 def gefs0p50():
@@ -86,13 +86,29 @@ def gefs0p50():
     
     -------------------------------------------------------
     
-    -c = Category (Default=primary).
+    -t = type (Default=primary).
     
-    This determines the category of variables and levels.
+    This determines the type of variables and levels.
+    
+    -c = Category (Default='mean')
+    
+    This determines the category of ensemble data 
+    
+    Categories
+    
+    ----------
+    
+    1) mean
+    
+    2) members
+    
+    3) spread
+    
+    4) control
     
     -f = Final Forecast Hour (Default=384).
      
-    The last hour the user wishes to download in the dataset. GFS0P25 has 384 forecast hours.
+    The last hour the user wishes to download in the dataset. GEFS0P50 has 384 forecast hours.
     
     -s = Source (Default=noaa). 
     
@@ -116,7 +132,7 @@ def gefs0p50():
     -cdir = Custom Directory (Default=None).
     
     If the user wishes to build their own directory to hold the data files set -cd directory_branch_path.
-    The default path is f:GFS0P25/ATMOSPHERIC. 
+    The default path is f:GEFS0P50/{CATEGORY}. 
     
     -cr = Clear Recycle Bin (Default=False).
     
@@ -136,246 +152,223 @@ def gefs0p50():
                        
     The list of variables the user wants to query.
     
-    Here is a sample of how to query geopotential height and temperature `gfs 0p25 latest -v geopotential_height -v temperature`
+    Here is a sample of how to query geopotential height and temperature `gefs 0p25 latest -v geopotential_height -v temperature`
     
     Primary Variables
     
     ------------------
     
-    best_lifted_index
+    'total precipitation'
     
-    absolute_vorticity
+    'convective available potential energy'
     
-    convective_precipitation
+    'categorical freezing rain'
     
-    albedo
+    'categorical ice pellets'
     
-    total_precipitation
+    'categorical rain'
     
-    convective_available_potential_energy
+    'categorical snow'
     
-    categorical_freezing_rain
+    'convective inhibition'
     
-    categorical_ice_pellets
+    'downward longwave radiation flux'
     
-    convective_inhibition
+    'downward shortwave radiation flux'
     
-    cloud_mixing_ratio
+    'geopotential height'
     
-    plant_canopy_surface_water
+    'ice thickness'
     
-    percent_frozen_precipitaion
+    'latent heat net flux'
     
-    convective_precipitation_rate
+    'pressure'
     
-    categorical_rain
+    'mean sea level pressure'
     
-    categorical_snow
+    'precipitable water'
     
-    cloud_water
+    'relative humidity'
     
-    cloud_work_function
+    'sensible heat net flux'
     
-    downward_longwave_radiation_flux
+    'snow depth'
     
-    dew_point
+    'volumetric soil moisture content'
     
-    downward_shortwave_radiation_flux
+    'total cloud cover'
     
-    vertical_velocity_(height)
+    'maximum temperature'
     
-    field_capacity
+    'minimum temperature'
     
-    surface_friction_velocity
+    'temperature'
     
-    ground_heat_flux
+    'soil temperature'
     
-    graupel
+    'u-component of wind'
     
-    wind_gust
+    'upward longwave radiation flux'
     
-    high_cloud_cover
+    'upward shortwave radiation flux'
     
-    geopotential_height
+    'v-component of wind'
     
-    haines_index
+    'vertical velocity'
     
-    storm_relative_helicity
-    
-    planetary_boundary_layer_height
-    
-    icao_standard_atmosphere_reference_height
-    
-    ice_cover
-    
-    ice_growth_rate
-    
-    ice_thickness
-    
-    ice_temperature
-    
-    ice_water_mixing_ratio
-    
-    land_cover
-    
-    low_cloud_cover
-    
-    surface_lifted_index
-    
-    latent_heat_net_flux
-    
-    middle_cloud_cover
-    
-    mean_sea_level_pressure
-    
-    mslp_(eta_model_reduction)
-    
-    ozone_mixing_ratio
-    
-    potential_evaporation_rate
-    
-    pressure_level_from_which_parcel_was_lifted
-    
-    potential_temperature
-    
-    precipitation_rate
-    
-    pressure
-    
-    mean_sea_level_pressure
-    
-    precipitable_water
-    
-    composite_reflectivity
-    
-    reflectivity
-    
-    relative_humidity
-    
-    rain_mixing_ratio
-    
-    surface_roughness
-    
-    sensible_heat_net_flux
-    
-    snow_mixing_ratio
-    
-    snow_depth
-    
-    liquid_volumetric_soil_moisture_(non-frozen)
-    
-    volumetric_soil_moisture_content
-    
-    soil_type
-    
-    specific_humidity
-    
-    sunshine_duration
-    
-    total_cloud_cover
-    
-    maximum_temperature
-    
-    minimum_temperature
-    
-    temperature
-    
-    total_ozone
-    
-    soil_temperature
-    
-    momentum_flux_(u-component)
-    
-    u-component_of_wind
-    
-    zonal_flux_of_gravity_wave_stress
-    
-    upward_longwave_radiation_flux
-    
-    u-component_of_storm_motion
-    
-    upward_shortwave_radiation_flux
-    
-    vegetation
-    
-    momentum_flux_(v-component)
-    
-    v-component_of_wind
-    
-    meridional_flux_of_gravity_wave_stress
-    
-    visibility
-    
-    ventilation_rate
-    
-    v-component_of_storm_motion
-    
-    vertical_velocity_(pressure)
-    
-    vertical_speed_shear
-    
-    water_runoff
-    
-    lated_snow_depth
-    
-    wilting_point
+    'water equivalent of accumulated snow depth'
     
     Secondary Variables
     
     -------------------
     
-    absolute_vorticity
-
-    clear_sky_uv-b_downward_solar_flux
-
-    cloud_mixing_ratio
-
-    plant_canopy_surface_water
-
-    uv-b_downward_solar_flux
-
-    vertical_velocity_(height)
-
-    graupel
-
-    geopotential_height
-
-    ice_thickness
-
-    ice_water_mixing_ratio
-
-    ozone_mixing_ratio
-
-    pressure
-
-    relative_humidity
-
-    rain_mixing_ratio
-
-    snow_mixing_ratio
-
-    liquid_volumetric_soil_moisture_(non-frozen)
-
-    specific_humidity
-
-    total_cloud_cover
-
-    temperature
-
-    u-component_of_wind
-
-    v-component_of_wind
-
-    vertical_velocity_(pressure)
-
-    vertical_speed_shear
+    'best lifted index'
+    
+    '5 wave geopotential height'
+    
+    'absolute vorticity'
+    
+    'temperature'
+    
+    'dew point'
+    
+    'convective precipitation'
+    
+    'albedo'
+    
+    'apparent temperature'
+    
+    'brightness temperature'
+    
+    'convective available potential energy'
+    
+    'clear sky uv-b downward solar flux'
+    
+    'convective inhibition'
+    
+    'cloud mixing ratio'
+    
+    'plant canopy surface water'
+    
+    'percent frozen precipitaion'
+    
+    'convective precipitation rate'
+    
+    'cloud water'
+    
+    'cloud work function'
+    
+    'uv-b downward solar flux'
+    
+    'field capacity'
+    
+    'surface friction velocity'
+    
+    'ground heat flux'
+    
+    'wind gust'
+    
+    'geopotential height'
+    
+    'haines index'
+    
+    'storm relative helicity'
+    
+    'planetary boundary layer height'
+    
+    'icao standard atmosphere reference height'
+    
+    'ice cover'
+    
+    'icing'
+    
+    'icing severity'
+    
+    'land cover'
+    
+    'surface lifted index'
+    
+    'montgomery stream function'
+    
+    'mslp (eta model reduction)'
+    
+    'large scale non-convective precipitation'
+    
+    'ozone mixing ratio'
+    
+    'potential evaporation rate'
+    
+    'parcel lifted index (to 500mb)'
+    
+    'pressure level from which parcel was lifted'
+    
+    'potential temperature'
+    
+    'precipitation rate'
+    
+    'pressure'
+    
+    'potential vorticity'
+    
+    'precipitable water'
+    
+    'relative humidity'
+    
+    'surface roughness'
+    
+    'snow phase-change heat flux'
+    
+    'snow cover'
+    
+    'liquid volumetric soil moisture (non-frozen)'
+    
+    'volumetric soil moisture content'
+    
+    'specific humidity'
+    
+    'sunshine duration'
+    
+    'total cloud cover'
+    
+    'total ozone'
+    
+    'soil temperature'
+    
+    'momentum flux (u-component)'
+    
+    'u-component of wind'
+    
+    'zonal flux of gravity wave stress'
+    
+    'u-component of storm motion'
+    
+    'upward shortwave radiation flux'
+    
+    'momentum flux (v-component)'
+    
+    'v-component of wind'
+    
+    'meridional flux of gravity wave stress'
+    
+    'visibility'
+    
+    'ventilation rate'
+    
+    'v-component of storm motion'
+    
+    'vertical velocity'
+    
+    'vertical speed shear'
+    
+    'water runoff'
+    
+    'wilting point'
     
     -l = Levels (Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10])
                             
-    
     Here is a sample of how to query geopotential height and temperature at 850 and 500mb 
     
-    `wxdata-gfs 0p25 latest -v geopotential_height -v temperature -l 850 -l 500`
+    `wxdata-gefs 0p50 latest -v geopotential_height -v temperature -l 850 -l 500`
     
     The default setting of levels assume pressure levels are being used and that the category is set to primary.
     
@@ -385,70 +378,28 @@ def gefs0p50():
     
     Primary Levels: 1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10
     
-    Secondary Levels: 875, 825, 775, 725, 675, 625, 575, 525, 475, 425, 375, 325, 275, 225, 175, 125, 7, 5, 3, 2, 1
+    Secondary Levels: Default=None -> level_type='surface'. 
     
+    Example: level_type='height above ground' & levels=2 -> 2-meter above ground
+                                                                
     Level Types
     
     -----------
     
-    pressure
-
-    mean_sea_level
-
-    hybrid
-
-    entire_atmosphere
-
-    boundary_layer
-
-    low_cloud_layer
-
-    middle_cloud_layer
-
-    high_cloud_layer
-
-    convective_cloud_bottom_level
-
-    low_cloud_bottom_level
-
-    middle_cloud_bottom_level
-
-    high_cloud_bottom_level
-
-    convective_cloud_top_level
-
-    low_cloud_top_level
-
-    middle_cloud_top_level
-
-    high_cloud_top_level
-
-    convective_cloud_layer
-
-    tropopause
-
-    max_wind
-
-    isothermal
-
-    highest_tropospheric_freezing_level
-
-    height_above_ground
-
-    surface
-
-    height_below_ground
-
-    sigma_layer
-
-    sigma_level
-
-    entire_atmosphere_(considered_as_a_single_layer)
-
-    pressure_above_ground
-
-    potential_vorticity_surface
+    'pressure'
     
+    'height below ground'
+    
+    'surface'
+    
+    'height above ground'
+    
+    'top of atmosphere'
+    
+    'pressure above ground'
+    
+    'mean sea level'
+
     --process This flag when set to True will process the data in addition to downloading the data. (Default=True)
     
     --proxy = Proxy Server (Default=None).
@@ -459,22 +410,22 @@ def gefs0p50():
     
     Example: 
     
-    `wxdata-gfs 0p25 latest -v geopotential height -l 500 --proxy https://proxy-server-address:proxy-server-port`
+    `wxdata-gefs 0p25 latest -v geopotential height -l 500 --proxy https://proxy-server-address:proxy-server-port`
     
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     
     **Additional Relevant Flags when --netcdf True**
     
-    --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=GFS0P25/NETCDF). 
+    --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=GEFS0P50/NETCDF). 
     
-    --ncfname = Defines the filename for the netCDF (.nc) file. (Default=gfs_0p25.nc)
+    --ncfname = Defines the filename for the netCDF (.nc) file. (Default=gefs_0p50.nc)
     
     Commands Only Valid for "latest"
     --------------------------------
     
     -cd = Clear Data (Default=False).
     
-    ***Only for wxdata-gfs 0p25 latest***
+    ***Only for wxdata-gefs 0p50 latest***
     
     ***Archived Clients Automatically Clear Old Data***
     
@@ -483,7 +434,7 @@ def gefs0p50():
     
     WARNING: When this feature is disabled and the user submits too many requests in a short period of time the user risks
     being rate-limited by the data server. If the user gets rate-limited, the user should wait approximately 5-10 minutes and
-    retry downloading the data. 
+    retry downloading the data.     
     
     """
     
@@ -635,7 +586,7 @@ def gefs0p50():
                   
                   Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']
                   
-                  See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
+                  See https://edrewitz.github.io/WxData/GEFS0P25 for available variables."""
                   
                   )
 )
@@ -663,7 +614,7 @@ def gefs0p50():
           
           Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10]
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available levels.
+          See https://edrewitz.github.io/WxData/GEFS0P25 for available levels.
           
           """)
 )
@@ -678,7 +629,7 @@ def gefs0p50():
         
           Default='pressure'.
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available level types.
+          See https://edrewitz.github.io/WxData/GEFS0P25 for available level types.
           
           """)
 )
@@ -934,7 +885,7 @@ def gefs0p50_fetch(final_forecast_hour,
     default="GEFS0P50/Archive",
     show_default=True,
     type=str,
-    help="The path of the directory where the archived GFS0P25 data saves to."
+    help="The path of the directory where the archived GEFS0P25 data saves to."
 )
 
 @_click.option(
@@ -996,7 +947,7 @@ def gefs0p50_fetch(final_forecast_hour,
                   
                   Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']
                   
-                  See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
+                  See https://edrewitz.github.io/WxData/GEFS0P25 for available variables."""
                   
                   )
 )
@@ -1024,7 +975,7 @@ def gefs0p50_fetch(final_forecast_hour,
           
           Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10]
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available levels.
+          See https://edrewitz.github.io/WxData/GEFS0P25 for available levels.
           
           """)
 )
@@ -1038,7 +989,7 @@ def gefs0p50_fetch(final_forecast_hour,
         
           Default='pressure'.
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available level types.
+          See https://edrewitz.github.io/WxData/GEFS0P25 for available level types.
           
           """)
 )
@@ -1213,9 +1164,25 @@ def gefs0p25():
     
     -------------------------------------------------------
     
-    -f = Final Forecast Hour (Default=384).
+    -c = Category (Default='mean')
+    
+    This determines the category of ensemble data 
+    
+    Categories
+    
+    ----------
+    
+    1) mean
+    
+    2) members
+    
+    3) spread
+    
+    4) control
+    
+    -f = Final Forecast Hour (Default=240).
      
-    The last hour the user wishes to download in the dataset. GFS0P50 has 384 forecast hours.
+    The last hour the user wishes to download in the dataset. GEFS0P25 has 240 forecast hours.
     
     -s = Source (Default=noaa). 
     
@@ -1236,23 +1203,10 @@ def gefs0p25():
     
     google - Google Cloud Servers
     
-    -cd = Clear Data (Default=False).
-    
-    ***Only for wxdata-gfs 0p50 latest***
-    
-    ***Archived Clients Automatically Clear Old Data***
-    
-    When set to False the scanner safeguard that prevents repetative downloads is enabled.
-    Set -cd False to disable this safety feature.
-    
-    WARNING: When this feature is disabled and the user submits too many requests in a short period of time the user risks
-    being rate-limited by the data server. If the user gets rate-limited, the user should wait approximately 5-10 minutes and
-    retry downloading the data. 
-    
     -cdir = Custom Directory (Default=None).
     
     If the user wishes to build their own directory to hold the data files set -cd directory_branch_path.
-    The default path is f:GEFS0P50/ATMOSPHERIC. 
+    The default path is f:GEFS0P25/{CATEGORY}. 
     
     -cr = Clear Recycle Bin (Default=False).
     
@@ -1268,232 +1222,112 @@ def gefs0p25():
     
     -sb = Southern Bound - The southern bound for subsetting the data range is from -90 to 90 degrees latitude. (Default=-90)
     
-    -v = Variables(Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']) 
+    -v = Variables(Default=['temperature']) 
                        
     The list of variables the user wants to query.
     
-    Here is a sample of how to query geopotential height and temperature `gfs 0p50 latest -v geopotential_height -v temperature`
+    Here is a sample of how to query ensemble members 2-meter temperature and relative humidity and create a netCDF file:
+    
+    `wxdata-gefs 0p25 latest -c members -v geopotential_height -v temperature -l 2 --netcdf True --ncdir GEFS0P25/Members/NETCDF --ncfname gefs_t_rh.nc`
     
     Variables
     
     ---------
     
-    best_lifted_index
+    'total precipitation'
     
-    absolute_vorticity
+    'convective available potential energy'
     
-    convective_precipitation
+    'categorical freezing rain'
     
-    albedo
+    'categorical ice pellets'
     
-    total_precipitation
+    'convective inhibition'
     
-    convective_available_potential_energy
+    'percent frozen precipitaion'
     
-    categorical_freezing_rain
+    'categorical rain'
     
-    categorical_ice_pellets
+    'categorical snow'
     
-    convective_inhibition
+    'downward longwave radiation flux'
     
-    cloud_mixing_ratio
+    'downward shortwave radiation flux'
     
-    plant_canopy_surface_water
+    'dew point'
     
-    percent_frozen_precipitaion
+    'wind gust'
     
-    convective_precipitation_rate
+    'geopotential height'
     
-    categorical_rain
+    'storm relative helicity'
     
-    categorical_snow
+    'ice thickness'
     
-    cloud_water
+    'latent heat net flux'
     
-    cloud_work_function
+    'pressure'
     
-    downward_longwave_radiation_flux
+    'mean sea level pressure'
     
-    dew_point
+    'precipitable water'
     
-    downward_shortwave_radiation_flux
+    'relative humidity'
     
-    vertical_velocity_(height)
+    'sensible heat net flux'
     
-    field_capacity
+    'snow depth'
     
-    surface_friction_velocity
+    'volumetric soil moisture content'
     
-    ground_heat_flux
+    'total cloud cover'
     
-    graupel
+    'maximum temperature'
     
-    wind_gust
+    'minimum temperature'
     
-    high_cloud_cover
+    'temperature'
     
-    geopotential_height
+    'soil temperature'
     
-    haines_index
+    'u-component of wind'
     
-    storm_relative_helicity
+    'upward longwave radiation flux'
     
-    planetary_boundary_layer_height
+    'upward shortwave radiation flux'
     
-    icao_standard_atmosphere_reference_height
+    'v-component of wind'
     
-    ice_cover
+    'visibility'
     
-    ice_growth_rate
+    'water equivalent of accumulated snow depth'
     
-    ice_thickness
+    -l = Levels (Default=[2])
     
-    ice_temperature
+    The default setting of levels assume height above ground levels are being used and that the category is set to primary.
     
-    ice_water_mixing_ratio
-    
-    land_cover
-    
-    low_cloud_cover
-    
-    surface_lifted_index
-    
-    latent_heat_net_flux
-    
-    middle_cloud_cover
-    
-    mean_sea_level_pressure
-    
-    mslp_(eta_model_reduction)
-    
-    ozone_mixing_ratio
-    
-    potential_evaporation_rate
-    
-    pressure_level_from_which_parcel_was_lifted
-    
-    potential_temperature
-    
-    precipitation_rate
-    
-    pressure
-    
-    mean_sea_level_pressure
-    
-    precipitable_water
-    
-    composite_reflectivity
-    
-    reflectivity
-    
-    relative_humidity
-    
-    rain_mixing_ratio
-    
-    surface_roughness
-    
-    sensible_heat_net_flux
-    
-    snow_mixing_ratio
-    
-    snow_depth
-    
-    liquid_volumetric_soil_moisture_(non-frozen)
-    
-    volumetric_soil_moisture_content
-    
-    soil_type
-    
-    specific_humidity
-    
-    sunshine_duration
-    
-    total_cloud_cover
-    
-    maximum_temperature
-    
-    minimum_temperature
-    
-    temperature
-    
-    total_ozone
-    
-    soil_temperature
-    
-    momentum_flux_(u-component)
-    
-    u-component_of_wind
-    
-    zonal_flux_of_gravity_wave_stress
-    
-    upward_longwave_radiation_flux
-    
-    u-component_of_storm_motion
-    
-    upward_shortwave_radiation_flux
-    
-    vegetation
-    
-    momentum_flux_(v-component)
-    
-    v-component_of_wind
-    
-    meridional_flux_of_gravity_wave_stress
-    
-    visibility
-    
-    ventilation_rate
-    
-    v-component_of_storm_motion
-    
-    vertical_velocity_(pressure)
-    
-    vertical_speed_shear
-    
-    water_runoff
-    
-    lated_snow_depth
-    
-    wilting_point
-    
-    -l = Levels (Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10])
-                            
-    
-    Here is a sample of how to query geopotential height and temperature at 850 and 500mb 
-    
-    `wxdata-gfs 0p50 latest -v geopotential_height -v temperature -l 850 -l 500`
-    
-    The default setting of levels assume pressure levels are being used and that the category is set to primary.
-    
-    -lt = Level Type (Default=pressure).
+    -lt = Level Type (Default=height above ground).
     
     This corresponds to the type of level.
-    
-    Levels: 1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10
-    
-    
+                                                                
     Level Types
     
     -----------
     
-    pressure
-
-    mean_sea_level
-
-    hybrid
-
-    entire_atmosphere
-
-    boundary_layer
-
-    low_cloud_layer
-
-    middle_cloud_layer
-
-    high_cloud_layer
-
-    convective_cloud_bottom_level
+    'surface'
     
+    'mean sea level'
+    
+    'height above ground'
+    
+    'height below ground'
+    
+    'entire atmosphere (considered as a single layer)'
+    
+    'cloud ceiling'
+    
+    'pressure above ground'
+
     --process This flag when set to True will process the data in addition to downloading the data. (Default=True)
     
     --proxy = Proxy Server (Default=None).
@@ -1504,15 +1338,31 @@ def gefs0p25():
     
     Example: 
     
-    `wxdata-gfs 0p50 latest -v geopotential height -l 500 --proxy https://proxy-server-address:proxy-server-port`
+    `wxdata-gefs 0p25 latest -v temperature -l 2 --proxy https://proxy-server-address:proxy-server-port`
     
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     
     **Additional Relevant Flags when --netcdf True**
     
-    --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=GFS0P50/NETCDF). 
+    --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=GEFS0P25/NETCDF). 
     
-    --ncfname = Defines the filename for the netCDF (.nc) file. (Default=gfs_0p50.nc)
+    --ncfname = Defines the filename for the netCDF (.nc) file. (Default=gefs_0p25.nc)
+    
+    Commands Only Valid for "latest"
+    --------------------------------
+    
+    -cd = Clear Data (Default=False).
+    
+    ***Only for wxdata-gefs 0p25 latest***
+    
+    ***Archived Clients Automatically Clear Old Data***
+    
+    When set to False the scanner safeguard that prevents repetative downloads is enabled.
+    Set -cd False to disable this safety feature.
+    
+    WARNING: When this feature is disabled and the user submits too many requests in a short period of time the user risks
+    being rate-limited by the data server. If the user gets rate-limited, the user should wait approximately 5-10 minutes and
+    retry downloading the data.   
     
     """
     
@@ -1644,7 +1494,7 @@ def gefs0p25():
                   
                   Default=['temperature']
                   
-                  See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
+                  See https://edrewitz.github.io/WxData/GEFS0P25 for available variables."""
                   
                   )
 )
@@ -1661,7 +1511,7 @@ def gefs0p25():
           
           Default=[2]
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available levels.
+          See https://edrewitz.github.io/WxData/GEFS0P25 for available levels.
           
           """)
 )
@@ -1676,7 +1526,7 @@ def gefs0p25():
         
           Default='height above ground'.
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available level types.
+          See https://edrewitz.github.io/WxData/GEFS0P25 for available level types.
           
           """)
 )
@@ -1888,7 +1738,7 @@ def gefs0p25_fetch(members,
     default="GEFS0P25/Archive",
     show_default=True,
     type=str,
-    help="The path of the directory where the archived GFS0P25 data saves to."
+    help="The path of the directory where the archived GEFS0P25 data saves to."
 )
 
 @_click.option(
@@ -1946,7 +1796,7 @@ def gefs0p25_fetch(members,
                   
                   Default=['temperature']
                   
-                  See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
+                  See https://edrewitz.github.io/WxData/GEFS0P25 for available variables."""
                   
                   )
 )
@@ -1963,7 +1813,7 @@ def gefs0p25_fetch(members,
           
           Default=[2]
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available levels.
+          See https://edrewitz.github.io/WxData/GEFS0P25 for available levels.
           
           """)
 )
@@ -1978,7 +1828,7 @@ def gefs0p25_fetch(members,
         
           Default='height above ground'.
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available level types.
+          See https://edrewitz.github.io/WxData/GEFS0P25 for available level types.
           
           """)
 )
@@ -2027,7 +1877,7 @@ def gefs0p25_fetch(members,
           """),
 )
 
-def archived_gfs0p50_fetch(
+def archived_gefs0p50_fetch(
                   date,
                   run,
                   category,

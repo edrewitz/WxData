@@ -267,7 +267,7 @@ def hgefs():
     retry downloading the data.   
     
     """
-    
+@hgefs.command("latest")
 @_click.option(
     "--final_forecast_hour",
     "-f",
@@ -361,12 +361,12 @@ def hgefs():
         
 @_click.option('--variables', 
               '-v', 
-              default=['geopotential_height',
-                       'specific_humidity',
+              default=['geopotential height',
+                       'specific humidity',
                        'temperature',
-                       'u-component_of_wind',
-                       'v-component_of_wind',
-                       'vertical_velocity'],
+                       'u-component of_wind',
+                       'v-component of_wind',
+                       'vertical velocity'],
               multiple=True, 
               type=str,
               help=(

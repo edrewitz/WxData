@@ -257,6 +257,7 @@ def hgefs_mean_spread(final_forecast_hour=240,
             
         stop = final_forecast_hour + 6
         
+        print(len(levels))
         for i in range(0, stop, 6):
             if level_type == 'surface':
                 try:

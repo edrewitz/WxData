@@ -438,6 +438,8 @@ def hgefs_fetch(final_forecast_hour,
             folder = "AVG"
         else:
             folder = "SPR"
+            
+        print(levels)
         
         _fetch_hgefs(final_forecast_hour=final_forecast_hour,
                         cat=category,

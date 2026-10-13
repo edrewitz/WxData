@@ -70,7 +70,7 @@ def gfs_data():
 @gfs_data.group(name='0p25')
 def gfs0p25():
     """
-    GFS 0.25x0.25 Client.
+    Global Forecast System (GFS) 0.25x0.25 Client.
     
     Archived Required Commands
     --------------------------
@@ -1111,7 +1111,7 @@ def archived_gfs0p25_fetch(
 @gfs_data.group(name='0p50')
 def gfs0p50():
     """
-    GFS 0.50x0.50 Client.
+    Global Forecast System (GFS) 0.50x0.50 Client.
     
     Archived Required Commands
     --------------------------

@@ -68,7 +68,7 @@ def gefs_data():
 @gefs_data.group(name='0p50')
 def gefs0p50():
     """
-    GEFS 0.50x0.50 Client.
+    Global Ensemble Forecast System (GEFS) 0.50x0.50 Client.
     
     Archived Required Commands
     --------------------------
@@ -467,8 +467,11 @@ def gefs0p50():
             -----------------
             
             1) mean
+            
             2) members
+            
             3) spread
+            
             4) control
     
           """
@@ -1146,7 +1149,7 @@ def archived_gefs0p50_fetch(
 @gefs_data.group(name='0p25')
 def gefs0p25():
     """
-    GEFS 0.25x0.25 Client.
+    Global Ensemble Forecast System (GEFS) 0.25x0.25 Client.
     
     Archived Required Commands
     --------------------------
@@ -1689,8 +1692,11 @@ def gefs0p25_fetch(members,
             -----------------
             
             1) mean
+            
             2) members
+            
             3) spread
+            
             4) control
     
           """

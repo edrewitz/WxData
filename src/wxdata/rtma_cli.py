@@ -58,7 +58,7 @@ def realtime_mesoscale_analysis():
 # ---------------------------------------------------------------------
 @realtime_mesoscale_analysis.group()
 def rtma():
-    """Real Time Mesoscale Analysis Client.
+    """Real Time Mesoscale Analysis (RTMA) Client.
     
     
     Archived Required Commands

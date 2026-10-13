@@ -10,7 +10,6 @@ import sys as _sys
 import platform as _platform
 current_os = _platform.system()
 
-from datetime import datetime as _datetime
 from wxdata.model_data.noaa.hgefs.hgefs import hgefs_mean_spread as _fetch_hgefs
 
 def _command_error_message(model):

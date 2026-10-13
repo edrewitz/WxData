@@ -434,6 +434,10 @@ def hgefs_fetch(final_forecast_hour,
             
         level_type = level_type.replace('_', ' ')
         category=category.lower()
+        if category == 'average':
+            folder = "AVG"
+        else:
+            folder = "SPR"
         
         _fetch_hgefs(final_forecast_hour=final_forecast_hour,
                         cat=category,
@@ -458,9 +462,9 @@ def hgefs_fetch(final_forecast_hour,
             _click.echo(f"HGEFS latest download complete, data files saved to {custom_directory}")
         else:
             if current_os != "Windows":
-                _click.echo(f"HGEFS latest download complete, data files saved to HGEFS/{category.upper()}")
+                _click.echo(f"HGEFS latest download complete, data files saved to HGEFS/{folder}")
             else:
-                _click.echo(f"HGEFS latest download complete, data files saved to HGEFS/{category.upper()}")
+                _click.echo(f"HGEFS latest download complete, data files saved to HGEFS/{folder}")
             
     except SystemExit as e:
         _command_error_message('hgefs')

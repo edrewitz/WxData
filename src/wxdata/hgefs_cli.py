@@ -43,7 +43,7 @@ def hgefs_data():
 # ---------------------------------------------------------------------
 # GEFS 0.25x0.25 Commands
 # ---------------------------------------------------------------------
-@hgefs_data.group()
+@hgefs_data.group(name='fetch')
 def hgefs():
     """
     Hybrid Global Ensemble Forecast System (HGEFS) Client.
@@ -469,6 +469,7 @@ def hgefs():
 
 def hgefs_fetch(final_forecast_hour,
                   proxy,
+                  category,
                   clear_recycle_bin,
                   custom_directory,
                   clear_data,
@@ -512,8 +513,10 @@ def hgefs_fetch(final_forecast_hour,
             vars_fixed.append(v)
             
         level_type = level_type.replace('_', ' ')
+        category=category.lower()
         
         _fetch_hgefs(final_forecast_hour=final_forecast_hour,
+                        cat=category,
                         process_data=process,
                         proxies=proxy,
                         clear_recycle_bin=clear_recycle_bin,

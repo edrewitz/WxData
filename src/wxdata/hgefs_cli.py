@@ -361,12 +361,12 @@ def hgefs():
         
 @_click.option('--variables', 
               '-v', 
-              default=['geopotential height',
-                       'specific humidity',
+              default=['geopotential_height',
+                       'specific_humidity',
                        'temperature',
-                       'u-component of wind',
-                       'v-component of wind',
-                       'vertical velocity (pressure)'],
+                       'u-component_of_wind',
+                       'v-component_of_wind',
+                       'vertical_velocity'],
               multiple=True, 
               type=str,
               help=(
@@ -377,7 +377,7 @@ def hgefs():
                        'temperature',
                        'u-component of wind',
                        'v-component of wind',
-                       'vertical velocity (pressure)']
+                       'vertical velocity']
                   
                   See https://edrewitz.github.io/WxData/HGEFS for available variables."""
                   
@@ -518,6 +518,10 @@ def hgefs_fetch(final_forecast_hour,
         vars_fixed = []
         for v in variables:
             v = v.replace('_', ' ')
+            if v == 'vertical velocity':
+                v = 'vertical velocity (pressure)'
+            else:
+                v = v
             vars_fixed.append(v)
             
         level_type = level_type.replace('_', ' ')

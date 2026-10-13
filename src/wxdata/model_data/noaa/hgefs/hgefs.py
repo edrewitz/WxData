@@ -257,7 +257,6 @@ def hgefs_mean_spread(final_forecast_hour=240,
             
         stop = final_forecast_hour + 6
         
-        print(len(levels))
         for i in range(0, stop, 6):
             if level_type == 'surface':
                 try:
@@ -285,7 +284,7 @@ def hgefs_mean_spread(final_forecast_hour=240,
                 except Exception as e:
                     pass
             else:
-                if len(variables) < 6 and len(levels) < 12:
+                if len(variables) < 6 or len(levels) < 12:
                     try:
                         if i < 10:
                             _client.byte_range_request(f"{url}hgefs.t{run}z.{level}.{cat}.f00{i}.grib2",

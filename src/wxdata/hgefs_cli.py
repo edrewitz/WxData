@@ -13,18 +13,6 @@ current_os = _platform.system()
 from datetime import datetime as _datetime
 from wxdata.model_data.noaa.hgefs.hgefs import hgefs_mean_spread as _fetch_hgefs
 
-def _parse_date(date):
-    
-    """Parses String Date Into DateTime Object"""
-    
-    if type(date) == type(_datetime.now()):
-        date = date
-    else:
-        date = f"{date[0:4]}{date[5:7]}{date[8:10]}"
-        date = _datetime.strptime(date, "%Y%m%d")
-        
-    return date
-
 def _command_error_message(model):
     
     """Error Message For Invalid Commands"""

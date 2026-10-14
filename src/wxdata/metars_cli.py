@@ -68,7 +68,7 @@ def metars():
     `wxdata-metars fetch latest --proxy https://proxy-server-address:proxy-server-port`
     
     """
-
+@metars.command("latest")
 @_click.option(
     "--clear_recycle_bin",
     "-cr",

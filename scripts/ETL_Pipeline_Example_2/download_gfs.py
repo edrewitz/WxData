@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+# This script uses WxData to download the GFS0P25 850mb Temperature Forecast Data from NCEP/NOMADS
+
+# This script is written by Eric J. Drewitz
+
 import os
 from wxdata import gfs_0p25
 

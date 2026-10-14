@@ -671,7 +671,7 @@ def get_observed_sounding_data(station_id,
             except Exception as e:
                 pass
             
-            filename = f"{station_id.upper()}_{date.strftime('%Y_%m_%d')}.csv"
+            filename = f"{station_id.upper()}_{date.strftime('%Y_%m_%d_%H')}.csv"
             
             df.to_csv(f"{path}/{filename}")
         else:
@@ -868,8 +868,8 @@ def get_observed_sounding_data(station_id,
             except Exception as e:
                 pass
             
-            filename_1 = f"{station_id.upper()}_{date.strftime('%Y_%m_%d')}.csv"
-            filename_2 = f"{station_id.upper()}_{date_24.strftime('%Y_%m_%d')}.csv"
+            filename_1 = f"{station_id.upper()}_{date.strftime('%Y_%m_%d_%H')}.csv"
+            filename_2 = f"{station_id.upper()}_{date_24.strftime('%Y_%m_%d_%H')}.csv"
             
             df.to_csv(f"{path}/{filename_1}")
             df_24.to_csv(f"{path}/{filename_2}")

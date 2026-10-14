@@ -257,7 +257,7 @@ def _aigfs_client(final_forecast_hour=384,
                                 chunk_size=chunk_size,
                                 notifications=notifications)   
             else:
-                if len(variables) < 6:
+                if len(variables) < 6 or len(levels) < 12:
                     if i < 10:
                         _client.byte_range_request(f"{url}aigfs.t{run}z.{level}.f00{i}.grib2",
                                                         f"{url}aigfs.t{run}z.{level}.f00{i}.grib2.idx",

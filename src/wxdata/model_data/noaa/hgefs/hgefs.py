@@ -284,46 +284,73 @@ def hgefs_mean_spread(final_forecast_hour=240,
                 except Exception as e:
                     pass
             else:
-                try:
-                    if i < 10:
-                        _client.byte_range_request(f"{url}hgefs.t{run}z.{level}.{cat}.f00{i}.grib2",
-                                                            f"{url}hgefs.t{run}z.{level}.{cat}.f00{i}.grib2.idx",
+                if len(variables) < 6 or len(levels) < 12:
+                    try:
+                        if i < 10:
+                            _client.byte_range_request(f"{url}hgefs.t{run}z.{level}.{cat}.f00{i}.grib2",
+                                                                f"{url}hgefs.t{run}z.{level}.{cat}.f00{i}.grib2.idx",
+                                                                variables,
+                                                                levels,
+                                                                'pressure',
+                                                                path,
+                                                                f"hgefs.t{run}z.{level}.{cat}.f00{i}.grib2",
+                                                                proxies=proxies,
+                                                                chunk_size=chunk_size,
+                                                                notifications=notifications,
+                                                                clear_recycle_bin=clear_recycle_bin)
+                        elif i >= 10 and i < 100:
+                            _client.byte_range_request(f"{url}hgefs.t{run}z.{level}.{cat}.f0{i}.grib2",
+                                                            f"{url}hgefs.t{run}z.{level}.{cat}.f0{i}.grib2.idx",
                                                             variables,
                                                             levels,
                                                             'pressure',
                                                             path,
-                                                            f"hgefs.t{run}z.{level}.{cat}.f00{i}.grib2",
+                                                            f"hgefs.t{run}z.{level}.{cat}.f0{i}.grib2",
                                                             proxies=proxies,
                                                             chunk_size=chunk_size,
                                                             notifications=notifications,
                                                             clear_recycle_bin=clear_recycle_bin)
-                    elif i >= 10 and i < 100:
-                        _client.byte_range_request(f"{url}hgefs.t{run}z.{level}.{cat}.f0{i}.grib2",
-                                                        f"{url}hgefs.t{run}z.{level}.{cat}.f0{i}.grib2.idx",
-                                                        variables,
-                                                        levels,
-                                                        'pressure',
-                                                        path,
-                                                        f"hgefs.t{run}z.{level}.{cat}.f0{i}.grib2",
-                                                        proxies=proxies,
-                                                        chunk_size=chunk_size,
-                                                        notifications=notifications,
-                                                        clear_recycle_bin=clear_recycle_bin)
-                    else:
-                        _client.byte_range_request(f"{url}hgefs.t{run}z.{level}.{cat}.f{i}.grib2",
-                                                        f"{url}hgefs.t{run}z.{level}.{cat}.f{i}.grib2.idx",
-                                                        variables,
-                                                        levels,
-                                                        'pressure',
-                                                        path,
-                                                        f"hgefs.t{run}z.{level}.{cat}.f{i}.grib2",
-                                                        proxies=proxies,
-                                                        chunk_size=chunk_size,
-                                                        notifications=notifications,
-                                                        clear_recycle_bin=clear_recycle_bin)  
+                        else:
+                            _client.byte_range_request(f"{url}hgefs.t{run}z.{level}.{cat}.f{i}.grib2",
+                                                            f"{url}hgefs.t{run}z.{level}.{cat}.f{i}.grib2.idx",
+                                                            variables,
+                                                            levels,
+                                                            'pressure',
+                                                            path,
+                                                            f"hgefs.t{run}z.{level}.{cat}.f{i}.grib2",
+                                                            proxies=proxies,
+                                                            chunk_size=chunk_size,
+                                                            notifications=notifications,
+                                                            clear_recycle_bin=clear_recycle_bin)  
+                        
+                    except Exception as e:
+                        pass
                     
-                except Exception as e:
-                    pass
+                else:
+                    try:
+                        if i < 10:
+                            _client.get_gridded_data(f"{url}hgefs.t{run}z.{level}.{cat}.f00{i}.grib2",
+                                        path,
+                                        f"hgefs.t{run}z.{level}.{cat}.f00{i}.grib2",
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications)  
+                        elif i >= 10 and i < 100:
+                            _client.get_gridded_data(f"{url}hgefs.t{run}z.{level}.{cat}.f0{i}.grib2",
+                                        path,
+                                        f"hgefs.t{run}z.{level}.{cat}.f0{i}.grib2",
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications)  
+                        else:
+                            _client.get_gridded_data(f"{url}hgefs.t{run}z.{level}.{cat}.f{i}.grib2",
+                                        path,
+                                        f"hgefs.t{run}z.{level}.{cat}.f{i}.grib2",
+                                        proxies=proxies,
+                                        chunk_size=chunk_size,
+                                        notifications=notifications) 
+                    except Exception as e:
+                        pass
                     
     else:
         print(f"User has latest HGEFS {level_type.upper()} {cat.upper()} Files\nSkipping Download...")  

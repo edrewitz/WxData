@@ -1,3 +1,11 @@
+"""
+This file hosts the WxData Command Line Interface for retrieving Global Forecast System (GFS) Data.
+
+Command Line Use: `wxdata-gfs **args`
+
+(C) Eric J. Drewitz 2025-2026
+"""
+
 import click as _click
 import sys as _sys
 import platform as _platform
@@ -33,7 +41,8 @@ def _command_error_message(model):
     """Error Message For Invalid Commands"""
     
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
-    print(f"Please run `gfs {model.lower()} -h to view the help documentation.")
+    print(f"Model: {model.upper()}")
+    print(f"Please run `wxdata-gfs -h to view the help documentation.")
     print(f"Please visit: https://github.com/edrewitz/WxData/wiki#global-forecast-system-gfs for full detailed documentation.")
 
 def _parse_proxy(value):
@@ -61,7 +70,7 @@ def gfs_data():
 @gfs_data.group(name='0p25')
 def gfs0p25():
     """
-    GFS 0.25x0.25 Client.
+    Global Forecast System (GFS) 0.25x0.25 Client.
     
     Archived Required Commands
     --------------------------
@@ -79,9 +88,9 @@ def gfs0p25():
     
     -------------------------------------------------------
     
-    -c = Category (Default=primary).
+    -t = Type (Default=primary).
     
-    This determines the category of variables and levels.
+    This determines the type of variables and levels.
     
     -f = Final Forecast Hour (Default=384).
      
@@ -105,19 +114,6 @@ def gfs0p25():
     aws - Amazon Web Services
     
     google - Google Cloud Servers
-    
-    -cd = Clear Data (Default=False).
-    
-    ***Only for wxdata-gfs 0p25 latest***
-    
-    ***Archived Clients Automatically Clear Old Data***
-    
-    When set to False the scanner safeguard that prevents repetative downloads is enabled.
-    Set -cd False to disable this safety feature.
-    
-    WARNING: When this feature is disabled and the user submits too many requests in a short period of time the user risks
-    being rate-limited by the data server. If the user gets rate-limited, the user should wait approximately 5-10 minutes and
-    retry downloading the data. 
     
     -cdir = Custom Directory (Default=None).
     
@@ -475,12 +471,28 @@ def gfs0p25():
     
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=gfs_0p25.nc)
     
+    Commands Only Valid for "latest"
+    --------------------------------
+    
+    -cd = Clear Data (Default=False).
+    
+    ***Only for wxdata-gfs 0p25 latest***
+    
+    ***Archived Clients Automatically Clear Old Data***
+    
+    When set to False the scanner safeguard that prevents repetative downloads is enabled.
+    Set -cd False to disable this safety feature.
+    
+    WARNING: When this feature is disabled and the user submits too many requests in a short period of time the user risks
+    being rate-limited by the data server. If the user gets rate-limited, the user should wait approximately 5-10 minutes and
+    retry downloading the data. 
+    
     """
     
 @gfs0p25.command("latest")
 @_click.option(
-    "--category",
-    "-c",
+    "--type",
+    "-t",
     default="primary",
     type=str,
     show_default=True,
@@ -488,7 +500,7 @@ def gfs0p25():
           
           Default=primary
           
-          set -c secondary for secondary variables.
+          set -t secondary for secondary variables.
           
           """
     )
@@ -527,7 +539,7 @@ def gfs0p25():
     default=False,
     show_default=True,
     type=bool,
-    help="To bypass the safety scanner set --clear data to False."
+    help="To bypass the safety scanner set --clear data to False: -cd False."
 )
 
 @_click.option(
@@ -690,7 +702,7 @@ def gfs0p25_fetch(final_forecast_hour,
                   variables,
                   levels,
                   level_type,
-                  category,
+                  type,
                   netcdf,
                   ncdir,
                   ncfname,
@@ -711,6 +723,12 @@ def gfs0p25_fetch(final_forecast_hour,
                 custom_directory = custom_directory.replace('/', '\\')
             else:
                 pass
+            
+        if netcdf == True:
+            if current_os == "Windows":
+                ncdir = ncdir.replace('/', '\\')
+            else:
+                pass
         
         vars_fixed = []
         for v in variables:
@@ -719,9 +737,9 @@ def gfs0p25_fetch(final_forecast_hour,
             
         level_type = level_type.replace('_', ' ')
         
-        category = category.lower()
+        type = type.lower()
         
-        if category == 'primary':
+        if type == 'primary':
         
             _fetch_gfs_0p25(final_forecast_hour=final_forecast_hour,
                             process_data=process,
@@ -762,13 +780,13 @@ def gfs0p25_fetch(final_forecast_hour,
                             northern_bound=northern_bound,
                             southern_bound=southern_bound)
         
-        if custom_directory != "none":
-            _click.echo(f"GFS0P25 {category.upper()} latest download complete, data files saved to {custom_directory}")
+        if custom_directory != "none" and custom_directory != None:
+            _click.echo(f"GFS0P25 {type.upper()} latest download complete, data files saved to {custom_directory}")
         else:
             if current_os != "Windows":
-                _click.echo(f"GFS0P25 {category.upper()} latest download complete, data files saved to GFS0P25/ATMOSPHERIC")
+                _click.echo(f"GFS0P25 {type.upper()} latest download complete, data files saved to GFS0P25/ATMOSPHERIC")
             else:
-                _click.echo(rf"GFS0P25 {category.upper()} latest download complete, data files saved to GFS0P25\ATMOSPHERIC")
+                _click.echo(rf"GFS0P25 {type.upper()} latest download complete, data files saved to GFS0P25\ATMOSPHERIC")
             
     except SystemExit as e:
         _command_error_message('gfs0p25')
@@ -799,8 +817,8 @@ def gfs0p25_fetch(final_forecast_hour,
 )
 
 @_click.option(
-    "--category",
-    "-c",
+    "--type",
+    "-t",
     default="primary",
     type=str,
     show_default=True,
@@ -808,7 +826,7 @@ def gfs0p25_fetch(final_forecast_hour,
           
           Default=primary
           
-          set -c secondary for secondary variables.
+          set -t secondary for secondary variables.
           
           """
     )
@@ -845,10 +863,10 @@ def gfs0p25_fetch(final_forecast_hour,
 @_click.option(
     "--source",
     "-s",
-    default="noaa",
+    default="aws",
     show_default=True,
     type=str,
-    help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"
+    help="Default aws is for Amazon Web Services - set to google to switch to Google Cloud"
 )
 
 @_click.option(
@@ -1003,7 +1021,7 @@ def archived_gfs0p25_fetch(
                   variables,
                   levels,
                   level_type,
-                  category,
+                  type,
                   netcdf,
                   ncdir,
                   ncfname,
@@ -1025,12 +1043,18 @@ def archived_gfs0p25_fetch(
             custom_directory = custom_directory.replace('/', '\\')
         else:
             pass
+    
+        if netcdf == True:
+            if current_os == "Windows":
+                ncdir = ncdir.replace('/', '\\')
+            else:
+                pass
         
         level_type = level_type.replace('_', ' ')
         
-        category = category.lower()
+        type = type.lower()
         
-        if category == 'primary':
+        if type == 'primary':
         
             _fetch_archived_gfs_0p25(
                             date,
@@ -1077,17 +1101,19 @@ def archived_gfs0p25_fetch(
                             southern_bound=southern_bound)
         
         d = _parse_date(date)
-        _click.echo(f"GFS0P25 {category.upper()} download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {custom_directory}")
+        _click.echo(f"GFS0P25 {type.upper()} download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {custom_directory}")
             
     except SystemExit as e:
         _command_error_message('gfs0p25')
         _sys.exit(1)
         
-        
+# ---------------------------------------------------------------------
+# GFS 0.50x0.50 Commands
+# ---------------------------------------------------------------------
 @gfs_data.group(name='0p50')
 def gfs0p50():
     """
-    GFS 0.50x0.50 Client.
+    Global Forecast System (GFS) 0.50x0.50 Client.
     
     Archived Required Commands
     --------------------------
@@ -1626,6 +1652,12 @@ def gfs0p50_fetch(final_forecast_hour,
             else:
                 pass
         
+        if netcdf == True:
+            if current_os == "Windows":
+                ncdir = ncdir.replace('/', '\\')
+            else:
+                pass
+        
         vars_fixed = []
         for v in variables:
             v = v.replace('_', ' ')
@@ -1653,7 +1685,7 @@ def gfs0p50_fetch(final_forecast_hour,
                         northern_bound=northern_bound,
                         southern_bound=southern_bound)
         
-        if custom_directory != "none":
+        if custom_directory != "none" and custom_directory != None:
             _click.echo(f"GFS0P50 latest download complete, data files saved to {custom_directory}")
         else:
             if current_os != "Windows":
@@ -1719,10 +1751,10 @@ def gfs0p50_fetch(final_forecast_hour,
 @_click.option(
     "--source",
     "-s",
-    default="noaa",
+    default="aws",
     show_default=True,
     type=str,
-    help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"
+    help="Default aws is for Amazon Web Services - set to google to switch to Google Cloud"
 )
 
 @_click.option(

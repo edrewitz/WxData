@@ -156,9 +156,7 @@ def _gefs_0p50_client(date,
             'vertical velocity'
             'water equivalent of accumulated snow depth'
             
-    13) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
-        the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
-        be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
+    13) path (String) - Default='GEFS0P50/Archive'. The path at which the GRIB2 data files will be stored. 
     
     14) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
         of the program you are calling WxData. This setting is to help preserve memory on the machine. 
@@ -650,9 +648,7 @@ def _gefs_0p50_secondary_parameters_client(date,
         'water runoff'
         'wilting point'
             
-    13) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
-        the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
-        be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
+    13) path (String) - Default='GEFS0P50 SECONDARY PARAMETERS/Archive'. The path at which the GRIB2 data files will be stored. 
     
     14) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
         of the program you are calling WxData. This setting is to help preserve memory on the machine. 
@@ -1136,9 +1132,7 @@ def _gefs_0p25_client(date,
         'visibility'
         'water equivalent of accumulated snow depth'
             
-    13) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
-        the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
-        be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
+    13) path (String) - Default='GEFS0P25/Archive'. The path at which the GRIB2 data files will be stored. 
     
     14) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
         of the program you are calling WxData. This setting is to help preserve memory on the machine. 
@@ -1490,7 +1484,8 @@ def gefs_0p50(date,
             netcdf_path=f"GEFS0P50/Archive/NETCDF",
             netcdf_filename=f"gefs_0p50.nc",
             delete_previous_netcdf_file=True,
-            return_values=True):
+            return_values=True,
+            path=f'GEFS0P50/Archive'):
     
     """
     This function downloads the archived GEFS0P50 data for a region specified by the user
@@ -1581,9 +1576,7 @@ def gefs_0p50(date,
             'vertical velocity'
             'water equivalent of accumulated snow depth'
             
-    13) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
-        the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
-        be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
+    13) path (String) - Default='GEFS0P50/Archive'. The path at which the GRIB2 data files will be stored. 
     
     14) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
         of the program you are calling WxData. This setting is to help preserve memory on the machine. 
@@ -1726,7 +1719,8 @@ def gefs_0p50(date,
                 notifications=notifications,
                 source=source,
                 level_type=level_type,
-                levels=levels)
+                levels=levels,
+                path=path)
             
         else:
             _gefs_0p50_client(date,
@@ -1749,7 +1743,8 @@ def gefs_0p50(date,
                 notifications=notifications,
                 source=source,
                 level_type=level_type,
-                levels=levels)
+                levels=levels,
+                path=path)
     except Exception as e:
         print(f"Error: Client lost connection with {source.upper()} server and is unable to reconnect.")
         if source == 'aws':
@@ -1776,7 +1771,8 @@ def gefs_0p50(date,
                         notifications=notifications,
                         source='google',
                         level_type=level_type,
-                        levels=levels)
+                        levels=levels,
+                        path=path)
                 else:
                     _gefs_0p50_client(date,
                                         run,
@@ -1798,7 +1794,8 @@ def gefs_0p50(date,
                         notifications=notifications,
                         source='google',
                         level_type=level_type,
-                        levels=levels)
+                        levels=levels,
+                        path=path)
             except Exception as e:
                 try:
                     print(f"Error: Data unavailible for {date.strftime('%Y%m%d')} {run}z. - System Exit.")
@@ -1830,7 +1827,8 @@ def gefs_0p50(date,
                         notifications=notifications,
                         source='aws',
                         level_type=level_type,
-                        levels=levels)
+                        levels=levels,
+                        path=path)
                 else:
                     _gefs_0p50_client(date,
                                         run,
@@ -1852,7 +1850,8 @@ def gefs_0p50(date,
                         notifications=notifications,
                         source='aws',
                         level_type=level_type,
-                        levels=levels)
+                        levels=levels,
+                        path=path)
             except Exception as e:
                 try:
                     print(f"Error: Data unavailible for {date.strftime('%Y%m%d')} {run}z. - System Exit.")
@@ -1912,7 +1911,8 @@ def gefs_0p50_secondary_parameters(date,
             netcdf_path=f"GEFS0P50 SECONDARY PARAMETERS/Archive/NETCDF",
             netcdf_filename=f"gefs_0p50_secondary_parameters.nc",
             delete_previous_netcdf_file=True,
-            return_values=True):
+            return_values=True,
+            path=f'GEFS0P50 SECONDARY PARAMETERS/Archive'):
     
     """
     This function downloads the archived GEFS0P50 SECONDARY PARAMETERS data for a region specified by the user
@@ -2041,9 +2041,7 @@ def gefs_0p50_secondary_parameters(date,
         'water runoff'
         'wilting point'
         
-    13) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
-        the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
-        be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
+    13) path (String) - Default='GEFS0P50 SECONDARY PARAMETERS/Archive'. The path at which the GRIB2 data files will be stored. 
     
     14) clear_recycle_bin (Boolean) - When set to True, the contents in your recycle/trash bin will be 
         deleted with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
@@ -2225,7 +2223,8 @@ def gefs_0p50_secondary_parameters(date,
                 notifications=notifications,
                 source=source,
                 level_type=level_type,
-                levels=levels
+                levels=levels,
+                path=path
                 )
             
         else:
@@ -2250,7 +2249,8 @@ def gefs_0p50_secondary_parameters(date,
                 notifications=notifications,
                 source=source,
                 level_type=level_type,
-                levels=levels
+                levels=levels,
+                path=path
                 )
     except Exception as e:
         print(f"Error: Client lost connection with {source.upper()} server and is unable to reconnect.")
@@ -2279,7 +2279,8 @@ def gefs_0p50_secondary_parameters(date,
                                     notifications=notifications,
                                     source='google',
                                     level_type=level_type,
-                                    levels=levels
+                                    levels=levels,
+                                    path=path
                                     )
                 else:
                     _gefs_0p50_secondary_parameters_client(
@@ -2303,7 +2304,8 @@ def gefs_0p50_secondary_parameters(date,
                                     notifications=notifications,
                                     source='google',
                                     level_type=level_type,
-                                    levels=levels
+                                    levels=levels,
+                                    path=path
                                     )
             except Exception as e:
                 try:
@@ -2337,7 +2339,8 @@ def gefs_0p50_secondary_parameters(date,
                                     notifications=notifications,
                                     source='aws',
                                     level_type=level_type,
-                                    levels=levels
+                                    levels=levels,
+                                    path=path
                                     )
                 else:
                     _gefs_0p50_secondary_parameters_client(
@@ -2361,7 +2364,8 @@ def gefs_0p50_secondary_parameters(date,
                                     notifications=notifications,
                                     source='aws',
                                     level_type=level_type,
-                                    levels=levels
+                                    levels=levels,
+                                    path=path
                                     )
             except Exception as e:
                 try:
@@ -2422,7 +2426,8 @@ def gefs_0p25(date,
             netcdf_path=f"GEFS0P25/Archive/NETCDF",
             netcdf_filename=f"gefs_0p25.nc",
             delete_previous_netcdf_file=True,
-            return_values=True):
+            return_values=True,
+            path=f'GEFS0P25/Archive'):
     
     """
     This function downloads the archived GEFS0P25 data for a region specified by the user
@@ -2514,9 +2519,7 @@ def gefs_0p25(date,
         'visibility'
         'water equivalent of accumulated snow depth'
         
-    13) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
-        the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
-        be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
+    13) path (String) - Default='GEFS0P25/Archive'. The path at which the GRIB2 data files will be stored. 
     
     14) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
@@ -2649,7 +2652,8 @@ def gefs_0p25(date,
                 notifications=notifications,
                 source=source,
                 level_type=level_type,
-                levels=levels)
+                levels=levels,
+                path=path)
             
         else:
             _gefs_0p25_client(date,
@@ -2672,7 +2676,8 @@ def gefs_0p25(date,
                 notifications=notifications,
                 source=source,
                 level_type=level_type,
-                levels=levels)
+                levels=levels,
+                path=path)
     except Exception as e:
         print(f"Error: Client lost connection with {source.upper()} server and is unable to reconnect.")
         if source == 'aws':
@@ -2699,7 +2704,8 @@ def gefs_0p25(date,
                         notifications=notifications,
                         source='google',
                         level_type=level_type,
-                        levels=levels)
+                        levels=levels,
+                        path=path)
                 else:
                     _gefs_0p25_client(date,
                                         run,
@@ -2721,7 +2727,8 @@ def gefs_0p25(date,
                         notifications=notifications,
                         source='google',
                         level_type=level_type,
-                        levels=levels)
+                        levels=levels,
+                        path=path)
             except Exception as e:
                 try:
                     print(f"Error: Data unavailible for {date.strftime('%Y%m%d')} {run}z. - System Exit.")
@@ -2753,7 +2760,8 @@ def gefs_0p25(date,
                         notifications=notifications,
                         source='aws',
                         level_type=level_type,
-                        levels=levels)
+                        levels=levels,
+                        path=path)
                 else:
                     _gefs_0p25_client(date,
                                         run,
@@ -2775,7 +2783,8 @@ def gefs_0p25(date,
                         notifications=notifications,
                         source='aws',
                         level_type=level_type,
-                        levels=levels)
+                        levels=levels,
+                        path=path)
             except Exception as e:
                 try:
                     print(f"Error: Data unavailible for {date.strftime('%Y%m%d')} {run}z. - System Exit.")

@@ -223,7 +223,7 @@ def _aigefs_pressure_members_client(final_forecast_hour=384,
         stop = final_forecast_hour + 6
         for path, url in zip(paths, urls):
             for i in range(0, stop, 6):
-                if len(variables) < 6:
+                if len(variables) < 6 or len(levels) < 12:
                     if i < 10:
                         _client.byte_range_request(f"{url}/aigefs.t{run}z.pres.f00{i}.grib2",
                                                     f"{url}/aigefs.t{run}z.pres.f00{i}.grib2.idx",

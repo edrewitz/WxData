@@ -385,7 +385,6 @@ from wxdata.utils.transforms import grib_to_netcdf
 #  - get_gridded_data()
 #  - get_csv_data()
 #  - get_excel_data()
-#  - get_xmacis_data()
 #  - get_aws_open_data()
 #  - byte_range_request()
 import wxdata.client.client as client

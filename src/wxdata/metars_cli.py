@@ -6,11 +6,19 @@ Command Line Use: `wxdata-metars **args`
 (C) Eric J. Drewitz 2025-2026
 """
 import click as _click
+import os as _os
 import sys as _sys
 import platform as _platform
 current_os = _platform.system()
 
 from wxdata.observational_data.metars.metar_obs import download_metar_data as _fetch_metars
+
+cwd = _os.getcwd()
+
+if current_os == "Windows":
+    custom_directory = cwd.replace('/', '\\')
+else:
+    pass
 
 def _command_error_message():
     
@@ -96,6 +104,8 @@ def metar_fetch(clear_recycle_bin,
     try:
         _fetch_metars(clear_recycle_bin=clear_recycle_bin,
                     proxies=proxy)
+        
+        print(f"METAR Data Saved to: {cwd}")
     except Exception as e:
         _command_error_message()
         _sys.exit(1)

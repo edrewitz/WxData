@@ -42,6 +42,7 @@ wxdata-gfs = "wxdata.gfs_cli:main"
 wxdata-gefs = "wxdata.gefs_cli:main"
 wxdata-hgefs = "wxdata.hgefs_cli:main"
 wxdata-soundings = "wxdata.soundings_cli:main"
+wxdata-metars = "wxdata.metars_cli:main"
 
 [build-system]
 requires = ["setuptools>=64.0.0", "wheel"]

@@ -17,7 +17,7 @@ def _command_error_message():
     """Error Message For Invalid Commands OR No Data Available"""
     
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
-    print(f"Please run `wxdata-soundings -h to view the help documentation.")
+    print(f"Please run `wxdata-soundings fetch -h to view the help documentation.")
     print(f"Please visit: https://edrewitz.github.io/WxData/wyoming_soundings for full detailed documentation.")
     print(f"There is also a chance there is no data available for this time. Please visit: https://weather.uwyo.edu/upperair/sounding.shtml for more information.")
 
@@ -41,7 +41,7 @@ def soundings_data():
     pass
 
 # ---------------------------------------------------------------------
-# GEFS 0.25x0.25 Commands
+# Sounding CLI Commands
 # ---------------------------------------------------------------------
 @soundings_data.group(name='fetch')
 def sounding():

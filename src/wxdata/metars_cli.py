@@ -16,9 +16,12 @@ from wxdata.observational_data.metars.metar_obs import download_metar_data as _f
 cwd = _os.getcwd()
 
 if current_os == "Windows":
-    custom_directory = cwd.replace('/', '\\')
+    cwd = cwd.replace('/', '\\')
+    cwd = rf"{cwd}\METAR_Data\metars.csv"
 else:
-    pass
+    cwd = f"{cwd}/METAR_Data/metars.csv"
+
+
 
 def _command_error_message():
     

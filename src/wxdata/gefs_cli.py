@@ -1154,9 +1154,8 @@ def gefs0p25():
     """
     Global Ensemble Forecast System (GEFS) 0.25x0.25 Client.
     
-    Archived Required Commands
-    --------------------------
-    
+    **Archived Required Commands**
+
     -d = Date. The date of the model run in the format of YYYY-mm-dd.
     
         (i.e. December 25th, 2025 should be entered as -d 2025-12-25)
@@ -1166,18 +1165,14 @@ def gefs0p25():
         (i.e. for the 12z run set -r 12)
     
     
-    Globally Valid Commands (valid for both "latest" and "archived")
-    
-    -------------------------------------------------------
-    
+    **Globally Valid Commands (valid for both "latest" and "archived")**
+
     -c = Category (Default='mean')
     
     This determines the category of ensemble data 
     
-    Categories
-    
-    ----------
-    
+    **Categories**
+
     1) mean
     
     2) members
@@ -1236,10 +1231,8 @@ def gefs0p25():
     
     `wxdata-gefs 0p25 latest -c members -v geopotential_height -v temperature -l 2 --netcdf True --ncdir GEFS0P25/Members/NETCDF --ncfname gefs_t_rh.nc`
     
-    Variables
-    
-    ---------
-    
+    **Variables**
+
     'total precipitation'
     
     'convective available potential energy'
@@ -1316,10 +1309,8 @@ def gefs0p25():
     
     This corresponds to the type of level.
                                                                 
-    Level Types
-    
-    -----------
-    
+    **Level Types**
+
     'surface'
     
     'mean sea level'
@@ -1354,9 +1345,8 @@ def gefs0p25():
     
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=gefs_0p25.nc)
     
-    Commands Only Valid for "latest"
-    --------------------------------
-    
+    **Commands Only Valid for "latest"**
+
     -cd = Clear Data (Default=False).
     
     ***Only for wxdata-gefs 0p25 latest***

@@ -1115,9 +1115,8 @@ def gfs0p50():
     """
     Global Forecast System (GFS) 0.50x0.50 Client.
     
-    Archived Required Commands
-    --------------------------
-    
+    **Archived Required Commands**
+
     -d = Date. The date of the model run in the format of YYYY-mm-dd.
     
         (i.e. December 25th, 2025 should be entered as -d 2025-12-25)
@@ -1127,10 +1126,8 @@ def gfs0p50():
         (i.e. for the 12z run set -r 12)
     
     
-    Globally Valid Commands (valid for both "latest" and "archived")
-    
-    -------------------------------------------------------
-    
+    **Globally Valid Commands (valid for both "latest" and "archived")**
+
     -f = Final Forecast Hour (Default=384).
      
     The last hour the user wishes to download in the dataset. GFS0P50 has 384 forecast hours.
@@ -1192,9 +1189,7 @@ def gfs0p50():
     
     Here is a sample of how to query geopotential height and temperature `gfs 0p50 latest -v geopotential_height -v temperature`
     
-    Variables
-    
-    ---------
+    **Variables**
     
     best_lifted_index
     
@@ -1374,8 +1369,7 @@ def gfs0p50():
     
     wilting_point
     
-    -l = Levels (Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10])
-                            
+    -l = Levels (Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10])          
     
     Here is a sample of how to query geopotential height and temperature at 850 and 500mb 
     
@@ -1390,10 +1384,8 @@ def gfs0p50():
     Levels: 1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10
     
     
-    Level Types
-    
-    -----------
-    
+    **Level Types**
+
     pressure
 
     mean_sea_level

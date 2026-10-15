@@ -31,7 +31,8 @@ def download_archived_single_station_nexrad2_radar_data(site_id,
                                                         chunk_size=8192,
                                                         clear_recycle_bin=False,
                                                         mode='precipitation',
-                                                        notifications='off'):
+                                                        notifications='off',
+                                                        extract_radar_objects=True):
     
     """
     This function downloads the latest NEXRAD2 Radar Data from NOAAs Open Data Amazon AWS Server and returns
@@ -70,6 +71,8 @@ def download_archived_single_station_nexrad2_radar_data(site_id,
     7) notifications (String) - Default='on'. When set to 'on' a print statement to the user will tell the user their file saved to the path
         they specified. 
         
+    8) extract_radar_objects (Boolean) - Default=True. When set to True the radar objects are extracted using the pyart package and returned to the user.
+        
     Returns
     -------
     
@@ -84,8 +87,6 @@ def download_archived_single_station_nexrad2_radar_data(site_id,
         pass
     else:
         start_time = _datetime.strptime(start_time, "%Y-%m-%d:%H")
-    
-    import pyart
     
     if clear_recycle_bin == True:
         _clear_recycle_bin_windows()
@@ -102,6 +103,12 @@ def download_archived_single_station_nexrad2_radar_data(site_id,
     try:
         for file in _os.listdir(f"{path}/{site_id.upper()}"):
             _os.remove(f"{path}/{site_id.upper()}/{file}")
+    except Exception as e:
+        pass
+    
+    try:
+        for file in _os.listdir(f"{path}/{site_id.upper()}/{start_time.strftime('%Y%m%d%H')}"):
+            _os.remove(f"{path}/{site_id.upper()}/{start_time.strftime('%Y%m%d%H')}/{file}")
     except Exception as e:
         pass
     
@@ -139,20 +146,25 @@ def download_archived_single_station_nexrad2_radar_data(site_id,
                                         chunk_size=chunk_size,
                                         notifications=notifications,
                                         clear_recycle_bin=False)
+    
+    if extract_radar_objects == True:
+        import pyart        
+        files = []
+        for file in _os.listdir(f"{path}/{site_id.upper()}/{start_time.strftime('%Y%m%d%H')}"):
+            files.append(file)
             
-    files = []
-    for file in _os.listdir(f"{path}/{site_id.upper()}/{start_time.strftime('%Y%m%d%H')}"):
-        files.append(file)
+        files.reverse()
+        radars = []
         
-    files.reverse()
-    radars = []
-    for file in files:
-        radar = pyart.io.read(_Path(f"{path}/{site_id.upper()}/{start_time.strftime('%Y%m%d%H')}/{file}"))
-        radars.append(radar)
-        
-    radars.reverse()
-        
-    return radars
+        for file in files:
+            radar = pyart.io.read(_Path(f"{path}/{site_id.upper()}/{start_time.strftime('%Y%m%d%H')}/{file}"))
+            radars.append(radar)
+            
+        radars.reverse()
+            
+        return radars
+    else:
+        pass
 
 
 def download_archived_multi_station_nexrad2_radar_data(site_ids,
@@ -163,7 +175,8 @@ def download_archived_multi_station_nexrad2_radar_data(site_ids,
                                                         chunk_size=8192,
                                                         clear_recycle_bin=False,
                                                         mode='precipitation',
-                                                        notifications='off'):
+                                                        notifications='off',
+                                                        extract_radar_objects=True):
     
     """
     This function downloads the latest NEXRAD2 Radar Data from NOAAs Open Data Amazon AWS Server and returns
@@ -198,6 +211,8 @@ def download_archived_multi_station_nexrad2_radar_data(site_ids,
     7) notifications (String) - Default='on'. When set to 'on' a print statement to the user will tell the user their file saved to the path
         they specified. 
         
+    8) extract_radar_objects (Boolean) - Default=True. When set to True the radar objects are extracted using the pyart package and returned to the user.
+        
     Returns
     -------
     
@@ -215,7 +230,8 @@ def download_archived_multi_station_nexrad2_radar_data(site_ids,
                                                         chunk_size=chunk_size,
                                                         clear_recycle_bin=clear_recycle_bin,
                                                         mode=mode,
-                                                        notifications=notifications)
+                                                        notifications=notifications,
+                                                        extract_radar_objects=extract_radar_objects)
         radars.append(radar)
         
     return radars

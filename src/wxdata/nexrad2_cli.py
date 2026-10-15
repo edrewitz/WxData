@@ -74,215 +74,215 @@ def nexrad2():
     
     """
 
-@nexrad2_data.command("latest")
-@_click.option(
-    "--site_id",
-    "-sid",
-    type=str,
-    help="The ID for the NEXRAD II Radar site."
-)
+    @nexrad2_data.command("latest")
+    @_click.option(
+        "--site_id",
+        "-sid",
+        type=str,
+        help="The ID for the NEXRAD II Radar site."
+    )
 
-@_click.option(
-    "--hours",
-    "-hr",
-    default=3,
-    show_default=True,
-    type=int,
-    help="Default=3. The amount of hours to query (hours=3 --> current to current -3 hours)."
-)
+    @_click.option(
+        "--hours",
+        "-hr",
+        default=3,
+        show_default=True,
+        type=int,
+        help="Default=3. The amount of hours to query (hours=3 --> current to current -3 hours)."
+    )
 
-@_click.option(
-    "--mode",
-    "-m",
-    default='precipitation',
-    show_default=True,
-    type=str,
-    help=("""Default='precipitation'. 
-    
-            When in 'precipitation' mode, data querying is based on 10 scans per hour.
+    @_click.option(
+        "--mode",
+        "-m",
+        default='precipitation',
+        show_default=True,
+        type=str,
+        help=("""Default='precipitation'. 
         
-            When in 'clear air' mode, data querying is based on 7 scans per hour.
-        
-        """)
-)
-
-@_click.option(
-    "--custom_directory",
-    "-cdir",
-    default="none",
-    show_default=True,
-    type=str,
-    help="If you want to save the files in a custom directory - enter the full path here."
-)
-
-@_click.option(
-    "--clear_recycle_bin",
-    "-cr",
-    default=False,
-    show_default=True,
-    type=bool,
-    help="To clear your recycle bin with each run of the script set to True."
-)
-
-
-@_click.option(
-    "--proxy",
-    default=None,
-    callback=lambda _, __, v: _parse_proxy(v),
-    show_default=True,
-    help="Proxy URL (e.g., https://address:port). Default: no proxy.",
-)
-
-def fetch_latest_nexrad2_data(site_id,
-                              hours,
-                              mode,
-                              custom_directory,
-                              clear_recycle_bin,
-                              proxy):
-    
-    
-    try:
-        if custom_directory.lower() == "none":
-            custom_directory = f"Radar Data/Latest"
-        else:
-            custom_directory = custom_directory
-            if current_os == "Windows":
-                custom_directory = custom_directory.replace('/', '\\')
-            else:
-                pass
+                When in 'precipitation' mode, data querying is based on 10 scans per hour.
             
-        _fetch_nexrad2(
-                       site_id,
-                       hours=hours,
-                       path=custom_directory,
-                       proxies=proxy,
-                       clear_recycle_bin=clear_recycle_bin,
-                       mode=mode
-                       )
-        
-        if custom_directory != "none" and custom_directory != None:
-            _click.echo(f"{site_id.upper()} NEXRAD II data saved to {custom_directory}")
-        else:
-            if current_os != "Windows":
-                _click.echo(f"Latest {site_id.upper()} NEXRAD II data saved to Radar Data/Latest")
-            else:
-                _click.echo(rf"Latest {site_id.upper()} NEXRAD II data saved to Radar Data\Latest")
+                When in 'clear air' mode, data querying is based on 7 scans per hour.
+            
+            """)
+    )
 
-    except SystemExit as e:
-        _command_error_message()
-        _sys.exit(1)
-        
-        
-@nexrad2_data.command("archived")
-@_click.option(
-    "--site_id",
-    "-sid",
-    type=str,
-    help="The ID for the NEXRAD II Radar site."
-)
+    @_click.option(
+        "--custom_directory",
+        "-cdir",
+        default="none",
+        show_default=True,
+        type=str,
+        help="If you want to save the files in a custom directory - enter the full path here."
+    )
 
-@_click.option(
-    "--start_time",
-    "-st",
-    type=str,
-    help=("""The time in 'YYYY-mm-dd:HH' of the last scan in the set.
-        
-            Example: start_time='2025-08-01:18' & hours = 3 = Radar scans from 2025-08-01:15 - 2025-08-01:18. 
-          
-          """)
-)
-
-@_click.option(
-    "--hours",
-    "-hr",
-    default=3,
-    show_default=True,
-    type=int,
-    help="Default=3. The amount of hours to query (hours=3 --> current to current -3 hours)."
-)
-
-@_click.option(
-    "--mode",
-    "-m",
-    default='precipitation',
-    show_default=True,
-    type=str,
-    help=("""Default='precipitation'. 
-    
-            When in 'precipitation' mode, data querying is based on 10 scans per hour.
-        
-            When in 'clear air' mode, data querying is based on 7 scans per hour.
-        
-        """)
-)
-
-@_click.option(
-    "--custom_directory",
-    "-cdir",
-    default="none",
-    show_default=True,
-    type=str,
-    help="If you want to save the files in a custom directory - enter the full path here."
-)
-
-@_click.option(
-    "--clear_recycle_bin",
-    "-cr",
-    default=False,
-    show_default=True,
-    type=bool,
-    help="To clear your recycle bin with each run of the script set to True."
-)
+    @_click.option(
+        "--clear_recycle_bin",
+        "-cr",
+        default=False,
+        show_default=True,
+        type=bool,
+        help="To clear your recycle bin with each run of the script set to True."
+    )
 
 
-@_click.option(
-    "--proxy",
-    default=None,
-    callback=lambda _, __, v: _parse_proxy(v),
-    show_default=True,
-    help="Proxy URL (e.g., https://address:port). Default: no proxy.",
-)
+    @_click.option(
+        "--proxy",
+        default=None,
+        callback=lambda _, __, v: _parse_proxy(v),
+        show_default=True,
+        help="Proxy URL (e.g., https://address:port). Default: no proxy.",
+    )
 
-def fetch_archived_nexrad2_data(site_id,
-                                start_time,
+    def fetch_latest_nexrad2_data(site_id,
                                 hours,
                                 mode,
                                 custom_directory,
                                 clear_recycle_bin,
                                 proxy):
-    
-    
-    try:
-        if custom_directory.lower() == "none":
-            custom_directory = f"Radar Data/Archive"
-        else:
-            custom_directory = custom_directory
-            if current_os == "Windows":
-                custom_directory = custom_directory.replace('/', '\\')
-            else:
-                pass
-            
-        _fetch_archived_nexrad2(
-                       site_id,
-                       start_time,
-                       hours=hours,
-                       path=custom_directory,
-                       proxies=proxy,
-                       clear_recycle_bin=clear_recycle_bin,
-                       mode=mode
-                       )
         
-        if custom_directory != "none" and custom_directory != None:
-            _click.echo(f"{site_id.upper()} NEXRAD II data for {start_time} saved to {custom_directory}")
-        else:
-            if current_os != "Windows":
-                _click.echo(f"{site_id.upper()} NEXRAD II data for {start_time}  saved to Radar Data/Archive")
+        
+        try:
+            if custom_directory.lower() == "none":
+                custom_directory = f"Radar Data/Latest"
             else:
-                _click.echo(rf"{site_id.upper()} NEXRAD II data for {start_time}  saved to Radar Data\Archive")
+                custom_directory = custom_directory
+                if current_os == "Windows":
+                    custom_directory = custom_directory.replace('/', '\\')
+                else:
+                    pass
+                
+            _fetch_nexrad2(
+                        site_id,
+                        hours=hours,
+                        path=custom_directory,
+                        proxies=proxy,
+                        clear_recycle_bin=clear_recycle_bin,
+                        mode=mode
+                        )
+            
+            if custom_directory != "none" and custom_directory != None:
+                _click.echo(f"{site_id.upper()} NEXRAD II data saved to {custom_directory}")
+            else:
+                if current_os != "Windows":
+                    _click.echo(f"Latest {site_id.upper()} NEXRAD II data saved to Radar Data/Latest")
+                else:
+                    _click.echo(rf"Latest {site_id.upper()} NEXRAD II data saved to Radar Data\Latest")
 
-    except SystemExit as e:
-        _command_error_message()
-        _sys.exit(1)
+        except SystemExit as e:
+            _command_error_message()
+            _sys.exit(1)
+            
+            
+    @nexrad2_data.command("archived")
+    @_click.option(
+        "--site_id",
+        "-sid",
+        type=str,
+        help="The ID for the NEXRAD II Radar site."
+    )
+
+    @_click.option(
+        "--start_time",
+        "-st",
+        type=str,
+        help=("""The time in 'YYYY-mm-dd:HH' of the last scan in the set.
+            
+                Example: start_time='2025-08-01:18' & hours = 3 = Radar scans from 2025-08-01:15 - 2025-08-01:18. 
+            
+            """)
+    )
+
+    @_click.option(
+        "--hours",
+        "-hr",
+        default=3,
+        show_default=True,
+        type=int,
+        help="Default=3. The amount of hours to query (hours=3 --> current to current -3 hours)."
+    )
+
+    @_click.option(
+        "--mode",
+        "-m",
+        default='precipitation',
+        show_default=True,
+        type=str,
+        help=("""Default='precipitation'. 
+        
+                When in 'precipitation' mode, data querying is based on 10 scans per hour.
+            
+                When in 'clear air' mode, data querying is based on 7 scans per hour.
+            
+            """)
+    )
+
+    @_click.option(
+        "--custom_directory",
+        "-cdir",
+        default="none",
+        show_default=True,
+        type=str,
+        help="If you want to save the files in a custom directory - enter the full path here."
+    )
+
+    @_click.option(
+        "--clear_recycle_bin",
+        "-cr",
+        default=False,
+        show_default=True,
+        type=bool,
+        help="To clear your recycle bin with each run of the script set to True."
+    )
+
+
+    @_click.option(
+        "--proxy",
+        default=None,
+        callback=lambda _, __, v: _parse_proxy(v),
+        show_default=True,
+        help="Proxy URL (e.g., https://address:port). Default: no proxy.",
+    )
+
+    def fetch_archived_nexrad2_data(site_id,
+                                    start_time,
+                                    hours,
+                                    mode,
+                                    custom_directory,
+                                    clear_recycle_bin,
+                                    proxy):
+        
+        
+        try:
+            if custom_directory.lower() == "none":
+                custom_directory = f"Radar Data/Archive"
+            else:
+                custom_directory = custom_directory
+                if current_os == "Windows":
+                    custom_directory = custom_directory.replace('/', '\\')
+                else:
+                    pass
+                
+            _fetch_archived_nexrad2(
+                        site_id,
+                        start_time,
+                        hours=hours,
+                        path=custom_directory,
+                        proxies=proxy,
+                        clear_recycle_bin=clear_recycle_bin,
+                        mode=mode
+                        )
+            
+            if custom_directory != "none" and custom_directory != None:
+                _click.echo(f"{site_id.upper()} NEXRAD II data for {start_time} saved to {custom_directory}")
+            else:
+                if current_os != "Windows":
+                    _click.echo(f"{site_id.upper()} NEXRAD II data for {start_time}  saved to Radar Data/Archive")
+                else:
+                    _click.echo(rf"{site_id.upper()} NEXRAD II data for {start_time}  saved to Radar Data\Archive")
+
+        except SystemExit as e:
+            _command_error_message()
+            _sys.exit(1)
         
 # ---------------------------------------------------------------------
 # Entry point

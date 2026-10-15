@@ -143,8 +143,6 @@ def rtma():
     retry downloading the data. 
     
     """
-    pass
-
 
 @realtime_mesoscale_analysis.command("latest")
 @_click.option(

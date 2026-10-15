@@ -61,8 +61,7 @@ def rtma():
     """Real Time Mesoscale Analysis (RTMA) Client.
     
     
-    Archived Required Commands
-    --------------------------
+    **Archived Required Commands**
     
     -d = Date. The date of the model run in the format of YYYY-mm-dd.
     
@@ -73,9 +72,7 @@ def rtma():
         (i.e. for the 12z run set -r 12)
     
     
-    Globally Valid Commands (valid for both "latest" and "archived")
-    
-    -------------------------------------------------------
+    **Globally Valid Commands (valid for both "latest" and "archived")**
     
     -loc = Location (Default='conus'). Locations: 1) `conus`, 2) `ak` (Alaska), 3) `hi` (Hawaii), 4) `pr` (Puerto Rico), 5) `gu` (Guam).
     
@@ -119,8 +116,7 @@ def rtma():
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=rtma.nc)
     
     
-    Commands Only Valid for "latest"
-    --------------------------------
+    **Commands Only Valid for "latest"**
     
     -s = Source (Default=noaa). 
     

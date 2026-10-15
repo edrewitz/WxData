@@ -34,7 +34,7 @@ except Exception as e:
     
 def download_current_single_station_nexrad2_radar_data(site_id,
                                                         hours=3,
-                                                        path=f"Radar Data",
+                                                        path=f"Radar Data/Latest",
                                                         proxies=None,
                                                         chunk_size=8192,
                                                         clear_recycle_bin=False,
@@ -53,7 +53,7 @@ def download_current_single_station_nexrad2_radar_data(site_id,
     
     1) hours (Integer) - Default=3. The amount of hours to query (hours=3 --> current to current -3 hours).
     
-    2) path (String) - Default="Radar Data". The parent directory of the radar data on the local computer.
+    2) path (String) - Default="Radar Data/Latest". The parent directory of the radar data on the local computer.
     
     3) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 

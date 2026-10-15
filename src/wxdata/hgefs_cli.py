@@ -48,18 +48,13 @@ def hgefs():
     """
     Hybrid Global Ensemble Forecast System (HGEFS) Client.
     
-    
-    Valid Commands
-    
-    --------------
+    **Valid Commands**
     
     -c = Category (Default='mean')
     
     This determines the category of ensemble data 
     
-    Categories
-    
-    ----------
+    **Categories**
     
     1) mean
         
@@ -110,9 +105,7 @@ def hgefs():
     
     `wxdata-hgefs fetch latest -v geopotential_height -l 500 --netcdf True --ncdir HGEFS/Mean/NETCDF --ncfname gefs_gh500.nc`
     
-    Variables
-    
-    ---------
+    **Variables**
     
     'geopotential height'
 
@@ -145,9 +138,7 @@ def hgefs():
     
     This corresponds to the type of level.
                                                                 
-    Level Types
-    
-    -----------
+    **Level Types**
     
     'surface'
     
@@ -192,8 +183,7 @@ def hgefs():
     show_default=True,
     help=("""The category of the ensemble data. Default='mean'.  
     
-            Valid categories
-            -----------------
+            **Valid categories**
             
             1) mean
                         

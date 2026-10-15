@@ -56,11 +56,9 @@ def metar_data():
 @metar_data.group(name='fetch')
 def metars():
     """
-    Observed Upper-Air Soundings Client
+    METAR Observations Soundings Client
     
-    Valid Commands
-    
-    --------------
+    **Valid Commands**
     
     -cr = Clear Recycle Bin (Default=False).
     

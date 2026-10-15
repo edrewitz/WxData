@@ -48,9 +48,7 @@ def sounding():
     """
     Observed Upper-Air Soundings Client
     
-    Globally Valid Commands
-    
-    -----------------------
+    **Globally Valid Commands**
     
     -stid = Station ID. The station ID for the observed sounding site.
     
@@ -75,23 +73,17 @@ def sounding():
     
     `wxdata-soundings fetch latest -stid okx --proxy https://proxy-server-address:proxy-server-port`
     
-    Extra Commands For Downloading Archived Data
-    
-    ---------------------------------------------
+    **Extra Commands For Downloading Archived Data**
     
     -d = Datetime. The date and time of the observed sounding in the format 'YYYY-mm-dd:HH'
     
     Example: Let's use the WxData CLI to download the observed upper-air sounding for the El Reno Tornado
     
-    No Proxy
-    
-    --------
+    *No Proxy*
     
     `wxdata-soundings fetch archived -stid oun -d 2013-05-31:18`
     
-    Proxy
-    
-    -----
+    *Proxy*
     
     `wxdata-soundings fetch archived -stid oun -d 2013-05-31:18 --proxy https://proxy-server-address:proxy-server-port`
     

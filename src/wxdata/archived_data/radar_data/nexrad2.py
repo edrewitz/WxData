@@ -106,6 +106,12 @@ def download_archived_single_station_nexrad2_radar_data(site_id,
     except Exception as e:
         pass
     
+    try:
+        for file in _os.listdir(f"{path}/{site_id.upper()}/{start_time.strftime('%Y%m%d%H')}"):
+            _os.remove(f"{path}/{site_id.upper()}/{start_time.strftime('%Y%m%d%H')}/{file}")
+    except Exception as e:
+        pass
+    
     data = _scan_radar_directory(site_id,
                                     start_time, 
                                     hours,
@@ -149,6 +155,7 @@ def download_archived_single_station_nexrad2_radar_data(site_id,
             
         files.reverse()
         radars = []
+        
         for file in files:
             radar = pyart.io.read(_Path(f"{path}/{site_id.upper()}/{start_time.strftime('%Y%m%d%H')}/{file}"))
             radars.append(radar)

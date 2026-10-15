@@ -111,7 +111,7 @@ def download_current_single_station_nexrad2_radar_data(site_id,
                                     mode,
                                     proxies)
     
-        
+    
     if len(data) == 2:
         for filename in data[1]:
             _client.get_aws_open_data(data[0],

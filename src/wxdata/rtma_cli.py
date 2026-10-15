@@ -56,7 +56,7 @@ def realtime_mesoscale_analysis():
 # ---------------------------------------------------------------------
 # RTMA Commands
 # ---------------------------------------------------------------------
-@realtime_mesoscale_analysis.group()
+@realtime_mesoscale_analysis.group(name='fetch')
 def rtma():
     """Real Time Mesoscale Analysis (RTMA) Client.
     
@@ -105,7 +105,7 @@ def rtma():
     
     Example: 
     
-    `wxdata-rtma latest --proxy https://proxy-server-address:proxy-server-port`
+    `wxdata-rtma fetch latest --proxy https://proxy-server-address:proxy-server-port`
     
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     

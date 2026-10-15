@@ -157,7 +157,8 @@ def fetch_latest_nexrad2_data(site_id,
                     path=custom_directory,
                     proxies=proxy,
                     clear_recycle_bin=clear_recycle_bin,
-                    mode=mode
+                    mode=mode,
+                    extract_radar_objects=False
                     )
         
         if custom_directory != "none" and custom_directory != None:
@@ -269,7 +270,8 @@ def fetch_archived_nexrad2_data(site_id,
                     path=custom_directory,
                     proxies=proxy,
                     clear_recycle_bin=clear_recycle_bin,
-                    mode=mode
+                    mode=mode,
+                    extract_radar_objects=False
                     )
         
         if custom_directory != "none" and custom_directory != None:

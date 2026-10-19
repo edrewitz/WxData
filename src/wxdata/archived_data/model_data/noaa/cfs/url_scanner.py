@@ -216,7 +216,7 @@ def cfs_pressure_url_scanner(date,
         time = init + timedelta(hours=h)
         url = f"https://noaa-cfs-pds.s3.amazonaws.com/cfs.{date.strftime('%Y%m%d')}/{run}/6hrly_grib_01/pgbf{time.strftime('%Y%m%d%H')}.01.{init.strftime('%Y%m%d%H')}.grb2"
         idx_url = f"https://noaa-cfs-pds.s3.amazonaws.com/cfs.{date.strftime('%Y%m%d')}/{run}/6hrly_grib_01/pgbf{time.strftime('%Y%m%d%H')}.01.{init.strftime('%Y%m%d%H')}.grb2.idx"
-        file = f"flxf{time.strftime('%Y%m%d%H')}.01.{init.strftime('%Y%m%d%H')}.grb2"
+        file = f"pgbf{time.strftime('%Y%m%d%H')}.01.{init.strftime('%Y%m%d%H')}.grb2"
         urls.append(url)
         files.append(file)
         idx_urls.append(idx_url)

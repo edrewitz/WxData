@@ -140,10 +140,8 @@ def gfs0p25():
     
     Here is a sample of how to query geopotential height and temperature `gfs 0p25 latest -v geopotential_height -v temperature`
     
-    Primary Variables
-    
-    ------------------
-    
+    **Primary Variables**
+
     best_lifted_index
     
     absolute_vorticity
@@ -322,9 +320,7 @@ def gfs0p25():
     
     wilting_point
     
-    Secondary Variables
-    
-    -------------------
+    **Secondary Variables**
     
     absolute_vorticity
 
@@ -381,6 +377,14 @@ def gfs0p25():
     
     The default setting of levels assume pressure levels are being used and that the category is set to primary.
     
+    -ct = Convert Temperature (Default=True).
+    
+    When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit.
+    
+    -tu = Temperature Units (Default=Celsius).
+    
+    When -ct True this is where you declare the units for temperature to be converted to. 
+    
     -lt = Level Type (Default=pressure).
     
     This corresponds to the type of level.
@@ -389,9 +393,7 @@ def gfs0p25():
     
     Secondary Levels: 875, 825, 775, 725, 675, 625, 575, 525, 475, 425, 375, 325, 275, 225, 175, 125, 7, 5, 3, 2, 1
     
-    Level Types
-    
-    -----------
+    **Level Types**
     
     pressure
 
@@ -549,6 +551,24 @@ def gfs0p25():
     show_default=True,
     type=str,
     help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"
+)
+
+@_click.option(
+    "--convert_temperature",
+    "-ct",
+    default=True,
+    show_default=True,
+    type=bool,
+    help="When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit."
+)
+
+@_click.option(
+    "--convert_to",
+    "-tu",
+    default='celsius',
+    show_default=True,
+    type=str,
+    help="When -ct True this is where you declare the units for temperature to be converted to."
 )
 
 @_click.option(
@@ -710,7 +730,9 @@ def gfs0p25_fetch(final_forecast_hour,
                   western_bound,
                   eastern_bound,
                   northern_bound,
-                  southern_bound):
+                  southern_bound,
+                  convert_temperature,
+                  convert_to):
     
     """Downloads Latest GFS 0.25x0.25 Data"""
     
@@ -738,6 +760,7 @@ def gfs0p25_fetch(final_forecast_hour,
         level_type = level_type.replace('_', ' ')
         
         type = type.lower()
+        convert_to = convert_to.lower()
         
         if type == 'primary':
         
@@ -758,7 +781,9 @@ def gfs0p25_fetch(final_forecast_hour,
                             western_bound=western_bound,
                             eastern_bound=eastern_bound,
                             northern_bound=northern_bound,
-                            southern_bound=southern_bound)
+                            southern_bound=southern_bound,
+                            convert_temperature=convert_temperature,
+                            convert_to=convert_to)
         else:
             
             _fetch_gfs_0p25_secondary_parameters(final_forecast_hour=final_forecast_hour,
@@ -778,7 +803,9 @@ def gfs0p25_fetch(final_forecast_hour,
                             western_bound=western_bound,
                             eastern_bound=eastern_bound,
                             northern_bound=northern_bound,
-                            southern_bound=southern_bound)
+                            southern_bound=southern_bound,
+                            convert_temperature=convert_temperature,
+                            convert_to=convert_to)
         
         if custom_directory != "none" and custom_directory != None:
             _click.echo(f"GFS0P25 {type.upper()} latest download complete, data files saved to {custom_directory}")
@@ -867,6 +894,24 @@ def gfs0p25_fetch(final_forecast_hour,
     show_default=True,
     type=str,
     help="Default aws is for Amazon Web Services - set to google to switch to Google Cloud"
+)
+
+@_click.option(
+    "--convert_temperature",
+    "-ct",
+    default=True,
+    show_default=True,
+    type=bool,
+    help="When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit."
+)
+
+@_click.option(
+    "--convert_to",
+    "-tu",
+    default='celsius',
+    show_default=True,
+    type=str,
+    help="When -ct True this is where you declare the units for temperature to be converted to."
 )
 
 @_click.option(
@@ -1029,7 +1074,9 @@ def archived_gfs0p25_fetch(
                   western_bound,
                   eastern_bound,
                   northern_bound,
-                  southern_bound):
+                  southern_bound,
+                  convert_temperature,
+                  convert_to):
     
     """Downloads Archived GFS 0.25x0.25 Data For A Specified Date and Run"""
     
@@ -1051,6 +1098,7 @@ def archived_gfs0p25_fetch(
                 pass
         
         level_type = level_type.replace('_', ' ')
+        convert_to = convert_to.lower()
         
         type = type.lower()
         
@@ -1075,7 +1123,9 @@ def archived_gfs0p25_fetch(
                             western_bound=western_bound,
                             eastern_bound=eastern_bound,
                             northern_bound=northern_bound,
-                            southern_bound=southern_bound)
+                            southern_bound=southern_bound,
+                            convert_temperature=convert_temperature,
+                            convert_to=convert_to)
             
         else:
             
@@ -1098,7 +1148,9 @@ def archived_gfs0p25_fetch(
                             western_bound=western_bound,
                             eastern_bound=eastern_bound,
                             northern_bound=northern_bound,
-                            southern_bound=southern_bound)
+                            southern_bound=southern_bound,
+                            convert_temperature=convert_temperature,
+                            convert_to=convert_to)
         
         d = _parse_date(date)
         _click.echo(f"GFS0P25 {type.upper()} download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {custom_directory}")
@@ -1135,6 +1187,7 @@ def gfs0p50():
     -s = Source (Default=noaa). 
     
     Selects the primary data server to use.
+    
     If the primary server is unavailable the client will rotate and try other servers.
     
     ***Server Choices For Latest Data***
@@ -1377,12 +1430,19 @@ def gfs0p50():
     
     The default setting of levels assume pressure levels are being used and that the category is set to primary.
     
+    -ct = Convert Temperature (Default=True).
+    
+    When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit.
+    
+    -tu = Temperature Units (Default=Celsius).
+    
+    When -ct True this is where you declare the units for temperature to be converted to. 
+    
     -lt = Level Type (Default=pressure).
     
     This corresponds to the type of level.
     
     Levels: 1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10
-    
     
     **Level Types**
 
@@ -1470,6 +1530,24 @@ def gfs0p50():
     show_default=True,
     type=str,
     help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"
+)
+
+@_click.option(
+    "--convert_temperature",
+    "-ct",
+    default=True,
+    show_default=True,
+    type=bool,
+    help="When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit."
+)
+
+@_click.option(
+    "--convert_to",
+    "-tu",
+    default='celsius',
+    show_default=True,
+    type=str,
+    help="When -ct True this is where you declare the units for temperature to be converted to."
 )
 
 @_click.option(
@@ -1630,7 +1708,9 @@ def gfs0p50_fetch(final_forecast_hour,
                   western_bound,
                   eastern_bound,
                   northern_bound,
-                  southern_bound):
+                  southern_bound,
+                  convert_temperature,
+                  convert_to):
     
     """Downloads Latest GFS 0.50x0.50 Data"""
     
@@ -1656,7 +1736,7 @@ def gfs0p50_fetch(final_forecast_hour,
             vars_fixed.append(v)
             
         level_type = level_type.replace('_', ' ')
-                
+        convert_to = convert_to.lower()
         
         _fetch_gfs_0p50(final_forecast_hour=final_forecast_hour,
                         process_data=process,
@@ -1675,7 +1755,9 @@ def gfs0p50_fetch(final_forecast_hour,
                         western_bound=western_bound,
                         eastern_bound=eastern_bound,
                         northern_bound=northern_bound,
-                        southern_bound=southern_bound)
+                        southern_bound=southern_bound,
+                        convert_temperature=convert_temperature,
+                        convert_to=convert_to)
         
         if custom_directory != "none" and custom_directory != None:
             _click.echo(f"GFS0P50 latest download complete, data files saved to {custom_directory}")
@@ -1747,6 +1829,24 @@ def gfs0p50_fetch(final_forecast_hour,
     show_default=True,
     type=str,
     help="Default aws is for Amazon Web Services - set to google to switch to Google Cloud"
+)
+
+@_click.option(
+    "--convert_temperature",
+    "-ct",
+    default=True,
+    show_default=True,
+    type=bool,
+    help="When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit."
+)
+
+@_click.option(
+    "--convert_to",
+    "-tu",
+    default='celsius',
+    show_default=True,
+    type=str,
+    help="When -ct True this is where you declare the units for temperature to be converted to."
 )
 
 @_click.option(
@@ -1908,7 +2008,9 @@ def archived_gfs0p50_fetch(
                   western_bound,
                   eastern_bound,
                   northern_bound,
-                  southern_bound):
+                  southern_bound,
+                  convert_temperature,
+                  convert_to):
     
     """Downloads Archived GFS 0.50x0.50 Data For A Specified Date and Run"""
     
@@ -1924,7 +2026,7 @@ def archived_gfs0p50_fetch(
             pass
 
         level_type = level_type.replace('_', ' ')
-        
+        convert_to = convert_to.lower()
         
         
         _fetch_archived_gfs_0p50(
@@ -1946,7 +2048,9 @@ def archived_gfs0p50_fetch(
                         western_bound=western_bound,
                         eastern_bound=eastern_bound,
                         northern_bound=northern_bound,
-                        southern_bound=southern_bound)
+                        southern_bound=southern_bound,
+                        convert_temperature=convert_temperature,
+                        convert_to=convert_to)
         
         d = _parse_date(date)
         _click.echo(f"GFS0P50 download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {custom_directory}")

@@ -95,6 +95,14 @@ def rtma():
     If the user wishes to build their own directory to hold the data files set -cd directory_branch_path.
     The default path is f:RTMA/ANALYSIS. 
     
+    -ct = Convert Temperature (Default=True).
+    
+    When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit.
+    
+    -tu = Temperature Units (Default=Celsius).
+    
+    When -ct True this is where you declare the units for temperature to be converted to. 
+    
     --process This flag when set to True will process the data in addition to downloading the data. (Default=True)
     
     --proxy = Proxy Server (Default=None).
@@ -189,9 +197,28 @@ def rtma():
 
 @_click.option(
     "--source",
+    "-s",
     default="noaa",
     show_default=True,
     help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services"
+)
+
+@_click.option(
+    "--convert_temperature",
+    "-ct",
+    default=True,
+    show_default=True,
+    type=bool,
+    help="When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit."
+)
+
+@_click.option(
+    "--convert_to",
+    "-tu",
+    default='celsius',
+    show_default=True,
+    type=str,
+    help="When -ct True this is where you declare the units for temperature to be converted to."
 )
 
 @_click.option(
@@ -248,9 +275,12 @@ def rtma_fetch(location,
                process,
                netcdf,
                ncdir,
-               ncfname):
+               ncfname,
+               convert_temperature,
+               convert_to):
     """Download Latest Real Time Mesoscale Analysis."""
     
+    convert_to = convert_to.lower()
     location = location.lower()
     category = category.lower()
     if category == 'forecast':
@@ -284,6 +314,8 @@ def rtma_fetch(location,
             to_netcdf=netcdf,
             netcdf_path=ncdir,
             netcdf_filename=ncfname,
+            convert_temperature=convert_temperature,
+            convert_to=convert_to,
             return_values=False
         )
 
@@ -358,6 +390,24 @@ def rtma_fetch(location,
 )
 
 @_click.option(
+    "--convert_temperature",
+    "-ct",
+    default=True,
+    show_default=True,
+    type=bool,
+    help="When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit."
+)
+
+@_click.option(
+    "--convert_to",
+    "-tu",
+    default='celsius',
+    show_default=True,
+    type=str,
+    help="When -ct True this is where you declare the units for temperature to be converted to."
+)
+
+@_click.option(
     "--process",
     default=True,
     type=bool,
@@ -412,9 +462,12 @@ def archived_rtma_fetch(
                process,
                netcdf,
                ncdir,
-               ncfname):
+               ncfname,
+               convert_temperature,
+               convert_to):
     """Download Archived Real Time Mesoscale Analysis."""
     
+    convert_to.lower()
     location = location.lower()
     category = category.lower()
     if category == 'forecast':
@@ -448,6 +501,8 @@ def archived_rtma_fetch(
             to_netcdf=netcdf,
             netcdf_path=ncdir,
             netcdf_filename=ncfname,
+            convert_temperature=convert_temperature,
+            convert_to=convert_to,
             return_values=False
         )
         

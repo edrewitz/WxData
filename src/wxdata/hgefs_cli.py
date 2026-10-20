@@ -134,6 +134,14 @@ def hgefs():
     
     The default setting of levels assume height above ground levels are being used and that the category is set to primary.
     
+    -ct = Convert Temperature (Default=True).
+    
+    When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit.
+    
+    -tu = Temperature Units (Default=Celsius).
+    
+    When -ct True this is where you declare the units for temperature to be converted to. 
+    
     -lt = Level Type (Default=height above ground).
     
     This corresponds to the type of level.
@@ -218,6 +226,24 @@ def hgefs():
     show_default=True,
     type=bool,
     help="To bypass the safety scanner set --clear data to False."
+)
+
+@_click.option(
+    "--convert_temperature",
+    "-ct",
+    default=True,
+    show_default=True,
+    type=bool,
+    help="When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit."
+)
+
+@_click.option(
+    "--convert_to",
+    "-tu",
+    default='celsius',
+    show_default=True,
+    type=str,
+    help="When -ct True this is where you declare the units for temperature to be converted to."
 )
 
 @_click.option(
@@ -393,7 +419,9 @@ def hgefs_fetch(final_forecast_hour,
                   western_bound,
                   eastern_bound,
                   northern_bound,
-                  southern_bound):
+                  southern_bound,
+                  convert_temperature,
+                  convert_to):
     
     """Downloads Latest HGEFS Data"""
     
@@ -422,6 +450,7 @@ def hgefs_fetch(final_forecast_hour,
                 v = v
             vars_fixed.append(v)
             
+        convert_to = convert_to.lower()
         level_type = level_type.replace('_', ' ')
         category=category.lower()
         if category == 'average':
@@ -446,7 +475,9 @@ def hgefs_fetch(final_forecast_hour,
                         western_bound=western_bound,
                         eastern_bound=eastern_bound,
                         northern_bound=northern_bound,
-                        southern_bound=southern_bound)
+                        southern_bound=southern_bound,
+                        convert_temperature=convert_temperature,
+                        convert_to=convert_to)
         
         if custom_directory != "none" and custom_directory != None:
             _click.echo(f"HGEFS latest download complete, data files saved to {custom_directory}")

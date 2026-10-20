@@ -70,9 +70,8 @@ def gefs0p50():
     """
     Global Ensemble Forecast System (GEFS) 0.50x0.50 Client.
     
-    Archived Required Commands
-    --------------------------
-    
+    **Archived Required Commands**
+
     -d = Date. The date of the model run in the format of YYYY-mm-dd.
     
         (i.e. December 25th, 2025 should be entered as -d 2025-12-25)
@@ -82,10 +81,8 @@ def gefs0p50():
         (i.e. for the 12z run set -r 12)
     
     
-    Globally Valid Commands (valid for both "latest" and "archived")
-    
-    -------------------------------------------------------
-    
+    **Globally Valid Commands (valid for both "latest" and "archived")**
+
     -t = type (Default=primary).
     
     This determines the type of variables and levels.
@@ -94,9 +91,7 @@ def gefs0p50():
     
     This determines the category of ensemble data 
     
-    Categories
-    
-    ----------
+    **Categories**
     
     1) mean
     
@@ -154,9 +149,7 @@ def gefs0p50():
     
     Here is a sample of how to query geopotential height and temperature `gefs 0p25 latest -v geopotential_height -v temperature`
     
-    Primary Variables
-    
-    ------------------
+    **Primary Variables**
     
     'total precipitation'
     
@@ -218,9 +211,7 @@ def gefs0p50():
     
     'water equivalent of accumulated snow depth'
     
-    Secondary Variables
-    
-    -------------------
+    **Secondary Variables**
     
     'best lifted index'
     
@@ -381,10 +372,16 @@ def gefs0p50():
     Secondary Levels: Default=None -> level_type='surface'. 
     
     Example: level_type='height above ground' & levels=2 -> 2-meter above ground
-                                                                
-    Level Types
     
-    -----------
+    -ct = Convert Temperature (Default=True).
+    
+    When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit.
+    
+    -tu = Temperature Units (Default=Celsius).
+    
+    When -ct True this is where you declare the units for temperature to be converted to. 
+                                                                
+    **Level Types**
     
     'pressure'
     
@@ -420,8 +417,7 @@ def gefs0p50():
     
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=gefs_0p50.nc)
     
-    Commands Only Valid for "latest"
-    --------------------------------
+    **Commands Only Valid for "latest"**
     
     -cd = Clear Data (Default=False).
     
@@ -537,6 +533,24 @@ def gefs0p50():
     show_default=True,
     type=str,
     help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"
+)
+
+@_click.option(
+    "--convert_temperature",
+    "-ct",
+    default=True,
+    show_default=True,
+    type=bool,
+    help="When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit."
+)
+
+@_click.option(
+    "--convert_to",
+    "-tu",
+    default='celsius',
+    show_default=True,
+    type=str,
+    help="When -ct True this is where you declare the units for temperature to be converted to."
 )
 
 @_click.option(
@@ -700,7 +714,9 @@ def gefs0p50_fetch(final_forecast_hour,
                   western_bound,
                   eastern_bound,
                   northern_bound,
-                  southern_bound):
+                  southern_bound,
+                  convert_temperature,
+                  convert_to):
     
     """Downloads Latest GEFS 0.50x0.50 Data"""
     
@@ -729,6 +745,7 @@ def gefs0p50_fetch(final_forecast_hour,
         
         category = category.lower()
         type = type.lower()
+        convert_to = convert_to.lower()
         
         if type == 'primary':
         
@@ -751,7 +768,9 @@ def gefs0p50_fetch(final_forecast_hour,
                             western_bound=western_bound,
                             eastern_bound=eastern_bound,
                             northern_bound=northern_bound,
-                            southern_bound=southern_bound)
+                            southern_bound=southern_bound,
+                            convert_temperature=convert_temperature,
+                            convert_to=convert_to)
         else:
             
             _fetch_gefs_0p50_secondary_parameters(cat=category,
@@ -773,7 +792,9 @@ def gefs0p50_fetch(final_forecast_hour,
                                                     western_bound=western_bound,
                                                     eastern_bound=eastern_bound,
                                                     northern_bound=northern_bound,
-                                                    southern_bound=southern_bound)
+                                                    southern_bound=southern_bound,
+                                                    convert_temperature=convert_temperature,
+                                                    convert_to=convert_to)
         
         if custom_directory != "none" and custom_directory != None:
             _click.echo(f"GEFS0P50 {category.upper()} latest download complete, data files saved to {custom_directory}")
@@ -898,6 +919,24 @@ def gefs0p50_fetch(final_forecast_hour,
     show_default=True,
     type=str,
     help="Default aws is for Amazon Web Services - set to google to switch to Google Cloud"
+)
+
+@_click.option(
+    "--convert_temperature",
+    "-ct",
+    default=True,
+    show_default=True,
+    type=bool,
+    help="When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit."
+)
+
+@_click.option(
+    "--convert_to",
+    "-tu",
+    default='celsius',
+    show_default=True,
+    type=str,
+    help="When -ct True this is where you declare the units for temperature to be converted to."
 )
 
 @_click.option(
@@ -1062,7 +1101,9 @@ def archived_gefs0p50_fetch(
                   western_bound,
                   eastern_bound,
                   northern_bound,
-                  southern_bound):
+                  southern_bound,
+                  convert_temperature,
+                  convert_to):
     
     """Downloads Archived GEFS 0.50x0.50 Data For A Specified Date and Run"""
     
@@ -1087,6 +1128,7 @@ def archived_gefs0p50_fetch(
         
         category = category.lower()
         type = type.lower()
+        convert_to = convert_to.lower()
         
         if type == 'primary':
         
@@ -1111,7 +1153,9 @@ def archived_gefs0p50_fetch(
                             western_bound=western_bound,
                             eastern_bound=eastern_bound,
                             northern_bound=northern_bound,
-                            southern_bound=southern_bound)
+                            southern_bound=southern_bound,
+                            convert_temperature=convert_temperature,
+                            convert_to=convert_to)
             
         else:
             
@@ -1136,7 +1180,9 @@ def archived_gefs0p50_fetch(
                             western_bound=western_bound,
                             eastern_bound=eastern_bound,
                             northern_bound=northern_bound,
-                            southern_bound=southern_bound)
+                            southern_bound=southern_bound,
+                            convert_temperature=convert_temperature,
+                            convert_to=convert_to)
         
         d = _parse_date(date)
         _click.echo(f"GEFS0P50 {category.upper()} download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {custom_directory}")
@@ -1305,6 +1351,14 @@ def gefs0p25():
     
     The default setting of levels assume height above ground levels are being used and that the category is set to primary.
     
+    -ct = Convert Temperature (Default=True).
+    
+    When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit.
+    
+    -tu = Temperature Units (Default=Celsius).
+    
+    When -ct True this is where you declare the units for temperature to be converted to. 
+    
     -lt = Level Type (Default=height above ground).
     
     This corresponds to the type of level.
@@ -1442,6 +1496,24 @@ def gefs0p25():
     show_default=True,
     type=str,
     help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"
+)
+
+@_click.option(
+    "--convert_temperature",
+    "-ct",
+    default=True,
+    show_default=True,
+    type=bool,
+    help="When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit."
+)
+
+@_click.option(
+    "--convert_to",
+    "-tu",
+    default='celsius',
+    show_default=True,
+    type=str,
+    help="When -ct True this is where you declare the units for temperature to be converted to."
 )
 
 @_click.option(
@@ -1589,7 +1661,9 @@ def gefs0p25_fetch(members,
                   western_bound,
                   eastern_bound,
                   northern_bound,
-                  southern_bound):
+                  southern_bound,
+                  convert_temperature,
+                  convert_to):
     
     """Downloads Latest GEFS 0.25x0.25 Data"""
     
@@ -1615,7 +1689,8 @@ def gefs0p25_fetch(members,
             vars_fixed.append(v)
             
         level_type = level_type.replace('_', ' ')
-        category = category.lower()        
+        category = category.lower()
+        convert_to = convert_to.lower()        
         
         _fetch_gefs_0p25(cat=category,
                          members=members,
@@ -1636,7 +1711,9 @@ def gefs0p25_fetch(members,
                         western_bound=western_bound,
                         eastern_bound=eastern_bound,
                         northern_bound=northern_bound,
-                        southern_bound=southern_bound)
+                        southern_bound=southern_bound,
+                        convert_temperature=convert_temperature,
+                        convert_to=convert_to)
         
         if custom_directory != "none" and custom_directory != None:
             _click.echo(f"GEFS0P25 latest download complete, data files saved to {custom_directory}")
@@ -1747,6 +1824,24 @@ def gefs0p25_fetch(members,
     show_default=True,
     type=str,
     help="Default aws is for Amazon Web Services - set to google to switch to Google Cloud"
+)
+
+@_click.option(
+    "--convert_temperature",
+    "-ct",
+    default=True,
+    show_default=True,
+    type=bool,
+    help="When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit."
+)
+
+@_click.option(
+    "--convert_to",
+    "-tu",
+    default='celsius',
+    show_default=True,
+    type=str,
+    help="When -ct True this is where you declare the units for temperature to be converted to."
 )
 
 @_click.option(
@@ -1896,7 +1991,9 @@ def archived_gefs0p50_fetch(
                   western_bound,
                   eastern_bound,
                   northern_bound,
-                  southern_bound):
+                  southern_bound,
+                  convert_temperature,
+                  convert_to):
     
     """Downloads Archived GEFS 0.25x0.25 Data For A Specified Date and Run"""
     
@@ -1913,7 +2010,7 @@ def archived_gefs0p50_fetch(
 
         level_type = level_type.replace('_', ' ')
         category = category.lower()
-        
+        convert_to = convert_to.lower()
         
         _fetch_archived_gefs_0p25(
                         date,
@@ -1936,7 +2033,9 @@ def archived_gefs0p50_fetch(
                         western_bound=western_bound,
                         eastern_bound=eastern_bound,
                         northern_bound=northern_bound,
-                        southern_bound=southern_bound)
+                        southern_bound=southern_bound,
+                        convert_temperature=convert_temperature,
+                        convert_to=convert_to)
         
         d = _parse_date(date)
         _click.echo(f"GEFS0P25 download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {custom_directory}")

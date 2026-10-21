@@ -45,6 +45,211 @@ def ecmwf_data():
 def ifs():
     
     """
+    **Downloads The Latest ECMWF IFS Data**
+    
+    ***Valid Commands***
+    
+    -f = Final Forecast Hour (Default=360).
+     
+    00z & 12z Runs Have 360 hours
+    
+    06z & 18z Runs Have 144 hours
+    
+    -s = Source (Default=noaa). 
+    
+    Selects the primary data server to use.
+    If the primary server is unavailable the client will rotate and try other servers.
+    
+    ***Server Choices***
+    
+    ecmwf - ECMWF Open-Data
+    
+    aws - Amazon Web Services
+    
+    google - Google Cloud Servers
+    
+    -cdir = Custom Directory (Default=None).
+    
+    If the user wishes to build their own directory to hold the data files set -cd directory_branch_path.
+    The default path is f:ECMWF/IFS. 
+    
+    -cr = Clear Recycle Bin (Default=False).
+    
+    For users who want to ensure old files are completely deleted when automating data retrieval set -cr True.
+    Setting -cr True clears your recycle bin with each run of the script. 
+    This ensures if any old files are moved to the recycle bin are deleted if they are not already.
+    
+    -wb = Western Bound - The western bound for subsetting the data range is from -180 to 180 degrees longitude. (Default=-180)
+    
+    -eb = Eastern Bound - The eastern bound for subsetting the data range is from -180 to 180 degrees longitude. (Default=180)
+    
+    -nb = Northern Bound - The northern bound for subsetting the data range is from -90 to 90 degrees latitude. (Default=90)
+    
+    -sb = Southern Bound - The southern bound for subsetting the data range is from -90 to 90 degrees latitude. (Default=-90)
+    
+    -v = Variables(Default=['geopotential_height', 'specific humidity', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']) 
+                       
+    The list of variables the user wants to query.
+    
+    Here is a sample of how to query geopotential height and temperature at 500mb `wxdata-ecmwf ifs latest -v geopotential_height -v temperature -l 500`
+    
+    ***Variable List***
+    
+        'Geopotential (step 0)'
+        
+        'Standard deviation of sub-gridscale orography (step 0)'
+        
+        '10-meter u-wind component'
+        
+        '10-meter v-wind component'
+        
+        '100-meter u-wind component'
+        
+        '100-meter v-wind component'
+        
+        'maximum 10-meter wind gust step 0'
+        
+        'maximum 10-meter wind gust steps 3-144'
+        
+        '2-meter temperature'
+        
+        '2-meter dewpoint temperature'
+        
+        'mean sea level pressure'
+        
+        'mean zero-crossing wave period'
+        
+        'mean wave direction'
+        
+        'mean wave period'
+        
+        'peak wave period'
+        
+        'significant wave height'
+        
+        'runoff'
+        
+        'total precipitation'
+        
+        'surface pressure'
+        
+        'total column vertically integrated water vapor'
+        
+        'total cloud cover'
+        
+        'snow depth water equivalent'
+        
+        'snowfall water equivalent'
+        
+        'land sea mask'
+        
+        'volumetric soil moisture content'
+        
+        'soil temperature'
+        
+        'most unstable cape'
+        
+        'snow albedo'
+        
+        '3-hour minimum 2-meter temperature'
+        
+        '3-hour maximum 2-meter temperature'
+        
+        '6-hour minimum 2-meter temperature'
+        
+        '6-hour maximum 2-meter temperature'
+        
+        'total precipitation rate'
+        
+        'precipitation type'
+        
+        'top net longwave thermal radiation'
+        
+        'snow density'
+        
+        'surface net longwave thermal radiation'
+        
+        'surface net shortwave solar radiation'
+        
+        'surface shortwave radiation downward'
+        
+        'surface longwave radiation downward'
+        
+        'northward turbulent surface stress'
+        
+        'eastward turbulent surface stress'
+        
+        'eastward surface sea water velocity'
+        
+        'northward surface sea water velocity'
+        
+        'sea ice thickness'
+        
+        'sea surface height'
+        
+        'divergence'
+        
+        'geopotential height'
+        
+        'specific humidity'
+        
+        'relative humidity'
+        
+        'temperature'
+        
+        'u-wind component'
+        
+        'v-wind component'
+        
+        'vertical velocity'
+        
+        'relative vorticity'
+        
+    -ct = Convert Temperature (Default=True).
+    
+    When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit.
+    
+    -tu = Temperature Units (Default=Celsius).
+    
+    When -ct True this is where you declare the units for temperature to be converted to. 
+    
+    -l = Levels (Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 1150, 100, 50])
+                            
+    Here is a sample of how to query geopotential height and temperature at 850 and 500mb 
+    
+    `wxdata-ecmwf ifs latest -v geopotential_height -v temperature -l 850 -l 500`
+    
+    -lt = Level Type (Default=pressure).
+    
+    This corresponds to the type of level.
+    
+    ***Level Types***
+    
+    pressure
+    
+    surface
+    
+    soil
+    
+    --process This flag when set to True will process the data in addition to downloading the data. (Default=True)
+    
+    --proxy = Proxy Server (Default=None).
+    
+    Client assumes user is not trying to download data through a proxy server.
+    
+    If you are using a proxy server you can define it by using --proxy https://proxy-server-address:proxy-server-port
+    
+    Example: 
+    
+    `wxdata-ecmwf ifs latest -v geopotential height -l 500 --proxy https://proxy-server-address:proxy-server-port`
+    
+    --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
+    
+    **Additional Relevant Flags when --netcdf True**
+    
+    --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=GFS0P25/NETCDF). 
+    
+    --ncfname = Defines the filename for the netCDF (.nc) file. (Default=ecmwf_ifs.nc)
     
     """
     
@@ -209,7 +414,7 @@ def ifs():
     default="pressure",
     type=str,
     show_default=True,
-    help=("""Type of level (i.e. pressure, height above ground etc.). 
+    help=("""Type of level (i.e. pressure, surface, soil.). 
         
           Default='pressure'.
           

@@ -55,7 +55,7 @@ def ifs():
     
     06z & 18z Runs Have 144 hours
     
-    -s = Source (Default=noaa). 
+    -s = Source (Default=ecmwf). 
     
     Selects the primary data server to use.
     If the primary server is unavailable the client will rotate and try other servers.

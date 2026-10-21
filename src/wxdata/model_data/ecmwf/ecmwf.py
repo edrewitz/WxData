@@ -5041,7 +5041,14 @@ def ecmwf_aifs(final_forecast_hour=360,
     16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
         
-    17) variables (String List) - Default is all variables. The list of variable names in plain-language. 
+    17) variables (String List) - Default=['geopotential height',
+                                            'specific humidity',
+                                            'relative humidity',
+                                            'temperature',
+                                            'u-wind component',
+                                            'v-wind component']. 
+                                
+        The list of variable names in plain-language. 
     
         variables
         ---------

@@ -95,115 +95,115 @@ def ifs():
     
     ***Variable List***
     
-        'Geopotential (step 0)'
-        
-        'Standard deviation of sub-gridscale orography (step 0)'
-        
-        '10-meter u-wind component'
-        
-        '10-meter v-wind component'
-        
-        '100-meter u-wind component'
-        
-        '100-meter v-wind component'
-        
-        'maximum 10-meter wind gust step 0'
-        
-        'maximum 10-meter wind gust steps 3-144'
-        
-        '2-meter temperature'
-        
-        '2-meter dewpoint temperature'
-        
-        'mean sea level pressure'
-        
-        'mean zero-crossing wave period'
-        
-        'mean wave direction'
-        
-        'mean wave period'
-        
-        'peak wave period'
-        
-        'significant wave height'
-        
-        'runoff'
-        
-        'total precipitation'
-        
-        'surface pressure'
-        
-        'total column vertically integrated water vapor'
-        
-        'total cloud cover'
-        
-        'snow depth water equivalent'
-        
-        'snowfall water equivalent'
-        
-        'land sea mask'
-        
-        'volumetric soil moisture content'
-        
-        'soil temperature'
-        
-        'most unstable cape'
-        
-        'snow albedo'
-        
-        '3-hour minimum 2-meter temperature'
-        
-        '3-hour maximum 2-meter temperature'
-        
-        '6-hour minimum 2-meter temperature'
-        
-        '6-hour maximum 2-meter temperature'
-        
-        'total precipitation rate'
-        
-        'precipitation type'
-        
-        'top net longwave thermal radiation'
-        
-        'snow density'
-        
-        'surface net longwave thermal radiation'
-        
-        'surface net shortwave solar radiation'
-        
-        'surface shortwave radiation downward'
-        
-        'surface longwave radiation downward'
-        
-        'northward turbulent surface stress'
-        
-        'eastward turbulent surface stress'
-        
-        'eastward surface sea water velocity'
-        
-        'northward surface sea water velocity'
-        
-        'sea ice thickness'
-        
-        'sea surface height'
-        
-        'divergence'
-        
-        'geopotential height'
-        
-        'specific humidity'
-        
-        'relative humidity'
-        
-        'temperature'
-        
-        'u-wind component'
-        
-        'v-wind component'
-        
-        'vertical velocity'
-        
-        'relative vorticity'
+    'Geopotential (step 0)'
+    
+    'Standard deviation of sub-gridscale orography (step 0)'
+    
+    '10-meter u-wind component'
+    
+    '10-meter v-wind component'
+    
+    '100-meter u-wind component'
+    
+    '100-meter v-wind component'
+    
+    'maximum 10-meter wind gust step 0'
+    
+    'maximum 10-meter wind gust steps 3-144'
+    
+    '2-meter temperature'
+    
+    '2-meter dewpoint temperature'
+    
+    'mean sea level pressure'
+    
+    'mean zero-crossing wave period'
+    
+    'mean wave direction'
+    
+    'mean wave period'
+    
+    'peak wave period'
+    
+    'significant wave height'
+    
+    'runoff'
+    
+    'total precipitation'
+    
+    'surface pressure'
+    
+    'total column vertically integrated water vapor'
+    
+    'total cloud cover'
+    
+    'snow depth water equivalent'
+    
+    'snowfall water equivalent'
+    
+    'land sea mask'
+    
+    'volumetric soil moisture content'
+    
+    'soil temperature'
+    
+    'most unstable cape'
+    
+    'snow albedo'
+    
+    '3-hour minimum 2-meter temperature'
+    
+    '3-hour maximum 2-meter temperature'
+    
+    '6-hour minimum 2-meter temperature'
+    
+    '6-hour maximum 2-meter temperature'
+    
+    'total precipitation rate'
+    
+    'precipitation type'
+    
+    'top net longwave thermal radiation'
+    
+    'snow density'
+    
+    'surface net longwave thermal radiation'
+    
+    'surface net shortwave solar radiation'
+    
+    'surface shortwave radiation downward'
+    
+    'surface longwave radiation downward'
+    
+    'northward turbulent surface stress'
+    
+    'eastward turbulent surface stress'
+    
+    'eastward surface sea water velocity'
+    
+    'northward surface sea water velocity'
+    
+    'sea ice thickness'
+    
+    'sea surface height'
+    
+    'divergence'
+    
+    'geopotential height'
+    
+    'specific humidity'
+    
+    'relative humidity'
+    
+    'temperature'
+    
+    'u-wind component'
+    
+    'v-wind component'
+    
+    'vertical velocity'
+    
+    'relative vorticity'
         
     -ct = Convert Temperature (Default=True).
     

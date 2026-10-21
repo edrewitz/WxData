@@ -80,13 +80,13 @@ def ecmwf_ifs_url_scanner(final_forecast_hour,
     else:
         final_forecast_hour = final_forecast_hour
         
-    today_18z_url = f"{PREFIX}{now.strftime('%Y%m%d')}/18z/ifs/0p25/scda/"
+    today_18z_url = f"{PREFIX}{now.strftime('%Y%m%d')}/18z/ifs/0p25/oper/"
     today_12z_url = f"{PREFIX}{now.strftime('%Y%m%d')}/12z/ifs/0p25/oper/"
-    today_06z_url = f"{PREFIX}{now.strftime('%Y%m%d')}/06z/ifs/0p25/scda/"
+    today_06z_url = f"{PREFIX}{now.strftime('%Y%m%d')}/06z/ifs/0p25/oper/"
     today_00z_url = f"{PREFIX}{now.strftime('%Y%m%d')}/00z/ifs/0p25/oper/"
-    yesterday_18z_url = f"{PREFIX}{yd.strftime('%Y%m%d')}/18z/ifs/0p25/scda/"
+    yesterday_18z_url = f"{PREFIX}{yd.strftime('%Y%m%d')}/18z/ifs/0p25/oper/"
     yesterday_12z_url = f"{PREFIX}{yd.strftime('%Y%m%d')}/12z/ifs/0p25/oper/"
-    yesterday_06z_url = f"{PREFIX}{yd.strftime('%Y%m%d')}/06z/ifs/0p25/scda/"
+    yesterday_06z_url = f"{PREFIX}{yd.strftime('%Y%m%d')}/06z/ifs/0p25/oper/"
     yesterday_00z_url = f"{PREFIX}{yd.strftime('%Y%m%d')}/00z/ifs/0p25/oper/"
     
     file_12z_today = f"{now.strftime('%Y%m%d')}120000-{final_forecast_hour}h-oper-fc.grib2"
@@ -94,15 +94,15 @@ def ecmwf_ifs_url_scanner(final_forecast_hour,
     file_12z_yesterday = f"{yd.strftime('%Y%m%d')}120000-{final_forecast_hour}h-oper-fc.grib2"
     file_00z_yesterday = f"{yd.strftime('%Y%m%d')}000000-{final_forecast_hour}h-oper-fc.grib2"
     if final_forecast_hour >= 144:
-        file_18z_today = f"{now.strftime('%Y%m%d')}180000-144h-scda-fc.grib2"
-        file_06z_today = f"{now.strftime('%Y%m%d')}060000-144h-scda-fc.grib2"
-        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}180000-144h-scda-fc.grib2"
-        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}060000-144h-scda-fc.grib2"
+        file_18z_today = f"{now.strftime('%Y%m%d')}180000-144h-oper-fc.grib2"
+        file_06z_today = f"{now.strftime('%Y%m%d')}060000-144h-oper-fc.grib2"
+        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}180000-144h-oper-fc.grib2"
+        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}060000-144h-oper-fc.grib2"
     else:
-        file_18z_today = f"{now.strftime('%Y%m%d')}180000-{final_forecast_hour}h-scda-fc.grib2"
-        file_06z_today = f"{now.strftime('%Y%m%d')}060000-{final_forecast_hour}h-scda-fc.grib2"
-        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}180000-{final_forecast_hour}h-scda-fc.grib2"
-        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}060000-{final_forecast_hour}h-scda-fc.grib2"
+        file_18z_today = f"{now.strftime('%Y%m%d')}180000-{final_forecast_hour}h-oper-fc.grib2"
+        file_06z_today = f"{now.strftime('%Y%m%d')}060000-{final_forecast_hour}h-oper-fc.grib2"
+        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}180000-{final_forecast_hour}h-oper-fc.grib2"
+        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}060000-{final_forecast_hour}h-oper-fc.grib2"
         
     try:
         t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 

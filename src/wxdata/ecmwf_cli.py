@@ -27,7 +27,7 @@ def _command_error_message(model):
     
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
     print(f"Model: {model.upper()}")
-    print(f"Please run `wxdata-gfs -h to view the help documentation.")
+    print(f"Please run `wxdata-ecmwf -h to view the help documentation.")
     print(f"Please visit: https://github.com/edrewitz/WxData/wiki#ecmwf-open-data for full detailed documentation.")
     
 # ---------------------------------------------------------------------

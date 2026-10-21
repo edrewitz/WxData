@@ -48,6 +48,7 @@ def ifs():
     
     """
     
+@ifs.command("latest")
 @_click.option(
     "--final_forecast_hour",
     "-f",

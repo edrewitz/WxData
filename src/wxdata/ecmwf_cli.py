@@ -93,10 +93,28 @@ def ifs():
 @_click.option(
     "--source",
     "-s",
-    default="noaa",
+    default="ecmwf",
     show_default=True,
     type=str,
-    help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"
+    help="Default ecmwf is for ECMWF Open-Data - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"
+)
+
+@_click.option(
+    "--convert_temperature",
+    "-ct",
+    default=True,
+    show_default=True,
+    type=bool,
+    help="When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit."
+)
+
+@_click.option(
+    "--convert_to",
+    "-tu",
+    default='celsius',
+    show_default=True,
+    type=str,
+    help="When -ct True this is where you declare the units for temperature to be converted to."
 )
 
 @_click.option(
@@ -137,17 +155,18 @@ def ifs():
         
 @_click.option('--variables', 
               '-v', 
-              default=['geopotential_height',
-                       'temperature',
-                       'relative_humidity',
-                       'u-component_of_wind'
-                       'v-component_of_wind'],
+              default=['geopotential height',
+                        'specific humidity',
+                        'relative humidity',
+                        'temperature',
+                        'u-wind component',
+                        'v-wind component'],
               multiple=True, 
               type=str,
               help=(
                   """Variables to pass into the function. 
                   
-                  Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']
+                  Default=['geopotential_height', 'specific humidity', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']
                   
                   See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
                   
@@ -157,25 +176,26 @@ def ifs():
 @_click.option(
     '--levels', 
     '-l', 
-    default=[1000,
-            925,
-            850,
-            700,
-            500,
-            400,
-            300,
-            250,
-            200,
-            100,
-            50,
-            10],
+    default=[1000, 
+            925, 
+            850, 
+            700, 
+            600, 
+            500, 
+            400, 
+            300, 
+            250, 
+            200, 
+            150, 
+            100, 
+            50],
     multiple=True, 
     type=int,  
     help=("""Levels for pressure, height, PVU etc. 
           
           Pressure (hPa)
           
-          Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10]
+          Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100, 50]
           
           See https://edrewitz.github.io/WxData/GFS0P25 for available levels.
           
@@ -199,9 +219,9 @@ def ifs():
 
 @_click.option(
     "--proxy",
-    default=None,
-    callback=lambda _, __, v: _parse_proxy(v),
+    default="none",
     show_default=True,
+    type=str,
     help="Proxy URL (e.g., https://address:port). Default: no proxy.",
 )
 
@@ -225,7 +245,7 @@ def ifs():
 
 @_click.option(
     "--ncdir",
-    default=f"GFS0P25/NETCDF",
+    default=f"ECMWF IFS/NETCDF",
     type=str,
     show_default=True,
     help=("""This flag is needed when --netcdf True to define the directory where the netCDF (.nc) file will save to.
@@ -234,9 +254,102 @@ def ifs():
 
 @_click.option(
     "--ncfname",
-    default=f"gfs_0p25.nc",
+    default=f"ecmwf_ifs.nc",
     type=str,
     show_default=True,
     help=("""This flag is needed when --netcdf True to define the filename for the netCDF (.nc) file. 
           """),
 )
+
+def fetch_ifs(final_forecast_hour,
+                  proxy,
+                  clear_recycle_bin,
+                  custom_directory,
+                  clear_data,
+                  source,
+                  variables,
+                  levels,
+                  level_type,
+                  netcdf,
+                  ncdir,
+                  ncfname,
+                  process,
+                  western_bound,
+                  eastern_bound,
+                  northern_bound,
+                  southern_bound,
+                  convert_temperature,
+                  convert_to):
+    
+    if proxy == "none":
+        proxy = None
+    else:
+        proxy = proxy
+    
+    if custom_directory.lower() == "none":
+        custom_directory = None
+    else:
+        custom_directory = custom_directory
+        if current_os == "Windows":
+            custom_directory = custom_directory.replace('/', '\\')
+        else:
+            pass
+        
+    if netcdf == True:
+        if current_os == "Windows":
+            ncdir = ncdir.replace('/', '\\')
+        else:
+            pass
+    
+    vars_fixed = []
+    for v in variables:
+        v = v.replace('_', ' ')
+        vars_fixed.append(v)
+        
+    level_type = level_type.replace('_', ' ')
+    
+    try:
+        _fetch_ecmwf_ifs(final_forecast_hour=final_forecast_hour,
+                         western_bound=western_bound,
+                         eastern_bound=eastern_bound,
+                         northern_bound=northern_bound,
+                         southern_bound=southern_bound,
+                         clear_data=clear_data,
+                         clear_recycle_bin=clear_recycle_bin,
+                         proxies=proxy,
+                         source=source,
+                         level_type=level_type,
+                         levels=levels,
+                         convert_temperature=convert_temperature,
+                         convert_to=convert_to,
+                         to_netcdf=netcdf,
+                         netcdf_path=ncdir,
+                         netcdf_filename=ncfname,
+                         process_data=process,
+                         return_values=False,
+                         variables=vars_fixed)
+        
+        if custom_directory != "none" and custom_directory != None:
+            _click.echo(f"ECMWF IFS latest download complete, data files saved to {custom_directory}")
+        else:
+            if current_os != "Windows":
+                _click.echo(f"ECMWF IFS latest download complete, data files saved to ECMWF/IFS")
+            else:
+                _click.echo(rf"ECMWF IFS latest download complete, data files saved to ECMWF\IFS")
+            
+    except SystemExit as e:
+        _command_error_message('ecmwf ifs')
+        _sys.exit(1)
+    
+    
+    
+
+# ---------------------------------------------------------------------
+# Entry point
+# ---------------------------------------------------------------------
+def main():
+    ecmwf_data()
+    
+if __name__ == "__main__":
+    main()
+    

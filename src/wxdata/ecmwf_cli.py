@@ -593,6 +593,14 @@ def ifs_ens():
     
     -sb = Southern Bound - The southern bound for subsetting the data range is from -90 to 90 degrees latitude. (Default=-90)
     
+    -m = Ensemble Members. (Default is all 30 members).
+    
+    *Example*
+    
+    Download the first 5 ensemble members for 850mb temperature
+    
+    `wxdata-ecmwf ifs_ens latest -v temperature -l 850 -m 1 -m 2 -m 3 -m 4 -m 5`
+    
     -v = Variables(Default=['geopotential_height', 'specific humidity', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']) 
                        
     The list of variables the user wants to query.
@@ -940,11 +948,7 @@ def ifs_ens():
     multiple=True,
     show_default=True,
     type=int,
-    help="""The individual ensemble members to select. Defaults to all 50 members.
-    
-            This is only necessary when category=members -> `-c members`
-    
-    """
+    help=("""The individual ensemble members to select. Defaults to all 50 members.""")
 )
 
 @_click.option(

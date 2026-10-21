@@ -143,6 +143,16 @@ def gefs0p50():
     
     -sb = Southern Bound - The southern bound for subsetting the data range is from -90 to 90 degrees latitude. (Default=-90)
     
+    -m = Ensemble Members. (Default is all 30 members).
+    
+    *Example*
+    
+    Download the first 5 ensemble members for 850mb temperature
+    
+    *Category Must Be Set To Members* -> `-c members`
+    
+    `wxdata-gefs 0p50 latest -c members -v temperature -l 850 -m 1 -m 2 -m 3 -m 4 -m 5`
+    
     -v = Variables(Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']) 
                        
     The list of variables the user wants to query.
@@ -1268,6 +1278,16 @@ def gefs0p25():
     -nb = Northern Bound - The northern bound for subsetting the data range is from -90 to 90 degrees latitude. (Default=90)
     
     -sb = Southern Bound - The southern bound for subsetting the data range is from -90 to 90 degrees latitude. (Default=-90)
+    
+    -m = Ensemble Members. (Default is all 30 members).
+    
+    *Example*
+    
+    Download the first 5 ensemble members for 2-meter temperature
+    
+    *Category Must Be Set To Members* -> `-c members`
+    
+    `wxdata-gefs 0p25 latest -c members -v temperature -lt height_above_ground -l 2 -m 1 -m 2 -m 3 -m 4 -m 5`
     
     -v = Variables(Default=['temperature']) 
                        

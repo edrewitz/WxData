@@ -12,16 +12,14 @@ This file hosts the functions the user has to download ECMWF model data.
 """
 
 import os as _os
-import contextlib as _contextlib
-import io as _io
 import warnings as _warnings
 _warnings.filterwarnings('ignore')
 import time as _time
 import sys as _sys
 import wxdata.post_processors.ecmwf_post_processing as _ecmwf_post_processing
 
+from wxdata.model_data.ecmwf.byte_range import download_ecmwf_data as _download_ecmwf_data
 from wxdata.utils.transforms import grib_to_netcdf as _grib_to_netcdf
-from ecmwf.opendata import Client as _Client
 from wxdata.model_data.ecmwf.url_scanners import(
     ecmwf_ifs_url_scanner as _ecmwf_ifs_url_scanner, 
     ecmwf_ifs_ens_url_scanner as _ecmwf_ifs_ens_url_scanner,
@@ -47,7 +45,6 @@ from wxdata.utils.warnings import(
     eccodes_warning as _eccodes_warning,
     version_warning as _version_warning
 )
-from wxdata.model_data.ecmwf.parsers import parse_date as _parse_date
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
 from wxdata.utils.file_scanner import local_file_scanner as _local_file_scanner
 from wxdata.model_data.ecmwf.paths import ecmwf_branch_paths as _ecmwf_branch_paths
@@ -63,46 +60,6 @@ from wxdata.utils.recycle_bin import(
 )
 
 _eccodes_warning()
-
-original_stdout = _sys.stdout
-
-
-def _get_stream(model,
-                run):
-    
-    """
-    This function returns the value for stream based on the model runtime
-    
-    Required Arguments:
-    
-    1) model (String) - The model being used.
-    
-    2) run (Integer) - The model run time (0, 6, 12, 18)
-    
-    Optional Arguments: None
-    
-    Returns
-    -------
-    
-    The value for stream needed for the ecmwf-opendata client    
-    """
-    
-    if model == 'ifs':
-        if run == 0 or run == 12:
-            stream = 'oper'
-        else:
-            stream = 'scda'
-    
-    if model == 'ifs-wave':
-        if run == 0 or run == 12:
-            stream = 'wave'
-        else:
-            stream = 'scwv'
-    
-    if model == 'ifs-ensemble':
-        stream = 'enfo'
-        
-    return stream
 
 def _get_level_type(level_type):
     
@@ -428,12 +385,6 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
     else:
         pass
     
-    if proxies == None:
-        pass
-    else:
-        _os.environ['http_proxy'] = proxies
-        _os.environ['https_proxy'] = proxies
-    
     if custom_directory == None:
         _build_directory('ifs', 
                         'operational')
@@ -454,7 +405,8 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
     if source == 'ecmwf':
         try:
             url, filename, run = _ecmwf_ifs_url_scanner(final_forecast_hour,
-                                                        source)
+                                                        source,
+                                                        proxies)
         except Exception as e:
             filename = None
             
@@ -463,7 +415,8 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
             print("Rotating to Amazon AWS Server.")
             try:
                 url, filename, run = _ecmwf_ifs_url_scanner(final_forecast_hour,
-                                                        'aws')
+                                                        'aws',
+                                                        proxies)
                 
                 print("Amazon AWS Server Online - Connected.")
                 source = 'aws'
@@ -475,7 +428,8 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                 print("Rotating to Google Cloud Server.")
                 try:
                     url, filename, run = _ecmwf_ifs_url_scanner(final_forecast_hour,
-                                                        'google')
+                                                        'google',
+                                                        proxies)
                     
                     print("Google Cloud Server Online - Connected.")
                     source = 'google'
@@ -493,7 +447,8 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
     elif source == 'aws':
         try:
             url, filename, run = _ecmwf_ifs_url_scanner(final_forecast_hour,
-                                                        source)
+                                                        source,
+                                                        proxies)
         except Exception as e:
             filename = None
             
@@ -502,7 +457,8 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
             print("Rotating to ECMWF Open-Data Server.")
             try:
                 url, filename, run = _ecmwf_ifs_url_scanner(final_forecast_hour,
-                                                        'ecmwf')
+                                                        'ecmwf',
+                                                        proxies)
                 
                 print("ECMWF Open-Data Server Online - Connected.")
                 source = 'ecmwf'
@@ -514,7 +470,8 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                 print("Rotating to Google Cloud Server.")
                 try:
                     url, filename, run = _ecmwf_ifs_url_scanner(final_forecast_hour,
-                                                        'google')
+                                                        'google',
+                                                        proxies)
                     
                     print("Google Cloud Server Online - Connected.")
                     source = 'google'
@@ -532,7 +489,8 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
     else:
         try:
             url, filename, run = _ecmwf_ifs_url_scanner(final_forecast_hour,
-                                                        source)
+                                                        source,
+                                                        proxies)
         except Exception as e:
             filename = None
             
@@ -541,7 +499,8 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
             print("Rotating to ECMWF Open-Data Server.")
             try:
                 url, filename, run = _ecmwf_ifs_url_scanner(final_forecast_hour,
-                                                        'ecmwf')
+                                                        'ecmwf',
+                                                        proxies)
                 
                 print("ECMWF Open-Data Server Online - Connected.")
                 source = 'ecmwf'
@@ -553,7 +512,8 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                 print("Rotating to Amazon AWS Server.")
                 try:
                     url, filename, run = _ecmwf_ifs_url_scanner(final_forecast_hour,
-                                                        'aws')
+                                                        'aws',
+                                                        proxies)
                     
                     print("Amazon AWS Server Online - Connected.")
                     source = 'aws'
@@ -567,15 +527,6 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                 
         else:
             pass
-            
-    
-    
-    stream = _get_stream('ifs',
-                         run)
-    
-
-    valid_date = _parse_date(url,
-                             'ifs')
     
     params = _ifs_var_keys(variables)
 
@@ -593,186 +544,63 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
     else:
         pass
     
-    client = _Client(source=source,
-                     model='ifs')
     if download == True:
         print(f"Downloading ECMWF IFS...\n")
-        print(f"By downloading data from the ECMWF open data dataset, you agree to the terms: Attribution 4.0 International (CC BY 4.0).\nPlease attribute ECMWF when downloading this data.")
         _clear_old_data(path)
         
         if final_forecast_hour <= 144:
             for i in range(0, final_forecast_hour + step, step):
-                f = _io.StringIO()
-                with _contextlib.redirect_stdout(f):
-                    if level_type == 'pl':
-                        try:
-                            client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="fc",
-                                            levtype=level_type,
-                                            param=params,
-                                            levelist=levels,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                            success = True
-                        except Exception as e:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                                time=run,
-                                                step=i,
-                                                stream=stream,
-                                                type="fc",
-                                                levtype=level_type,
-                                                param=params,
-                                                levelist=levels,
-                                                target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
-                                        pass
-      
-                    else:
-                        try:
-                            client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="fc",
-                                            levtype=level_type,
-                                            param=params,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                            success = True
-                        except Exception as e:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="fc",
-                                            levtype=level_type,
-                                            param=params,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
-                                        pass
-                            
-                if success == True:
-                    if notifications == True:
-                        print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
-                    else:
-                        pass
+                _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2",
+                                    f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.index",
+                                    level_type,
+                                    levels,
+                                    params,
+                                    None,
+                                    proxies,
+                                    path,
+                                    f"{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2")
+                if notifications == True:
+                    print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2 saved to {path}")
                 else:
-                    break
+                    pass
+                            
         else:
-            for i in range(0, final_forecast_hour + step, step):
-                f = _io.StringIO()
-                with _contextlib.redirect_stdout(f):
-                    if level_type == 'pl':
-                        try:
-                            client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="fc",
-                                            levtype=level_type,
-                                            param=params,
-                                            levelist=levels,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                            success = True
-                        except Exception as e:
-                            if i % 6 != 0 and i > 144:
-                                pass
-                            else:
-                                for k in range(0, 3, 1):
-                                    print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                    print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                    _time.sleep(3)
-                                    try:
-                                        client.retrieve(date=valid_date,
-                                                    time=run,
-                                                    step=i,
-                                                    stream=stream,
-                                                    type="fc",
-                                                    levtype=level_type,
-                                                    param=params,
-                                                    levelist=levels,
-                                                    target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                                        success = True
-                                        break
-                                    except Exception as e:
-                                        k = k
-                                        if k >= 2:
-                                            success = False
-                                            pass
-      
-                    else:
-                        try:
-                            client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="fc",
-                                            levtype=level_type,
-                                            param=params,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                            success = True
-                        except Exception as e:
-                            if i % 6 != 0 and i > 144:
-                                pass
-                            else:
-                                for k in range(0, 3, 1):
-                                    print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                    print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                    _time.sleep(3)
-                                    try:
-                                        client.retrieve(date=valid_date,
-                                                time=run,
-                                                step=i,
-                                                stream=stream,
-                                                type="fc",
-                                                levtype=level_type,
-                                                param=params,
-                                                target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                                        success = True
-                                        break
-                                    except Exception as e:
-                                        k = k
-                                        if k >= 2:
-                                            success = False
-                                            pass
-                            
-                if success == True:
-                    if notifications == True:
-                        print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
-                    else:
-                        pass
+            for i in range(0, (144 + step), step):
+                _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2",
+                                    f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.index",
+                                    level_type,
+                                    levels,
+                                    params,
+                                    None,
+                                    proxies,
+                                    path,
+                                    f"{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2")
+                if notifications == True:
+                    print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2 saved to {path}")
                 else:
-                    break
-        
+                    pass
+                
+            for i in range(0, (final_forecast_hour + 6), 6):
+                _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2",
+                                    f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.index",
+                                    level_type,
+                                    levels,
+                                    params,
+                                    None,
+                                    proxies,
+                                    path,
+                                    f"{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2")
+                if notifications == True:
+                    print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2 saved to {path}")
+                else:
+                    pass
+            
+        print(f"ECMWF IFS Download Complete.")    
     else:
         print(f"ECMWF IFS Data is up to date. Skipping download...")    
 
     if process_data == True:
-        if success == True:
-            print(f"ECMWF IFS Data Processing...")
-        else:
-            pass
+        print(f"ECMWF IFS Data Processing...")
         
         ds = _ecmwf_post_processing.ecmwf_ifs_post_processing(path,
                                                             western_bound, 
@@ -1109,12 +937,6 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
     else:
         pass
     
-    if proxies == None:
-        pass
-    else:
-        _os.environ['http_proxy'] = proxies
-        _os.environ['https_proxy'] = proxies
-    
     if custom_directory == None:
         _build_directory('ifs', 
                         'ensemble')
@@ -1135,7 +957,8 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
     if source == 'ecmwf':
         try:
             url, filename, run = _ecmwf_ifs_ens_url_scanner(final_forecast_hour,
-                                                        source)
+                                                        source,
+                                                        proxies)
         except Exception as e:
             filename = None
             
@@ -1144,7 +967,8 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
             print("Rotating to Amazon AWS Server.")
             try:
                 url, filename, run = _ecmwf_ifs_ens_url_scanner(final_forecast_hour,
-                                                        'aws')
+                                                        'aws',
+                                                        proxies)
                 
                 print("Amazon AWS Server Online - Connected.")
                 source = 'aws'
@@ -1156,7 +980,8 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                 print("Rotating to Google Cloud Server.")
                 try:
                     url, filename, run = _ecmwf_ifs_ens_url_scanner(final_forecast_hour,
-                                                        'google')
+                                                        'google',
+                                                        proxies)
                     
                     print("Google Cloud Server Online - Connected.")
                     source = 'google'
@@ -1174,7 +999,8 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
     elif source == 'aws':
         try:
             url, filename, run = _ecmwf_ifs_ens_url_scanner(final_forecast_hour,
-                                                        source)
+                                                        source,
+                                                        proxies)
         except Exception as e:
             filename = None
             
@@ -1183,7 +1009,8 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
             print("Rotating to ECMWF Open-Data Server.")
             try:
                 url, filename, run = _ecmwf_ifs_ens_url_scanner(final_forecast_hour,
-                                                        'ecmwf')
+                                                        'ecmwf',
+                                                        proxies)
                 
                 print("ECMWF Open-Data Server Online - Connected.")
                 source = 'ecmwf'
@@ -1195,7 +1022,8 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                 print("Rotating to Google Cloud Server.")
                 try:
                     url, filename, run = _ecmwf_ifs_ens_url_scanner(final_forecast_hour,
-                                                        'google')
+                                                        'google',
+                                                        proxies)
                     
                     print("Google Cloud Server Online - Connected.")
                     source = 'google'
@@ -1213,7 +1041,8 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
     else:
         try:
             url, filename, run = _ecmwf_ifs_ens_url_scanner(final_forecast_hour,
-                                                        source)
+                                                        source,
+                                                        proxies)
         except Exception as e:
             filename = None
             
@@ -1222,7 +1051,8 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
             print("Rotating to ECMWF Open-Data Server.")
             try:
                 url, filename, run = _ecmwf_ifs_ens_url_scanner(final_forecast_hour,
-                                                        'ecmwf')
+                                                        'ecmwf',
+                                                        proxies)
                 
                 print("ECMWF Open-Data Server Online - Connected.")
                 source = 'ecmwf'
@@ -1234,7 +1064,8 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
                 print("Rotating to Amazon AWS Server.")
                 try:
                     url, filename, run = _ecmwf_ifs_ens_url_scanner(final_forecast_hour,
-                                                        'aws')
+                                                        'aws',
+                                                        proxies)
                     
                     print("Amazon AWS Server Online - Connected.")
                     source = 'aws'
@@ -1249,13 +1080,6 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
         else:
             pass
     
-    
-    stream = _get_stream('ifs-ensemble',
-                         run)
-    
-
-    valid_date = _parse_date(url,
-                             'ifs-ensemble')
     
     params = _ifs_var_keys(variables)
 
@@ -1272,204 +1096,65 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=144,
         levels = _get_levels(levels)
     else:
         pass
-    client = _Client(source=source,
-                     model='ifs')
+
     if download == True:
         print(f"Downloading ECMWF IFS ENSEMBLE...\n")
-        print(f"By downloading data from the ECMWF open data dataset, you agree to the terms: Attribution 4.0 International (CC BY 4.0).\nPlease attribute ECMWF when downloading this data.")
         _clear_old_data(path)
         
         if final_forecast_hour <= 144:
             for i in range(0, final_forecast_hour + step, step):
-                f = _io.StringIO()
-                with _contextlib.redirect_stdout(f):
-                    if level_type == 'pl':
-                        try:
-                            client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="ef",
-                                            levtype=level_type,
-                                            param=params,
-                                            levelist=levels,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
-                            success = True
-                        except Exception as e:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts (Before Server Rotation): {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                                time=run,
-                                                step=i,
-                                                stream=stream,
-                                                type="ef",
-                                                levtype=level_type,
-                                                param=params,
-                                                levelist=levels,
-                                                number=members,
-                                                target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
-                                        break
-                    else:
-                        try:
-                            client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="ef",
-                                            levtype=level_type,
-                                            param=params,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
-                            success = True
-                        except Exception as e:
-                            for k in range(0, 100, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="ef",
-                                            levtype=level_type,
-                                            param=params,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
-                                        break
-                if success == True:
-                    if notifications == True:
-                        print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
-                    else:
-                        pass
+                _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-ef.grib2",
+                                    f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-ef.index",
+                                    level_type,
+                                    levels,
+                                    params,
+                                    members,
+                                    proxies,
+                                    path,
+                                    f"{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-ef.grib2")
+                if notifications == True:
+                    print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2 saved to {path}")
                 else:
-                    break
-        else:
-            for i in range(0, final_forecast_hour + step, step):
-                f = _io.StringIO()
-                with _contextlib.redirect_stdout(f):
-                    if level_type == 'pl':
-                        try:
-                            client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="ef",
-                                            levtype=level_type,
-                                            param=params,
-                                            levelist=levels,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
-                            success = True
-                        except Exception as e:
-                            if i % 6 != 0 and i > 144:
-                                pass
-                            else:
-                                for k in range(0, 3, 1):
-                                    print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                    print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                    _time.sleep(3)
-                                    try:
-                                        client.retrieve(date=valid_date,
-                                                time=run,
-                                                step=i,
-                                                stream=stream,
-                                                type="ef",
-                                                levtype=level_type,
-                                                param=params,
-                                                levelist=levels,
-                                                number=members,
-                                                target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
-                                        success = True
-                                        break
-                                    except Exception as e:
-                                        k = k
-                                        if k >= 2:
-                                            success = False
-                                            break
-                    else:
-                        try:
-                            client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="ef",
-                                            levtype=level_type,
-                                            param=params,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
-                            success = True
-                        except Exception as e:
-                            if i % 6 != 0 and i > 144:
-                                pass
-                            else:
-                                for k in range(0, 3, 1):
-                                    print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                    print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                    _time.sleep(3)
-                                    try:
-                                        client.retrieve(date=valid_date,
-                                                time=run,
-                                                step=i,
-                                                stream=stream,
-                                                type="ef",
-                                                levtype=level_type,
-                                                param=params,
-                                                number=members,
-                                                target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-ef.grib2")
-                                        success = True
-                                        break
-                                    except Exception as e:
-                                        k = k
-                                        if k >= 2:
-                                            success = False
-                                            break
-                if success == True:                    
-                    if notifications == True:
-                        print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
-                    else:
-                        pass
-                else:
-                    break
+                    pass
                             
-                if success == True:                   
-                    if notifications == True:
-                        print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
-                    else:
-                        pass
-                else:
-                    break
-                
-        if success == True:
-            print(f"ECMWF IFS Download Complete.")   
         else:
-            pass 
-
+            for i in range(0, (144 + step), step):
+                _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-ef.grib2",
+                                    f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-ef.index",
+                                    level_type,
+                                    levels,
+                                    params,
+                                    members,
+                                    proxies,
+                                    path,
+                                    f"{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-ef.grib2")
+                if notifications == True:
+                    print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-ef.grib2 saved to {path}")
+                else:
+                    pass
+                
+            for i in range(0, (final_forecast_hour + 6), 6):
+                _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-ef.grib2",
+                                    f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-ef.index",
+                                    level_type,
+                                    levels,
+                                    params,
+                                    members,
+                                    proxies,
+                                    path,
+                                    f"{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-ef.grib2")
+                if notifications == True:
+                    print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-ef.grib2 saved to {path}")
+                else:
+                    pass
+                
+        print(f"ECMWF IFS ENSEMBLE Download Complete.")    
     else:
         print(f"ECMWF IFS ENSEMBLE Data is up to date. Skipping download...")    
 
     if process_data == True:    
-        if success == True:
-            print("ECMWF IFS ENSEMBLE Data Processing")   
-        else:
-            pass
-         
+        print("ECMWF IFS ENSEMBLE Data Processing")   
+
         ds = _ecmwf_post_processing.ecmwf_ifs_post_processing(path,
                                                             western_bound, 
                                                             eastern_bound, 
@@ -1724,12 +1409,6 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
     else:
         pass
     
-    if proxies == None:
-        pass
-    else:
-        _os.environ['http_proxy'] = proxies
-        _os.environ['https_proxy'] = proxies
-    
     if custom_directory == None:
         _build_directory('aifs', 
                         'operational')
@@ -1750,7 +1429,8 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
     if source == 'ecmwf':
         try:
             url, filename, run = _ecmwf_aifs_url_scanner(final_forecast_hour,
-                                                        source)
+                                                        source,
+                                                        proxies)
         except Exception as e:
             filename = None
             
@@ -1759,7 +1439,8 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
             print("Rotating to Amazon AWS Server.")
             try:
                 url, filename, run = _ecmwf_aifs_url_scanner(final_forecast_hour,
-                                                        'aws')
+                                                        'aws',
+                                                        proxies)
                 
                 print("Amazon AWS Server Online - Connected.")
                 source = 'aws'
@@ -1771,7 +1452,8 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
                 print("Rotating to Google Cloud Server.")
                 try:
                     url, filename, run = _ecmwf_aifs_url_scanner(final_forecast_hour,
-                                                        'google')
+                                                        'google',
+                                                        proxies)
                     
                     print("Google Cloud Server Online - Connected.")
                     source = 'google'
@@ -1789,7 +1471,8 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
     elif source == 'aws':
         try:
             url, filename, run = _ecmwf_aifs_url_scanner(final_forecast_hour,
-                                                        source)
+                                                        source,
+                                                        proxies)
         except Exception as e:
             filename = None
             
@@ -1798,7 +1481,8 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
             print("Rotating to ECMWF Open-Data Server.")
             try:
                 url, filename, run = _ecmwf_aifs_url_scanner(final_forecast_hour,
-                                                        'ecmwf')
+                                                        'ecmwf',
+                                                        proxies)
                 
                 print("ECMWF Open-Data Server Online - Connected.")
                 source = 'ecmwf'
@@ -1810,7 +1494,8 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
                 print("Rotating to Google Cloud Server.")
                 try:
                     url, filename, run = _ecmwf_aifs_url_scanner(final_forecast_hour,
-                                                        'google')
+                                                        'google',
+                                                        proxies)
                     
                     print("Google Cloud Server Online - Connected.")
                     source = 'google'
@@ -1828,7 +1513,8 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
     else:
         try:
             url, filename, run = _ecmwf_aifs_url_scanner(final_forecast_hour,
-                                                        source)
+                                                        source,
+                                                        proxies)
         except Exception as e:
             filename = None
             
@@ -1837,7 +1523,8 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
             print("Rotating to ECMWF Open-Data Server.")
             try:
                 url, filename, run = _ecmwf_aifs_url_scanner(final_forecast_hour,
-                                                        'ecmwf')
+                                                        'ecmwf',
+                                                        proxies)
                 
                 print("ECMWF Open-Data Server Online - Connected.")
                 source = 'ecmwf'
@@ -1849,7 +1536,8 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
                 print("Rotating to Amazon AWS Server.")
                 try:
                     url, filename, run = _ecmwf_aifs_url_scanner(final_forecast_hour,
-                                                        'aws')
+                                                        'aws',
+                                                        proxies)
                     
                     print("Amazon AWS Server Online - Connected.")
                     source = 'aws'
@@ -1864,10 +1552,6 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
         else:
             pass
     
-    
-    valid_date = _parse_date(url,
-                             'aifs-single')
-    
     params = _aifs_var_keys(variables)
 
     download = _local_file_scanner(path, 
@@ -1875,108 +1559,36 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
                                   'ecmwf',
                                   run)
     
-
-    date = _parse_filename(filename)
     
+    date = _parse_filename(filename)
     levels = _get_levels(levels)
     
-    client = _Client(source=source,
-                     model='aifs-single')
     if download == True:
         print(f"Downloading ECMWF AIFS...\n")
-        print(f"By downloading data from the ECMWF open data dataset, you agree to the terms: Attribution 4.0 International (CC BY 4.0).\nPlease attribute ECMWF when downloading this data.")
         _clear_old_data(path)
         
-        for i in range(0, final_forecast_hour + 6, 6):
-            f = _io.StringIO()
-            with _contextlib.redirect_stdout(f):
-                if level_type == 'pl':
-                    try:
-                        client.retrieve(date=valid_date,
-                                        time=run,
-                                        step=i,
-                                        stream='oper',
-                                        type="fc",
-                                        levtype=level_type,
-                                        param=params,
-                                        levelist=levels,
-                                        target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2")
-                        success = True
-                    except Exception as e:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                        time=run,
-                                        step=i,
-                                        stream='oper',
-                                        type="fc",
-                                        levtype=level_type,
-                                        param=params,
-                                        levelist=levels,
-                                        target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
-                                        break                      
-                else:
-                    try:
-                        client.retrieve(date=valid_date,
-                                        time=run,
-                                        step=i,
-                                        stream='oper',
-                                        type="fc",
-                                        levtype=level_type,
-                                        param=params,
-                                        target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2")
-                        success = True
-                    except Exception as e:
-                        for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                        time=run,
-                                        step=i,
-                                        stream='oper',
-                                        type="fc",
-                                        levtype=level_type,
-                                        param=params,
-                                        target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
-                                        break
-            if success == True:      
-                if notifications == True:
-                    print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2 saved to {path}", file=original_stdout)
-                else:
-                    pass
+        for i in range(0, (final_forecast_hour + 6), 6):
+            _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2",
+                                f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.index",
+                                level_type,
+                                levels,
+                                params,
+                                None,
+                                proxies,
+                                path,
+                                f"{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2")
+            if notifications == True:
+                print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2 saved to {path}")
             else:
-                break
-        
-        if success == True:
-            print(f"ECMWF AIFS Download Complete.")  
-        else:
-            pass  
-        
+                pass
+                            
+        print(f"ECMWF AIFS Download Complete.")    
     else:
         print(f"ECMWF AIFS Data is up to date. Skipping download...")    
         
     if process_data == True:
-        if success == True:
-            print(f"ECMWF AIFS Data Processing...")
-        else:
-            pass
+        print(f"ECMWF AIFS Data Processing...")
+
         
         ds = _ecmwf_post_processing.ecmwf_aifs_post_processing(path,
                                                             western_bound, 
@@ -2254,12 +1866,6 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
     else:
         pass
     
-    if proxies == None:
-        pass
-    else:
-        _os.environ['http_proxy'] = proxies
-        _os.environ['https_proxy'] = proxies
-    
     if custom_directory == None:
         cat = cat.lower()
         if cat == 'control':
@@ -2282,7 +1888,8 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
         try:
             url, filename, run, cat = _ecmwf_aifs_ens_url_scanner(final_forecast_hour,
                                                                   cat,
-                                                                  source)
+                                                                  source,
+                                                                  proxies)
         except Exception as e:
             filename = None
             
@@ -2292,7 +1899,8 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
             try:
                 url, filename, run, cat = _ecmwf_aifs_ens_url_scanner(final_forecast_hour,
                                                                  cat,
-                                                                 'aws')
+                                                                 'aws',
+                                                                  proxies)
                 
                 print("Amazon AWS Server Online - Connected.")
                 source = 'aws'
@@ -2305,7 +1913,8 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
                 try:
                     url, filename, run, cat = _ecmwf_aifs_ens_url_scanner(final_forecast_hour,
                                                                           cat,
-                                                                          'google')
+                                                                          'google',
+                                                                          proxies)
                     
                     print("Google Cloud Server Online - Connected.")
                     source = 'google'
@@ -2324,7 +1933,8 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
         try:
             url, filename, run, cat = _ecmwf_aifs_ens_url_scanner(final_forecast_hour,
                                                                   cat,
-                                                                  source)
+                                                                  source,
+                                                                  proxies)
         except Exception as e:
             filename = None
             
@@ -2334,7 +1944,8 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
             try:
                 url, filename, run, cat = _ecmwf_aifs_ens_url_scanner(final_forecast_hour,
                                                                       cat,
-                                                                      'ecmwf')
+                                                                      'ecmwf',
+                                                                      proxies)
                 
                 print("ECMWF Open-Data Server Online - Connected.")
                 source = 'ecmwf'
@@ -2347,7 +1958,8 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
                 try:
                     url, filename, run, cat = _ecmwf_aifs_ens_url_scanner(final_forecast_hour,
                                                                           cat,
-                                                                          'google')
+                                                                          'google',
+                                                                          proxies)
                     
                     print("Google Cloud Server Online - Connected.")
                     source = 'google'
@@ -2366,7 +1978,8 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
         try:
             url, filename, run, cat = _ecmwf_aifs_ens_url_scanner(final_forecast_hour,
                                                                   cat,
-                                                                  source)
+                                                                  source,
+                                                                  proxies)
         except Exception as e:
             filename = None
             
@@ -2376,7 +1989,8 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
             try:
                 url, filename, run, cat = _ecmwf_aifs_ens_url_scanner(final_forecast_hour,
                                                                       cat,
-                                                                      'ecmwf')
+                                                                      'ecmwf',
+                                                                      proxies)
                 
                 print("ECMWF Open-Data Server Online - Connected.")
                 source = 'ecmwf'
@@ -2389,7 +2003,8 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
                 try:
                     url, filename, run, cat = _ecmwf_aifs_ens_url_scanner(final_forecast_hour,
                                                                           cat,
-                                                                          'aws')
+                                                                          'aws',
+                                                                          proxies)
                     
                     print("Amazon AWS Server Online - Connected.")
                     source = 'aws'
@@ -2404,9 +2019,6 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
         else:
             pass
     
-    
-    valid_date = _parse_date(url,
-                             'aifs-ens')
     
     params = _aifs_var_keys(variables)
 
@@ -2423,187 +2035,51 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
     date = _parse_filename(filename)
     
     levels = _get_levels(levels)
-    
-    client = _Client(source=source,
-                     model='aifs-ens')
+
     if download == True:
-        print(f"Downloading ECMWF AIFS ENSEMBLE {cat.upper()}...\n")
-        print(f"By downloading data from the ECMWF open data dataset, you agree to the terms: Attribution 4.0 International (CC BY 4.0).\nPlease attribute ECMWF when downloading this data.")
+        print(f"Downloading ECMWF AIFS ENSEMBLE...\n")
         _clear_old_data(path)
         
-        if cat == 'cf':        
-            for i in range(0, final_forecast_hour + 6, 6):
-                f = _io.StringIO()
-                with _contextlib.redirect_stdout(f):
-                    if level_type == 'pl':
-                        try:
-                            client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream='enfo',
-                                            type=cat,
-                                            levtype=level_type,
-                                            param=params,
-                                            levelist=levels,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-{cat}.grib2")
-                            success = True
-                        except Exception as e:
-                                for k in range(0, 3, 1):
-                                    print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                    print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                    _time.sleep(3)
-                                    try:
-                                        client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream='enfo',
-                                            type=cat,
-                                            levtype=level_type,
-                                            param=params,
-                                            levelist=levels,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-{cat}.grib2")
-                                        success = True
-                                        break
-                                    except Exception as e:
-                                        k = k
-                                        if k >= 2:
-                                           success = False
-                                           break                   
-                    else:
-                        try:
-                            client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream='enfo',
-                                            type=cat,
-                                            levtype=level_type,
-                                            param=params,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-{cat}.grib2")
-                            success = True
-                        except Exception as e:
-                            for k in range(0, 3, 1):
-                                    print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                    print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                    _time.sleep(3)
-                                    try:
-                                        client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream='enfo',
-                                            type=cat,
-                                            levtype=level_type,
-                                            param=params,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-{cat}.grib2")
-                                        success = True
-                                        break
-                                    except Exception as e:
-                                        k = k
-                                        if k >= 2:
-                                            success = False
-                                            break
-                if success == True:                
-                    if notifications == True:
-                        print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-{cat}.grib2 saved to {path}", file=original_stdout)
-                    else:
-                        pass
+        if cat == 'cf':
+            for i in range(0, (final_forecast_hour + 6), 6):
+                _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-cf.grib2",
+                                    f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-cf.index",
+                                    level_type,
+                                    levels,
+                                    params,
+                                    None,
+                                    proxies,
+                                    path,
+                                    f"{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-cf.grib2")
+                if notifications == True:
+                    print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-cf.grib2 saved to {path}")
                 else:
-                    break
-                    
-        else:        
-            for i in range(0, final_forecast_hour + 6, 6):
-                f = _io.StringIO()
-                with _contextlib.redirect_stdout(f):
-                    if level_type == 'pl':
-                        try:
-                            client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream='enfo',
-                                            type=cat,
-                                            levtype=level_type,
-                                            param=params,
-                                            levelist=levels,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-{cat}.grib2")
-                            success = True
-                        except Exception as e:
-                                for k in range(0, 3, 1):
-                                    print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                    print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                    _time.sleep(3)
-                                    try:
-                                        client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream='enfo',
-                                            type=cat,
-                                            levtype=level_type,
-                                            param=params,
-                                            levelist=levels,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-{cat}.grib2")
-                                        success = True
-                                        break
-                                    except Exception as e:
-                                        k = k
-                                        if k >= 2:
-                                            success = False
-                                            break                      
-                    else:
-                        try:
-                            client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream='enfo',
-                                            type=cat,
-                                            levtype=level_type,
-                                            param=params,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-{cat}.grib2")
-                            success = True
-                        except Exception as e:
-                            for k in range(0, 3, 1):
-                                    print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                    print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                    _time.sleep(3)
-                                    try:
-                                        client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream='enfo',
-                                            type=cat,
-                                            levtype=level_type,
-                                            param=params,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-{cat}.grib2")
-                                        success = True
-                                        break
-                                    except Exception as e:
-                                        k = k
-                                        if k >= 2:
-                                            success = False
-                                            break
-                if success == True:  
-                    if notifications == True:
-                        print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-{cat}.grib2 saved to {path}", file=original_stdout)
-                    else:
-                        pass
-                else:
-                    break
-        if success == True:
-            print(f"ECMWF AIFS ENSEMBLE {cat.upper()} Download Complete.")   
+                    pass
+                
         else:
-            pass 
+            for i in range(0, (final_forecast_hour + 6), 6):
+                _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-pf.grib2",
+                                    f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-pf.index",
+                                    level_type,
+                                    levels,
+                                    params,
+                                    members,
+                                    proxies,
+                                    path,
+                                    f"{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-pf.grib2")
+                if notifications == True:
+                    print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-pf.grib2 saved to {path}")
+                else:
+                    pass
+                
+        print(f"ECMWF AIFS ENSEMBLE Download Complete.")
         
     else:
         print(f"ECMWF AIFS ENSEMBLE {cat.upper()} Data is up to date. Skipping download...")    
         
     if process_data == True:
-        if success == True:
-            print(f"ECMWF AIFS ENSEMBLE {cat.upper()} Data Processing...")
-        else:
-            pass
-        
+        print(f"ECMWF AIFS ENSEMBLE {cat.upper()} Data Processing...")
+
         ds = _ecmwf_post_processing.ecmwf_aifs_post_processing(path,
                                                             western_bound, 
                                                             eastern_bound, 
@@ -2748,11 +2224,6 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
     else:
         pass
     
-    if proxies == None:
-        pass
-    else:
-        _os.environ['http_proxy'] = proxies
-        _os.environ['https_proxy'] = proxies
     
     if custom_directory == None:
         _build_directory('ifs', 
@@ -2774,7 +2245,8 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
     if source == 'ecmwf':
         try:
             url, filename, run = _ecmwf_ifs_wave_url_scanner(final_forecast_hour,
-                                                        source)
+                                                        source,
+                                                        proxies)
         except Exception as e:
             filename = None
             
@@ -2783,7 +2255,8 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
             print("Rotating to Amazon AWS Server.")
             try:
                 url, filename, run = _ecmwf_ifs_wave_url_scanner(final_forecast_hour,
-                                                        'aws')
+                                                        'aws',
+                                                        proxies)
                 
                 print("Amazon AWS Server Online - Connected.")
                 source = 'aws'
@@ -2795,7 +2268,8 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
                 print("Rotating to Google Cloud Server.")
                 try:
                     url, filename, run = _ecmwf_ifs_wave_url_scanner(final_forecast_hour,
-                                                        'google')
+                                                        'google',
+                                                        proxies)
                     
                     print("Google Cloud Server Online - Connected.")
                     source = 'google'
@@ -2813,7 +2287,8 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
     elif source == 'aws':
         try:
             url, filename, run = _ecmwf_ifs_wave_url_scanner(final_forecast_hour,
-                                                        source)
+                                                        source,
+                                                        proxies)
         except Exception as e:
             filename = None
             
@@ -2822,7 +2297,8 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
             print("Rotating to ECMWF Open-Data Server.")
             try:
                 url, filename, run = _ecmwf_ifs_wave_url_scanner(final_forecast_hour,
-                                                        'ecmwf')
+                                                        'ecmwf',
+                                                        proxies)
                 
                 print("ECMWF Open-Data Server Online - Connected.")
                 source = 'ecmwf'
@@ -2834,7 +2310,8 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
                 print("Rotating to Google Cloud Server.")
                 try:
                     url, filename, run = _ecmwf_ifs_wave_url_scanner(final_forecast_hour,
-                                                        'google')
+                                                        'google',
+                                                        proxies)
                     
                     print("Google Cloud Server Online - Connected.")
                     source = 'google'
@@ -2852,7 +2329,8 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
     else:
         try:
             url, filename, run = _ecmwf_ifs_wave_url_scanner(final_forecast_hour,
-                                                        source)
+                                                        source,
+                                                        proxies)
         except Exception as e:
             filename = None
             
@@ -2861,7 +2339,8 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
             print("Rotating to ECMWF Open-Data Server.")
             try:
                 url, filename, run = _ecmwf_ifs_wave_url_scanner(final_forecast_hour,
-                                                        'ecmwf')
+                                                        'ecmwf',
+                                                        proxies)
                 
                 print("ECMWF Open-Data Server Online - Connected.")
                 source = 'ecmwf'
@@ -2873,7 +2352,8 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
                 print("Rotating to Amazon AWS Server.")
                 try:
                     url, filename, run = _ecmwf_ifs_wave_url_scanner(final_forecast_hour,
-                                                        'aws')
+                                                        'aws',
+                                                        proxies)
                     
                     print("Amazon AWS Server Online - Connected.")
                     source = 'aws'
@@ -2889,12 +2369,6 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
             pass
     
     
-    stream = _get_stream('ifs-wave',
-                         run)
-
-    valid_date = _parse_date(url,
-                             'ifs-wave')
-    
     params = _ifs_var_keys(variables)
 
     download = _local_file_scanner(path, 
@@ -2905,108 +2379,64 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
 
     date = _parse_filename(filename)
     
-    client = _Client(source=source,
-                     model='ifs')
     if download == True:
         print(f"Downloading ECMWF IFS-WAVE...\n")
-        print(f"By downloading data from the ECMWF open data dataset, you agree to the terms: Attribution 4.0 International (CC BY 4.0).\nPlease attribute ECMWF when downloading this data.")
         _clear_old_data(path)
         
         if final_forecast_hour <= 144:
             for i in range(0, final_forecast_hour + step, step):
-                f = _io.StringIO()
-                with _contextlib.redirect_stdout(f):
-                    try:
-                        client.retrieve(date=valid_date,
-                                        time=run,
-                                        step=i,
-                                        stream=stream,
-                                        type="fc",
-                                        param=params,
-                                        target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                        success = True
-                    except Exception as e:
-                        for k in range(0, 3, 1):
-                            print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                            print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                            _time.sleep(3)
-                            try:
-                                client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="fc",
-                                            param=params,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                                success = True
-                                break
-                            except Exception as e:
-                                k = k
-                                if k >= 2:
-                                    success = False
-                                    break
-                if success == True:
-                    if notifications == True:
-                        print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2 saved to {path}", file=original_stdout)
-                    else:
-                        pass       
+                _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-wave-fc.grib2",
+                                    f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-wave-fc.index",
+                                    "sfc",
+                                    None,
+                                    params,
+                                    None,
+                                    proxies,
+                                    path,
+                                    f"{date.strftime('%Y%m%d%H')}0000-{i}h-wave-fc.grib2")
+                if notifications == True:
+                    print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-wave-fc.grib2 saved to {path}")
                 else:
-                    break                 
-                                
-        else:
-            for i in range(0, final_forecast_hour + step, step):
-                f = _io.StringIO()
-                with _contextlib.redirect_stdout(f):
-                    try:
-                        client.retrieve(date=valid_date,
-                                        time=run,
-                                        step=i,
-                                        stream=stream,
-                                        type="fc",
-                                        param=params,
-                                        target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                        success = True
-                    except Exception as e:
-                        if i % 6 != 0 and i > 144:
-                            pass
-                        else:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream=stream,
-                                            type="fc",
-                                            param=params,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-{stream}-fc.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
-                                        break
-                if success == True:
                     pass
-                else:
-                    break
-
-        if success == True:
-            print(f"ECMWF IFS-WAVE Download Complete.")   
+                            
         else:
-            pass 
+            for i in range(0, (144 + step), step):
+                _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-wave-fc.grib2",
+                                    f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-wave-fc.index",
+                                    "sfc",
+                                    None,
+                                    params,
+                                    None,
+                                    proxies,
+                                    path,
+                                    f"{date.strftime('%Y%m%d%H')}0000-{i}h-wave-fc.grib2")
+                if notifications == True:
+                    print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-wave-fc.grib2 saved to {path}")
+                else:
+                    pass
+                
+            for i in range(0, (final_forecast_hour + 6), 6):
+                _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-wave-fc.grib2",
+                                    f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-wave-fc.index",
+                                    "sfc",
+                                    None,
+                                    params,
+                                    None,
+                                    proxies,
+                                    path,
+                                    f"{date.strftime('%Y%m%d%H')}0000-{i}h-wave-fc.grib2")
+                if notifications == True:
+                    print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-wave-fc.grib2 saved to {path}")
+                else:
+                    pass
+                
+        print(f"ECMWF IFS-WAVE Download Complete.")    
         
     else:
         print(f"ECMWF IFS-WAVE Data is up to date. Skipping download...")    
         
     if process_data == True:
-        if success == True:
-            print(f"ECMWF IFS-WAVE Data Processing...")
-        else:
-            pass
+        print(f"ECMWF IFS-WAVE Data Processing...")
         
         ds = _ecmwf_post_processing.ecmwf_ifs_wave_post_processing(path,
                                                             western_bound, 
@@ -3176,7 +2606,8 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
     if source == 'ecmwf':
         try:
             url, filename, run = _ecmwf_ifs_wave_ens_url_scanner(final_forecast_hour,
-                                                        source)
+                                                        source,
+                                                        proxies)
         except Exception as e:
             filename = None
             
@@ -3185,7 +2616,8 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
             print("Rotating to Amazon AWS Server.")
             try:
                 url, filename, run = _ecmwf_ifs_wave_ens_url_scanner(final_forecast_hour,
-                                                        'aws')
+                                                        'aws',
+                                                        proxies)
                 
                 print("Amazon AWS Server Online - Connected.")
                 source = 'aws'
@@ -3197,7 +2629,8 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
                 print("Rotating to Google Cloud Server.")
                 try:
                     url, filename, run = _ecmwf_ifs_wave_ens_url_scanner(final_forecast_hour,
-                                                        'google')
+                                                        'google',
+                                                        proxies)
                     
                     print("Google Cloud Server Online - Connected.")
                     source = 'google'
@@ -3215,7 +2648,8 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
     elif source == 'aws':
         try:
             url, filename, run = _ecmwf_ifs_wave_ens_url_scanner(final_forecast_hour,
-                                                        source)
+                                                        source,
+                                                        proxies)
         except Exception as e:
             filename = None
             
@@ -3224,7 +2658,8 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
             print("Rotating to ECMWF Open-Data Server.")
             try:
                 url, filename, run = _ecmwf_ifs_wave_ens_url_scanner(final_forecast_hour,
-                                                        'ecmwf')
+                                                        'ecmwf',
+                                                        proxies)
                 
                 print("ECMWF Open-Data Server Online - Connected.")
                 source = 'ecmwf'
@@ -3236,7 +2671,8 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
                 print("Rotating to Google Cloud Server.")
                 try:
                     url, filename, run = _ecmwf_ifs_wave_ens_url_scanner(final_forecast_hour,
-                                                        'google')
+                                                        'google',
+                                                        proxies)
                     
                     print("Google Cloud Server Online - Connected.")
                     source = 'google'
@@ -3254,7 +2690,8 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
     else:
         try:
             url, filename, run = _ecmwf_ifs_wave_ens_url_scanner(final_forecast_hour,
-                                                        source)
+                                                        source,
+                                                        proxies)
         except Exception as e:
             filename = None
             
@@ -3263,7 +2700,8 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
             print("Rotating to ECMWF Open-Data Server.")
             try:
                 url, filename, run = _ecmwf_ifs_wave_ens_url_scanner(final_forecast_hour,
-                                                        'ecmwf')
+                                                        'ecmwf',
+                                                        proxies)
                 
                 print("ECMWF Open-Data Server Online - Connected.")
                 source = 'ecmwf'
@@ -3275,7 +2713,8 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
                 print("Rotating to Amazon AWS Server.")
                 try:
                     url, filename, run = _ecmwf_ifs_wave_ens_url_scanner(final_forecast_hour,
-                                                        'aws')
+                                                        'aws',
+                                                        proxies)
                     
                     print("Amazon AWS Server Online - Connected.")
                     source = 'aws'
@@ -3290,8 +2729,6 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
         else:
             pass
     
-    valid_date = _parse_date(url,
-                             'ifs-wave')
     
     params = _ifs_var_keys(variables)
 
@@ -3303,123 +2740,65 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
 
     date = _parse_filename(filename)
     
-    client = _Client(source=source,
-                     model='ifs')
     if download == True:
         print(f"Downloading ECMWF IFS-WAVE ENSEMBLE...\n")
-        print(f"By downloading data from the ECMWF open data dataset, you agree to the terms: Attribution 4.0 International (CC BY 4.0).\nPlease attribute ECMWF when downloading this data.")
         _clear_old_data(path)
         
         if final_forecast_hour <= 144:
             for i in range(0, final_forecast_hour + step, step):
-                f = _io.StringIO()
-                with _contextlib.redirect_stdout(f):
-                    try:
-                        client.retrieve(date=valid_date,
-                                        time=run,
-                                        step=i,
-                                        stream='waef',
-                                        type="ef",
-                                        param=params,
-                                        number=members,
-                                        target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
-                        success = True
-                    except Exception as e:
-                        for k in range(0, 3, 1):
-                            print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                            print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                            _time.sleep(3)
-                            try:
-                                client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream='waef',
-                                            type="ef",
-                                            param=params,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
-                                success = True
-                                break
-                            except Exception as e:
-                                k = k
-                                if k >= 2:
-                                    success = False
-                                    pass   
-                    
-                    if success == True:
-                        if notifications == 'on':
-                            print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-waef-fc.grib2 saved to {path}", file=original_stdout)
-                        else:
-                            pass
-                    else:
-                        break      
-                                                 
-                                
+                _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2",
+                                    f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.index",
+                                    "sfc",
+                                    None,
+                                    params,
+                                    members,
+                                    proxies,
+                                    path,
+                                    f"{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
+                if notifications == True:
+                    print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2 saved to {path}")
+                else:
+                    pass
+                            
         else:
-            for i in range(0, final_forecast_hour + step, step):
-                f = _io.StringIO()
-                with _contextlib.redirect_stdout(f):
-                    try:
-                        client.retrieve(date=valid_date,
-                                        time=run,
-                                        step=i,
-                                        stream='waef',
-                                        type="ef",
-                                        param=params,
-                                        number=members,
-                                        target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
-                        success = True
-                    except Exception as e:
-                        if i % 6 != 0 and i > 144:
-                            pass
-                        else:
-                            for k in range(0, 3, 1):
-                                print(f"Server Connection Unstable - Retrying.", file=original_stdout)
-                                print(f"Remaining Attempts: {3 - k}", file=original_stdout)
-                                _time.sleep(3)
-                                try:
-                                    client.retrieve(date=valid_date,
-                                            time=run,
-                                            step=i,
-                                            stream='waef',
-                                            type="ef",
-                                            param=params,
-                                            number=members,
-                                            target=f"{path}/{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
-                                    success = True
-                                    break
-                                except Exception as e:
-                                    k = k
-                                    if k >= 2:
-                                        success = False
-                                        pass
-                    if success == True:
-                        pass
-                    else:
-                        break
-                                                                
-                    if success == True:
-                        if notifications == 'on':
-                            print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-waef-fc.grib2 saved to {path}", file=original_stdout)
-                        else:
-                            pass
-                    else:
-                        break
+            for i in range(0, (144 + step), step):
+                _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2",
+                                    f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.index",
+                                    "sfc",
+                                    None,
+                                    params,
+                                    members,
+                                    proxies,
+                                    path,
+                                    f"{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
+                if notifications == True:
+                    print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2 saved to {path}")
+                else:
+                    pass
+                
+            for i in range(0, (final_forecast_hour + 6), 6):
+                _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2",
+                                    f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.index",
+                                    "sfc",
+                                    None,
+                                    params,
+                                    members,
+                                    proxies,
+                                    path,
+                                    f"{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2")
+                if notifications == True:
+                    print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2 saved to {path}")
+                else:
+                    pass
 
                                                                            
-        if success == True:
-            print(f"ECMWF IFS-WAVE ENSEMBLE Download Complete.")    
-        else:
-            pass
-        
+        print(f"ECMWF IFS-WAVE ENSEMBLE Download Complete.")    
+
     else:
         print(f"ECMWF IFS-WAVE ENSEMBLE Data is up to date. Skipping download...")    
         
     if process_data == True:
-        if success == True:
-            print(f"ECMWF IFS-WAVE ENSEMBLE Data Processing...")
-        else:
-            pass
+        print(f"ECMWF IFS-WAVE ENSEMBLE Data Processing...")
         
         ds = _ecmwf_post_processing.ecmwf_ifs_wave_post_processing(path,
                                                             western_bound, 
@@ -4941,7 +4320,7 @@ def ecmwf_aifs(final_forecast_hour=360,
                     custom_directory=None,
                     notifications='off',
                     source='ecmwf',
-                    level_type='surface',
+                    level_type='pressure',
                     clear_data=False,
                     variables=['geopotential height',
                                 'specific humidity',
@@ -5629,38 +5008,12 @@ def ecmwf_aifs_ens(final_forecast_hour=360,
                     level_type='surface',
                     cat='control',
                     clear_data=False,
-                    variables=['geopotential',
-                                'total column water',
-                                'mean sea level pressure',
-                                'standard deviation of sub-gridscale orography',
-                                'slope of sub-gridscale orography',
-                                '10-meter u-wind component',
-                                '10-meter v-wind component',
-                                '2-meter temperature',
-                                '2-meter dew point',
-                                'surface shortwave radiation downward',
-                                'land sea mask',
-                                'surface longwave radiation downward',
-                                'low cloud cover',
-                                'mid-level cloud cover',
-                                'high cloud cover',
-                                'runoff water equivalent',
-                                'convective precipitation',
-                                'snowfall water equivalent',
-                                'total cloud cover',
-                                'total precipitation',
-                                '100-meter u-wind component',
-                                '100-meter v-wind component',
-                                'skin temperature',
-                                'surface pressure',
+                    variables=['geopotential height',
                                 'specific humidity',
                                 'relative humidity',
                                 'temperature',
                                 'u-wind component',
-                                'v-wind component',
-                                'vertical velocity',
-                                'volumetric soil moisture content',
-                                'soil temperature'],
+                                'v-wind component'],
                     levels=[1000, 
                             925, 
                             850, 
@@ -5764,7 +5117,14 @@ def ecmwf_aifs_ens(final_forecast_hour=360,
     18) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
         
-    19) variables (String List) - Default is all variables. The list of variable names in plain-language. 
+    19) variables (String List) - Default=['geopotential height',
+                                            'specific humidity',
+                                            'relative humidity',
+                                            'temperature',
+                                            'u-wind component',
+                                            'v-wind component']. 
+                                
+        The list of variable names in plain-language. 
     
         variables
         ---------
@@ -6366,7 +5726,7 @@ def ecmwf_aifs_ens(final_forecast_hour=360,
     else:
         pass
     
-def ecmwf_ifs_wave(final_forecast_hour=144,
+def ecmwf_ifs_wave(final_forecast_hour=360,
                     western_bound=-180,
                     eastern_bound=180,
                     northern_bound=90,

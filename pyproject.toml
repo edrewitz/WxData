@@ -29,7 +29,6 @@ dependencies = [
   "cfgrib>=0.9.15.1",
   "dask>=2025.11.0",
   "tqdm>=4.67.3",
-  "ecmwf-opendata>=0.3.26",
   "openpyxl>=3.1.5",
   "arm-pyart>=2.2.0",
   "click>=8.3.1",

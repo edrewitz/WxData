@@ -28,12 +28,13 @@ local = datetime.now()
 # Gets yesterday's date
 yd = now - timedelta(days=1)
 
-ECMWF_PREFIX = f"https://data.ecmwf.int/forecasts/"
+ECMWF_PREFIX = f"https://data.ecmwf.int/ecpds/home/opendata/"
 AMAZON_AWS_PREFIX = f"https://ecmwf-forecasts.s3.eu-central-1.amazonaws.com/"
 GOOGLE_CLOUD_PREFIX = f"https://storage.googleapis.com/ecmwf-open-data/"
 
 def ecmwf_ifs_url_scanner(final_forecast_hour,
-                          source):
+                          source,
+                          proxies):
     
     """
     This function scans for the URL of the latest available ECMWF IFS data on the ECMWF Data Store. 
@@ -52,6 +53,13 @@ def ecmwf_ifs_url_scanner(final_forecast_hour,
         - ECMWF Open-Data Server = 'ecmwf'
         - Amazon AWS Server = 'aws'
         - Google Cloud Server = 'google'
+        
+    3) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
     Returns
     -------
@@ -80,13 +88,13 @@ def ecmwf_ifs_url_scanner(final_forecast_hour,
     else:
         final_forecast_hour = final_forecast_hour
         
-    today_18z_url = f"{PREFIX}{now.strftime('%Y%m%d')}/18z/ifs/0p25/scda/"
+    today_18z_url = f"{PREFIX}{now.strftime('%Y%m%d')}/18z/ifs/0p25/oper/"
     today_12z_url = f"{PREFIX}{now.strftime('%Y%m%d')}/12z/ifs/0p25/oper/"
-    today_06z_url = f"{PREFIX}{now.strftime('%Y%m%d')}/06z/ifs/0p25/scda/"
+    today_06z_url = f"{PREFIX}{now.strftime('%Y%m%d')}/06z/ifs/0p25/oper/"
     today_00z_url = f"{PREFIX}{now.strftime('%Y%m%d')}/00z/ifs/0p25/oper/"
-    yesterday_18z_url = f"{PREFIX}{yd.strftime('%Y%m%d')}/18z/ifs/0p25/scda/"
+    yesterday_18z_url = f"{PREFIX}{yd.strftime('%Y%m%d')}/18z/ifs/0p25/oper/"
     yesterday_12z_url = f"{PREFIX}{yd.strftime('%Y%m%d')}/12z/ifs/0p25/oper/"
-    yesterday_06z_url = f"{PREFIX}{yd.strftime('%Y%m%d')}/06z/ifs/0p25/scda/"
+    yesterday_06z_url = f"{PREFIX}{yd.strftime('%Y%m%d')}/06z/ifs/0p25/oper/"
     yesterday_00z_url = f"{PREFIX}{yd.strftime('%Y%m%d')}/00z/ifs/0p25/oper/"
     
     file_12z_today = f"{now.strftime('%Y%m%d')}120000-{final_forecast_hour}h-oper-fc.grib2"
@@ -94,72 +102,147 @@ def ecmwf_ifs_url_scanner(final_forecast_hour,
     file_12z_yesterday = f"{yd.strftime('%Y%m%d')}120000-{final_forecast_hour}h-oper-fc.grib2"
     file_00z_yesterday = f"{yd.strftime('%Y%m%d')}000000-{final_forecast_hour}h-oper-fc.grib2"
     if final_forecast_hour >= 144:
-        file_18z_today = f"{now.strftime('%Y%m%d')}180000-144h-scda-fc.grib2"
-        file_06z_today = f"{now.strftime('%Y%m%d')}060000-144h-scda-fc.grib2"
-        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}180000-144h-scda-fc.grib2"
-        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}060000-144h-scda-fc.grib2"
+        file_18z_today = f"{now.strftime('%Y%m%d')}180000-144h-oper-fc.grib2"
+        file_06z_today = f"{now.strftime('%Y%m%d')}060000-144h-oper-fc.grib2"
+        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}180000-144h-oper-fc.grib2"
+        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}060000-144h-oper-fc.grib2"
     else:
-        file_18z_today = f"{now.strftime('%Y%m%d')}180000-{final_forecast_hour}h-scda-fc.grib2"
-        file_06z_today = f"{now.strftime('%Y%m%d')}060000-{final_forecast_hour}h-scda-fc.grib2"
-        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}180000-{final_forecast_hour}h-scda-fc.grib2"
-        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}060000-{final_forecast_hour}h-scda-fc.grib2"
-        
-    try:
-        t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
-                            stream=True)
-        t_18.close()
-        t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
-                            stream=True)
-        t_12.close()
-        t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
-                            stream=True)
-        t_06.close()
-        t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
-                            stream=True)
-        t_00.close()
-        y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
-                            stream=True)
-        y_18.close()
-        y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
-                            stream=True)
-        y_12.close()
-        y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
-                            stream=True)
-        y_06.close()
-        y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
-                            stream=True)
-        y_00.close()
-    except Exception as e:
-        for i in range(0, 10, 1):
-            time.sleep(30)
-            try:
-                t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
-                                    stream=True)
-                t_18.close()
-                t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
-                                    stream=True)
-                t_12.close()
-                t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
-                                    stream=True)
-                t_06.close()
-                t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
-                                    stream=True)
-                t_00.close()
-                y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
-                                    stream=True)
-                y_18.close()
-                y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
-                                    stream=True)
-                y_12.close()
-                y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
-                                    stream=True)
-                y_06.close()
-                y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
-                                    stream=True)
-                y_00.close()
-                break
-            except Exception as e:
-                i = i
+        file_18z_today = f"{now.strftime('%Y%m%d')}180000-{final_forecast_hour}h-oper-fc.grib2"
+        file_06z_today = f"{now.strftime('%Y%m%d')}060000-{final_forecast_hour}h-oper-fc.grib2"
+        file_18z_yesterday = f"{yd.strftime('%Y%m%d')}180000-{final_forecast_hour}h-oper-fc.grib2"
+        file_06z_yesterday = f"{yd.strftime('%Y%m%d')}060000-{final_forecast_hour}h-oper-fc.grib2"
+    
+    if proxies == None:    
+        try:
+            t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                stream=True)
+            t_18.close()
+            t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                stream=True)
+            t_12.close()
+            t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                stream=True)
+            t_06.close()
+            t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                stream=True)
+            t_00.close()
+            y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                stream=True)
+            y_18.close()
+            y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                stream=True)
+            y_12.close()
+            y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                stream=True)
+            y_06.close()
+            y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                stream=True)
+            y_00.close()
+        except Exception as e:
+            for i in range(0, 10, 1):
+                time.sleep(30)
+                try:
+                    t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                        stream=True)
+                    t_18.close()
+                    t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                        stream=True)
+                    t_12.close()
+                    t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                        stream=True)
+                    t_06.close()
+                    t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                        stream=True)
+                    t_00.close()
+                    y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                        stream=True)
+                    y_18.close()
+                    y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                        stream=True)
+                    y_12.close()
+                    y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                        stream=True)
+                    y_06.close()
+                    y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                        stream=True)
+                    y_00.close()
+                    break
+                except Exception as e:
+                    i = i
+                    
+    else:
+        try:
+            t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_18.close()
+            t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_12.close()
+            t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_06.close()
+            t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_00.close()
+            y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_18.close()
+            y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_12.close()
+            y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_06.close()
+            y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_00.close()
+        except Exception as e:
+            for i in range(0, 10, 1):
+                time.sleep(30)
+                try:
+                    t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_18.close()
+                    t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_12.close()
+                    t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_06.close()
+                    t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_00.close()
+                    y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_18.close()
+                    y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_12.close()
+                    y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_06.close()
+                    y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_00.close()
+                    break
+                except Exception as e:
+                    i = i
         
     urls = [
         today_18z_url,
@@ -214,7 +297,8 @@ def ecmwf_ifs_url_scanner(final_forecast_hour,
 
 
 def ecmwf_ifs_ens_url_scanner(final_forecast_hour,
-                              source):
+                              source,
+                              proxies):
     
     """
     This function scans for the URL of the latest available ECMWF IFS data on the ECMWF Data Store. 
@@ -233,6 +317,13 @@ def ecmwf_ifs_ens_url_scanner(final_forecast_hour,
         - ECMWF Open-Data Server = 'ecmwf'
         - Amazon AWS Server = 'aws'
         - Google Cloud Server = 'google'
+        
+    3) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
     Returns
     -------
@@ -286,62 +377,137 @@ def ecmwf_ifs_ens_url_scanner(final_forecast_hour,
         file_18z_yesterday = f"{yd.strftime('%Y%m%d')}180000-{final_forecast_hour}h-enfo-ef.grib2"
         file_06z_yesterday = f"{yd.strftime('%Y%m%d')}060000-{final_forecast_hour}h-enfo-ef.grib2"
     
-    try:
-        t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
-                            stream=True)
-        t_18.close()
-        t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
-                            stream=True)
-        t_12.close()
-        t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
-                            stream=True)
-        t_06.close()
-        t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
-                            stream=True)
-        t_00.close()
-        y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
-                            stream=True)
-        y_18.close()
-        y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
-                            stream=True)
-        y_12.close()
-        y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
-                            stream=True)
-        y_06.close()
-        y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
-                            stream=True)
-        y_00.close()
-    except Exception as e:
-        for i in range(0, 10, 1):
-            time.sleep(30)
-            try:
-                t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
-                                    stream=True)
-                t_18.close()
-                t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
-                                    stream=True)
-                t_12.close()
-                t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
-                                    stream=True)
-                t_06.close()
-                t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
-                                    stream=True)
-                t_00.close()
-                y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
-                                    stream=True)
-                y_18.close()
-                y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
-                                    stream=True)
-                y_12.close()
-                y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
-                                    stream=True)
-                y_06.close()
-                y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
-                                    stream=True)
-                y_00.close()
-                break
-            except Exception as e:
-                i = i
+    if proxies == None:
+        try:
+            t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                stream=True)
+            t_18.close()
+            t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                stream=True)
+            t_12.close()
+            t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                stream=True)
+            t_06.close()
+            t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                stream=True)
+            t_00.close()
+            y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                stream=True)
+            y_18.close()
+            y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                stream=True)
+            y_12.close()
+            y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                stream=True)
+            y_06.close()
+            y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                stream=True)
+            y_00.close()
+        except Exception as e:
+            for i in range(0, 10, 1):
+                time.sleep(30)
+                try:
+                    t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                        stream=True)
+                    t_18.close()
+                    t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                        stream=True)
+                    t_12.close()
+                    t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                        stream=True)
+                    t_06.close()
+                    t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                        stream=True)
+                    t_00.close()
+                    y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                        stream=True)
+                    y_18.close()
+                    y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                        stream=True)
+                    y_12.close()
+                    y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                        stream=True)
+                    y_06.close()
+                    y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                        stream=True)
+                    y_00.close()
+                    break
+                except Exception as e:
+                    i = i
+                    
+    else:
+        try:
+            t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_18.close()
+            t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_12.close()
+            t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_06.close()
+            t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_00.close()
+            y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_18.close()
+            y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_12.close()
+            y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_06.close()
+            y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_00.close()
+        except Exception as e:
+            for i in range(0, 10, 1):
+                time.sleep(30)
+                try:
+                    t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_18.close()
+                    t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_12.close()
+                    t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_06.close()
+                    t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_00.close()
+                    y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_18.close()
+                    y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_12.close()
+                    y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_06.close()
+                    y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_00.close()
+                    break
+                except Exception as e:
+                    i = i
         
     urls = [
         today_18z_url,
@@ -397,7 +563,8 @@ def ecmwf_ifs_ens_url_scanner(final_forecast_hour,
 
 
 def ecmwf_aifs_url_scanner(final_forecast_hour,
-                           source):
+                           source,
+                           proxies):
     
     """
     This function scans for the URL of the latest available ECMWF AIFS data on the ECMWF Data Store. 
@@ -416,6 +583,13 @@ def ecmwf_aifs_url_scanner(final_forecast_hour,
         - ECMWF Open-Data Server = 'ecmwf'
         - Amazon AWS Server = 'aws'
         - Google Cloud Server = 'google'
+        
+    3) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
     Returns
     -------
@@ -462,62 +636,137 @@ def ecmwf_aifs_url_scanner(final_forecast_hour,
     file_06z_yesterday = f"{yd.strftime('%Y%m%d')}060000-{final_forecast_hour}h-oper-fc.grib2"
     file_00z_yesterday = f"{yd.strftime('%Y%m%d')}000000-{final_forecast_hour}h-oper-fc.grib2"
     
-    try:    
-        t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
-                            stream=True)
-        t_18.close()
-        t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
-                            stream=True)
-        t_12.close()
-        t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
-                            stream=True)
-        t_06.close()
-        t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
-                            stream=True)
-        t_00.close()
-        y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
-                            stream=True)
-        y_18.close()
-        y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
-                            stream=True)
-        y_12.close()
-        y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
-                            stream=True)
-        y_06.close()
-        y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
-                            stream=True)
-        y_00.close()
-    except Exception as e:
-        for i in range(0, 10, 1):
-            time.sleep(30)
-            try:
-                t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
-                                    stream=True)
-                t_18.close()
-                t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
-                                    stream=True)
-                t_12.close()
-                t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
-                                    stream=True)
-                t_06.close()
-                t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
-                                    stream=True)
-                t_00.close()
-                y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
-                                    stream=True)
-                y_18.close()
-                y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
-                                    stream=True)
-                y_12.close()
-                y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
-                                    stream=True)
-                y_06.close()
-                y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
-                                    stream=True)
-                y_00.close()
-                break
-            except Exception as e:
-                i = i                         
+    if proxies == None:
+        try:    
+            t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                stream=True)
+            t_18.close()
+            t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                stream=True)
+            t_12.close()
+            t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                stream=True)
+            t_06.close()
+            t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                stream=True)
+            t_00.close()
+            y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                stream=True)
+            y_18.close()
+            y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                stream=True)
+            y_12.close()
+            y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                stream=True)
+            y_06.close()
+            y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                stream=True)
+            y_00.close()
+        except Exception as e:
+            for i in range(0, 10, 1):
+                time.sleep(30)
+                try:
+                    t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                        stream=True)
+                    t_18.close()
+                    t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                        stream=True)
+                    t_12.close()
+                    t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                        stream=True)
+                    t_06.close()
+                    t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                        stream=True)
+                    t_00.close()
+                    y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                        stream=True)
+                    y_18.close()
+                    y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                        stream=True)
+                    y_12.close()
+                    y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                        stream=True)
+                    y_06.close()
+                    y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                        stream=True)
+                    y_00.close()
+                    break
+                except Exception as e:
+                    i = i       
+                    
+    else:
+        try:    
+            t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_18.close()
+            t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_12.close()
+            t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_06.close()
+            t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_00.close()
+            y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_18.close()
+            y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_12.close()
+            y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_06.close()
+            y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_00.close()
+        except Exception as e:
+            for i in range(0, 10, 1):
+                time.sleep(30)
+                try:
+                    t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_18.close()
+                    t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_12.close()
+                    t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_06.close()
+                    t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_00.close()
+                    y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_18.close()
+                    y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_12.close()
+                    y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_06.close()
+                    y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_00.close()
+                    break
+                except Exception as e:
+                    i = i                         
         
     urls = [
         today_18z_url,
@@ -572,7 +821,8 @@ def ecmwf_aifs_url_scanner(final_forecast_hour,
 
 def ecmwf_aifs_ens_url_scanner(final_forecast_hour,
                                cat,
-                               source):
+                               source,
+                               proxies):
     
     """
     This function scans for the URL of the latest available ECMWF AIFS data on the ECMWF Data Store. 
@@ -583,7 +833,13 @@ def ecmwf_aifs_ens_url_scanner(final_forecast_hour,
     goes out to 360 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
     360 by the nereast increment of 3 hours. 
     
-    2) source (String) - Default='ecmwf'. The data server choice. 
+    2) cat (String) - Default='control'. The type of ensemble run. 
+    
+        Control Run - cat='control'
+        
+        Ensemble Members - cat='members'
+    
+    3) source (String) - Default='ecmwf'. The data server choice. 
     
         Data Sources
         ------------
@@ -591,6 +847,13 @@ def ecmwf_aifs_ens_url_scanner(final_forecast_hour,
         - ECMWF Open-Data Server = 'ecmwf'
         - Amazon AWS Server = 'aws'
         - Google Cloud Server = 'google'
+        
+    4) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
     Returns
     -------
@@ -645,62 +908,137 @@ def ecmwf_aifs_ens_url_scanner(final_forecast_hour,
     file_06z_yesterday = f"{yd.strftime('%Y%m%d')}060000-{final_forecast_hour}h-enfo-{cat}.grib2"
     file_00z_yesterday = f"{yd.strftime('%Y%m%d')}000000-{final_forecast_hour}h-enfo-{cat}.grib2"
     
-    try:    
-        t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
-                            stream=True)
-        t_18.close()
-        t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
-                            stream=True)
-        t_12.close()
-        t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
-                            stream=True)
-        t_06.close()
-        t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
-                            stream=True)
-        t_00.close()
-        y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
-                            stream=True)
-        y_18.close()
-        y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
-                            stream=True)
-        y_12.close()
-        y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
-                            stream=True)
-        y_06.close()
-        y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
-                            stream=True)
-        y_00.close()
-    except Exception as e:
-        for i in range(0, 10, 1):
-            time.sleep(30)
-            try:
-                t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
-                                    stream=True)
-                t_18.close()
-                t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
-                                    stream=True)
-                t_12.close()
-                t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
-                                    stream=True)
-                t_06.close()
-                t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
-                                    stream=True)
-                t_00.close()
-                y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
-                                    stream=True)
-                y_18.close()
-                y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
-                                    stream=True)
-                y_12.close()
-                y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
-                                    stream=True)
-                y_06.close()
-                y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
-                                    stream=True)
-                y_00.close()
-                break
-            except Exception as e:
-                i = i                         
+    if proxies == None:
+        try:    
+            t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                stream=True)
+            t_18.close()
+            t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                stream=True)
+            t_12.close()
+            t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                stream=True)
+            t_06.close()
+            t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                stream=True)
+            t_00.close()
+            y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                stream=True)
+            y_18.close()
+            y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                stream=True)
+            y_12.close()
+            y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                stream=True)
+            y_06.close()
+            y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                stream=True)
+            y_00.close()
+        except Exception as e:
+            for i in range(0, 10, 1):
+                time.sleep(30)
+                try:
+                    t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                        stream=True)
+                    t_18.close()
+                    t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                        stream=True)
+                    t_12.close()
+                    t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                        stream=True)
+                    t_06.close()
+                    t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                        stream=True)
+                    t_00.close()
+                    y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                        stream=True)
+                    y_18.close()
+                    y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                        stream=True)
+                    y_12.close()
+                    y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                        stream=True)
+                    y_06.close()
+                    y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                        stream=True)
+                    y_00.close()
+                    break
+                except Exception as e:
+                    i = i   
+                    
+    else:
+        try:    
+            t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_18.close()
+            t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_12.close()
+            t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_06.close()
+            t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_00.close()
+            y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_18.close()
+            y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_12.close()
+            y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_06.close()
+            y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_00.close()
+        except Exception as e:
+            for i in range(0, 10, 1):
+                time.sleep(30)
+                try:
+                    t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_18.close()
+                    t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_12.close()
+                    t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_06.close()
+                    t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_00.close()
+                    y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_18.close()
+                    y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_12.close()
+                    y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_06.close()
+                    y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_00.close()
+                    break
+                except Exception as e:
+                    i = i                         
         
     urls = [
         today_18z_url,
@@ -754,7 +1092,8 @@ def ecmwf_aifs_ens_url_scanner(final_forecast_hour,
 
 
 def ecmwf_ifs_wave_url_scanner(final_forecast_hour,
-                               source):
+                               source,
+                               proxies):
     
     """
     This function scans for the URL of the latest available ECMWF IFS WAVE data on the ECMWF Data Store. 
@@ -773,6 +1112,13 @@ def ecmwf_ifs_wave_url_scanner(final_forecast_hour,
         - ECMWF Open-Data Server = 'ecmwf'
         - Amazon AWS Server = 'aws'
         - Google Cloud Server = 'google'
+        
+    3) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
 
     Returns
     -------
@@ -802,80 +1148,155 @@ def ecmwf_ifs_wave_url_scanner(final_forecast_hour,
     else:
         final_forecast_hour = final_forecast_hour
         
-    today_18z_url = f"{PREFIX}{now.strftime('%Y%m%d')}/18z/ifs/0p25/scwv/"
+    today_18z_url = f"{PREFIX}{now.strftime('%Y%m%d')}/18z/ifs/0p25/wave/"
     today_12z_url = f"{PREFIX}{now.strftime('%Y%m%d')}/12z/ifs/0p25/wave/"
-    today_06z_url = f"{PREFIX}{now.strftime('%Y%m%d')}/06z/ifs/0p25/scwv/"
+    today_06z_url = f"{PREFIX}{now.strftime('%Y%m%d')}/06z/ifs/0p25/wave/"
     today_00z_url = f"{PREFIX}{now.strftime('%Y%m%d')}/00z/ifs/0p25/wave/"
-    yesterday_18z_url = f"{PREFIX}{yd.strftime('%Y%m%d')}/18z/ifs/0p25/scwv/"
+    yesterday_18z_url = f"{PREFIX}{yd.strftime('%Y%m%d')}/18z/ifs/0p25/wave/"
     yesterday_12z_url = f"{PREFIX}{yd.strftime('%Y%m%d')}/12z/ifs/0p25/wave/"
-    yesterday_06z_url = f"{PREFIX}{yd.strftime('%Y%m%d')}/06z/ifs/0p25/scwv/"
+    yesterday_06z_url = f"{PREFIX}{yd.strftime('%Y%m%d')}/06z/ifs/0p25/wave/"
     yesterday_00z_url = f"{PREFIX}{yd.strftime('%Y%m%d')}/00z/ifs/0p25/wave/"
     
-    file_18z_today = f"{now.strftime('%Y%m%d')}180000-{final_forecast_hour}h-scwv-fc.grib2"
+    file_18z_today = f"{now.strftime('%Y%m%d')}180000-{final_forecast_hour}h-wave-fc.grib2"
     file_12z_today = f"{now.strftime('%Y%m%d')}120000-{final_forecast_hour}h-wave-fc.grib2"
-    file_06z_today = f"{now.strftime('%Y%m%d')}060000-{final_forecast_hour}h-scwv-fc.grib2"
+    file_06z_today = f"{now.strftime('%Y%m%d')}060000-{final_forecast_hour}h-wave-fc.grib2"
     file_00z_today = f"{now.strftime('%Y%m%d')}000000-{final_forecast_hour}h-wave-fc.grib2"
-    file_18z_yesterday = f"{yd.strftime('%Y%m%d')}180000-{final_forecast_hour}h-scwv-fc.grib2"
+    file_18z_yesterday = f"{yd.strftime('%Y%m%d')}180000-{final_forecast_hour}h-wave-fc.grib2"
     file_12z_yesterday = f"{yd.strftime('%Y%m%d')}120000-{final_forecast_hour}h-wave-fc.grib2"
-    file_06z_yesterday = f"{yd.strftime('%Y%m%d')}060000-{final_forecast_hour}h-scwv-fc.grib2"
+    file_06z_yesterday = f"{yd.strftime('%Y%m%d')}060000-{final_forecast_hour}h-wave-fc.grib2"
     file_00z_yesterday = f"{yd.strftime('%Y%m%d')}000000-{final_forecast_hour}h-wave-fc.grib2"
     
-    try:    
-        t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
-                            stream=True)
-        t_18.close()
-        t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
-                            stream=True)
-        t_12.close()
-        t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
-                            stream=True)
-        t_06.close()
-        t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
-                            stream=True)
-        t_00.close()
-        y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
-                            stream=True)
-        y_18.close()
-        y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
-                            stream=True)
-        y_12.close()
-        y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
-                            stream=True)
-        y_06.close()
-        y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
-                            stream=True)
-        y_00.close()
-    except Exception as e:
-        for i in range(0, 10, 1):
-            time.sleep(30)
-            try:
-                t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
-                                    stream=True)
-                t_18.close()
-                t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
-                                    stream=True)
-                t_12.close()
-                t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
-                                    stream=True)
-                t_06.close()
-                t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
-                                    stream=True)
-                t_00.close()
-                y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
-                                    stream=True)
-                y_18.close()
-                y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
-                                    stream=True)
-                y_12.close()
-                y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
-                                    stream=True)
-                y_06.close()
-                y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
-                                    stream=True)
-                y_00.close()
-                break
-            except Exception as e:
-                i = i     
+    if proxies == None:
+        try:    
+            t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                stream=True)
+            t_18.close()
+            t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                stream=True)
+            t_12.close()
+            t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                stream=True)
+            t_06.close()
+            t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                stream=True)
+            t_00.close()
+            y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                stream=True)
+            y_18.close()
+            y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                stream=True)
+            y_12.close()
+            y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                stream=True)
+            y_06.close()
+            y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                stream=True)
+            y_00.close()
+        except Exception as e:
+            for i in range(0, 10, 1):
+                time.sleep(30)
+                try:
+                    t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                        stream=True)
+                    t_18.close()
+                    t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                        stream=True)
+                    t_12.close()
+                    t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                        stream=True)
+                    t_06.close()
+                    t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                        stream=True)
+                    t_00.close()
+                    y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                        stream=True)
+                    y_18.close()
+                    y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                        stream=True)
+                    y_12.close()
+                    y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                        stream=True)
+                    y_06.close()
+                    y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                        stream=True)
+                    y_00.close()
+                    break
+                except Exception as e:
+                    i = i     
+                    
+    else:
+        try:    
+            t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_18.close()
+            t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_12.close()
+            t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_06.close()
+            t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_00.close()
+            y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_18.close()
+            y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_12.close()
+            y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_06.close()
+            y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_00.close()
+        except Exception as e:
+            for i in range(0, 10, 1):
+                time.sleep(30)
+                try:
+                    t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_18.close()
+                    t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_12.close()
+                    t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_06.close()
+                    t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_00.close()
+                    y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_18.close()
+                    y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_12.close()
+                    y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_06.close()
+                    y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_00.close()
+                    break
+                except Exception as e:
+                    i = i     
                     
     urls = [
         today_18z_url,
@@ -925,11 +1346,13 @@ def ecmwf_ifs_wave_url_scanner(final_forecast_hour,
         print(f"Latest forecast data is over 24 hours old. Aborting.....")
         sys.exit(1)
         
+        
     return url, file, run
 
 
 def ecmwf_ifs_wave_ens_url_scanner(final_forecast_hour,
-                                   source):
+                                   source,
+                                   proxies):
     
     """
     This function scans for the URL of the latest available ECMWF IFS WAVE data on the ECMWF Data Store. 
@@ -948,6 +1371,13 @@ def ecmwf_ifs_wave_ens_url_scanner(final_forecast_hour,
         - ECMWF Open-Data Server = 'ecmwf'
         - Amazon AWS Server = 'aws'
         - Google Cloud Server = 'google'
+        
+    3) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
     Returns
     -------
@@ -995,62 +1425,137 @@ def ecmwf_ifs_wave_ens_url_scanner(final_forecast_hour,
     file_06z_yesterday = f"{yd.strftime('%Y%m%d')}060000-{final_forecast_hour}h-waef-ef.grib2"
     file_00z_yesterday = f"{yd.strftime('%Y%m%d')}000000-{final_forecast_hour}h-waef-ef.grib2"
     
-    try:    
-        t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
-                            stream=True)
-        t_18.close()
-        t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
-                            stream=True)
-        t_12.close()
-        t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
-                            stream=True)
-        t_06.close()
-        t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
-                            stream=True)
-        t_00.close()
-        y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
-                            stream=True)
-        y_18.close()
-        y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
-                            stream=True)
-        y_12.close()
-        y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
-                            stream=True)
-        y_06.close()
-        y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
-                            stream=True)
-        y_00.close()
-    except Exception as e:
-        for i in range(0, 10, 1):
-            time.sleep(30)
-            try:
-                t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
-                                    stream=True)
-                t_18.close()
-                t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
-                                    stream=True)
-                t_12.close()
-                t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
-                                    stream=True)
-                t_06.close()
-                t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
-                                    stream=True)
-                t_00.close()
-                y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
-                                    stream=True)
-                y_18.close()
-                y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
-                                    stream=True)
-                y_12.close()
-                y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
-                                    stream=True)
-                y_06.close()
-                y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
-                                    stream=True)
-                y_00.close()
-                break
-            except Exception as e:
-                i = i     
+    if proxies == None:
+        try:    
+            t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                stream=True)
+            t_18.close()
+            t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                stream=True)
+            t_12.close()
+            t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                stream=True)
+            t_06.close()
+            t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                stream=True)
+            t_00.close()
+            y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                stream=True)
+            y_18.close()
+            y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                stream=True)
+            y_12.close()
+            y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                stream=True)
+            y_06.close()
+            y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                stream=True)
+            y_00.close()
+        except Exception as e:
+            for i in range(0, 10, 1):
+                time.sleep(30)
+                try:
+                    t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                        stream=True)
+                    t_18.close()
+                    t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                        stream=True)
+                    t_12.close()
+                    t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                        stream=True)
+                    t_06.close()
+                    t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                        stream=True)
+                    t_00.close()
+                    y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                        stream=True)
+                    y_18.close()
+                    y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                        stream=True)
+                    y_12.close()
+                    y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                        stream=True)
+                    y_06.close()
+                    y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                        stream=True)
+                    y_00.close()
+                    break
+                except Exception as e:
+                    i = i   
+                    
+    else:
+        try:    
+            t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_18.close()
+            t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_12.close()
+            t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_06.close()
+            t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                stream=True,
+                                proxies=proxies)
+            t_00.close()
+            y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_18.close()
+            y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_12.close()
+            y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_06.close()
+            y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                stream=True,
+                                proxies=proxies)
+            y_00.close()
+        except Exception as e:
+            for i in range(0, 10, 1):
+                time.sleep(30)
+                try:
+                    t_18 = requests.get(f"{today_18z_url}{file_18z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_18.close()
+                    t_12 = requests.get(f"{today_12z_url}{file_12z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_12.close()
+                    t_06 = requests.get(f"{today_06z_url}{file_06z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_06.close()
+                    t_00 = requests.get(f"{today_00z_url}{file_00z_today}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    t_00.close()
+                    y_18 = requests.get(f"{yesterday_18z_url}{file_18z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_18.close()
+                    y_12 = requests.get(f"{yesterday_12z_url}{file_12z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_12.close()
+                    y_06 = requests.get(f"{yesterday_06z_url}{file_06z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_06.close()
+                    y_00 = requests.get(f"{yesterday_00z_url}{file_00z_yesterday}", 
+                                        stream=True,
+                                        proxies=proxies)
+                    y_00.close()
+                    break
+                except Exception as e:
+                    i = i       
                     
     urls = [
         today_18z_url,

@@ -2708,13 +2708,15 @@ def ecmwf_ifs(final_forecast_hour=360,
     
     1) Download ECMWF IFS data from ECMWF Open-Data, Amazon Web Services and Google Cloud servers.
     
-    2) Subset the GRIB data into a user-specified bounding box and decode the GRIB2 keys into plain-language.
+    2) Query your download by downloading only the variables and levels needed. 
     
-    3) Convert temperature fields to user-specified units (Kelvin -> Celsius & Kelvin -> Fahrenheit)
+    3) Subset the GRIB data into a user-specified bounding box and decode the GRIB2 keys into plain-language.
     
-    4) Convert the xarray.array of decoded GRIB2 data into a NETCDF (.nc) file. 
+    4) Convert temperature fields to user-specified units (Kelvin -> Celsius & Kelvin -> Fahrenheit)
     
-    5) Manages the ECMWF IFS files in the local directory.     
+    5) Convert the xarray.array of decoded GRIB2 data into a NETCDF (.nc) file. 
+    
+    6) Manages the ECMWF IFS files in the local directory.     
     
     
     These ECMWF end-to-end clients can download ECMWF data from the following sources: 

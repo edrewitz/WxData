@@ -2181,11 +2181,6 @@ def ecmwf_high_resolution_ifs_url_scanner(final_forecast_hour,
     source = source.lower()
     level_type = level_type.lower()
     
-    if level_type == 'pressure':
-        level_type = 'pl'
-    else:
-        level_type = 'sfc'
-    
     if source == 'ecmwf':
         PREFIX = ECMWF_PREFIX
     elif source == 'aws':

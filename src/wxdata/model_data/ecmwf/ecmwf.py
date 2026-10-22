@@ -2716,7 +2716,11 @@ def ecmwf_ifs(final_forecast_hour=360,
     
     5) Convert the xarray.array of decoded GRIB2 data into a NETCDF (.nc) file. 
     
-    6) Manages the ECMWF IFS files in the local directory.     
+    6) Manages the ECMWF IFS files in the local directory.    
+    
+    7) Handle user-specified proxy-server protocol - Useful for users working on VPN connections and behind firewalls.  
+    
+    8) Automatically Rotate between ECMWF Open-Data, Amazon Web Services and Google Cloud in the event of significant server connection issues.
     
     
     These ECMWF end-to-end clients can download ECMWF data from the following sources: 

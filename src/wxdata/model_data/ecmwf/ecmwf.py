@@ -342,6 +342,11 @@ def _ecmwf_ifs_client(final_forecast_hour=360,
     """
     source = source.lower()
     
+    if level_type != 'pressure':
+        levels = None
+    else:
+        pass
+    
     level_type = _get_level_type(level_type)
     
     if clear_recycle_bin == True:
@@ -835,7 +840,10 @@ def _ecmwf_high_res_ifs_client(final_forecast_hour=360,
     
     """
     source = source.lower()
-    
+    if level_type != 'pressure':
+        levels = None
+    else:
+        pass
     
     if clear_recycle_bin == True:
         _clear_recycle_bin_windows()
@@ -1357,6 +1365,10 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=360,
     '3_hr_minimum_2m_temperature'
     
     """
+    if level_type != 'pressure':
+        levels = None
+    else:
+        pass
     
     level_type = _get_level_type(level_type)
     
@@ -1868,6 +1880,10 @@ def _ecmwf_high_res_ifs_ens_client(final_forecast_hour=360,
     '3_hr_minimum_2m_temperature'
     
     """
+    if level_type != 'pressure':
+        levels = None
+    else:
+        pass
     
     if clear_recycle_bin == True:
         _clear_recycle_bin_windows()
@@ -2326,6 +2342,10 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
     'mslp'
     
     """
+    if level_type != 'pressure':
+        levels = None
+    else:
+        pass
     
     level_type = _get_level_type(level_type)
     
@@ -2753,6 +2773,10 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
     'mslp'
     
     """
+    if level_type != 'pressure':
+        levels = None
+    else:
+        pass
     
     level_type = _get_level_type(level_type)
     

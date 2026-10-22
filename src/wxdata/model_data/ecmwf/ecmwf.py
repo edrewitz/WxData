@@ -2737,11 +2737,9 @@ def _ecmwf_aifs_wave_client(final_forecast_hour=360,
     
         ***Variables***
         
-        'mean zero-crossing wave period'
         'significant wave height'
         'mean wave direction'
         'mean wave period'
-        'peak wave period'
         
     **Returns**
     
@@ -7172,11 +7170,9 @@ def ecmwf_aifs_wave(final_forecast_hour=360,
     
         ***Variables***
         
-        'mean zero-crossing wave period'
         'significant wave height'
         'mean wave direction'
         'mean wave period'
-        'peak wave period'
         
     16) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
     

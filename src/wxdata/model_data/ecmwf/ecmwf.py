@@ -2660,7 +2660,7 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=360,
     
     
     
-def ecmwf_ifs(final_forecast_hour=144,
+def ecmwf_ifs(final_forecast_hour=360,
               western_bound=-180,
               eastern_bound=180,
               northern_bound=90,
@@ -2702,8 +2702,20 @@ def ecmwf_ifs(final_forecast_hour=144,
             return_values=True):
     
     """
-    This function scans for the latest ECMWF IFS dataset. If the dataset on the computer is old, the old data will be deleted
-    and the new data will be downloaded. 
+    This function is the main client that downloads and processes ECMWF IFS data. 
+    
+    ***This client can do the following:***
+    
+    1) Download ECMWF IFS data from ECMWF Open-Data, Amazon Web Services and Google Cloud servers.
+    
+    2) Subset the GRIB data into a user-specified bounding box and decode the GRIB2 keys into plain-language.
+    
+    3) Convert temperature fields to user-specified units (Kelvin -> Celsius & Kelvin -> Fahrenheit)
+    
+    4) Convert the xarray.array of decoded GRIB2 data into a NETCDF (.nc) file. 
+    
+    5) Manages the ECMWF IFS files in the local directory.     
+    
     
     These ECMWF end-to-end clients can download ECMWF data from the following sources: 
     
@@ -2714,18 +2726,16 @@ def ecmwf_ifs(final_forecast_hour=144,
     ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
     ***If the client cannot connect to any of the servers, the system will exit.***
     
-    1) final_forecast_hour (Integer) - Default = 144.
+    1) final_forecast_hour (Integer) - Default = 360.
 
-        00z and 12z ECMWF IFS Runs
-        --------------------------
-        
-        3-Hourly Increments from hour 0 to hour 144.
-        6-Hourly Increments from hour 144 to hour 360
-        
-        06z and 18z ECMWF IFS Runs
-        --------------------------
-        
-        3-Hourly Increments from hour 0 to hour 144. 
+    ***00z and 12z ECMWF IFS Runs***
+    
+    3-Hourly Increments from hour 0 to hour 144.
+    6-Hourly Increments from hour 144 to hour 360
+    
+    ***06z and 18z ECMWF IFS Runs***
+    
+    3-Hourly Increments from hour 0 to hour 144. 
     
     2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
@@ -2737,16 +2747,17 @@ def ecmwf_ifs(final_forecast_hour=144,
     
     6) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
 
-    7) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-       proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_ifs(proxies=proxies)
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
     8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
        
-    9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
+    9) clear_recycle_bin (Boolean) - (Default=False). Set to True to clear your recycle bin. 
         
     10) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
@@ -2761,8 +2772,7 @@ def ecmwf_ifs(final_forecast_hour=144,
     
     14) source (String) - Default='ecmwf'. The data server choice. 
     
-        Data Sources
-        ------------
+        ***Data Sources***
         
         - ECMWF Open-Data Server = 'ecmwf'
         - Amazon AWS Server = 'aws'
@@ -2770,8 +2780,7 @@ def ecmwf_ifs(final_forecast_hour=144,
     
     15) level_type (String) - Default='pressure'. The level of the parameters being queried. 
     
-        level_types
-        -----------
+        ***level_types***
         
         1) 'surface'
         2) 'pressure'
@@ -2785,12 +2794,11 @@ def ecmwf_ifs(final_forecast_hour=144,
                                             'relative humidity',
                                             'temperature',
                                             'u-wind component',
-                                            'v-wind component'].
+                                            'v-wind component']. 
                         
         The list of variable names in plain-language. 
     
-        variables
-        ---------
+        ***Variables***
         
         'Geopotential (step 0)'
         'Standard deviation of sub-gridscale orography (step 0)'
@@ -2865,13 +2873,11 @@ def ecmwf_ifs(final_forecast_hour=144,
         
     23) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
         
-    Returns
-    -------
+    **Returns**
     
     An xarray.data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
     
-    Plain Language ECMWF IFS Variable Keys (After Post-Processing)
-    --------------------------------------------------------------
+    ***Plain Language ECMWF IFS Variable Keys (After Post-Processing)***
     
     'total_column_water'
     'total_column_vertically_integrated_water_vapor'

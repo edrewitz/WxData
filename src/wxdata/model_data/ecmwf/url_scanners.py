@@ -37,13 +37,16 @@ def ecmwf_ifs_url_scanner(final_forecast_hour,
                           proxies):
     
     """
-    This function scans for the URL of the latest available ECMWF IFS data on the ECMWF Data Store. 
+    This function scans for the URL of the latest available ECMWF IFS data for ECMWF Open-Data, Amazon Web Services and Google Cloud. 
     
     Required Arguments:
     
-    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The ECMWF IFS
-    goes out to 360 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    360 by the nereast increment of 3 hours. 
+    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. 
+    
+    **Final Forecast Hour By Model Run**
+    
+            00z & 12z - 360 
+            06z & 18z - 144
     
     2) source (String) - Default='ecmwf'. The data server choice. 
     
@@ -64,8 +67,7 @@ def ecmwf_ifs_url_scanner(final_forecast_hour,
     Returns
     -------
     
-    The download URL and filename of the latest file in the ECMWF IFS dataset.   
-    The ECMWF Data Store Server Status Code. 
+    The download URL, filename and runtime of the latest file in the ECMWF IFS dataset.   
     """
     source = source.lower()
     
@@ -301,13 +303,16 @@ def ecmwf_ifs_ens_url_scanner(final_forecast_hour,
                               proxies):
     
     """
-    This function scans for the URL of the latest available ECMWF IFS data on the ECMWF Data Store. 
+    This function scans for the URL of the latest available ECMWF IFS ENSEMBLE data for ECMWF Open-Data, Amazon Web Services and Google Cloud. 
     
     Required Arguments:
     
-    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The ECMWF IFS
-    goes out to 360 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    360 by the nereast increment of 3 hours. 
+    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. 
+    
+    **Final Forecast Hour By Model Run**
+    
+            00z & 12z - 360 
+            06z & 18z - 144
     
     2) source (String) - Default='ecmwf'. The data server choice. 
     
@@ -328,8 +333,7 @@ def ecmwf_ifs_ens_url_scanner(final_forecast_hour,
     Returns
     -------
     
-    The download URL and filename of the latest file in the ECMWF IFS dataset.   
-    The ECMWF Data Store Server Status Code. 
+    The download URL, filename and runtime of the latest file in the ECMWF IFS ENSEMBLE dataset.   
     """
     
     source = source.lower()
@@ -567,13 +571,11 @@ def ecmwf_aifs_url_scanner(final_forecast_hour,
                            proxies):
     
     """
-    This function scans for the URL of the latest available ECMWF AIFS data on the ECMWF Data Store. 
+    This function scans for the URL of the latest available ECMWF AIFS data for ECMWF Open-Data, Amazon Web Services and Google Cloud. 
     
     Required Arguments:
     
-    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The ECMWF AIFS
-    goes out to 360 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    360 by the nereast increment of 3 hours. 
+    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. Maximum is 360 hours for all runs.
     
     2) source (String) - Default='ecmwf'. The data server choice. 
     
@@ -594,8 +596,7 @@ def ecmwf_aifs_url_scanner(final_forecast_hour,
     Returns
     -------
     
-    The download URL and filename of the latest file in the ECMWF AIFS dataset.  
-    The ECMWF Data Store Server Status Code.       
+    The download URL, filename and runtime of the latest file in the ECMWF AIFS dataset.  
     """
     source = source.lower()
     
@@ -825,13 +826,11 @@ def ecmwf_aifs_ens_url_scanner(final_forecast_hour,
                                proxies):
     
     """
-    This function scans for the URL of the latest available ECMWF AIFS data on the ECMWF Data Store. 
+    This function scans for the URL of the latest available ECMWF AIFS Ensemble data for ECMWF Open-Data, Amazon Web Services and Google Cloud. 
     
     Required Arguments:
     
-    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The ECMWF AIFS
-    goes out to 360 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    360 by the nereast increment of 3 hours. 
+    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. Maximum is 360 hours for all runs. 
     
     2) cat (String) - Default='control'. The type of ensemble run. 
     
@@ -858,8 +857,7 @@ def ecmwf_aifs_ens_url_scanner(final_forecast_hour,
     Returns
     -------
     
-    The download URL and filename of the latest file in the ECMWF AIFS dataset.  
-    The ECMWF Data Store Server Status Code.       
+    The download URL, filename and runtime of the latest file in the ECMWF AIFS Ensemble dataset.  
     """
     
     source = source.lower()
@@ -1096,13 +1094,16 @@ def ecmwf_ifs_wave_url_scanner(final_forecast_hour,
                                proxies):
     
     """
-    This function scans for the URL of the latest available ECMWF IFS WAVE data on the ECMWF Data Store. 
+    This function scans for the URL of the latest available ECMWF IFS WAVE data for ECMWF Open-Data, Amazon Web Services and Google Cloud. 
     
     Required Arguments:
     
-    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The ECMWF IFS WAVE
-    goes out to 144 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    144 by the nereast increment of 3 hours. 
+    1)     1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. 
+    
+    **Final Forecast Hour By Model Run**
+    
+            00z & 12z - 360 
+            06z & 18z - 144
     
     2) source (String) - Default='ecmwf'. The data server choice. 
     
@@ -1123,8 +1124,7 @@ def ecmwf_ifs_wave_url_scanner(final_forecast_hour,
     Returns
     -------
     
-    The download URL and filename of the latest file in the ECMWF High Resolution IFS dataset.  
-    The ECMWF Data Store Server Status Code.   
+    The download URL, filename and runtime of the latest file in the ECMWF IFS WAVE dataset.  
     """
     
     source = source.lower()
@@ -1355,13 +1355,16 @@ def ecmwf_ifs_wave_ens_url_scanner(final_forecast_hour,
                                    proxies):
     
     """
-    This function scans for the URL of the latest available ECMWF IFS WAVE data on the ECMWF Data Store. 
+    This function scans for the URL of the latest available ECMWF IFS WAVE ENSEMBLE data from ECMWF Open-Data, Amazon Web Services and Google Cloud. 
     
     Required Arguments:
     
-    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The ECMWF IFS WAVE
-    goes out to 144 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    144 by the nereast increment of 3 hours. 
+    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. 
+    
+    **Final Forecast Hour By Model Run**
+    
+            00z & 12z - 360 
+            06z & 18z - 144
     
     2) source (String) - Default='ecmwf'. The data server choice. 
     
@@ -1382,8 +1385,7 @@ def ecmwf_ifs_wave_ens_url_scanner(final_forecast_hour,
     Returns
     -------
     
-    The download URL and filename of the latest file in the ECMWF High Resolution IFS dataset.  
-    The ECMWF Data Store Server Status Code.   
+    The download URL, filename and runtime of the latest file in the ECMWF IFS WAVE ENSEMBLE dataset.  
     """
     
     source = source.lower()
@@ -1612,13 +1614,11 @@ def ecmwf_aifs_wave_url_scanner(final_forecast_hour,
                                proxies):
     
     """
-    This function scans for the URL of the latest available ECMWF AIFS WAVE data on the ECMWF Data Store. 
+    This function scans for the URL of the latest available ECMWF AIFS WAVE data for ECMWF Open-Data, Amazon Web Services and Google Cloud. 
     
     Required Arguments:
     
-    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The ECMWF AIFS WAVE
-    goes out to 144 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    144 by the nereast increment of 3 hours. 
+    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. Maximum is 360 hours for all runs.  
     
     2) source (String) - Default='ecmwf'. The data server choice. 
     
@@ -1639,8 +1639,7 @@ def ecmwf_aifs_wave_url_scanner(final_forecast_hour,
     Returns
     -------
     
-    The download URL and filename of the latest file in the ECMWF AIFS WAVE dataset.  
-    The ECMWF Data Store Server Status Code.   
+    The download URL, filename and runtime of the latest file in the ECMWF AIFS WAVE dataset.  
     """
     
     source = source.lower()
@@ -1872,13 +1871,11 @@ def ecmwf_aifs_wave_ens_url_scanner(final_forecast_hour,
                                proxies):
     
     """
-    This function scans for the URL of the latest available ECMWF AIFS WAVE ENSEMBLE data on the ECMWF Data Store. 
+    This function scans for the URL of the latest available ECMWF AIFS WAVE ENSEMBLE data for ECMWF Open-Data, Amazon Web Services and Google Cloud. 
     
     Required Arguments:
     
-    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The ECMWF AIFS
-    goes out to 360 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    360 by the nereast increment of 3 hours. 
+    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. Maximum is 360 hours across all runs.  
     
     2) cat (String) - Default='control'. The type of ensemble run. 
     
@@ -1905,8 +1902,7 @@ def ecmwf_aifs_wave_ens_url_scanner(final_forecast_hour,
     Returns
     -------
     
-    The download URL and filename of the latest file in the ECMWF AIFS dataset.  
-    The ECMWF Data Store Server Status Code.       
+    The download URL, filename and runtime of the latest file in the ECMWF AIFS WAVE ENSEMBLE dataset.  
     """
     
     source = source.lower()
@@ -2143,13 +2139,16 @@ def ecmwf_high_resolution_ifs_url_scanner(final_forecast_hour,
                           level_type):
     
     """
-    This function scans for the URL of the latest available ECMWF IFS data on the ECMWF Data Store. 
+    This function scans for the URL of the latest available ECMWF High Resolution IFS data for ECMWF Open-Data, Amazon Web Services and Google Cloud. 
     
     Required Arguments:
     
-    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The ECMWF IFS
-    goes out to 360 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    360 by the nereast increment of 3 hours. 
+    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. 
+    
+    **Final Forecast Hour By Model Run**
+    
+            00z & 12z - 360 
+            06z & 18z - 144
     
     2) source (String) - Default='ecmwf'. The data server choice. 
     
@@ -2177,8 +2176,7 @@ def ecmwf_high_resolution_ifs_url_scanner(final_forecast_hour,
     Returns
     -------
     
-    The download URL and filename of the latest file in the ECMWF IFS dataset.   
-    The ECMWF Data Store Server Status Code. 
+    The download URL, filename and runtime of the latest file in the ECMWF High Resolution IFS dataset.   
     """
     source = source.lower()
     level_type = level_type.lower()
@@ -2420,13 +2418,16 @@ def ecmwf_high_resolution_ifs_ens_url_scanner(final_forecast_hour,
                           level_type):
     
     """
-    This function scans for the URL of the latest available ECMWF IFS data on the ECMWF Data Store. 
+    This function scans for the URL of the latest available ECMWF High Resolution IFS ENSEMBLE data for ECMWF Open-Data, Amazon Web Services and Google Cloud. 
     
     Required Arguments:
     
-    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The ECMWF IFS
-    goes out to 360 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    360 by the nereast increment of 3 hours. 
+    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. 
+    
+    **Final Forecast Hour By Model Run**
+    
+            00z & 12z - 360 
+            06z & 18z - 144
     
     2) source (String) - Default='ecmwf'. The data server choice. 
     
@@ -2454,8 +2455,7 @@ def ecmwf_high_resolution_ifs_ens_url_scanner(final_forecast_hour,
     Returns
     -------
     
-    The download URL and filename of the latest file in the ECMWF IFS dataset.   
-    The ECMWF Data Store Server Status Code. 
+    The download URL, filename and runtime of the latest file in the ECMWF High Resolution IFS ENSEMBLE dataset.   
     """
     source = source.lower()
     level_type = level_type.lower()
@@ -2696,13 +2696,16 @@ def ecmwf_high_resolution_ifs_wave_url_scanner(final_forecast_hour,
                           proxies):
     
     """
-    This function scans for the URL of the latest available ECMWF IFS data on the ECMWF Data Store. 
+    This function scans for the URL of the latest available ECMWF High Resolution IFS WAVE data for ECMWF Open-Data, Amazon Web Services and Google Cloud. 
     
     Required Arguments:
     
-    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The ECMWF IFS
-    goes out to 360 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    360 by the nereast increment of 3 hours. 
+    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. 
+    
+    **Final Forecast Hour By Model Run**
+    
+            00z & 12z - 360 
+            06z & 18z - 144
     
     2) source (String) - Default='ecmwf'. The data server choice. 
     
@@ -2720,13 +2723,10 @@ def ecmwf_high_resolution_ifs_wave_url_scanner(final_forecast_hour,
                                'https':'http://your-proxy-address:port'
                                }
                                
-
-    
     Returns
     -------
     
-    The download URL and filename of the latest file in the ECMWF IFS dataset.   
-    The ECMWF Data Store Server Status Code. 
+    The download URL, filename and runtime of the latest file in the ECMWF High Resolution IFS WAVE dataset.   
     """
     source = source.lower()
     level_type = "sfc"
@@ -2962,13 +2962,16 @@ def ecmwf_high_resolution_ifs_wave_ens_url_scanner(final_forecast_hour,
                           proxies):
     
     """
-    This function scans for the URL of the latest available ECMWF IFS data on the ECMWF Data Store. 
+    This function scans for the URL of the latest available ECMWF High Resolution IFS WAVE ENSEMBLE data for ECMWF Open-Data, Amazon Web Services and Google Cloud. 
     
     Required Arguments:
     
-    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. The ECMWF IFS
-    goes out to 360 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-    360 by the nereast increment of 3 hours. 
+    1) final_forecast_hour (Integer) - The final forecast hour the user wishes to download. 
+    
+    **Final Forecast Hour By Model Run**
+    
+            00z & 12z - 360 
+            06z & 18z - 144
     
     2) source (String) - Default='ecmwf'. The data server choice. 
     
@@ -2986,13 +2989,10 @@ def ecmwf_high_resolution_ifs_wave_ens_url_scanner(final_forecast_hour,
                                'https':'http://your-proxy-address:port'
                                }
                                
-
-    
     Returns
     -------
     
-    The download URL and filename of the latest file in the ECMWF IFS dataset.   
-    The ECMWF Data Store Server Status Code. 
+    The download URL, filename and runtime of the latest file in the ECMWF High Resolution IFS WAVE ENSEMBLE dataset.   
     """
     source = source.lower()
     level_type = "sfc"

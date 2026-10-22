@@ -2656,6 +2656,309 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=360,
     else:
         pass
     
+def _ecmwf_aifs_wave_client(final_forecast_hour=360,
+                    western_bound=-180,
+                    eastern_bound=180,
+                    northern_bound=90,
+                    southern_bound=-90,
+                    proxies=None,
+                    process_data=True,
+                    clear_recycle_bin=False,
+                    custom_directory=None,
+                    notifications='off',
+                    source='ecmwf',
+                    clear_data=False,
+                    variables=['mean zero-crossing wave period',
+                               'significant wave height',
+                                'mean wave direction',
+                                'mean wave period',
+                                'peak wave period']):
+    
+    """
+    This function scans for the latest ECMWF AIFS Wave dataset. If the dataset on the computer is old, the old data will be deleted
+    and the new data will be downloaded. 
+    
+    These ECMWF end-to-end clients can download ECMWF data from the following sources: 
+    
+            1) ECMWF Open-Data Server
+            2) Amazon AWS Server
+            3) Google Cloud Server
+            
+    ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
+    ***If the client cannot connect to any of the servers, the system will exit.***
+    
+    1) final_forecast_hour (Integer) - Default = 360. The maximum forecast hour. 
+        
+    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+
+    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+
+    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+
+    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+    
+    6) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
+
+    7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
+    
+    8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
+       data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
+       
+    9) clear_recycle_bin (Boolean) - (Default=False). Set to True to clear your recycle bin. 
+        
+    10) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+        either Celsius or Fahrenheit. When False, this data remains in Kelvin.
+        
+    11) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+        Set convert_to='fahrenheit' for Fahrenheit. 
+        
+    12) custom_directory (String or None) - Default=None. The directory path where the ECMWF AIFS Wave files will be saved to.
+        Default = "ECMWF/AIFS/WAVE"
+    
+    13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    
+    14) source (String) - Default='ecmwf'. The data server choice. 
+    
+        ***Data Sources***
+        
+        - ECMWF Open-Data Server = 'ecmwf'
+        - Amazon AWS Server = 'aws'
+        - Google Cloud Server = 'google'
+        
+    15) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+    
+    16) variables (String List) - Default is all variables. The list of variable names in plain-language. 
+    
+        ***Variables***
+        
+        'mean zero-crossing wave period'
+        'significant wave height'
+        'mean wave direction'
+        'mean wave period'
+        'peak wave period'
+        
+    **Returns**
+    
+    An xarray.data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
+    
+    ***Plain Language ECMWF AIFS Wave Variable Keys (After Post-Processing)***
+    
+    'mean_zero_crossing_wave_period'
+    'significant_height_of_combined_waves_and_swell'
+    'mean_wave_direction'
+    'peak_wave_period'
+    'mean_wave_period'
+    
+    """
+    
+    if clear_recycle_bin == True:
+        _clear_recycle_bin_windows()
+        _clear_trash_bin_mac()
+        _clear_trash_bin_linux()
+    else:
+        pass
+    
+    
+    if custom_directory == None:
+        _build_directory('aifs', 
+                        'wave')
+        
+        path = _ecmwf_branch_paths('aifs', 
+                        'wave')
+        
+    else:
+        path = _custom_branch(custom_directory)
+        
+    if clear_data == True:
+        _clear_old_data(path)
+    else:
+        pass
+    
+    _clear_idx_files(path)
+    
+    if source == 'ecmwf':
+        try:
+            url, filename, run = _ecmwf_aifs_wave_url_scanner(final_forecast_hour,
+                                                        source,
+                                                        proxies)
+        except Exception as e:
+            filename = None
+            
+        if filename == None:
+            print("ECMWF Open-Data Server Is Down.")
+            print("Rotating to Amazon AWS Server.")
+            try:
+                url, filename, run = _ecmwf_aifs_wave_url_scanner(final_forecast_hour,
+                                                        'aws',
+                                                        proxies)
+                
+                print("Amazon AWS Server Online - Connected.")
+                source = 'aws'
+            except Exception as e:
+                filename = None
+                
+            if filename == None:
+                print("Amazon AWS Server Is Down.")
+                print("Rotating to Google Cloud Server.")
+                try:
+                    url, filename, run = _ecmwf_aifs_wave_url_scanner(final_forecast_hour,
+                                                        'google',
+                                                        proxies)
+                    
+                    print("Google Cloud Server Online - Connected.")
+                    source = 'google'
+                except Exception as e:
+                    print("Error: Both Servers Appear Down")
+                    print("System Exit")
+                    _sys.exit(1)
+                
+            else:
+                pass
+                
+        else:
+            pass
+        
+    elif source == 'aws':
+        try:
+            url, filename, run = _ecmwf_aifs_wave_url_scanner(final_forecast_hour,
+                                                        source,
+                                                        proxies)
+        except Exception as e:
+            filename = None
+            
+        if filename == None:
+            print("Amazon AWS Server Is Down.")
+            print("Rotating to ECMWF Open-Data Server.")
+            try:
+                url, filename, run = _ecmwf_aifs_wave_url_scanner(final_forecast_hour,
+                                                        'ecmwf',
+                                                        proxies)
+                
+                print("ECMWF Open-Data Server Online - Connected.")
+                source = 'ecmwf'
+            except Exception as e:
+                filename = None
+                
+            if filename == None:
+                print("ECMWF Open-Data Server Is Down.")
+                print("Rotating to Google Cloud Server.")
+                try:
+                    url, filename, run = _ecmwf_aifs_wave_url_scanner(final_forecast_hour,
+                                                        'google',
+                                                        proxies)
+                    
+                    print("Google Cloud Server Online - Connected.")
+                    source = 'google'
+                except Exception as e:
+                    print("Error: Both Servers Appear Down")
+                    print("System Exit")
+                    _sys.exit(1)
+                
+            else:
+                pass
+                
+        else:
+            pass
+        
+    else:
+        try:
+            url, filename, run = _ecmwf_aifs_wave_url_scanner(final_forecast_hour,
+                                                        source,
+                                                        proxies)
+        except Exception as e:
+            filename = None
+            
+        if filename == None:
+            print("Google Cloud Server Is Down.")
+            print("Rotating to ECMWF Open-Data Server.")
+            try:
+                url, filename, run = _ecmwf_aifs_wave_url_scanner(final_forecast_hour,
+                                                        'ecmwf',
+                                                        proxies)
+                
+                print("ECMWF Open-Data Server Online - Connected.")
+                source = 'ecmwf'
+            except Exception as e:
+                filename = None
+                
+            if filename == None:
+                print("ECMWF Open-Data Server Is Down.")
+                print("Rotating to Amazon AWS Server.")
+                try:
+                    url, filename, run = _ecmwf_aifs_wave_url_scanner(final_forecast_hour,
+                                                        'aws',
+                                                        proxies)
+                    
+                    print("Amazon AWS Server Online - Connected.")
+                    source = 'aws'
+                except Exception as e:
+                    print("Error: Both Servers Appear Down")
+                    print("System Exit")
+                    _sys.exit(1)
+                
+            else:
+                pass
+                
+        else:
+            pass
+    
+    
+    params = _ifs_var_keys(variables)
+
+    download = _local_file_scanner(path, 
+                                  filename,
+                                  'ecmwf',
+                                  run)
+    
+
+    date = _parse_filename(filename)
+    
+    if download == True:
+        print(f"Downloading ECMWF AIFS-WAVE...\n")
+        _clear_old_data(path)
+        
+        for i in range(0, (final_forecast_hour + 6), 6):
+            _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-wave-fc.grib2",
+                                f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-wave-fc.index",
+                                "sfc",
+                                None,
+                                params,
+                                None,
+                                proxies,
+                                path,
+                                f"{date.strftime('%Y%m%d%H')}0000-{i}h-wave-fc.grib2")
+            if notifications == True:
+                print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-wave-fc.grib2 saved to {path}")
+            else:
+                pass
+                            
+        print(f"ECMWF AIFS-WAVE Download Complete.")    
+        
+    else:
+        print(f"ECMWF AIFS-WAVE Data is up to date. Skipping download...")    
+        
+    if process_data == True:
+        print(f"ECMWF IFS-WAVE Data Processing...")
+        
+        ds = _ecmwf_post_processing.ecmwf_ifs_wave_post_processing(path,
+                                                            western_bound, 
+                                                            eastern_bound, 
+                                                            northern_bound, 
+                                                            southern_bound)
+        
+        _clear_idx_files_in_path(path)
+        
+        print(f"ECMWF AIFS-WAVE Data Processing Complete.")
+        return ds
+    
+    else:
+        pass
     
     
 def ecmwf_ifs(final_forecast_hour=360,
@@ -5646,18 +5949,16 @@ def ecmwf_ifs_wave(final_forecast_hour=360,
     2) Query your download by downloading only the variables and levels needed. 
     
     3) Subset the GRIB data into a user-specified bounding box and decode the GRIB2 keys into plain-language.
+        
+    4) Convert the xarray.array of decoded GRIB2 data into a NETCDF (.nc) file. 
     
-    4) Convert temperature fields to user-specified units (Kelvin -> Celsius & Kelvin -> Fahrenheit)
+    5) Manages the ECMWF IFS Wave files in the local directory.    
     
-    5) Convert the xarray.array of decoded GRIB2 data into a NETCDF (.nc) file. 
+    6) Handle user-specified proxy-server protocol - Useful for users working on VPN connections and behind firewalls.  
     
-    6) Manages the ECMWF IFS Wave files in the local directory.    
+    7) Automatically Rotate between ECMWF Open-Data, Amazon Web Services and Google Cloud in the event of significant server connection issues.
     
-    7) Handle user-specified proxy-server protocol - Useful for users working on VPN connections and behind firewalls.  
-    
-    8) Automatically Rotate between ECMWF Open-Data, Amazon Web Services and Google Cloud in the event of significant server connection issues.
-    
-    9) Validates the download and helps the user troubleshoot if needed. 
+    8) Validates the download and helps the user troubleshoot if needed. 
     
     These ECMWF end-to-end clients can download ECMWF data from the following sources: 
     
@@ -6221,18 +6522,16 @@ def ecmwf_ifs_wave_ens(final_forecast_hour=144,
     2) Query your download by downloading only the variables, levels and ensemble members needed. 
     
     3) Subset the GRIB data into a user-specified bounding box and decode the GRIB2 keys into plain-language.
+        
+    4) Convert the xarray.array of decoded GRIB2 data into a NETCDF (.nc) file. 
     
-    4) Convert temperature fields to user-specified units (Kelvin -> Celsius & Kelvin -> Fahrenheit)
+    5) Manages the ECMWF IFS Wave Ensemble files in the local directory.    
     
-    5) Convert the xarray.array of decoded GRIB2 data into a NETCDF (.nc) file. 
+    6) Handle user-specified proxy-server protocol - Useful for users working on VPN connections and behind firewalls.  
     
-    6) Manages the ECMWF IFS Wave Ensemble files in the local directory.    
+    7) Automatically Rotate between ECMWF Open-Data, Amazon Web Services and Google Cloud in the event of significant server connection issues.
     
-    7) Handle user-specified proxy-server protocol - Useful for users working on VPN connections and behind firewalls.  
-    
-    8) Automatically Rotate between ECMWF Open-Data, Amazon Web Services and Google Cloud in the event of significant server connection issues.
-    
-    9) Validates the download and helps the user troubleshoot if needed. 
+    8) Validates the download and helps the user troubleshoot if needed. 
     
     These ECMWF end-to-end clients can download ECMWF data from the following sources: 
     
@@ -6759,6 +7058,550 @@ def ecmwf_ifs_wave_ens(final_forecast_hour=144,
                                                     clear_data=clear_data,
                                                     variables=variables,
                                                     members=members)
+                    rotate = False
+            except Exception as e:
+                print("Client cannot establish a connection to any server.")
+                _version_warning()
+                print("System Exit.")
+                _sys.exit(1)       
+            
+    else:
+        pass
+    
+    
+def ecmwf_aifs_wave(final_forecast_hour=360,
+                    western_bound=-180,
+                    eastern_bound=180,
+                    northern_bound=90,
+                    southern_bound=-90,
+                    proxies=None,
+                    process_data=True,
+                    clear_recycle_bin=False,
+                    custom_directory=None,
+                    notifications='off',
+                    source='ecmwf',
+                    clear_data=False,
+                    variables=['mean zero-crossing wave period',
+                               'significant wave height',
+                                'mean wave direction',
+                                'mean wave period',
+                                'peak wave period'],
+                to_netcdf=False,
+                netcdf_path=f"ECMWF AIFS WAVE/NETCDF",
+                netcdf_filename=f"ecmwf_aifs_wave.nc",
+                delete_previous_netcdf_file=True,
+                return_values=True):
+    
+    """
+    This function is the main client that downloads and processes ECMWF AIFS Wave data. 
+    
+    ***This client can do the following:***
+    
+    1) Download ECMWF AIFS Wave data from ECMWF Open-Data, Amazon Web Services and Google Cloud servers.
+    
+    2) Query your download by downloading only the variables and levels needed. 
+    
+    3) Subset the GRIB data into a user-specified bounding box and decode the GRIB2 keys into plain-language.
+    
+    4) Convert the xarray.array of decoded GRIB2 data into a NETCDF (.nc) file. 
+    
+    5) Manages the ECMWF AIFS Wave files in the local directory.    
+    
+    6) Handle user-specified proxy-server protocol - Useful for users working on VPN connections and behind firewalls.  
+    
+    7) Automatically Rotate between ECMWF Open-Data, Amazon Web Services and Google Cloud in the event of significant server connection issues.
+    
+    8) Validates the download and helps the user troubleshoot if needed. 
+    
+    These ECMWF end-to-end clients can download ECMWF data from the following sources: 
+    
+            1) ECMWF Open-Data Server
+            2) Amazon AWS Server
+            3) Google Cloud Server
+            
+    ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
+    ***If the client cannot connect to any of the servers, the system will exit.***
+    
+    1) final_forecast_hour (Integer) - Default = 360. The maximum forecast hour. 
+        
+    2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
+
+    3) eastern_bound (Float or Integer) - Default=180. The eastern bound of the data needed.
+
+    4) northern_bound (Float or Integer) - Default=90. The northern bound of the data needed.
+
+    5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
+    
+    6) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
+
+    7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
+    
+    8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
+       data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
+       
+    9) clear_recycle_bin (Boolean) - (Default=False). Set to True to clear your recycle bin. 
+        
+    10) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+        either Celsius or Fahrenheit. When False, this data remains in Kelvin.
+        
+    11) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+        Set convert_to='fahrenheit' for Fahrenheit. 
+        
+    12) custom_directory (String or None) - Default=None. The directory path where the ECMWF AIFS Wave files will be saved to.
+        Default = "ECMWF/AIFS/WAVE"
+    
+    13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    
+    14) source (String) - Default='ecmwf'. The data server choice. 
+    
+        ***Data Sources***
+        
+        - ECMWF Open-Data Server = 'ecmwf'
+        - Amazon AWS Server = 'aws'
+        - Google Cloud Server = 'google'
+        
+    15) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+        When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+    
+    16) variables (String List) - Default is all variables. The list of variable names in plain-language. 
+    
+        ***Variables***
+        
+        'mean zero-crossing wave period'
+        'significant wave height'
+        'mean wave direction'
+        'mean wave period'
+        'peak wave period'
+        
+    16) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    
+    17) netcdf_path (String) - Default='ECMWF AIFS WAVE/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    
+    18) netcdf_filename (String) - Default='ecmwf_ifs_wave.nc'. The name of the netCDF (.nc) file. A good practice is to 
+        name this netCDF file using the variable name. 
+        
+    19) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+        new netCDF file. For users who want to archive all data set this to False. 
+        
+    20) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+        
+    **Returns**
+    
+    An xarray.data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
+    
+    ***Plain Language ECMWF AIFS Wave Variable Keys (After Post-Processing)***
+    
+    'mean_zero_crossing_wave_period'
+    'significant_height_of_combined_waves_and_swell'
+    'mean_wave_direction'
+    'peak_wave_period'
+    'mean_wave_period'
+    
+    """
+    
+    source = source.lower()
+    
+    if source == 'ecmwf':
+        server = "ECMWF Open-Data Server"
+    elif source == 'aws':
+        server = "Amazon AWS Server"
+    else:
+        server = 'Google Cloud Server'
+    
+    try:
+        if process_data == True:
+            ds = _ecmwf_aifs_wave_client(final_forecast_hour=final_forecast_hour,
+                        western_bound=western_bound,
+                        eastern_bound=eastern_bound,
+                        northern_bound=northern_bound,
+                        southern_bound=southern_bound,
+                        proxies=proxies,
+                        process_data=process_data,
+                        clear_recycle_bin=clear_recycle_bin,
+                        custom_directory=custom_directory,
+                        notifications=notifications,
+                        source=source,
+                        clear_data=clear_data,
+                        variables=variables)
+            
+            rotate = False
+            if to_netcdf == True:
+                
+                if delete_previous_netcdf_file == True:
+                    try:
+                        _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                    except Exception as e:
+                        pass
+                
+                _grib_to_netcdf(ds,
+                                netcdf_path,
+                                netcdf_filename)
+            else:
+                pass
+            
+            if return_values == True:    
+                return ds
+            else:
+                pass
+        else:
+            _ecmwf_aifs_wave_client(final_forecast_hour=final_forecast_hour,
+                        western_bound=western_bound,
+                        eastern_bound=eastern_bound,
+                        northern_bound=northern_bound,
+                        southern_bound=southern_bound,
+                        proxies=proxies,
+                        process_data=process_data,
+                        clear_recycle_bin=clear_recycle_bin,
+                        custom_directory=custom_directory,
+                        notifications=notifications,
+                        source=source,
+                        clear_data=clear_data,
+                        variables=variables)
+            
+            rotate = False
+    except Exception as e:
+        print(f"Client cannot establish a connection to {server}.")
+        rotate = True
+    
+    if rotate == True:
+        if source == 'google':
+            print(f"Rotating to ECMWF Open-Data Server.")
+            try:
+                if process_data == True:
+                    ds = _ecmwf_aifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='ecmwf',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_aifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='ecmwf',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
+            except Exception as e:
+                print("Client cannot establish a connection to ECMWF Open-Data Server.")
+                rotate = True
+                
+        elif source == 'aws':
+            print(f"Rotating to ECMWF Open-Data Server.")
+            try:
+                if process_data == True:
+                    ds = _ecmwf_aifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='ecmwf',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_aifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='ecmwf',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
+            except Exception as e:
+                print("Client cannot establish a connection to ECMWF Open-Data Server.")
+                rotate = True
+                
+        else:
+            print(f"Rotating to Amazon AWS Server.")
+            try:
+                if process_data == True:
+                    ds = _ecmwf_aifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='aws',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_aifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='aws',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
+            except Exception as e:
+                print("Client cannot establish a connection to Amazon AWS Server.")
+                rotate = True        
+            
+    else:
+        pass
+              
+    if rotate == True:
+        if source == 'google':
+            print(f"Rotating to Amazon AWS Server.")
+            try:
+                if process_data == True:
+                    ds = _ecmwf_aifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='aws',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_aifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='aws',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
+            except Exception as e:
+                print("Client cannot establish a connection to any server.")
+                _version_warning()
+                print("System Exit.")
+                _sys.exit(1)  
+                
+        elif source == 'aws':
+            print(f"Rotating to Google Cloud Server.")
+            try:
+                if process_data == True:
+                    ds = _ecmwf_aifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='google',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_aifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='google',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
+            except Exception as e:
+                print("Client cannot establish a connection to any server.")
+                _version_warning()
+                print("System Exit.")
+                _sys.exit(1)  
+                
+        else:
+            print(f"Rotating to Google Cloud Server.")
+            try:
+                if process_data == True:
+                    ds = _ecmwf_aifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='google',
+                                                clear_data=clear_data,
+                                                variables=variables)
+                    rotate = False
+                    if to_netcdf == True:
+                        
+                        if delete_previous_netcdf_file == True:
+                            try:
+                                _os.remove(f"{netcdf_path}/{netcdf_filename}")
+                            except Exception as e:
+                                pass
+                        
+                        _grib_to_netcdf(ds,
+                                        netcdf_path,
+                                        netcdf_filename)
+                    else:
+                        pass
+                    
+                    if return_values == True:    
+                        return ds
+                    else:
+                        pass
+                else:
+                    _ecmwf_aifs_wave_client(final_forecast_hour=final_forecast_hour,
+                                                western_bound=western_bound,
+                                                eastern_bound=eastern_bound,
+                                                northern_bound=northern_bound,
+                                                southern_bound=southern_bound,
+                                                proxies=proxies,
+                                                process_data=process_data,
+                                                clear_recycle_bin=clear_recycle_bin,
+                                                custom_directory=custom_directory,
+                                                notifications=notifications,
+                                                source='google',
+                                                clear_data=clear_data,
+                                                variables=variables)
                     rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")

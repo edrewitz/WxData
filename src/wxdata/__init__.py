@@ -173,13 +173,15 @@ from wxdata.model_data.noaa.rtma.rtma import(
 # - ECMWF AIFS Ensemble
 # - ECMWF IFS Wave
 # - ECMWF IFS Wave Ensemble
+# - ECMWF AIFS Wave
 from wxdata.model_data.ecmwf.ecmwf import(
     ecmwf_ifs,
     ecmwf_ifs_ens,
     ecmwf_aifs,
     ecmwf_aifs_ens,
     ecmwf_ifs_wave,
-    ecmwf_ifs_wave_ens
+    ecmwf_ifs_wave_ens,
+    ecmwf_aifs_wave
 )
 
 ##################################

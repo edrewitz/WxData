@@ -514,6 +514,14 @@ def _ecmwf_ifs_client(final_forecast_hour=360,
         print(f"Downloading ECMWF IFS...\n")
         _clear_old_data(path)
         
+        if run == 6 or run == 18:
+            if final_forecast_hour > 144:
+                final_forecast_hour = 144
+            else:
+                pass
+        else:
+            pass
+        
         if final_forecast_hour <= 144:
             for i in range(0, final_forecast_hour + step, step):
                 _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2",
@@ -1009,6 +1017,14 @@ def _ecmwf_high_res_ifs_client(final_forecast_hour=360,
     if download == True:
         print(f"Downloading ECMWF High Resolution IFS...\n")
         _clear_old_data(path)
+        
+        if run == 6 or run == 18:
+            if final_forecast_hour > 144:
+                final_forecast_hour = 144
+            else:
+                pass
+        else:
+            pass
         
         if final_forecast_hour <= 144:
             for i in range(0, final_forecast_hour + step, step):
@@ -1514,6 +1530,13 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=360,
     if download == True:
         print(f"Downloading ECMWF IFS ENSEMBLE...\n")
         _clear_old_data(path)
+        if run == 6 or run == 18:
+            if final_forecast_hour > 144:
+                final_forecast_hour = 144
+            else:
+                pass
+        else:
+            pass
         
         if final_forecast_hour <= 144:
             for i in range(0, final_forecast_hour + step, step):
@@ -2732,6 +2755,14 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=360,
         print(f"Downloading ECMWF IFS-WAVE...\n")
         _clear_old_data(path)
         
+        if run == 6 or run == 18:
+            if final_forecast_hour > 144:
+                final_forecast_hour = 144
+            else:
+                pass
+        else:
+            pass
+        
         if final_forecast_hour <= 144:
             for i in range(0, final_forecast_hour + step, step):
                 _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-wave-fc.grib2",
@@ -3081,6 +3112,14 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=360,
     if download == True:
         print(f"Downloading ECMWF IFS-WAVE ENSEMBLE...\n")
         _clear_old_data(path)
+        
+        if run == 6 or run == 18:
+            if final_forecast_hour > 144:
+                final_forecast_hour = 144
+            else:
+                pass
+        else:
+            pass
         
         if final_forecast_hour <= 144:
             for i in range(0, final_forecast_hour + step, step):

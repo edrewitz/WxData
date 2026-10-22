@@ -14,7 +14,6 @@ This file hosts the functions the user has to download ECMWF model data.
 import os as _os
 import warnings as _warnings
 _warnings.filterwarnings('ignore')
-import time as _time
 import sys as _sys
 import wxdata.post_processors.ecmwf_post_processing as _ecmwf_post_processing
 
@@ -2579,12 +2578,6 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
         _clear_trash_bin_linux()
     else:
         pass
-    
-    if proxies == None:
-        pass
-    else:
-        _os.environ['http_proxy'] = proxies
-        _os.environ['https_proxy'] = proxies
     
     if custom_directory == None:
         _build_directory('ifs', 

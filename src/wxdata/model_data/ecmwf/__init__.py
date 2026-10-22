@@ -7,6 +7,7 @@ from wxdata.model_data.ecmwf.ecmwf import(
     ecmwf_aifs_ens,
     ecmwf_ifs_wave,
     ecmwf_ifs_wave_ens,
-    ecmwf_aifs_wave
+    ecmwf_aifs_wave,
+    ecmwf_aifs_wave_ens
 )
 

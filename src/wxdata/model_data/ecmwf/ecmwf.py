@@ -7,6 +7,15 @@ This file hosts the functions the user has to download ECMWF model data.
 4) ecmwf_aifs_ens
 5) ecmwf_ifs_wave
 6) ecmwf_ifs_wave_ens
+7) ecmwf_aifs_wave
+8) ecmwf_aifs_wave_ens
+9) ecmwf_high_resolution_ifs
+10) ecmwf_high_resolution_ifs_ens
+11) ecmwf_high_resolution_ifs_wave
+12) ecmwf_high_resolution_ifs_wave_ens
+
+ECMWF Standard Models Grid Spacing: 0.25x0.25 degree
+ECMWF High Resolution Models Grid Spacing: 0.10x0.10 degree
 
 (C) Eric J. Drewitz 2025-2026
 """
@@ -25,7 +34,13 @@ from wxdata.model_data.ecmwf.url_scanners import(
     ecmwf_aifs_url_scanner as _ecmwf_aifs_url_scanner,
     ecmwf_aifs_ens_url_scanner as _ecmwf_aifs_ens_url_scanner,
     ecmwf_ifs_wave_url_scanner as _ecmwf_ifs_wave_url_scanner,
-    ecmwf_ifs_wave_ens_url_scanner as _ecmwf_ifs_wave_ens_url_scanner
+    ecmwf_ifs_wave_ens_url_scanner as _ecmwf_ifs_wave_ens_url_scanner,
+    ecmwf_aifs_wave_url_scanner as _ecmwf_aifs_wave_url_scanner,
+    ecmwf_aifs_wave_ens_url_scanner as _ecmwf_aifs_wave_ens_url_scanner,
+    ecmwf_high_resolution_ifs_url_scanner as _ecmwf_high_resolution_ifs_url_scanner,
+    ecmwf_high_resolution_ifs_ens_url_scanner as _ecmwf_high_resolution_ifs_ens_url_scanner,
+    ecmwf_high_resolution_ifs_wave_url_scanner as _ecmwf_high_resolution_ifs_wave_url_scanner,
+    ecmwf_high_resolution_ifs_wave_ens_url_scanner as _ecmwf_high_resolution_ifs_wave_ens_url_scanner
 )
 
 from wxdata.model_data.ecmwf.file_funcs import(

@@ -3075,10 +3075,10 @@ def _ecmwf_aifs_wave_ens_client(final_forecast_hour=360,
     
     if custom_directory == None:
         _build_directory('aifs', 
-                        'wave ensemble')
+                        f'wave ensemble {cat.upper()}')
         
         path = _ecmwf_branch_paths('aifs', 
-                        'wave ensemble')
+                        f'wave ensemble {cat.upper()}')
         
     else:
         path = _custom_branch(custom_directory)
@@ -3240,21 +3240,39 @@ def _ecmwf_aifs_wave_ens_client(final_forecast_hour=360,
         print(f"Downloading ECMWF AIFS-WAVE Ensemble...\n")
         _clear_old_data(path)
         
-        for i in range(0, (final_forecast_hour + 6), 6):
-            _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-waef-{cat}.grib2",
-                                f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-waef-{cat}.index",
-                                "sfc",
-                                None,
-                                params,
-                                None,
-                                proxies,
-                                path,
-                                f"{date.strftime('%Y%m%d%H')}0000-{i}h-waef-{cat}.grib2")
-            if notifications == True:
-                print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-waef-{cat}.grib2 saved to {path}")
-            else:
-                pass
-                            
+        if cat == 'cf':
+            for i in range(0, (final_forecast_hour + 6), 6):
+                _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-waef-{cat}.grib2",
+                                    f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-waef-{cat}.index",
+                                    "sfc",
+                                    None,
+                                    params,
+                                    None,
+                                    proxies,
+                                    path,
+                                    f"{date.strftime('%Y%m%d%H')}0000-{i}h-waef-{cat}.grib2")
+                if notifications == True:
+                    print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-waef-{cat}.grib2 saved to {path}")
+                else:
+                    pass
+                
+        else:
+            for i in range(0, (final_forecast_hour + 6), 6):
+                _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-waef-{cat}.grib2",
+                                    f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-waef-{cat}.index",
+                                    "sfc",
+                                    None,
+                                    params,
+                                    members,
+                                    proxies,
+                                    path,
+                                    f"{date.strftime('%Y%m%d%H')}0000-{i}h-waef-{cat}.grib2")
+                if notifications == True:
+                    print(f"{date.strftime('%Y%m%d%H')}0000-{i}h-waef-{cat}.grib2 saved to {path}")
+                else:
+                    pass
+            
+            
         print(f"ECMWF AIFS-WAVE Ensemble Download Complete.")    
         
     else:
@@ -7938,6 +7956,7 @@ def ecmwf_aifs_wave_ens(final_forecast_hour=144,
                     notifications='off',
                     source='ecmwf',
                     clear_data=False,
+                    cat='control',
                     variables=['mean zero-crossing wave period',
                                'significant wave height',
                                 'mean wave direction',
@@ -8092,7 +8111,8 @@ def ecmwf_aifs_wave_ens(final_forecast_hour=144,
                         source=source,
                         clear_data=clear_data,
                         variables=variables,
-                        members=members)
+                        members=members,
+                        cat=cat)
             
             rotate = False
             if to_netcdf == True:
@@ -8127,7 +8147,8 @@ def ecmwf_aifs_wave_ens(final_forecast_hour=144,
                         source=source,
                         clear_data=clear_data,
                         variables=variables,
-                        members=members)
+                        members=members,
+                        cat=cat)
             
             rotate = False
     except Exception as e:
@@ -8152,7 +8173,8 @@ def ecmwf_aifs_wave_ens(final_forecast_hour=144,
                                                     source='ecmwf',
                                                     clear_data=clear_data,
                                                     variables=variables,
-                                                    members=members)
+                                                    members=members,
+                                                    cat=cat)
                     rotate = False
                     if to_netcdf == True:
                         
@@ -8186,7 +8208,8 @@ def ecmwf_aifs_wave_ens(final_forecast_hour=144,
                                                     source='ecmwf',
                                                     clear_data=clear_data,
                                                     variables=variables,
-                                                    members=members)
+                                                    members=members,
+                                                    cat=cat)
                     rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to ECMWF Open-Data Server.")
@@ -8209,7 +8232,8 @@ def ecmwf_aifs_wave_ens(final_forecast_hour=144,
                                                     source='ecmwf',
                                                     clear_data=clear_data,
                                                     variables=variables,
-                                                    members=members)
+                                                    members=members,
+                                                    cat=cat)
                     rotate = False
                     if to_netcdf == True:
                         
@@ -8243,7 +8267,8 @@ def ecmwf_aifs_wave_ens(final_forecast_hour=144,
                                                     source='ecmwf',
                                                     clear_data=clear_data,
                                                     variables=variables,
-                                                    members=members)
+                                                    members=members,
+                                                    cat=cat)
                     rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to ECMWF Open-Data Server.")
@@ -8266,7 +8291,8 @@ def ecmwf_aifs_wave_ens(final_forecast_hour=144,
                                                     source='aws',
                                                     clear_data=clear_data,
                                                     variables=variables,
-                                                    members=members)
+                                                    members=members,
+                                                    cat=cat)
                     rotate = False
                     if to_netcdf == True:
                         
@@ -8300,7 +8326,8 @@ def ecmwf_aifs_wave_ens(final_forecast_hour=144,
                                                     source='aws',
                                                     clear_data=clear_data,
                                                     variables=variables,
-                                                    members=members)
+                                                    members=members,
+                                                    cat=cat)
                     rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to Amazon AWS Server.")
@@ -8327,7 +8354,8 @@ def ecmwf_aifs_wave_ens(final_forecast_hour=144,
                                                     source='aws',
                                                     clear_data=clear_data,
                                                     variables=variables,
-                                                    members=members)
+                                                    members=members,
+                                                    cat=cat)
                     rotate = False
                     if to_netcdf == True:
                         
@@ -8361,7 +8389,8 @@ def ecmwf_aifs_wave_ens(final_forecast_hour=144,
                                                     source='aws',
                                                     clear_data=clear_data,
                                                     variables=variables,
-                                                    members=members)
+                                                    members=members,
+                                                    cat=cat)
                     rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
@@ -8386,7 +8415,8 @@ def ecmwf_aifs_wave_ens(final_forecast_hour=144,
                                                     source='google',
                                                     clear_data=clear_data,
                                                     variables=variables,
-                                                    members=members)
+                                                    members=members,
+                                                    cat=cat)
                     rotate = False
                     if to_netcdf == True:
                         
@@ -8420,7 +8450,8 @@ def ecmwf_aifs_wave_ens(final_forecast_hour=144,
                                                     source='google',
                                                     clear_data=clear_data,
                                                     variables=variables,
-                                                    members=members)
+                                                    members=members,
+                                                    cat=cat)
                     rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")
@@ -8444,7 +8475,8 @@ def ecmwf_aifs_wave_ens(final_forecast_hour=144,
                                                     source='google',
                                                     clear_data=clear_data,
                                                     variables=variables,
-                                                    members=members)
+                                                    members=members,
+                                                    cat=cat)
                     rotate = False
                     if to_netcdf == True:
                         
@@ -8478,7 +8510,8 @@ def ecmwf_aifs_wave_ens(final_forecast_hour=144,
                                                     source='google',
                                                     clear_data=clear_data,
                                                     variables=variables,
-                                                    members=members)
+                                                    members=members,
+                                                    cat=cat)
                     rotate = False
             except Exception as e:
                 print("Client cannot establish a connection to any server.")

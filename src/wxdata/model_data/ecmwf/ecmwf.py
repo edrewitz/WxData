@@ -1179,8 +1179,7 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
     
     13) source (String) - Default='ecmwf'. The data server choice. 
     
-        Data Sources
-        ------------
+        ***Data Sources***
         
         - ECMWF Open-Data Server = 'ecmwf'
         - Amazon AWS Server = 'aws'
@@ -1188,8 +1187,7 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
         
     14) level_type (String) - Default='pressure'. The level of the parameters being queried. 
     
-        level_types
-        -----------
+        ***level_types***
         
         1) 'surface'
         2) 'pressure'
@@ -2722,6 +2720,8 @@ def ecmwf_ifs(final_forecast_hour=360,
     
     8) Automatically Rotate between ECMWF Open-Data, Amazon Web Services and Google Cloud in the event of significant server connection issues.
     
+    9) Validates the download and helps the user troubleshoot if needed. 
+    
     
     These ECMWF end-to-end clients can download ECMWF data from the following sources: 
     
@@ -3439,8 +3439,27 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
                 return_values=True):
     
     """
-    This function scans for the latest ECMWF IFS Ensemble dataset. If the dataset on the computer is old, the old data will be deleted
-    and the new data will be downloaded. 
+    This function is the main client that downloads and processes ECMWF IFS Ensemble data. 
+    
+    ***This client can do the following:***
+    
+    1) Download ECMWF IFS data from ECMWF Open-Data, Amazon Web Services and Google Cloud servers.
+    
+    2) Query your download by downloading only the variables, levels and ensemble members needed. 
+    
+    3) Subset the GRIB data into a user-specified bounding box and decode the GRIB2 keys into plain-language.
+    
+    4) Convert temperature fields to user-specified units (Kelvin -> Celsius & Kelvin -> Fahrenheit)
+    
+    5) Convert the xarray.array of decoded GRIB2 data into a NETCDF (.nc) file. 
+    
+    6) Manages the ECMWF IFS files in the local directory.    
+    
+    7) Handle user-specified proxy-server protocol - Useful for users working on VPN connections and behind firewalls.  
+    
+    8) Automatically Rotate between ECMWF Open-Data, Amazon Web Services and Google Cloud in the event of significant server connection issues.
+    
+    9) Validates the download and helps the user troubleshoot if needed. 
     
     These ECMWF end-to-end clients can download ECMWF data from the following sources: 
     
@@ -3451,18 +3470,16 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
     ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
     ***If the client cannot connect to any of the servers, the system will exit.***
     
-    1) final_forecast_hour (Integer) - Default = 144.
+    1) final_forecast_hour (Integer) - Default = 360.
 
-        00z and 12z ECMWF IFS Ensemble Runs
-        -----------------------------------
-        
-        3-Hourly Increments from hour 0 to hour 144.
-        6-Hourly Increments from hour 144 to hour 360
-        
-        06z and 18z ECMWF IFS Ensemble Runs
-        -----------------------------------
-        
-        3-Hourly Increments from hour 0 to hour 144.
+    ***00z and 12z ECMWF IFS Ensemble Runs***
+    
+    3-Hourly Increments from hour 0 to hour 144.
+    6-Hourly Increments from hour 144 to hour 360
+    
+    ***06z and 18z ECMWF IFS Ensemble Runs***
+    
+    3-Hourly Increments from hour 0 to hour 144.
     
     2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
@@ -3474,16 +3491,17 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
     
     6) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
 
-    7) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-       proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_ifs_ens(proxies=proxies)
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
     8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
        
-    9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
+    9) clear_recycle_bin (Boolean) - (Default=False). Set to True to clear your recycle bin. 
         
     10) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
@@ -3498,8 +3516,7 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
     
     14) source (String) - Default='ecmwf'. The data server choice. 
     
-        Data Sources
-        ------------
+        ***Data Sources***
         
         - ECMWF Open-Data Server = 'ecmwf'
         - Amazon AWS Server = 'aws'
@@ -3507,8 +3524,7 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
         
     15) level_type (String) - Default='pressure'. The level of the parameters being queried. 
     
-        level_types
-        -----------
+        ***level_types***
         
         1) 'surface'
         2) 'pressure'
@@ -3522,12 +3538,11 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
                                             'relative humidity',
                                             'temperature',
                                             'u-wind component',
-                                            'v-wind component'].
+                                            'v-wind component']. 
                         
         The list of variable names in plain-language. 
     
-        variables
-        ---------
+        ***Variables***
         
         'Geopotential (step 0)'
         'Standard deviation of sub-gridscale orography (step 0)'
@@ -3612,13 +3627,11 @@ def ecmwf_ifs_ens(final_forecast_hour=144,
         
     24) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
             
-    Returns
-    -------
-    
+    **Returns**
+        
     An xarray.data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
     
-    Plain Language ECMWF IFS Ensemble Variable Keys (After Post-Processing)
-    --------------------------------------------------------------
+    ***Plain Language ECMWF IFS Ensemble Variable Keys (After Post-Processing)***
     
     'total_column_water'
     'total_column_vertically_integrated_water_vapor'
@@ -4204,8 +4217,27 @@ def ecmwf_aifs(final_forecast_hour=360,
                 return_values=True):
 
     """
-    This function scans for the latest ECMWF AIFS dataset. If the dataset on the computer is old, the old data will be deleted
-    and the new data will be downloaded. 
+    This function is the main client that downloads and processes ECMWF AIFS data. 
+    
+    ***This client can do the following:***
+    
+    1) Download ECMWF IFS data from ECMWF Open-Data, Amazon Web Services and Google Cloud servers.
+    
+    2) Query your download by downloading only the variables and levels needed. 
+    
+    3) Subset the GRIB data into a user-specified bounding box and decode the GRIB2 keys into plain-language.
+    
+    4) Convert temperature fields to user-specified units (Kelvin -> Celsius & Kelvin -> Fahrenheit)
+    
+    5) Convert the xarray.array of decoded GRIB2 data into a NETCDF (.nc) file. 
+    
+    6) Manages the ECMWF IFS files in the local directory.    
+    
+    7) Handle user-specified proxy-server protocol - Useful for users working on VPN connections and behind firewalls.  
+    
+    8) Automatically Rotate between ECMWF Open-Data, Amazon Web Services and Google Cloud in the event of significant server connection issues.
+    
+    9) Validates the download and helps the user troubleshoot if needed. 
     
     These ECMWF end-to-end clients can download ECMWF data from the following sources: 
     
@@ -4216,12 +4248,7 @@ def ecmwf_aifs(final_forecast_hour=360,
     ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
     ***If the client cannot connect to any of the servers, the system will exit.***
     
-    1) final_forecast_hour (Integer) - Default = 360.
-
-        00z/06z/12z/18z ECMWF AIFS Runs
-        -------------------------------
-        
-        6-hourly increments from hour 0 to hour 360.
+    1) final_forecast_hour (Integer) - Default = 360. The maximum forecast hour. 
         
     2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
@@ -4231,52 +4258,49 @@ def ecmwf_aifs(final_forecast_hour=360,
 
     5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
     
-    6) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
+    6) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-    7) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
-
-       proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_aifs(proxies=proxies)
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
-    8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
+    7) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
        
-    9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
+    8) clear_recycle_bin (Boolean) - (Default=False). Set to True to clear your recycle bin. 
         
-    10) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+    9) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
         
-    11) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+    10) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    12) custom_directory (String or None) - Default=None. The directory path where the ECMWF AIFS files will be saved to. 
+    11) custom_directory (String or None) - Default=None. The directory path where the ECMWF AIFS files will be saved to. 
         When set to None, the path will be: "ECMWF/AIFS/OPERATIONAL/"
     
-    13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    12) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    14) source (String) - Default='ecmwf'. The data server choice. 
+    13) source (String) - Default='ecmwf'. The data server choice. 
     
-        Data Sources
-        ------------
+        ***Data Sources***
         
         - ECMWF Open-Data Server = 'ecmwf'
         - Amazon AWS Server = 'aws'
         - Google Cloud Server = 'google'
         
-    15) level_type (String) - Default='surface'. The level of the parameters being queried. 
+    14) level_type (String) - Default='pressure'. The level of the parameters being queried. 
     
-        level_types
-        -----------
+        ***level_types***
         
         1) 'surface'
         2) 'pressure'
         3) 'soil
     
-    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+    15) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
         
-    17) variables (String List) - Default=['geopotential height',
+    16) variables (String List) - Default=['geopotential height',
                                             'specific humidity',
                                             'relative humidity',
                                             'temperature',
@@ -4285,8 +4309,7 @@ def ecmwf_aifs(final_forecast_hour=360,
                                 
         The list of variable names in plain-language. 
     
-        variables
-        ---------
+        ***Variables***
         
         'geopotential'
         'total column water'
@@ -4321,30 +4344,28 @@ def ecmwf_aifs(final_forecast_hour=360,
         'volumetric soil moisture content'
         'soil temperature'
         
-    18) levels (Integer List) - Default=[1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50]. 
+    17) levels (Integer List) - Default=[1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50]. 
         When level_type='pressure', this is the list of the pressure levels. 
         
         Example: User wants only the 500 mb level: levels=[500]
         
-    19) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    18) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
     
-    20) netcdf_path (String) - Default='ECMWF AIFS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    19) netcdf_path (String) - Default='ECMWF AIFS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
     
-    21) netcdf_filename (String) - Default='ecmwf_aifs.nc'. The name of the netCDF (.nc) file. A good practice is to 
+    20) netcdf_filename (String) - Default='ecmwf_aifs.nc'. The name of the netCDF (.nc) file. A good practice is to 
         name this netCDF file using the variable name. 
         
-    22) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+    21) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
         new netCDF file. For users who want to archive all data set this to False. 
         
-    23) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+    22) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
         
-    Returns
-    -------
+    **Returns**
     
     An xarray data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
     
-    Plain Language ECMWF AIFS Variable Keys (After Post-Processing)
-    --------------------------------------------------------------
+    ***Plain Language ECMWF AIFS Variable Keys (After Post-Processing)***
     
     'volumetric_soil_moisture_content'
     'soil_temperature'

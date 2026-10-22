@@ -154,14 +154,14 @@ def _ecmwf_ifs_client(final_forecast_hour=360,
     
     1) final_forecast_hour (Integer) - Default = 360.
 
-        ***00z and 12z ECMWF IFS Runs***
-        
-        3-Hourly Increments from hour 0 to hour 144.
-        6-Hourly Increments from hour 144 to hour 360
-        
-        ***06z and 18z ECMWF IFS Runs***
-        
-        3-Hourly Increments from hour 0 to hour 144. 
+    ***00z and 12z ECMWF IFS Runs***
+    
+    3-Hourly Increments from hour 0 to hour 144.
+    6-Hourly Increments from hour 144 to hour 360
+    
+    ***06z and 18z ECMWF IFS Runs***
+    
+    3-Hourly Increments from hour 0 to hour 144. 
     
     2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
@@ -647,14 +647,14 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=360,
     
     1) final_forecast_hour (Integer) - Default = 360.
 
-        ***00z and 12z ECMWF IFS Ensemble Runs***
-        
-        3-Hourly Increments from hour 0 to hour 144.
-        6-Hourly Increments from hour 144 to hour 360
-        
-        ***06z and 18z ECMWF IFS Ensemble Runs***
-        
-        3-Hourly Increments from hour 0 to hour 144.
+    ***00z and 12z ECMWF IFS Ensemble Runs***
+    
+    3-Hourly Increments from hour 0 to hour 144.
+    6-Hourly Increments from hour 144 to hour 360
+    
+    ***06z and 18z ECMWF IFS Ensemble Runs***
+    
+    3-Hourly Increments from hour 0 to hour 144.
     
     2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
@@ -1110,40 +1110,14 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
                     custom_directory=None,
                     notifications='off',
                     source='ecmwf',
-                    level_type='surface',
+                    level_type='pressure',
                     clear_data=False,
-                    variables=['geopotential',
-                                'total column water',
-                                'mean sea level pressure',
-                                'standard deviation of sub-gridscale orography',
-                                'slope of sub-gridscale orography',
-                                '10-meter u-wind component',
-                                '10-meter v-wind component',
-                                '2-meter temperature',
-                                '2-meter dew point',
-                                'surface shortwave radiation downward',
-                                'land sea mask',
-                                'surface longwave radiation downward',
-                                'low cloud cover',
-                                'mid-level cloud cover',
-                                'high cloud cover',
-                                'runoff water equivalent',
-                                'convective precipitation',
-                                'snowfall water equivalent',
-                                'total cloud cover',
-                                'total precipitation',
-                                '100-meter u-wind component',
-                                '100-meter v-wind component',
-                                'skin temperature',
-                                'surface pressure',
+                    variables=['geopotential height',
                                 'specific humidity',
                                 'relative humidity',
                                 'temperature',
                                 'u-wind component',
-                                'v-wind component',
-                                'vertical velocity',
-                                'volumetric soil moisture content',
-                                'soil temperature'],
+                                'v-wind component'],
                     levels=[1000, 
                             925, 
                             850, 
@@ -1173,8 +1147,7 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
     
     1) final_forecast_hour (Integer) - Default = 360.
 
-        00z/06z/12z/18z ECMWF AIFS Runs
-        -------------------------------
+        ***00z/06z/12z/18z ECMWF AIFS Runs***
         
         6-hourly increments from hour 0 to hour 360.
         
@@ -1188,16 +1161,17 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
     
     6) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
 
-    7) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-       proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_aifs(proxies=proxies)
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
     8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
        
-    9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
+    9) clear_recycle_bin (Boolean) - (Default=False). Set to True to clear your recycle bin. 
         
     10) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
@@ -1219,7 +1193,7 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
         - Amazon AWS Server = 'aws'
         - Google Cloud Server = 'google'
         
-    15) level_type (String) - Default='surface'. The level of the parameters being queried. 
+    15) level_type (String) - Default='pressure'. The level of the parameters being queried. 
     
         level_types
         -----------
@@ -1231,10 +1205,16 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
     16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
         
-    17) variables (String List) - Default is all variables. The list of variable names in plain-language. 
+    17) variables (String List) - Default=['geopotential height',
+                                            'specific humidity',
+                                            'relative humidity',
+                                            'temperature',
+                                            'u-wind component',
+                                            'v-wind component']. 
+                                
+        The list of variable names in plain-language. 
     
-        variables
-        ---------
+        ***Variables***
         
         'geopotential'
         'total column water'
@@ -1279,8 +1259,7 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
     
     An xarray data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
     
-    Plain Language ECMWF AIFS Variable Keys (After Post-Processing)
-    --------------------------------------------------------------
+    ***Plain Language ECMWF AIFS Variable Keys (After Post-Processing)***
     
     'volumetric_soil_moisture_content'
     'soil_temperature'

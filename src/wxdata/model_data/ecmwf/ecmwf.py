@@ -1,5 +1,5 @@
 """
-This file hosts the functions the user has to download ECMWF model data. 
+This file hosts the clients that manage the downloads and local file system for European Centre for Medium-Range Weather Forecasts (ECMWF) Data. 
 
 1) ecmwf_ifs
 2) ecmwf_ifs_ens
@@ -117,63 +117,14 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
               custom_directory=None,
               notifications='off',
               source='ecmwf',
-              level_type='surface',
+              level_type='pressure',
               clear_data=False,
-              variables=['Geopotential (step 0)',
-                        'Standard deviation of sub-gridscale orography (step 0)',
-                        '10-meter u-wind component',
-                        '10-meter v-wind component',
-                        '100-meter u-wind component',
-                        '100-meter v-wind component',
-                        'maximum 10-meter wind gust step 0',
-                        'maximum 10-meter wind gust steps 3-144',
-                        '2-meter temperature',
-                        '2-meter dewpoint temperature',
-                        'mean sea level pressure',
-                        'mean zero-crossing wave period',
-                        'mean wave direction',
-                        'mean wave period',
-                        'peak wave period',
-                        'significant wave height',
-                        'runoff',
-                        'total precipitation',
-                        'surface pressure',
-                        'total column vertically integrated water vapor',
-                        'total cloud cover',
-                        'snow depth water equivalent',
-                        'snowfall water equivalent',
-                        'land sea mask',
-                        'volumetric soil moisture content',
-                        'soil temperature',
-                        'most unstable cape',
-                        'snow albedo',
-                        '3-hour minimum 2-meter temperature',
-                        '3-hour maximum 2-meter temperature',
-                        '6-hour minimum 2-meter temperature',
-                        '6-hour maximum 2-meter temperature',
-                        'total precipitation rate',
-                        'precipitation type',
-                        'top net longwave thermal radiation',
-                        'snow density',
-                        'surface net longwave thermal radiation',
-                        'surface net shortwave solar radiation',
-                        'surface shortwave radiation downward',
-                        'surface longwave radiation downward',
-                        'northward turbulent surface stress',
-                        'eastward turbulent surface stress',
-                        'eastward surface sea water velocity',
-                        'northward surface sea water velocity',
-                        'sea ice thickness',
-                        'sea surface height',
-                        'divergence',
-                        'geopotential height',
+              variables=['geopotential height',
                         'specific humidity',
                         'relative humidity',
                         'temperature',
                         'u-wind component',
-                        'v-wind component',
-                        'vertical velocity',
-                        'relative vorticity'],
+                        'v-wind component'],
               levels=[1000, 
                       925, 
                       850, 
@@ -189,7 +140,7 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
                       50]):
     
     """
-    This function scans for the latest ECMWF IFS dataset. If the dataset on the computer is old, the old data will be deleted
+    This function scans for the latest ECMWF IFS data. If the dataset on the computer is old, the old data will be deleted
     and the new data will be downloaded. 
     
     These ECMWF end-to-end clients can download ECMWF data from the following sources: 
@@ -203,14 +154,12 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
     
     1) final_forecast_hour (Integer) - Default = 144.
 
-        00z and 12z ECMWF IFS Runs
-        --------------------------
+        ***00z and 12z ECMWF IFS Runs***
         
         3-Hourly Increments from hour 0 to hour 144.
         6-Hourly Increments from hour 144 to hour 360
         
-        06z and 18z ECMWF IFS Runs
-        --------------------------
+        ***06z and 18z ECMWF IFS Runs***
         
         3-Hourly Increments from hour 0 to hour 144. 
     
@@ -224,16 +173,17 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
     
     6) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
 
-    7) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-       proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_ifs(proxies=proxies)
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
     8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
        
-    9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
+    9) clear_recycle_bin (Boolean) - (Default=False). Set to True to clear your recycle bin. 
         
     10) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
@@ -248,17 +198,15 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
     
     14) source (String) - Default='ecmwf'. The data server choice. 
     
-        Data Sources
-        ------------
+        ***Data Sources***
         
         - ECMWF Open-Data Server = 'ecmwf'
         - Amazon AWS Server = 'aws'
         - Google Cloud Server = 'google'
     
-    15) level_type (String) - Default='surface'. The level of the parameters being queried. 
+    15) level_type (String) - Default='pressure'. The level of the parameters being queried. 
     
-        level_types
-        -----------
+        ***level_types***
         
         1) 'surface'
         2) 'pressure'
@@ -267,10 +215,16 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
     16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
         
-    17) variables (String List) - Default is all variables. The list of variable names in plain-language. 
+    17) variables (String List) - Default=['geopotential height',
+                                            'specific humidity',
+                                            'relative humidity',
+                                            'temperature',
+                                            'u-wind component',
+                                            'v-wind component']. 
+                        
+        The list of variable names in plain-language. 
     
-        variables
-        ---------
+        ***Variables***
         
         'Geopotential (step 0)'
         'Standard deviation of sub-gridscale orography (step 0)'
@@ -333,13 +287,11 @@ def _ecmwf_ifs_client(final_forecast_hour=144,
         
         Example: User wants only the 500 mb level: levels=[500]
         
-    Returns
-    -------
+    **Returns**
     
     An xarray.data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
     
-    Plain Language ECMWF IFS Variable Keys (After Post-Processing)
-    --------------------------------------------------------------
+    ***Plain Language ECMWF IFS Variable Keys (After Post-Processing)***
     
     'total_column_water'
     'total_column_vertically_integrated_water_vapor'

@@ -1738,7 +1738,6 @@ def _ecmwf_high_res_ifs_ens_client(final_forecast_hour=360,
         
         1) 'surface'
         2) 'pressure'
-        3) 'soil
     
     16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
@@ -6756,7 +6755,6 @@ def ecmwf_high_res_ifs_ens(final_forecast_hour=144,
         
         1) 'surface'
         2) 'pressure'
-        3) 'soil
     
     16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 

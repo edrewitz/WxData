@@ -4604,11 +4604,11 @@ def ecmwf_high_res_ifs(final_forecast_hour=360,
             return_values=True):
     
     """
-    This function is the main client that downloads and processes ECMWF IFS data. 
+    This function is the main client that downloads and processes ECMWF High Resolution IFS data. 
     
     ***This client can do the following:***
     
-    1) Download ECMWF IFS data from ECMWF Open-Data, Amazon Web Services and Google Cloud servers.
+    1) Download ECMWF High Resolution IFS data from ECMWF Open-Data, Amazon Web Services and Google Cloud servers.
     
     2) Query your download by downloading only the variables and levels needed. 
     
@@ -4618,7 +4618,7 @@ def ecmwf_high_res_ifs(final_forecast_hour=360,
     
     5) Convert the xarray.array of decoded GRIB2 data into a NETCDF (.nc) file. 
     
-    6) Manages the ECMWF IFS files in the local directory.    
+    6) Manages the ECMWF High Resolution IFS files in the local directory.    
     
     7) Handle user-specified proxy-server protocol - Useful for users working on VPN connections and behind firewalls.  
     
@@ -4637,12 +4637,12 @@ def ecmwf_high_res_ifs(final_forecast_hour=360,
     
     1) final_forecast_hour (Integer) - Default = 360.
 
-    ***00z and 12z ECMWF IFS Runs***
+    ***00z and 12z ECMWF High Resolution IFS Runs***
     
     3-Hourly Increments from hour 0 to hour 144.
     6-Hourly Increments from hour 144 to hour 360
     
-    ***06z and 18z ECMWF IFS Runs***
+    ***06z and 18z ECMWF High Resolution IFS Runs***
     
     3-Hourly Increments from hour 0 to hour 144. 
     
@@ -4675,7 +4675,7 @@ def ecmwf_high_res_ifs(final_forecast_hour=360,
         Set convert_to='fahrenheit' for Fahrenheit. 
         
     12) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS files will be saved to. 
-        When set to None, the path will be: "ECMWF/IFS/OPERATIONAL/"
+        When set to None, the path will be: "ECMWF/IFS/HIGH RES/"
     
     13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
@@ -4693,7 +4693,6 @@ def ecmwf_high_res_ifs(final_forecast_hour=360,
         
         1) 'surface'
         2) 'pressure'
-        3) 'soil
     
     16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
@@ -4772,9 +4771,9 @@ def ecmwf_high_res_ifs(final_forecast_hour=360,
         
     19) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
     
-    20) netcdf_path (String) - Default='ECMWF IFS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    20) netcdf_path (String) - Default='ECMWF High Resolution IFS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
     
-    21) netcdf_filename (String) - Default='ecmwf_ifs.nc'. The name of the netCDF (.nc) file. A good practice is to 
+    21) netcdf_filename (String) - Default='ecmwf_high_res_ifs.nc'. The name of the netCDF (.nc) file. A good practice is to 
         name this netCDF file using the variable name. 
         
     22) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
@@ -4786,7 +4785,7 @@ def ecmwf_high_res_ifs(final_forecast_hour=360,
     
     An xarray.data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
     
-    ***Plain Language ECMWF IFS Variable Keys (After Post-Processing)***
+    ***Plain Language ECMWF High Resolution IFS Variable Keys (After Post-Processing)***
     
     'total_column_water'
     'total_column_vertically_integrated_water_vapor'

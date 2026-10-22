@@ -1567,32 +1567,30 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
 
     5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
     
-    6) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
-
-    7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    6) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
        proxies=None ---> proxies={
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
     
-    8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
+    7) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
        
-    9) clear_recycle_bin (Boolean) - (Default=False). Set to True to clear your recycle bin. 
+    8) clear_recycle_bin (Boolean) - (Default=False). Set to True to clear your recycle bin. 
         
-    10) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+    9) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
         
-    11) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+    10) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    12) custom_directory (String or None) - Default=None. The directory path where the ECMWF AIFS Ensemble files will be saved to. 
+    11) custom_directory (String or None) - Default=None. The directory path where the ECMWF AIFS Ensemble files will be saved to. 
         When set to None, the path will be: "ECMWF/AIFS/ENSEMBLE {cat}/"
     
-    13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    12) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    14) source (String) - Default='ecmwf'. The data server choice. 
+    13) source (String) - Default='ecmwf'. The data server choice. 
     
         ***Data Sources***
         
@@ -1600,7 +1598,7 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
         - Amazon AWS Server = 'aws'
         - Google Cloud Server = 'google'
         
-    15) level_type (String) - Default='pressure'. The level of the parameters being queried. 
+    14) level_type (String) - Default='pressure'. The level of the parameters being queried. 
     
         ***level_types***
         
@@ -1608,16 +1606,16 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
         2) 'pressure'
         3) 'soil
     
-    17) cat (String) - Default='control'. The type of ensemble run. 
+    15) cat (String) - Default='control'. The type of ensemble run. 
     
         Control Run - cat='control'
         
         Ensemble Members - cat='members'
     
-    18) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
         
-    19) variables (String List) - Default=['geopotential height',
+    17) variables (String List) - Default=['geopotential height',
                                             'specific humidity',
                                             'relative humidity',
                                             'temperature',
@@ -1661,12 +1659,12 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
         'volumetric soil moisture content'
         'soil temperature'
         
-    20) levels (Integer List) - Default=[1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50]. 
+    18) levels (Integer List) - Default=[1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50]. 
         When level_type='pressure', this is the list of the pressure levels. 
         
         Example: User wants only the 500 mb level: levels=[500]
         
-    21) members (Integer List) - Default=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+    19) members (Integer List) - Default=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
                                           11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                                           21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
                                           31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 
@@ -1963,7 +1961,7 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
     else:
         pass
     
-def _ecmwf_ifs_wave_client(final_forecast_hour=144,
+def _ecmwf_ifs_wave_client(final_forecast_hour=360,
                     western_bound=-180,
                     eastern_bound=180,
                     northern_bound=90,
@@ -1995,18 +1993,16 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
     ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
     ***If the client cannot connect to any of the servers, the system will exit.***
     
-    1) final_forecast_hour (Integer) - Default = 144.
+    1) final_forecast_hour (Integer) - Default = 360.
 
-        00z and 12z ECMWF IFS Wave Runs
-        -------------------------------
-        
-        3-Hourly Increments from hour 0 to hour 144.
-        6-Hourly Increments from hour 144 to hour 360
-        
-        06z and 18z ECMWF IFS Wave Runs
-        -------------------------------
-        
-        3-Hourly Increments from hour 0 to hour 144.  
+    ***00z and 12z ECMWF IFS Wave Runs***
+    
+    3-Hourly Increments from hour 0 to hour 144.
+    6-Hourly Increments from hour 144 to hour 360
+    
+    ***06z and 18z ECMWF IFS Wave Runs***
+    
+    3-Hourly Increments from hour 0 to hour 144.  
     
     2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
@@ -2018,16 +2014,17 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
     
     6) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
 
-    7) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-       proxies=None ---> proxies="http://your-proxy-address:port"
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
     8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
        
-    9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
+    9) clear_recycle_bin (Boolean) - (Default=False). Set to True to clear your recycle bin. 
         
     10) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
@@ -2042,8 +2039,7 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
     
     14) source (String) - Default='ecmwf'. The data server choice. 
     
-        Data Sources
-        ------------
+        ***Data Sources***
         
         - ECMWF Open-Data Server = 'ecmwf'
         - Amazon AWS Server = 'aws'
@@ -2054,8 +2050,7 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
     
     16) variables (String List) - Default is all variables. The list of variable names in plain-language. 
     
-        variables
-        ---------
+        ***Variables***
         
         'mean zero-crossing wave period'
         'significant wave height'
@@ -2063,13 +2058,11 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
         'mean wave period'
         'peak wave period'
         
-    Returns
-    -------
+    **Returns**
     
     An xarray.data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
     
-    Plain Language ECMWF IFS Wave Variable Keys (After Post-Processing)
-    -------------------------------------------------------------------
+    ***Plain Language ECMWF IFS Wave Variable Keys (After Post-Processing)***
     
     'mean_zero_crossing_wave_period'
     'significant_height_of_combined_waves_and_swell'
@@ -2314,7 +2307,7 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=144,
     else:
         pass
     
-def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
+def _ecmwf_ifs_wave_ens_client(final_forecast_hour=360,
                     western_bound=-180,
                     eastern_bound=180,
                     northern_bound=90,
@@ -2351,18 +2344,16 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
     ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
     ***If the client cannot connect to any of the servers, the system will exit.***
     
-    1) final_forecast_hour (Integer) - Default = 144.
+    1) final_forecast_hour (Integer) - Default = 360.
 
-        00z and 12z ECMWF IFS Wave Ensemble Runs
-        ----------------------------------------
-        
-        3-Hourly Increments from hour 0 to hour 144.
-        6-Hourly Increments from hour 144 to hour 360
-        
-        06z and 18z ECMWF IFS Ensemble Wave Runs
-        ----------------------------------------
-        
-        3-Hourly Increments from hour 0 to hour 144.  
+    ***00z and 12z ECMWF IFS Wave Ensemble Runs***
+    
+    3-Hourly Increments from hour 0 to hour 144.
+    6-Hourly Increments from hour 144 to hour 360
+    
+    ***06z and 18z ECMWF IFS Ensemble Wave Runs***
+    
+    3-Hourly Increments from hour 0 to hour 144.  
     
     2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
@@ -2374,16 +2365,17 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
     
     6) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
 
-    7) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+    7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-       proxies=None ---> proxies="http://your-proxy-address:port"
+       proxies=None ---> proxies={
+                               'http':'http://your-proxy-address:port',
+                               'https':'http://your-proxy-address:port'
+                               }
     
     8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
        
-    9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
+    9) clear_recycle_bin (Boolean) - (Default=False). Set to True to clear your recycle bin. 
         
     10) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
@@ -2398,8 +2390,7 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
     
     14) source (String) - Default='ecmwf'. The data server choice. 
     
-        Data Sources
-        ------------
+        ***Data Sources***
         
         - ECMWF Open-Data Server = 'ecmwf'
         - Amazon AWS Server = 'aws'
@@ -2410,8 +2401,7 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
     
     16) variables (String List) - Default is all variables. The list of variable names in plain-language. 
     
-        variables
-        ---------
+        ***Variables***
         
         'mean zero-crossing wave period'
         'significant wave height'
@@ -2419,13 +2409,11 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=144,
         'mean wave period'
         'peak wave period'
         
-    Returns
-    -------
+    **Returns**
     
     An xarray.data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
     
-    Plain Language ECMWF IFS Wave Ensemble Variable Keys (After Post-Processing)
-    ----------------------------------------------------------------------------
+    ***Plain Language ECMWF IFS Wave Ensemble Variable Keys (After Post-Processing)***
     
     'mean_zero_crossing_wave_period'
     'significant_height_of_combined_waves_and_swell'

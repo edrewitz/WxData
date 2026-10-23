@@ -177,6 +177,8 @@ from wxdata.model_data.noaa.rtma.rtma import(
 # - ECMWF AIFS Wave Ensemble (0.25x0.25 Degree)
 # - ECMWF High Resolution IFS (0.10x0.10 Degree)
 # - ECMWF High Resolution IFS Ensemble (0.10x0.10 Degree)
+# - ECMWF High Resolution IFS Wave (0.10x0.10 Degree)
+# - ECMWF High Resolution IFS Wave Ensemble (0.10x0.10 Degree)
 from wxdata.model_data.ecmwf.ecmwf import(
     ecmwf_ifs,
     ecmwf_ifs_ens,
@@ -187,7 +189,9 @@ from wxdata.model_data.ecmwf.ecmwf import(
     ecmwf_aifs_wave,
     ecmwf_aifs_wave_ens,
     ecmwf_high_res_ifs,
-    ecmwf_high_res_ifs_ens
+    ecmwf_high_res_ifs_ens,
+    ecmwf_high_res_ifs_wave,
+    ecmwf_high_res_ifs_wave_ens
 )
 
 ##################################

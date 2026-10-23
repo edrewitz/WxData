@@ -518,7 +518,7 @@ def _ecmwf_ifs_client(final_forecast_hour=360,
     if download == True:
         print(f"Downloading ECMWF IFS...\n")
         _clear_old_data(path)
-        
+
         if run == 6 or run == 18:
             if final_forecast_hour > 144:
                 final_forecast_hour = 144
@@ -559,7 +559,7 @@ def _ecmwf_ifs_client(final_forecast_hour=360,
                 else:
                     pass
                 
-            for i in range(0, (final_forecast_hour + 6), 6):
+            for i in range(144, (final_forecast_hour + 6), 6):
                 _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.grib2",
                                     f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc.index",
                                     level_type,
@@ -1066,7 +1066,7 @@ def _ecmwf_high_res_ifs_client(final_forecast_hour=360,
                 else:
                     pass
                 
-            for i in range(0, (final_forecast_hour + 6), 6):
+            for i in range(144, (final_forecast_hour + 6), 6):
                 _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc-{level_type}.grib2",
                                     f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-oper-fc-{level_type}.index",
                                     level_type,
@@ -1582,7 +1582,7 @@ def _ecmwf_ifs_ens_client(final_forecast_hour=360,
                 else:
                     pass
                 
-            for i in range(0, (final_forecast_hour + 6), 6):
+            for i in range(144, (final_forecast_hour + 6), 6):
                 _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-ef.grib2",
                                     f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-ef.index",
                                     level_type,
@@ -2105,7 +2105,7 @@ def _ecmwf_high_res_ifs_ens_client(final_forecast_hour=360,
                 else:
                     pass
                 
-            for i in range(0, (final_forecast_hour + 6), 6):
+            for i in range(144, (final_forecast_hour + 6), 6):
                 _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-ef-{level_type}.grib2",
                                     f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-enfo-ef-{level_type}.index",
                                     level_type,
@@ -3338,7 +3338,7 @@ def _ecmwf_ifs_wave_client(final_forecast_hour=360,
                 else:
                     pass
                 
-            for i in range(0, (final_forecast_hour + 6), 6):
+            for i in range(144, (final_forecast_hour + 6), 6):
                 _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-wave-fc.grib2",
                                     f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-wave-fc.index",
                                     "sfc",
@@ -3693,7 +3693,7 @@ def _ecmwf_high_res_ifs_wave_client(final_forecast_hour=360,
                 else:
                     pass
                 
-            for i in range(0, (final_forecast_hour + 6), 6):
+            for i in range(144, (final_forecast_hour + 6), 6):
                 _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-wave-fc-sfc.grib2",
                                     f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-wave-fc-sfc.index",
                                     "sfc",
@@ -4051,7 +4051,7 @@ def _ecmwf_ifs_wave_ens_client(final_forecast_hour=360,
                 else:
                     pass
                 
-            for i in range(0, (final_forecast_hour + 6), 6):
+            for i in range(144, (final_forecast_hour + 6), 6):
                 _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.grib2",
                                     f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef.index",
                                     "sfc",
@@ -4410,7 +4410,7 @@ def _ecmwf_high_res_ifs_wave_ens_client(final_forecast_hour=360,
                 else:
                     pass
                 
-            for i in range(0, (final_forecast_hour + 6), 6):
+            for i in range(144, (final_forecast_hour + 6), 6):
                 _download_ecmwf_data(f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef-sfc.grib2",
                                     f"{url}{date.strftime('%Y%m%d%H')}0000-{i}h-waef-ef-sfc.index",
                                     "sfc",

@@ -12400,7 +12400,7 @@ def ecmwf_aifs_wave(final_forecast_hour=360,
         pass
     
     
-def ecmwf_aifs_wave_ens(final_forecast_hour=144,
+def ecmwf_aifs_wave_ens(final_forecast_hour=360,
                     western_bound=-180,
                     eastern_bound=180,
                     northern_bound=90,

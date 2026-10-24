@@ -14,10 +14,12 @@ current_os = _platform.system()
 from wxdata.model_data.ecmwf.ecmwf import(
     ecmwf_ifs as _fetch_ecmwf_ifs,
     ecmwf_ifs_ens as _fetch_ecmwf_ifs_ens,
-    ecmwf_aifs as _fetch_ecmwf_aifs,
-    ecmwf_aifs_ens as _fetch_ecmwf_aifs_ens,
     ecmwf_ifs_wave as _fetch_ecmwf_ifs_wave,
-    ecmwf_ifs_wave_ens as _fetch_ecmwf_ifs_wave_ens
+    ecmwf_ifs_wave_ens as _fetch_ecmwf_ifs_wave_ens,
+    ecmwf_high_res_ifs as _fetch_ecmwf_high_res_ifs,
+    ecmwf_high_res_ifs_ens as _fetch_ecmwf_high_res_ifs_ens,
+    ecmwf_high_res_ifs_wave as _fetch_ecmwf_high_res_ifs_wave,
+    ecmwf_high_res_ifs_wave_ens as _fetch_ecmwf_high_res_ifs_wave_ens
 )
 
 

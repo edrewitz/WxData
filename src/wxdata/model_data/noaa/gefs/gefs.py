@@ -2102,8 +2102,13 @@ def gefs_0p50(cat='mean',
         ***Server List***
         
         1) NOAA/NCEP/NOMADS - source='noaa'
+        
         2) Amazon AWS - source='aws'
+        
         3) Google Cloud - source='google'
+        
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     21) level_type (String) - Default='pressure'. The type of level for the variable.
     
@@ -2777,8 +2782,13 @@ def gefs_0p50_secondary_parameters(cat='control',
         ***Server List***
         
         1) NOAA/NCEP/NOMADS - source='noaa'
+        
         2) Amazon AWS - source='aws'
+        
         3) Google Cloud - source='google'
+        
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     21) level_type (String) - Default='mean sea level'. The type of level for the variable.
     
@@ -3452,8 +3462,13 @@ def gefs_0p25(cat='mean',
         ***Server List***
         
         1) NOAA/NCEP/NOMADS - source='noaa'
+        
         2) Amazon AWS - source='aws'
+        
         3) Google Cloud - source='google'
+        
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     21) level_type (String) - Default='height above ground'. The type of level for the variable.
     

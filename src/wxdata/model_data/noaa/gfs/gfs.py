@@ -1866,8 +1866,13 @@ def gfs_0p25(final_forecast_hour=384,
         ***Server List***
         
         1) NOAA/NCEP/NOMADS - source='noaa'
+        
         2) Amazon AWS - source='aws'
+        
         3) Google Cloud - source='google'
+        
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     18) level_type (String) - Default='pressure'. The type of level for the variable.
     
@@ -2570,8 +2575,13 @@ def gfs_0p50(final_forecast_hour=384,
         ***Server List***
         
         1) NOAA/NCEP/NOMADS - source='noaa'
+        
         2) Amazon AWS - source='aws'
+        
         3) Google Cloud - source='google'
+        
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     18) level_type (String) - Default='pressure'. The type of level for the variable.
     
@@ -3258,8 +3268,13 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
         ***Server List***
         
         1) NOAA/NCEP/NOMADS - source='noaa'
+        
         2) Amazon AWS - source='aws'
+        
         3) Google Cloud - source='google'
+        
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     18) level_type (String) - Default='pressure'. The type of level for the variable.
     

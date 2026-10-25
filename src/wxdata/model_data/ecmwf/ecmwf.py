@@ -192,7 +192,7 @@ def _ecmwf_ifs_client(final_forecast_hour=360,
         Set convert_to='fahrenheit' for Fahrenheit. 
         
     12) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS files will be saved to. 
-        When set to None, the path will be: "ECMWF/IFS/OPERATIONAL/"
+        When set to None, the path will be: "ECMWF/IFS/DETERMINISTIC/"
     
     13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
@@ -358,10 +358,10 @@ def _ecmwf_ifs_client(final_forecast_hour=360,
     
     if custom_directory == None:
         _build_directory('ifs', 
-                        'operational')
+                        'deterministic')
         
         path = _ecmwf_branch_paths('ifs', 
-                        'operational')
+                        'deterministic')
         
     else:
         path = _custom_branch(custom_directory)
@@ -2227,7 +2227,7 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
         Set convert_to='fahrenheit' for Fahrenheit. 
         
     11) custom_directory (String or None) - Default=None. The directory path where the ECMWF AIFS files will be saved to. 
-        When set to None, the path will be: "ECMWF/AIFS/OPERATIONAL/"
+        When set to None, the path will be: "ECMWF/AIFS/DETERMINISTIC/"
     
     12) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
@@ -2357,10 +2357,10 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
     
     if custom_directory == None:
         _build_directory('aifs', 
-                        'operational')
+                        'deterministic')
         
         path = _ecmwf_branch_paths('aifs', 
-                        'operational')
+                        'deterministic')
         
     else:
         path = _custom_branch(custom_directory)
@@ -5201,7 +5201,7 @@ def ecmwf_ifs(final_forecast_hour=360,
         Set convert_to='fahrenheit' for Fahrenheit. 
         
     12) custom_directory (String or None) - Default=None. The directory path where the ECMWF IFS files will be saved to. 
-        When set to None, the path will be: "ECMWF/IFS/OPERATIONAL/"
+        When set to None, the path will be: "ECMWF/IFS/DETERMINISTIC/"
     
     13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
@@ -6550,7 +6550,7 @@ def ecmwf_high_res_ifs(final_forecast_hour=360,
         pass
         
        
-def ecmwf_ifs_ens(final_forecast_hour=144,
+def ecmwf_ifs_ens(final_forecast_hour=360,
               western_bound=-180,
               eastern_bound=180,
               northern_bound=90,
@@ -8217,7 +8217,7 @@ def ecmwf_aifs(final_forecast_hour=360,
         Set convert_to='fahrenheit' for Fahrenheit. 
         
     11) custom_directory (String or None) - Default=None. The directory path where the ECMWF AIFS files will be saved to. 
-        When set to None, the path will be: "ECMWF/AIFS/OPERATIONAL/"
+        When set to None, the path will be: "ECMWF/AIFS/DETERMINISTIC/"
     
     12) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     

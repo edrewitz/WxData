@@ -874,6 +874,7 @@ def fetch_ifs(type,
                 
         except SystemExit as e:
             _command_error_message('ecmwf ifs wave ensemble')
+            _ecmwf_wave_var_error('ifs')
             _sys.exit(1)
             
     elif type == 'hwe':

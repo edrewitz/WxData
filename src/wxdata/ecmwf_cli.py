@@ -442,7 +442,7 @@ def ifs():
                   
                   Default=['geopotential_height', 'specific humidity', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']
                   
-                  See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
+                  See https://edrewitz.github.io/WxData/ECMWF_IFS for available variables."""
                   
                   )
 )
@@ -471,7 +471,7 @@ def ifs():
           
           Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100, 50]
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available levels.
+          See https://edrewitz.github.io/WxData/ECMWF_IFS for available levels.
           
           """)
 )
@@ -504,7 +504,7 @@ def ifs():
         
           Default='pressure'.
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available level types.
+          See https://edrewitz.github.io/WxData/ECMWF_IFS for available level types.
           
           """)
 )

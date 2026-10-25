@@ -1410,7 +1410,8 @@ def fetch_aifs(type,
                   southern_bound,
                   convert_temperature,
                   convert_to,
-                  members):
+                  members,
+                  category):
     
     if proxy == "none":
         proxy = None
@@ -1431,6 +1432,8 @@ def fetch_aifs(type,
             ncdir = ncdir.replace('/', '\\')
         else:
             pass
+    
+    category = category.lower()
     
     vars_fixed = []
     for v in variables:
@@ -1492,14 +1495,15 @@ def fetch_aifs(type,
                             process_data=process,
                             return_values=False,
                             variables=vars_fixed,
-                            members=members)
+                            members=members,
+                            cat=category)
             if custom_directory != "none" and custom_directory != None:
                 _click.echo(f"ECMWF AIFS ENSEMBLE latest download complete, data files saved to {custom_directory}")
             else:
                 if current_os != "Windows":
-                    _click.echo(f"ECMWF AIFS ENSEMBLE latest download complete, data files saved to ECMWF/AIFS/ENSEMBLE")
+                    _click.echo(f"ECMWF AIFS ENSEMBLE latest download complete, data files saved to ECMWF/AIFS/ENSEMBLE {category.upper()}")
                 else:
-                    _click.echo(rf"ECMWF AIFS ENSEMBLE latest download complete, data files saved to ECMWF\AIFS\ENSEMBLE")
+                    _click.echo(rf"ECMWF AIFS ENSEMBLE latest download complete, data files saved to ECMWF\AIFS\ENSEMBLE {category.upper()}")
                 
         except SystemExit as e:
             _command_error_message('ecmwf aifs ensemble')
@@ -1551,14 +1555,15 @@ def fetch_aifs(type,
                             process_data=process,
                             return_values=False,
                             variables=vars_fixed,
-                            members=members)
+                            members=members,
+                            cat=category)
             if custom_directory != "none" and custom_directory != None:
                 _click.echo(f"ECMWF AIFS WAVE ENSEMBLE latest download complete, data files saved to {custom_directory}")
             else:
                 if current_os != "Windows":
-                    _click.echo(f"ECMWF AIFS WAVE ENSEMBLE latest download complete, data files saved to ECMWF/AIFS/WAVE ENSEMBLE")
+                    _click.echo(f"ECMWF AIFS WAVE ENSEMBLE latest download complete, data files saved to ECMWF/AIFS/WAVE ENSEMBLE {category.upper()}")
                 else:
-                    _click.echo(rf"ECMWF AIFS WAVE ENSEMBLE latest download complete, data files saved to ECMWF\AIFS\WAVE ENSEMBLE")
+                    _click.echo(rf"ECMWF AIFS WAVE ENSEMBLE latest download complete, data files saved to ECMWF\AIFS\WAVE ENSEMBLE {category.upper()}")
                 
         except SystemExit as e:
             _command_error_message('ecmwf aifs wave ensemble')
@@ -1568,21 +1573,13 @@ def fetch_aifs(type,
         print(f"Error: {type} is not a valid model type.")
         print(f"""***Valid Model Types***
               
-          -d = Deterministic IFS (0.25x0.25 Degree)
+          -d = Deterministic AIFS (0.25x0.25 Degree)
           
-          -e = Ensemble (0.25x0.25 Degree)
+          -e = AIFS Ensemble (0.25x0.25 Degree)
           
-          -wd = Wave Deterministic (0.25x0.25 Degree)
+          -wd = AIFS Wave Deterministic (0.25x0.25 Degree)
           
-          -we = Wave Ensemble (0.25x0.25 Degree)
-          
-          -hd = High Resolution Deterministic (0.10x0.10 Degree)
-          
-          -he = High Resolution Ensemble (0.10x0.10 Degree)
-          
-          -hwd = High Resolution Wave Deterministic (0.10x0.10 Degree)
-          
-          -hwe = High Resolution Wave Ensemble (0.10x0.10 Degree)
+          -we = AIFS Wave Ensemble (0.25x0.25 Degree)
               
               """)
         print("System Exit")

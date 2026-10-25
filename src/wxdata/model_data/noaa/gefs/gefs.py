@@ -2003,13 +2003,15 @@ def gefs_0p50(cat='mean',
     
     1) cat (string) - Default='mean'. The category of the ensemble data. 
     
-    Valid categories
-    -----------------
+    ***Valid categories***
     
-    1) mean
-    2) members
-    3) spread
-    4) control
+    i) mean
+    
+    ii) members
+    
+    iii) spread
+    
+    iv) control
     
     2) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The GEFS0P50
     goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
@@ -2045,8 +2047,7 @@ def gefs_0p50(cat='mean',
     
         A list of variable names the user wants to download in plain language. 
     
-        Variable Name List for GEFS0P50
-        -------------------------------
+        ***Variable Name List for GEFS0P50***
         
 			'total precipitation'
             'convective available potential energy'
@@ -2101,17 +2102,20 @@ def gefs_0p50(cat='mean',
     
     20) source (String) - Default='noaa'. The data server the user wants to connect the client to.
     
-        Server List
-        -----------
+        ***Server List***
         
-        1) NOAA/NCEP/NOMADS - source='noaa'
-        2) Amazon AWS - source='aws'
-        3) Google Cloud - source='google'
+        i) NOAA/NCEP/NOMADS - `source='noaa'`
+        
+        ii) Amazon AWS - `source='aws'`
+        
+        iii) Google Cloud - `source='google'`
+        
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     21) level_type (String) - Default='pressure'. The type of level for the variable.
     
-        Level Types
-        -----------
+        ***Level Types***
         
         'pressure'
         'height below ground'
@@ -2150,15 +2154,13 @@ def gefs_0p50(cat='mean',
         
     27) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
     
-    Returns
-    -------
+    **Returns**
     
     An xarray data array of the GEFS0P50 data specified to the coordinate boundaries and variable list the user specifies. 
     
     GEFS0P50 files are saved to f:GEFS0P50/{cat} or in the case of ensemble members f:GEFS0P50/{cat}/{member}
     
-    Variables
-    ---------
+    ***Variables***
     
     'surface_pressure'
     'total_precipitation'
@@ -2645,13 +2647,15 @@ def gefs_0p50_secondary_parameters(cat='control',
     
     1) cat (string) - Default='control'. The category of the ensemble data. 
     
-    Valid categories
-    -----------------
+    ***Valid categories***
     
-    1) mean
-    2) members
-    3) spread
-    4) control
+    i) mean
+    
+    ii) members
+    
+    iii) spread
+    
+    iv) control
     
     2) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The GEFS0P50 SECONDARY PARAMETERS
     goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
@@ -2684,8 +2688,7 @@ def gefs_0p50_secondary_parameters(cat='control',
         
     12) variables (List) - Default=['pressure']. A list of variable names the user wants to download in plain language. 
     
-        Variable Name List for GEFS0P50 SECONDARY PARAMETERS
-        ----------------------------------------------------
+        ***Variable Name List for GEFS0P50 SECONDARY PARAMETERS***
         
         'best lifted index'
         '5 wave geopotential height'
@@ -2782,17 +2785,20 @@ def gefs_0p50_secondary_parameters(cat='control',
     
     20) source (String) - Default='noaa'. The data server the user wants to connect the client to.
     
-        Server List
-        -----------
+        ***Server List***
         
-        1) NOAA/NCEP/NOMADS - source='noaa'
-        2) Amazon AWS - source='aws'
-        3) Google Cloud - source='google'
+        i) NOAA/NCEP/NOMADS - `source='noaa'`
+        
+        ii) Amazon AWS - `source='aws'`
+        
+        iii) Google Cloud - `source='google'`
+        
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     21) level_type (String) - Default='mean sea level'. The type of level for the variable.
     
-        Level Types
-        -----------
+        ***Level Types***
         
         'mean sea level'
         'hybrid'
@@ -2830,15 +2836,13 @@ def gefs_0p50_secondary_parameters(cat='control',
         
     27) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
     
-    Returns
-    -------
+    **Returns**
     
     An xarray data array of the GEFS0P50 SECONDARY PARAMETERS data specified to the coordinate boundaries and variable list the user specifies. 
     
     GEFS0P50 SECONDARY PARAMETERS files are saved to f:GEFS0P50 SECONDARY PARAMETERS/{cat} or in the case of ensemble members f:GEFS0P50 SECONDARY PARAMETERS/{cat}/{member}
     
-    Variables
-    ---------
+    ***Variables***
     
     'temperature'
     'surface_visibility'
@@ -3363,13 +3367,15 @@ def gefs_0p25(cat='mean',
     
     1) cat (string) - Default='mean'. The category of the ensemble data. 
     
-    Valid categories
-    -----------------
+    ***Valid categories***
     
-    1) mean
-    2) members
-    3) spread
-    4) control
+    i) mean
+    
+    ii) members
+    
+    iii) spread
+    
+    iv) control
     
     2) final_forecast_hour (Integer) - Default = 240. The final forecast hour the user wishes to download. The GEFS0P25
     goes out to 240 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
@@ -3402,8 +3408,7 @@ def gefs_0p25(cat='mean',
         
     12) variables (List) - Default=['temperature']. A list of variable names the user wants to download in plain language. 
     
-        Variable Name List for GEFS0P25
-        -------------------------------
+        ***Variable Name List for GEFS0P25***
         
         'total precipitation'
         'convective available potential energy'
@@ -3463,17 +3468,20 @@ def gefs_0p25(cat='mean',
     
     20) source (String) - Default='noaa'. The data server the user wants to connect the client to.
     
-        Server List
-        -----------
+        ***Server List***
         
-        1) NOAA/NCEP/NOMADS - source='noaa'
-        2) Amazon AWS - source='aws'
-        3) Google Cloud - source='google'
+        i) NOAA/NCEP/NOMADS - `source='noaa'`
+        
+        ii) Amazon AWS - `source='aws'`
+        
+        iii) Google Cloud - `source='google'`
+        
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     21) level_type (String) - Default='height above ground'. The type of level for the variable.
     
-        Level Types
-        -----------
+        ***Level Types***
         
         'surface'
         'mean sea level'
@@ -3499,15 +3507,13 @@ def gefs_0p25(cat='mean',
         
     27) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
     
-    Returns
-    -------
+    **Returns**
     
     An xarray data array of the GEFS0P25 data specified to the coordinate boundaries and variable list the user specifies. 
     
     GEFS0P25 files are saved to f:GEFS0P25/{cat} or in the case of ensemble members f:GEFS0P25/{cat}/{member}
     
-    Variables
-    ---------
+    ***Variables***
     
     'surface_pressure'
     'total_precipitation'

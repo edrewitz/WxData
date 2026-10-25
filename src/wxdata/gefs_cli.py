@@ -70,9 +70,8 @@ def gefs0p50():
     """
     Global Ensemble Forecast System (GEFS) 0.50x0.50 Client.
     
-    Archived Required Commands
-    --------------------------
-    
+    ***Archived Required Commands***
+
     -d = Date. The date of the model run in the format of YYYY-mm-dd.
     
         (i.e. December 25th, 2025 should be entered as -d 2025-12-25)
@@ -82,10 +81,8 @@ def gefs0p50():
         (i.e. for the 12z run set -r 12)
     
     
-    Globally Valid Commands (valid for both "latest" and "archived")
-    
-    -------------------------------------------------------
-    
+    ***Globally Valid Commands (valid for both "latest" and "archived")***
+
     -t = type (Default=primary).
     
     This determines the type of variables and levels.
@@ -94,9 +91,7 @@ def gefs0p50():
     
     This determines the category of ensemble data 
     
-    Categories
-    
-    ----------
+    **Categories**
     
     1) mean
     
@@ -148,221 +143,227 @@ def gefs0p50():
     
     -sb = Southern Bound - The southern bound for subsetting the data range is from -90 to 90 degrees latitude. (Default=-90)
     
+    -m = Ensemble Members. (Default is all 30 members).
+    
+    *Example*
+    
+    Download the first 5 ensemble members for 850mb temperature
+    
+    *Category Must Be Set To Members* -> `-c members`
+    
+    `wxdata-gefs 0p50 latest -c members -v temperature -l 850 -m 1 -m 2 -m 3 -m 4 -m 5`
+    
     -v = Variables(Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']) 
                        
     The list of variables the user wants to query.
     
     Here is a sample of how to query geopotential height and temperature `gefs 0p25 latest -v geopotential_height -v temperature`
     
-    Primary Variables
+    ***Primary Variables***
     
-    ------------------
-    
-    'total precipitation'
-    
-    'convective available potential energy'
-    
-    'categorical freezing rain'
-    
-    'categorical ice pellets'
-    
-    'categorical rain'
-    
-    'categorical snow'
-    
-    'convective inhibition'
-    
-    'downward longwave radiation flux'
-    
-    'downward shortwave radiation flux'
-    
-    'geopotential height'
-    
-    'ice thickness'
-    
-    'latent heat net flux'
-    
+    'total_precipitation'
+
+    'convective_available_potential_energy'
+
+    'categorical_freezing_rain'
+
+    'categorical_ice_pellets'
+
+    'categorical_rain'
+
+    'categorical_snow'
+
+    'convective_inhibition'
+
+    'downward_longwave_radiation_flux'
+
+    'downward_shortwave_radiation_flux'
+
+    'geopotential_height'
+
+    'ice_thickness'
+
+    'latent_heat_net_flux'
+
     'pressure'
-    
-    'mean sea level pressure'
-    
-    'precipitable water'
-    
-    'relative humidity'
-    
-    'sensible heat net flux'
-    
-    'snow depth'
-    
-    'volumetric soil moisture content'
-    
-    'total cloud cover'
-    
-    'maximum temperature'
-    
-    'minimum temperature'
-    
+
+    'mean_sea_level_pressure'
+
+    'precipitable_water'
+
+    'relative_humidity'
+
+    'sensible_heat_net_flux'
+
+    'snow_depth'
+
+    'volumetric_soil_moisture_content'
+
+    'total_cloud_cover'
+
+    'maximum_temperature'
+
+    'minimum_temperature'
+
     'temperature'
-    
-    'soil temperature'
-    
-    'u-component of wind'
-    
-    'upward longwave radiation flux'
-    
-    'upward shortwave radiation flux'
-    
-    'v-component of wind'
-    
-    'vertical velocity'
-    
-    'water equivalent of accumulated snow depth'
-    
-    Secondary Variables
-    
-    -------------------
-    
-    'best lifted index'
-    
-    '5 wave geopotential height'
-    
-    'absolute vorticity'
-    
+
+    'soil_temperature'
+
+    'u-component_of_wind'
+
+    'upward_longwave_radiation_flux'
+
+    'upward_shortwave_radiation_flux'
+
+    'v-component_of_wind'
+
+    'vertical_velocity'
+
+    'water_equivalent_of_accumulated_snow_depth'
+
+    ***Secondary_Variables***
+
+    'best_lifted_index'
+
+    '5_wave_geopotential_height'
+
+    'absolute_vorticity'
+
     'temperature'
-    
-    'dew point'
-    
-    'convective precipitation'
-    
+
+    'dew_point'
+
+    'convective_precipitation'
+
     'albedo'
-    
-    'apparent temperature'
-    
-    'brightness temperature'
-    
-    'convective available potential energy'
-    
-    'clear sky uv-b downward solar flux'
-    
-    'convective inhibition'
-    
-    'cloud mixing ratio'
-    
-    'plant canopy surface water'
-    
-    'percent frozen precipitaion'
-    
-    'convective precipitation rate'
-    
-    'cloud water'
-    
-    'cloud work function'
-    
-    'uv-b downward solar flux'
-    
-    'field capacity'
-    
-    'surface friction velocity'
-    
-    'ground heat flux'
-    
-    'wind gust'
-    
-    'geopotential height'
-    
-    'haines index'
-    
-    'storm relative helicity'
-    
-    'planetary boundary layer height'
-    
-    'icao standard atmosphere reference height'
-    
-    'ice cover'
-    
+
+    'apparent_temperature'
+
+    'brightness_temperature'
+
+    'convective_available_potential_energy'
+
+    'clear_sky_uv-b_downward_solar_flux'
+
+    'convective_inhibition'
+
+    'cloud_mixing_ratio'
+
+    'plant_canopy_surface_water'
+
+    'percent_frozen_precipitaion'
+
+    'convective_precipitation_rate'
+
+    'cloud_water'
+
+    'cloud_work_function'
+
+    'uv-b_downward_solar_flux'
+
+    'field_capacity'
+
+    'surface_friction_velocity'
+
+    'ground_heat_flux'
+
+    'wind_gust'
+
+    'geopotential_height'
+
+    'haines_index'
+
+    'storm_relative_helicity'
+
+    'planetary_boundary_layer_height'
+
+    'icao_standard_atmosphere_reference_height'
+
+    'ice_cover'
+
     'icing'
-    
-    'icing severity'
-    
-    'land cover'
-    
-    'surface lifted index'
-    
-    'montgomery stream function'
-    
-    'mslp (eta model reduction)'
-    
-    'large scale non-convective precipitation'
-    
-    'ozone mixing ratio'
-    
-    'potential evaporation rate'
-    
-    'parcel lifted index (to 500mb)'
-    
-    'pressure level from which parcel was lifted'
-    
-    'potential temperature'
-    
-    'precipitation rate'
-    
+
+    'icing_severity'
+
+    'land_cover'
+
+    'surface_lifted_index'
+
+    'montgomery_stream_function'
+
+    'mslp_(eta_model_reduction)'
+
+    'large_scale_non-convective_precipitation'
+
+    'ozone_mixing_ratio'
+
+    'potential_evaporation_rate'
+
+    'parcel_lifted_index_(to_500mb)'
+
+    'pressure_level_from_which_parcel_was_lifted'
+
+    'potential_temperature'
+
+    'precipitation_rate'
+
     'pressure'
-    
-    'potential vorticity'
-    
-    'precipitable water'
-    
-    'relative humidity'
-    
-    'surface roughness'
-    
-    'snow phase-change heat flux'
-    
-    'snow cover'
-    
-    'liquid volumetric soil moisture (non-frozen)'
-    
-    'volumetric soil moisture content'
-    
-    'specific humidity'
-    
-    'sunshine duration'
-    
-    'total cloud cover'
-    
-    'total ozone'
-    
-    'soil temperature'
-    
-    'momentum flux (u-component)'
-    
-    'u-component of wind'
-    
-    'zonal flux of gravity wave stress'
-    
-    'u-component of storm motion'
-    
-    'upward shortwave radiation flux'
-    
-    'momentum flux (v-component)'
-    
-    'v-component of wind'
-    
-    'meridional flux of gravity wave stress'
-    
+
+    'potential_vorticity'
+
+    'precipitable_water'
+
+    'relative_humidity'
+
+    'surface_roughness'
+
+    'snow_phase-change_heat_flux'
+
+    'snow_cover'
+
+    'liquid_volumetric_soil_moisture_(non-frozen)'
+
+    'volumetric_soil_moisture_content'
+
+    'specific_humidity'
+
+    'sunshine_duration'
+
+    'total_cloud_cover'
+
+    'total_ozone'
+
+    'soil_temperature'
+
+    'momentum_flux_(u-component)'
+
+    'u-component_of_wind'
+
+    'zonal_flux_of_gravity_wave_stress'
+
+    'u-component_of_storm_motion'
+
+    'upward_shortwave_radiation_flux'
+
+    'momentum_flux_(v-component)'
+
+    'v-component_of_wind'
+
+    'meridional_flux_of_gravity_wave_stress'
+
     'visibility'
-    
-    'ventilation rate'
-    
-    'v-component of storm motion'
-    
-    'vertical velocity'
-    
-    'vertical speed shear'
-    
-    'water runoff'
-    
-    'wilting point'
+
+    'ventilation_rate'
+
+    'v-component_of_storm_motion'
+
+    'vertical_velocity'
+
+    'vertical_speed_shear'
+
+    'water_runoff'
+
+    'wilting_point'
     
     -l = Levels (Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10])
                             
@@ -381,10 +382,16 @@ def gefs0p50():
     Secondary Levels: Default=None -> level_type='surface'. 
     
     Example: level_type='height above ground' & levels=2 -> 2-meter above ground
-                                                                
-    Level Types
     
-    -----------
+    -ct = Convert Temperature (Default=True).
+    
+    When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit.
+    
+    -tu = Temperature Units (Default=Celsius).
+    
+    When -ct True this is where you declare the units for temperature to be converted to. 
+                                                                
+    **Level Types**
     
     'pressure'
     
@@ -414,14 +421,13 @@ def gefs0p50():
     
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     
-    **Additional Relevant Flags when --netcdf True**
+    ***Additional Relevant Flags when --netcdf True***
     
     --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=GEFS0P50/NETCDF). 
     
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=gefs_0p50.nc)
     
-    Commands Only Valid for "latest"
-    --------------------------------
+    ***Commands Only Valid for "latest"***
     
     -cd = Clear Data (Default=False).
     
@@ -537,6 +543,24 @@ def gefs0p50():
     show_default=True,
     type=str,
     help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"
+)
+
+@_click.option(
+    "--convert_temperature",
+    "-ct",
+    default=True,
+    show_default=True,
+    type=bool,
+    help="When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit."
+)
+
+@_click.option(
+    "--convert_to",
+    "-tu",
+    default='celsius',
+    show_default=True,
+    type=str,
+    help="When -ct True this is where you declare the units for temperature to be converted to."
 )
 
 @_click.option(
@@ -700,7 +724,9 @@ def gefs0p50_fetch(final_forecast_hour,
                   western_bound,
                   eastern_bound,
                   northern_bound,
-                  southern_bound):
+                  southern_bound,
+                  convert_temperature,
+                  convert_to):
     
     """Downloads Latest GEFS 0.50x0.50 Data"""
     
@@ -729,6 +755,7 @@ def gefs0p50_fetch(final_forecast_hour,
         
         category = category.lower()
         type = type.lower()
+        convert_to = convert_to.lower()
         
         if type == 'primary':
         
@@ -751,7 +778,9 @@ def gefs0p50_fetch(final_forecast_hour,
                             western_bound=western_bound,
                             eastern_bound=eastern_bound,
                             northern_bound=northern_bound,
-                            southern_bound=southern_bound)
+                            southern_bound=southern_bound,
+                            convert_temperature=convert_temperature,
+                            convert_to=convert_to)
         else:
             
             _fetch_gefs_0p50_secondary_parameters(cat=category,
@@ -773,7 +802,9 @@ def gefs0p50_fetch(final_forecast_hour,
                                                     western_bound=western_bound,
                                                     eastern_bound=eastern_bound,
                                                     northern_bound=northern_bound,
-                                                    southern_bound=southern_bound)
+                                                    southern_bound=southern_bound,
+                                                    convert_temperature=convert_temperature,
+                                                    convert_to=convert_to)
         
         if custom_directory != "none" and custom_directory != None:
             _click.echo(f"GEFS0P50 {category.upper()} latest download complete, data files saved to {custom_directory}")
@@ -898,6 +929,24 @@ def gefs0p50_fetch(final_forecast_hour,
     show_default=True,
     type=str,
     help="Default aws is for Amazon Web Services - set to google to switch to Google Cloud"
+)
+
+@_click.option(
+    "--convert_temperature",
+    "-ct",
+    default=True,
+    show_default=True,
+    type=bool,
+    help="When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit."
+)
+
+@_click.option(
+    "--convert_to",
+    "-tu",
+    default='celsius',
+    show_default=True,
+    type=str,
+    help="When -ct True this is where you declare the units for temperature to be converted to."
 )
 
 @_click.option(
@@ -1062,7 +1111,9 @@ def archived_gefs0p50_fetch(
                   western_bound,
                   eastern_bound,
                   northern_bound,
-                  southern_bound):
+                  southern_bound,
+                  convert_temperature,
+                  convert_to):
     
     """Downloads Archived GEFS 0.50x0.50 Data For A Specified Date and Run"""
     
@@ -1087,6 +1138,7 @@ def archived_gefs0p50_fetch(
         
         category = category.lower()
         type = type.lower()
+        convert_to = convert_to.lower()
         
         if type == 'primary':
         
@@ -1111,7 +1163,9 @@ def archived_gefs0p50_fetch(
                             western_bound=western_bound,
                             eastern_bound=eastern_bound,
                             northern_bound=northern_bound,
-                            southern_bound=southern_bound)
+                            southern_bound=southern_bound,
+                            convert_temperature=convert_temperature,
+                            convert_to=convert_to)
             
         else:
             
@@ -1136,7 +1190,9 @@ def archived_gefs0p50_fetch(
                             western_bound=western_bound,
                             eastern_bound=eastern_bound,
                             northern_bound=northern_bound,
-                            southern_bound=southern_bound)
+                            southern_bound=southern_bound,
+                            convert_temperature=convert_temperature,
+                            convert_to=convert_to)
         
         d = _parse_date(date)
         _click.echo(f"GEFS0P50 {category.upper()} download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {custom_directory}")
@@ -1154,7 +1210,7 @@ def gefs0p25():
     """
     Global Ensemble Forecast System (GEFS) 0.25x0.25 Client.
     
-    **Archived Required Commands**
+    ***Archived Required Commands***
 
     -d = Date. The date of the model run in the format of YYYY-mm-dd.
     
@@ -1165,7 +1221,7 @@ def gefs0p25():
         (i.e. for the 12z run set -r 12)
     
     
-    **Globally Valid Commands (valid for both "latest" and "archived")**
+    ***Globally Valid Commands (valid for both "latest" and "archived")***
 
     -c = Category (Default='mean')
     
@@ -1223,6 +1279,16 @@ def gefs0p25():
     
     -sb = Southern Bound - The southern bound for subsetting the data range is from -90 to 90 degrees latitude. (Default=-90)
     
+    -m = Ensemble Members. (Default is all 30 members).
+    
+    *Example*
+    
+    Download the first 5 ensemble members for 2-meter temperature
+    
+    *Category Must Be Set To Members* -> `-c members`
+    
+    `wxdata-gefs 0p25 latest -c members -v temperature -lt height_above_ground -l 2 -m 1 -m 2 -m 3 -m 4 -m 5`
+    
     -v = Variables(Default=['temperature']) 
                        
     The list of variables the user wants to query.
@@ -1233,77 +1299,85 @@ def gefs0p25():
     
     **Variables**
 
-    'total precipitation'
-    
-    'convective available potential energy'
-    
-    'categorical freezing rain'
-    
-    'categorical ice pellets'
-    
-    'convective inhibition'
-    
-    'percent frozen precipitaion'
-    
-    'categorical rain'
-    
-    'categorical snow'
-    
-    'downward longwave radiation flux'
-    
-    'downward shortwave radiation flux'
-    
-    'dew point'
-    
-    'wind gust'
-    
-    'geopotential height'
-    
-    'storm relative helicity'
-    
-    'ice thickness'
-    
-    'latent heat net flux'
-    
+    'total_precipitation'
+
+    'convective_available_potential_energy'
+
+    'categorical_freezing_rain'
+
+    'categorical_ice_pellets'
+
+    'convective_inhibition'
+
+    'percent_frozen_precipitaion'
+
+    'categorical_rain'
+
+    'categorical_snow'
+
+    'downward_longwave_radiation_flux'
+
+    'downward_shortwave_radiation_flux'
+
+    'dew_point'
+
+    'wind_gust'
+
+    'geopotential_height'
+
+    'storm_relative_helicity'
+
+    'ice_thickness'
+
+    'latent_heat_net_flux'
+
     'pressure'
-    
-    'mean sea level pressure'
-    
-    'precipitable water'
-    
-    'relative humidity'
-    
-    'sensible heat net flux'
-    
-    'snow depth'
-    
-    'volumetric soil moisture content'
-    
-    'total cloud cover'
-    
-    'maximum temperature'
-    
-    'minimum temperature'
-    
+
+    'mean_sea_level_pressure'
+
+    'precipitable_water'
+
+    'relative_humidity'
+
+    'sensible_heat_net_flux'
+
+    'snow_depth'
+
+    'volumetric_soil_moisture_content'
+
+    'total_cloud_cover'
+
+    'maximum_temperature'
+
+    'minimum_temperature'
+
     'temperature'
-    
-    'soil temperature'
-    
-    'u-component of wind'
-    
-    'upward longwave radiation flux'
-    
-    'upward shortwave radiation flux'
-    
-    'v-component of wind'
-    
+
+    'soil_temperature'
+
+    'u-component_of_wind'
+
+    'upward_longwave_radiation_flux'
+
+    'upward_shortwave_radiation_flux'
+
+    'v-component_of_wind'
+
     'visibility'
-    
-    'water equivalent of accumulated snow depth'
+
+    'water_equivalent_of_accumulated_snow_depth'
     
     -l = Levels (Default=[2])
     
     The default setting of levels assume height above ground levels are being used and that the category is set to primary.
+    
+    -ct = Convert Temperature (Default=True).
+    
+    When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit.
+    
+    -tu = Temperature Units (Default=Celsius).
+    
+    When -ct True this is where you declare the units for temperature to be converted to. 
     
     -lt = Level Type (Default=height above ground).
     
@@ -1380,12 +1454,14 @@ def gefs0p25():
     show_default=True,
     help=("""The category of the ensemble data. Default='mean'.  
     
-            Valid categories
-            -----------------
+            ***Valid Categories***
             
             1) mean
+            
             2) members
+            
             3) spread
+            
             4) control
     
           """
@@ -1442,6 +1518,24 @@ def gefs0p25():
     show_default=True,
     type=str,
     help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"
+)
+
+@_click.option(
+    "--convert_temperature",
+    "-ct",
+    default=True,
+    show_default=True,
+    type=bool,
+    help="When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit."
+)
+
+@_click.option(
+    "--convert_to",
+    "-tu",
+    default='celsius',
+    show_default=True,
+    type=str,
+    help="When -ct True this is where you declare the units for temperature to be converted to."
 )
 
 @_click.option(
@@ -1589,7 +1683,9 @@ def gefs0p25_fetch(members,
                   western_bound,
                   eastern_bound,
                   northern_bound,
-                  southern_bound):
+                  southern_bound,
+                  convert_temperature,
+                  convert_to):
     
     """Downloads Latest GEFS 0.25x0.25 Data"""
     
@@ -1615,7 +1711,8 @@ def gefs0p25_fetch(members,
             vars_fixed.append(v)
             
         level_type = level_type.replace('_', ' ')
-        category = category.lower()        
+        category = category.lower()
+        convert_to = convert_to.lower()        
         
         _fetch_gefs_0p25(cat=category,
                          members=members,
@@ -1636,7 +1733,9 @@ def gefs0p25_fetch(members,
                         western_bound=western_bound,
                         eastern_bound=eastern_bound,
                         northern_bound=northern_bound,
-                        southern_bound=southern_bound)
+                        southern_bound=southern_bound,
+                        convert_temperature=convert_temperature,
+                        convert_to=convert_to)
         
         if custom_directory != "none" and custom_directory != None:
             _click.echo(f"GEFS0P25 latest download complete, data files saved to {custom_directory}")
@@ -1747,6 +1846,24 @@ def gefs0p25_fetch(members,
     show_default=True,
     type=str,
     help="Default aws is for Amazon Web Services - set to google to switch to Google Cloud"
+)
+
+@_click.option(
+    "--convert_temperature",
+    "-ct",
+    default=True,
+    show_default=True,
+    type=bool,
+    help="When set to True any temperature fields are converted from Kelvin to either Celsius or Fahrenheit."
+)
+
+@_click.option(
+    "--convert_to",
+    "-tu",
+    default='celsius',
+    show_default=True,
+    type=str,
+    help="When -ct True this is where you declare the units for temperature to be converted to."
 )
 
 @_click.option(
@@ -1896,7 +2013,9 @@ def archived_gefs0p50_fetch(
                   western_bound,
                   eastern_bound,
                   northern_bound,
-                  southern_bound):
+                  southern_bound,
+                  convert_temperature,
+                  convert_to):
     
     """Downloads Archived GEFS 0.25x0.25 Data For A Specified Date and Run"""
     
@@ -1913,7 +2032,7 @@ def archived_gefs0p50_fetch(
 
         level_type = level_type.replace('_', ' ')
         category = category.lower()
-        
+        convert_to = convert_to.lower()
         
         _fetch_archived_gefs_0p25(
                         date,
@@ -1936,7 +2055,9 @@ def archived_gefs0p50_fetch(
                         western_bound=western_bound,
                         eastern_bound=eastern_bound,
                         northern_bound=northern_bound,
-                        southern_bound=southern_bound)
+                        southern_bound=southern_bound,
+                        convert_temperature=convert_temperature,
+                        convert_to=convert_to)
         
         d = _parse_date(date)
         _click.echo(f"GEFS0P25 download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {custom_directory}")

@@ -489,8 +489,9 @@ def get_observed_sounding_data(station_id,
 
     2) custom_time (String) - If a user wants to download the data for a custom date/time, they must do the following:
 
-        1. set current=False
-        2. set custom_time='YYYY-mm-dd:HH'
+        1. set `current=False`
+        
+        2. set `custom_time='YYYY-mm-dd:HH'`
 
     3) comparison_24 (Boolean) - Default = False. When set to True, the function will return the current dataset and dataset from 
        24-hours prior to the current dataset (i.e. 00z this evening vs. 00z yesterday evening). When set to False, only the 
@@ -518,8 +519,7 @@ def get_observed_sounding_data(station_id,
     9) return_pandas_df (Boolean) - Default=True. When set to True, returns a pandas.DataFrame. Sometimes when setting
         to_csv=True, users may not want to return a pandas.DataFrame.
 
-    Returns
-    -------
+    **Returns**
     
     if comparison_24 == False: 
         A Pandas DataFrame of the University of Wyoming Sounding Data

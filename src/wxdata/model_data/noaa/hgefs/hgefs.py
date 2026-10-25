@@ -125,18 +125,18 @@ def hgefs_mean_spread(final_forecast_hour=240,
     
     15) cat (String) - Default='mean'. The category of the data.
     
-        Catagories
-        ----------
+        ***Catagories***
         
         1) mean
+        
         2) spread
         
     16) level_type (String) - Default='pressure'. The type of level the data is in.
     
-        Types of Levels
-        ---------------
+        ***Types of Levels***
         
         1) pressure
+        
         2) surface
         
     17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
@@ -180,13 +180,11 @@ def hgefs_mean_spread(final_forecast_hour=240,
         
     24) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
     
-    Returns
-    -------
+    **Returns**
     
     An xarray data array of the AIGEFS data specified to the coordinate boundaries and variable list the user specifies. 
     
-    Pressure-Level Plain Language Variable Keys
-    -------------------------------------------
+    ***Pressure-Level Plain Language Variable Keys***
     
     'geopotential_height'
     'specific_humidity'
@@ -195,8 +193,7 @@ def hgefs_mean_spread(final_forecast_hour=240,
     'v_wind_component'
     'vertical_velocity'
     
-    Surface-Level Plain Language Variable Keys
-    ------------------------------------------
+    ***Surface-Level Plain Language Variable Keys***
     
     '10m_u_wind_component'
     '10m_v_wind_component'

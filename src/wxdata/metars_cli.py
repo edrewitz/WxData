@@ -58,7 +58,7 @@ def metars():
     """
     METAR Observations Soundings Client
     
-    **Valid Commands**
+    ***Valid Commands***
     
     -cr = Clear Recycle Bin (Default=False).
     

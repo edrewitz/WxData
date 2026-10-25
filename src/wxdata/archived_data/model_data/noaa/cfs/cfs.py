@@ -511,8 +511,7 @@ def get_archived_cfs_pressure(
             
     15) levels (Integer List) - Default=[1000, 925, 850, 700, 500, 300, 250]
     
-    Available Levels
-    ----------------
+    ***Available Levels***
     
         1000
         975

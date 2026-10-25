@@ -50,7 +50,7 @@ def nexrad2():
     """
     NEXRAD II Radar Data Client
     
-    **Globally Valid Commands**
+    ***Globally Valid Commands***
     
     -sid = Site ID. The ID for the NEXRAD II Radar site.
     
@@ -66,7 +66,7 @@ def nexrad2():
     
     -cr = Clear Recycle Bin. To clear your recycle bin with each run of the script set to True. (Default=False)
     
-    **Additional Required Field For Archived Data**
+    ***Additional Required Field For Archived Data***
     
     -st = Start Time. The time in 'YYYY-mm-dd:HH' of the last scan in the set.
         

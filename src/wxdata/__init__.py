@@ -167,19 +167,31 @@ from wxdata.model_data.noaa.rtma.rtma import(
 ##############################################################
 # European Centre for Medium-Range Weather Forecasts (ECMWF) #
 ##############################################################
-# - ECMWF IFS
-# - ECMWF IFS Ensemble
-# - ECMWF AIFS
-# - ECMWF AIFS Ensemble
-# - ECMWF IFS Wave
-# - ECMWF IFS Wave Ensemble
+# - ECMWF IFS (0.25x0.25 Degree)
+# - ECMWF IFS Ensemble (0.25x0.25 Degree)
+# - ECMWF AIFS (0.25x0.25 Degree)
+# - ECMWF AIFS Ensemble (0.25x0.25 Degree)
+# - ECMWF IFS Wave (0.25x0.25 Degree)
+# - ECMWF IFS Wave Ensemble (0.25x0.25 Degree)
+# - ECMWF AIFS Wave (0.25x0.25 Degree)
+# - ECMWF AIFS Wave Ensemble (0.25x0.25 Degree)
+# - ECMWF High Resolution IFS (0.10x0.10 Degree)
+# - ECMWF High Resolution IFS Ensemble (0.10x0.10 Degree)
+# - ECMWF High Resolution IFS Wave (0.10x0.10 Degree)
+# - ECMWF High Resolution IFS Wave Ensemble (0.10x0.10 Degree)
 from wxdata.model_data.ecmwf.ecmwf import(
     ecmwf_ifs,
     ecmwf_ifs_ens,
     ecmwf_aifs,
     ecmwf_aifs_ens,
     ecmwf_ifs_wave,
-    ecmwf_ifs_wave_ens
+    ecmwf_ifs_wave_ens,
+    ecmwf_aifs_wave,
+    ecmwf_aifs_wave_ens,
+    ecmwf_high_res_ifs,
+    ecmwf_high_res_ifs_ens,
+    ecmwf_high_res_ifs_wave,
+    ecmwf_high_res_ifs_wave_ens
 )
 
 ##################################

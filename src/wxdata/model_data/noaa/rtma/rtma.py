@@ -63,23 +63,27 @@ def rtma(model='rtma',
     
     1) model (String) - Default='rtma'. The RTMA model being used:
     
-    RTMA Models
-    -----------
+    ***RTMA Models***
     
-    CONUS = 'rtma'
-    Alaska = 'ak rtma'
-    Hawaii = 'hi rtma'
-    Puerto Rico = 'pr rtma'
-    Guam = 'gu rtma'
+    i) CONUS = 'rtma'
+    
+    ii) Alaska = 'ak rtma'
+    
+    iii) Hawaii = 'hi rtma'
+    
+    iv) Puerto Rico = 'pr rtma'
+    
+    v) Guam = 'gu rtma'
     
     2) cat (String) - Default='analysis'. The category of the RTMA dataset. 
     
-    RTMA Categories
-    ---------------
+    ***RTMA Categories***
     
-    analysis - Latest RTMA Analysis
-    error - Latest RTMA Error
-    surface 1 hour forecast - RTMA Surface 1 Hour Forecast
+    i) analysis - Latest RTMA Analysis
+    
+    ii) error - Latest RTMA Error
+    
+    iii) surface 1 hour forecast - RTMA Surface 1 Hour Forecast
     
     3) proxies (dict or None) - If the user is using a proxy server, the user must change the following:
 
@@ -112,11 +116,14 @@ def rtma(model='rtma',
     
     12) source (String) - Default='noaa'. The data server the client will try first.
     
-        Server List
-        -----------
+        ***Server List***
         
-        1) NCEP/NOMADS - source='noaa'
-        2) Amazon AWS - source='aws'
+        i) NCEP/NOMADS - `source='noaa'`
+        
+        ii) Amazon AWS - `source='aws'`
+        
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     13) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
     
@@ -129,17 +136,12 @@ def rtma(model='rtma',
         new netCDF file. For users who want to archive all data set this to False. 
         
     17) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
-        
-    **If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
-        establish a connection there.**
     
-    Returns
-    -------
+    **Returns**
     
     An xarray data array of the RTMA Dataset with variable keys converted from the GRIB format to a Plain Language format. 
     
-    Variable Keys
-    -------------
+    ***Variable Keys***
     
     'orography'
     'surface_pressure'
@@ -338,23 +340,27 @@ def rtma_comparison(model='rtma',
     
     1) model (String) - Default='rtma'. The RTMA model being used:
     
-    RTMA Models
-    -----------
+    ***RTMA Models***
     
-    CONUS = 'rtma'
-    Alaska = 'ak rtma'
-    Hawaii = 'hi rtma'
-    Puerto Rico = 'pr rtma'
-    Guam = 'gu rtma'
+    i) CONUS = 'rtma'
+    
+    ii) Alaska = 'ak rtma'
+    
+    iii) Hawaii = 'hi rtma'
+    
+    iv) Puerto Rico = 'pr rtma'
+    
+    v) Guam = 'gu rtma'
     
     2) cat (String) - Default='analysis'. The category of the RTMA dataset. 
     
-    RTMA Categories
-    ---------------
+    ***RTMA Categories***
     
-    analysis - Latest RTMA Analysis
-    error - Latest RTMA Error
-    surface 1 hour forecast - RTMA Surface 1 Hour Forecast
+    i) analysis - Latest RTMA Analysis
+    
+    ii) error - Latest RTMA Error
+    
+    iii) surface 1 hour forecast - RTMA Surface 1 Hour Forecast
     
     3) hours (Integer) - Default=24. The amount of hours previous to the current dataset for the comparison dataset. 
     
@@ -389,14 +395,14 @@ def rtma_comparison(model='rtma',
     
     13) source (String) - Default='noaa'. The data server the client will try first.
     
-        Server List
-        -----------
+        ***Server List***
         
-        1) NCEP/NOMADS - source='noaa'
-        2) Amazon AWS - source='aws'
+        i) NCEP/NOMADS - `source='noaa'`
         
-        **If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
-        establish a connection there.**
+        ii) Amazon AWS - `source='aws'`
+        
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     14) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
     
@@ -411,8 +417,7 @@ def rtma_comparison(model='rtma',
         
     19) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
     
-    Returns
-    -------
+    **Returns**
     
     1) ds - The current RTMA dataset
     
@@ -420,8 +425,7 @@ def rtma_comparison(model='rtma',
     
     All with variable keys converted from the GRIB format to a Plain Language format. 
     
-    Variable Keys
-    -------------
+    ***Variable Keys***
     
     'orography'
     'surface_pressure'

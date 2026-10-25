@@ -602,8 +602,7 @@ def geps(final_forecast_hour=384,
         valid levels:
             level_type='height above ground' (m): 2, 40, 80, 120.   
             
-    Returns
-    -------
+    **Returns**
     
     An xarray.array of the latest GEPS forecast data for a user-specified variable, level/layer and level_type.
     

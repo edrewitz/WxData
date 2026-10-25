@@ -232,8 +232,7 @@ def cansips_forecast(western_bound=-180,
         valid categories: None (There are no probabilistic forecasts for this level_type)
         valid period(s): 'monthly'. 
        
-    Returns
-    -------
+    **Returns**
     
     An xarray.array of the requested CanSIPS data.     
     """

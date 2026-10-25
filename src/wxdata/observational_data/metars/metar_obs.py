@@ -61,8 +61,7 @@ def download_metar_data(clear_recycle_bin=False,
        proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = download_metar_data(proxies=proxies)
         
 
-    Returns
-    -------
+    **Returns**
             
     pd.DataFrame: A DataFrame containing the METAR data.
     """

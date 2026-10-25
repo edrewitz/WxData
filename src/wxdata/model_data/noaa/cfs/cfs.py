@@ -527,8 +527,7 @@ def _cfs_pressure_client(western_bound=-180,
             
     18) levels (Integer List) - Default=[1000, 925, 850, 700, 500, 300, 250]
     
-    Available Levels
-    ----------------
+    ***Available Levels***
     
         1000
         975
@@ -796,8 +795,12 @@ def cfs_flux(western_bound=-180,
 
         ***Server Choices***
         
-        'noaa' = NCEP/NOMADS
-        'aws' = Amazon Web Services
+        i) NOAA/NCEP/NOMADS - `source='noaa'`
+        
+        ii) Amazon AWS - `source='aws'`
+        
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     16) level_type (String) - Default='height above ground'. The type of vertical coordinates for the list of variables.
     
@@ -1242,8 +1245,12 @@ def cfs_pressure(western_bound=-180,
 
         ***Server Choices***
         
-        'noaa' = NCEP/NOMADS
-        'aws' = Amazon Web Services
+        i) NOAA/NCEP/NOMADS - `source='noaa'`
+        
+        ii) Amazon AWS - `source='aws'`
+        
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     16) level_type (String) - Default='pressure'. The type of vertical coordinates for the list of variables.
     
@@ -1311,8 +1318,7 @@ def cfs_pressure(western_bound=-180,
             
     18) levels (Integer List) - Default=[1000, 925, 850, 700, 500, 300, 250]
     
-    Available Levels
-    ----------------
+    ***Available Levels***
     
         1000
         975

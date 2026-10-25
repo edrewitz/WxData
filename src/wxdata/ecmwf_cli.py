@@ -62,6 +62,32 @@ def ifs():
     
     ***Valid Commands***
     
+    -t = Type of ECMWF IFS Data. (Default='d').
+    
+    ***Here are the various commands for the different ECMWF IFS Model Options***
+    
+    -d = Deterministic IFS (0.25x0.25 Degree)
+    
+    -e = Ensemble (0.25x0.25 Degree)
+    
+    -wd = Wave Deterministic (0.25x0.25 Degree)
+    
+    -we = Wave Ensemble (0.25x0.25 Degree)
+    
+    -hd = High Resolution Deterministic (0.10x0.10 Degree)
+    
+    -he = High Resolution Ensemble (0.10x0.10 Degree)
+    
+    -hwd = High Resolution Wave Deterministic (0.10x0.10 Degree)
+    
+    -hwe = High Resolution Wave Ensemble (0.10x0.10 Degree)
+    
+    ***Example***
+    
+    Download the ECMWF High Resolution Ensemble for 500mb and 850mb geopotential height and temperature for members 1 through 5 from Google Cloud.
+    
+    `wxdata-ecmwf ifs latest -t he -v geopotential_height -v temperature -l 850 -l 500 -m 1 -m 2 -m 3 -m 4 -m 5 -s google`
+    
     -f = Final Forecast Hour (Default=360).
      
     00z & 12z Runs Have 360 hours
@@ -84,7 +110,6 @@ def ifs():
     -cdir = Custom Directory (Default=None).
     
     If the user wishes to build their own directory to hold the data files set -cd directory_branch_path.
-    The default path is f:ECMWF/IFS. 
     
     -cr = Clear Recycle Bin (Default=False).
     
@@ -260,7 +285,7 @@ def ifs():
     
     **Additional Relevant Flags when --netcdf True**
     
-    --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=GFS0P25/NETCDF). 
+    --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=ECMWF IFS/NETCDF). 
     
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=ecmwf_ifs.nc)
     

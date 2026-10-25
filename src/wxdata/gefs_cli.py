@@ -70,7 +70,7 @@ def gefs0p50():
     """
     Global Ensemble Forecast System (GEFS) 0.50x0.50 Client.
     
-    **Archived Required Commands**
+    ***Archived Required Commands***
 
     -d = Date. The date of the model run in the format of YYYY-mm-dd.
     
@@ -81,7 +81,7 @@ def gefs0p50():
         (i.e. for the 12z run set -r 12)
     
     
-    **Globally Valid Commands (valid for both "latest" and "archived")**
+    ***Globally Valid Commands (valid for both "latest" and "archived")***
 
     -t = type (Default=primary).
     
@@ -421,13 +421,13 @@ def gefs0p50():
     
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     
-    **Additional Relevant Flags when --netcdf True**
+    ***Additional Relevant Flags when --netcdf True***
     
     --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=GEFS0P50/NETCDF). 
     
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=gefs_0p50.nc)
     
-    **Commands Only Valid for "latest"**
+    ***Commands Only Valid for "latest"***
     
     -cd = Clear Data (Default=False).
     
@@ -1210,7 +1210,7 @@ def gefs0p25():
     """
     Global Ensemble Forecast System (GEFS) 0.25x0.25 Client.
     
-    **Archived Required Commands**
+    ***Archived Required Commands***
 
     -d = Date. The date of the model run in the format of YYYY-mm-dd.
     
@@ -1221,7 +1221,7 @@ def gefs0p25():
         (i.e. for the 12z run set -r 12)
     
     
-    **Globally Valid Commands (valid for both "latest" and "archived")**
+    ***Globally Valid Commands (valid for both "latest" and "archived")***
 
     -c = Category (Default='mean')
     

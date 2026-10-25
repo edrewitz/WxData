@@ -1748,8 +1748,7 @@ def gfs_0p25(final_forecast_hour=384,
                        
         The variables the user wishes to query.
     
-        Variables
-        ---------
+        ***Variables***
         
         'best lifted index'
         'absolute vorticity'
@@ -1864,8 +1863,7 @@ def gfs_0p25(final_forecast_hour=384,
         
     17) source (String) - Default='noaa'. The data server the user wants to connect the client to.
     
-        Server List
-        -----------
+        ***Server List***
         
         1) NOAA/NCEP/NOMADS - source='noaa'
         2) Amazon AWS - source='aws'
@@ -1873,8 +1871,7 @@ def gfs_0p25(final_forecast_hour=384,
         
     18) level_type (String) - Default='pressure'. The type of level for the variable.
     
-        Level Types
-        -----------
+        ***Level Types***
         
         'pressure'
         'mean sea level'
@@ -1933,13 +1930,11 @@ def gfs_0p25(final_forecast_hour=384,
         
     24) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned.
     
-    Returns
-    -------
+    **Returns**
     
     An xarray.array dataset of the most recent GFS0P25 run. 
     
-    Post-processed Variable Key List
-    --------------------------------
+    ***Post-processed Variable Key List***
     
     'surface_pressure'
     'total_precipitation'
@@ -2456,8 +2451,7 @@ def gfs_0p50(final_forecast_hour=384,
                        
         The variables the user wishes to query.
     
-        Variables
-        ---------
+        ***Variables***
         
         'best lifted index'
         'absolute vorticity'
@@ -2573,8 +2567,7 @@ def gfs_0p50(final_forecast_hour=384,
     
     17) source (String) - Default='noaa'. The data server the user wants to connect the client to.
     
-        Server List
-        -----------
+        ***Server List***
         
         1) NOAA/NCEP/NOMADS - source='noaa'
         2) Amazon AWS - source='aws'
@@ -2582,8 +2575,7 @@ def gfs_0p50(final_forecast_hour=384,
         
     18) level_type (String) - Default='pressure'. The type of level for the variable.
     
-        Level Types
-        -----------
+        ***Level Types***
         
         'pressure'
         'mean sea level'
@@ -2664,13 +2656,11 @@ def gfs_0p50(final_forecast_hour=384,
         
     24) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned.
     
-    Returns
-    -------
+    **Returns**
     
     An xarray.array dataset of the most recent GFS0P50 run. 
     
-    Post-processed Variable Key List
-    --------------------------------
+    ***Post-processed Variable Key List***
     
     'mslp'
     'mslp_eta_reduction' 
@@ -3216,8 +3206,7 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
                        
         The variables the user wishes to query.
     
-        Variables
-        ---------
+        ***Variables***
         
         'absolute vorticity'
         'clear sky uv-b downward solar flux'
@@ -3266,8 +3255,7 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
     
     17) source (String) - Default='noaa'. The data server the user wants to connect the client to.
     
-        Server List
-        -----------
+        ***Server List***
         
         1) NOAA/NCEP/NOMADS - source='noaa'
         2) Amazon AWS - source='aws'
@@ -3275,8 +3263,7 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
         
     18) level_type (String) - Default='pressure'. The type of level for the variable.
     
-        Level Types
-        -----------
+        ***Level Types***
         
         'pressure'
         'height below ground'
@@ -3322,13 +3309,11 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
         
     24) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned.
     
-    Returns
-    -------
+    **Returns**
     
     An xarray.array dataset of the most recent GFS0P25 run. 
     
-    Post-processed Variable Key List
-    --------------------------------
+    ***Post-processed Variable Key List***
     
     'u_wind_component'
     'v_wind_component'

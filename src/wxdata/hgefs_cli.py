@@ -172,7 +172,7 @@ def hgefs():
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=hgefs.nc)
     
     """
-@hgefs.command("latest")
+@hgefs.command("fetch")
 @_click.option(
     "--final_forecast_hour",
     "-f",

@@ -32,6 +32,9 @@ def _ecmwf_wave_var_error(model):
     
     model = model.lower()
     
+    print(f"Another potential reason for this error is an invalid variable.")
+    print(f"Please review the valid variable list.")
+    
     if model == 'ifs':
         
         print(f"""

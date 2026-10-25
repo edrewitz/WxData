@@ -159,211 +159,211 @@ def gefs0p50():
     
     Here is a sample of how to query geopotential height and temperature `gefs 0p25 latest -v geopotential_height -v temperature`
     
-    **Primary Variables**
+    ***Primary Variables***
     
-    'total precipitation'
-    
-    'convective available potential energy'
-    
-    'categorical freezing rain'
-    
-    'categorical ice pellets'
-    
-    'categorical rain'
-    
-    'categorical snow'
-    
-    'convective inhibition'
-    
-    'downward longwave radiation flux'
-    
-    'downward shortwave radiation flux'
-    
-    'geopotential height'
-    
-    'ice thickness'
-    
-    'latent heat net flux'
-    
+    'total_precipitation'
+
+    'convective_available_potential_energy'
+
+    'categorical_freezing_rain'
+
+    'categorical_ice_pellets'
+
+    'categorical_rain'
+
+    'categorical_snow'
+
+    'convective_inhibition'
+
+    'downward_longwave_radiation_flux'
+
+    'downward_shortwave_radiation_flux'
+
+    'geopotential_height'
+
+    'ice_thickness'
+
+    'latent_heat_net_flux'
+
     'pressure'
-    
-    'mean sea level pressure'
-    
-    'precipitable water'
-    
-    'relative humidity'
-    
-    'sensible heat net flux'
-    
-    'snow depth'
-    
-    'volumetric soil moisture content'
-    
-    'total cloud cover'
-    
-    'maximum temperature'
-    
-    'minimum temperature'
-    
+
+    'mean_sea_level_pressure'
+
+    'precipitable_water'
+
+    'relative_humidity'
+
+    'sensible_heat_net_flux'
+
+    'snow_depth'
+
+    'volumetric_soil_moisture_content'
+
+    'total_cloud_cover'
+
+    'maximum_temperature'
+
+    'minimum_temperature'
+
     'temperature'
-    
-    'soil temperature'
-    
-    'u-component of wind'
-    
-    'upward longwave radiation flux'
-    
-    'upward shortwave radiation flux'
-    
-    'v-component of wind'
-    
-    'vertical velocity'
-    
-    'water equivalent of accumulated snow depth'
-    
-    **Secondary Variables**
-    
-    'best lifted index'
-    
-    '5 wave geopotential height'
-    
-    'absolute vorticity'
-    
+
+    'soil_temperature'
+
+    'u-component_of_wind'
+
+    'upward_longwave_radiation_flux'
+
+    'upward_shortwave_radiation_flux'
+
+    'v-component_of_wind'
+
+    'vertical_velocity'
+
+    'water_equivalent_of_accumulated_snow_depth'
+
+    ***Secondary_Variables***
+
+    'best_lifted_index'
+
+    '5_wave_geopotential_height'
+
+    'absolute_vorticity'
+
     'temperature'
-    
-    'dew point'
-    
-    'convective precipitation'
-    
+
+    'dew_point'
+
+    'convective_precipitation'
+
     'albedo'
-    
-    'apparent temperature'
-    
-    'brightness temperature'
-    
-    'convective available potential energy'
-    
-    'clear sky uv-b downward solar flux'
-    
-    'convective inhibition'
-    
-    'cloud mixing ratio'
-    
-    'plant canopy surface water'
-    
-    'percent frozen precipitaion'
-    
-    'convective precipitation rate'
-    
-    'cloud water'
-    
-    'cloud work function'
-    
-    'uv-b downward solar flux'
-    
-    'field capacity'
-    
-    'surface friction velocity'
-    
-    'ground heat flux'
-    
-    'wind gust'
-    
-    'geopotential height'
-    
-    'haines index'
-    
-    'storm relative helicity'
-    
-    'planetary boundary layer height'
-    
-    'icao standard atmosphere reference height'
-    
-    'ice cover'
-    
+
+    'apparent_temperature'
+
+    'brightness_temperature'
+
+    'convective_available_potential_energy'
+
+    'clear_sky_uv-b_downward_solar_flux'
+
+    'convective_inhibition'
+
+    'cloud_mixing_ratio'
+
+    'plant_canopy_surface_water'
+
+    'percent_frozen_precipitaion'
+
+    'convective_precipitation_rate'
+
+    'cloud_water'
+
+    'cloud_work_function'
+
+    'uv-b_downward_solar_flux'
+
+    'field_capacity'
+
+    'surface_friction_velocity'
+
+    'ground_heat_flux'
+
+    'wind_gust'
+
+    'geopotential_height'
+
+    'haines_index'
+
+    'storm_relative_helicity'
+
+    'planetary_boundary_layer_height'
+
+    'icao_standard_atmosphere_reference_height'
+
+    'ice_cover'
+
     'icing'
-    
-    'icing severity'
-    
-    'land cover'
-    
-    'surface lifted index'
-    
-    'montgomery stream function'
-    
-    'mslp (eta model reduction)'
-    
-    'large scale non-convective precipitation'
-    
-    'ozone mixing ratio'
-    
-    'potential evaporation rate'
-    
-    'parcel lifted index (to 500mb)'
-    
-    'pressure level from which parcel was lifted'
-    
-    'potential temperature'
-    
-    'precipitation rate'
-    
+
+    'icing_severity'
+
+    'land_cover'
+
+    'surface_lifted_index'
+
+    'montgomery_stream_function'
+
+    'mslp_(eta_model_reduction)'
+
+    'large_scale_non-convective_precipitation'
+
+    'ozone_mixing_ratio'
+
+    'potential_evaporation_rate'
+
+    'parcel_lifted_index_(to_500mb)'
+
+    'pressure_level_from_which_parcel_was_lifted'
+
+    'potential_temperature'
+
+    'precipitation_rate'
+
     'pressure'
-    
-    'potential vorticity'
-    
-    'precipitable water'
-    
-    'relative humidity'
-    
-    'surface roughness'
-    
-    'snow phase-change heat flux'
-    
-    'snow cover'
-    
-    'liquid volumetric soil moisture (non-frozen)'
-    
-    'volumetric soil moisture content'
-    
-    'specific humidity'
-    
-    'sunshine duration'
-    
-    'total cloud cover'
-    
-    'total ozone'
-    
-    'soil temperature'
-    
-    'momentum flux (u-component)'
-    
-    'u-component of wind'
-    
-    'zonal flux of gravity wave stress'
-    
-    'u-component of storm motion'
-    
-    'upward shortwave radiation flux'
-    
-    'momentum flux (v-component)'
-    
-    'v-component of wind'
-    
-    'meridional flux of gravity wave stress'
-    
+
+    'potential_vorticity'
+
+    'precipitable_water'
+
+    'relative_humidity'
+
+    'surface_roughness'
+
+    'snow_phase-change_heat_flux'
+
+    'snow_cover'
+
+    'liquid_volumetric_soil_moisture_(non-frozen)'
+
+    'volumetric_soil_moisture_content'
+
+    'specific_humidity'
+
+    'sunshine_duration'
+
+    'total_cloud_cover'
+
+    'total_ozone'
+
+    'soil_temperature'
+
+    'momentum_flux_(u-component)'
+
+    'u-component_of_wind'
+
+    'zonal_flux_of_gravity_wave_stress'
+
+    'u-component_of_storm_motion'
+
+    'upward_shortwave_radiation_flux'
+
+    'momentum_flux_(v-component)'
+
+    'v-component_of_wind'
+
+    'meridional_flux_of_gravity_wave_stress'
+
     'visibility'
-    
-    'ventilation rate'
-    
-    'v-component of storm motion'
-    
-    'vertical velocity'
-    
-    'vertical speed shear'
-    
-    'water runoff'
-    
-    'wilting point'
+
+    'ventilation_rate'
+
+    'v-component_of_storm_motion'
+
+    'vertical_velocity'
+
+    'vertical_speed_shear'
+
+    'water_runoff'
+
+    'wilting_point'
     
     -l = Levels (Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10])
                             
@@ -1299,73 +1299,73 @@ def gefs0p25():
     
     **Variables**
 
-    'total precipitation'
-    
-    'convective available potential energy'
-    
-    'categorical freezing rain'
-    
-    'categorical ice pellets'
-    
-    'convective inhibition'
-    
-    'percent frozen precipitaion'
-    
-    'categorical rain'
-    
-    'categorical snow'
-    
-    'downward longwave radiation flux'
-    
-    'downward shortwave radiation flux'
-    
-    'dew point'
-    
-    'wind gust'
-    
-    'geopotential height'
-    
-    'storm relative helicity'
-    
-    'ice thickness'
-    
-    'latent heat net flux'
-    
+    'total_precipitation'
+
+    'convective_available_potential_energy'
+
+    'categorical_freezing_rain'
+
+    'categorical_ice_pellets'
+
+    'convective_inhibition'
+
+    'percent_frozen_precipitaion'
+
+    'categorical_rain'
+
+    'categorical_snow'
+
+    'downward_longwave_radiation_flux'
+
+    'downward_shortwave_radiation_flux'
+
+    'dew_point'
+
+    'wind_gust'
+
+    'geopotential_height'
+
+    'storm_relative_helicity'
+
+    'ice_thickness'
+
+    'latent_heat_net_flux'
+
     'pressure'
-    
-    'mean sea level pressure'
-    
-    'precipitable water'
-    
-    'relative humidity'
-    
-    'sensible heat net flux'
-    
-    'snow depth'
-    
-    'volumetric soil moisture content'
-    
-    'total cloud cover'
-    
-    'maximum temperature'
-    
-    'minimum temperature'
-    
+
+    'mean_sea_level_pressure'
+
+    'precipitable_water'
+
+    'relative_humidity'
+
+    'sensible_heat_net_flux'
+
+    'snow_depth'
+
+    'volumetric_soil_moisture_content'
+
+    'total_cloud_cover'
+
+    'maximum_temperature'
+
+    'minimum_temperature'
+
     'temperature'
-    
-    'soil temperature'
-    
-    'u-component of wind'
-    
-    'upward longwave radiation flux'
-    
-    'upward shortwave radiation flux'
-    
-    'v-component of wind'
-    
+
+    'soil_temperature'
+
+    'u-component_of_wind'
+
+    'upward_longwave_radiation_flux'
+
+    'upward_shortwave_radiation_flux'
+
+    'v-component_of_wind'
+
     'visibility'
-    
-    'water equivalent of accumulated snow depth'
+
+    'water_equivalent_of_accumulated_snow_depth'
     
     -l = Levels (Default=[2])
     

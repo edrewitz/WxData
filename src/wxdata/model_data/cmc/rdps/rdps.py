@@ -1194,8 +1194,7 @@ def rdps(final_forecast_hour=84,
         valid level type(s): 'eta'
         valid levels: None (level_type='eta' -> 'eta' is the only level)     
             
-    Returns
-    -------
+    **Returns**
     
     An xarray.array of the latest RDPS forecast data for a user-specified variable, level/layer and level_type.
     

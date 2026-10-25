@@ -65,15 +65,15 @@ def rtma(model='rtma',
     
     ***RTMA Models***
     
-    CONUS = 'rtma'
+    i) CONUS = 'rtma'
     
-    Alaska = 'ak rtma'
+    ii) Alaska = 'ak rtma'
     
-    Hawaii = 'hi rtma'
+    iii) Hawaii = 'hi rtma'
     
-    Puerto Rico = 'pr rtma'
+    iv) Puerto Rico = 'pr rtma'
     
-    Guam = 'gu rtma'
+    v) Guam = 'gu rtma'
     
     2) cat (String) - Default='analysis'. The category of the RTMA dataset. 
     
@@ -118,9 +118,9 @@ def rtma(model='rtma',
     
         ***Server List***
         
-        1) NCEP/NOMADS - source='noaa'
+        i) NCEP/NOMADS - `source='noaa'`
         
-        2) Amazon AWS - source='aws'
+        ii) Amazon AWS - `source='aws'`
         
         *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
         establish a connection there.*
@@ -342,25 +342,25 @@ def rtma_comparison(model='rtma',
     
     ***RTMA Models***
     
-    CONUS = 'rtma'
+    i) CONUS = 'rtma'
     
-    Alaska = 'ak rtma'
+    ii) Alaska = 'ak rtma'
     
-    Hawaii = 'hi rtma'
+    iii) Hawaii = 'hi rtma'
     
-    Puerto Rico = 'pr rtma'
+    iv) Puerto Rico = 'pr rtma'
     
-    Guam = 'gu rtma'
+    v) Guam = 'gu rtma'
     
     2) cat (String) - Default='analysis'. The category of the RTMA dataset. 
     
     ***RTMA Categories***
     
-    analysis - Latest RTMA Analysis
+    i) analysis - Latest RTMA Analysis
     
-    error - Latest RTMA Error
+    ii) error - Latest RTMA Error
     
-    surface 1 hour forecast - RTMA Surface 1 Hour Forecast
+    iii) surface 1 hour forecast - RTMA Surface 1 Hour Forecast
     
     3) hours (Integer) - Default=24. The amount of hours previous to the current dataset for the comparison dataset. 
     
@@ -397,9 +397,9 @@ def rtma_comparison(model='rtma',
     
         ***Server List***
         
-        1) NCEP/NOMADS - source='noaa'
+        i) NCEP/NOMADS - `source='noaa'`
         
-        2) Amazon AWS - source='aws'
+        ii) Amazon AWS - `source='aws'`
         
         *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
         establish a connection there.*

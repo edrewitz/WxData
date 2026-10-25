@@ -1146,8 +1146,7 @@ def gdps(final_forecast_hour=240,
                                    
             level_type='height above ground' (m): 10, 40, 80, 120
             
-    Returns
-    -------
+    **Returns**
     
     An xarray.array of the latest GDPS forecast data for a user-specified variable, level/layer and level_type.
     

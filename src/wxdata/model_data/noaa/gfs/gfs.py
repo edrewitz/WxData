@@ -1865,11 +1865,11 @@ def gfs_0p25(final_forecast_hour=384,
     
         ***Server List***
         
-        1) NOAA/NCEP/NOMADS - source='noaa'
+        i) NOAA/NCEP/NOMADS - `source='noaa'`
         
-        2) Amazon AWS - source='aws'
+        ii) Amazon AWS - `source='aws'`
         
-        3) Google Cloud - source='google'
+        iii) Google Cloud - `source='google'`
         
         *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
         establish a connection there.*
@@ -2574,11 +2574,11 @@ def gfs_0p50(final_forecast_hour=384,
     
         ***Server List***
         
-        1) NOAA/NCEP/NOMADS - source='noaa'
+        i) NOAA/NCEP/NOMADS - `source='noaa'`
         
-        2) Amazon AWS - source='aws'
+        ii) Amazon AWS - `source='aws'`
         
-        3) Google Cloud - source='google'
+        iii) Google Cloud - `source='google'`
         
         *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
         establish a connection there.*
@@ -3267,11 +3267,11 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
     
         ***Server List***
         
-        1) NOAA/NCEP/NOMADS - source='noaa'
+        i) NOAA/NCEP/NOMADS - `source='noaa'`
         
-        2) Amazon AWS - source='aws'
+        ii) Amazon AWS - `source='aws'`
         
-        3) Google Cloud - source='google'
+        iii) Google Cloud - `source='google'`
         
         *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
         establish a connection there.*

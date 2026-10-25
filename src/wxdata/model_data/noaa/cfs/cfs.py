@@ -795,9 +795,9 @@ def cfs_flux(western_bound=-180,
 
         ***Server Choices***
         
-        1) NOAA/NCEP/NOMADS - source='noaa'
+        i) NOAA/NCEP/NOMADS - `source='noaa'`
         
-        2) Amazon AWS - source='aws'
+        ii) Amazon AWS - `source='aws'`
         
         *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
         establish a connection there.*
@@ -1245,9 +1245,9 @@ def cfs_pressure(western_bound=-180,
 
         ***Server Choices***
         
-        1) NOAA/NCEP/NOMADS - source='noaa'
+        i) NOAA/NCEP/NOMADS - `source='noaa'`
         
-        2) Amazon AWS - source='aws'
+        ii) Amazon AWS - `source='aws'`
         
         *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
         establish a connection there.*

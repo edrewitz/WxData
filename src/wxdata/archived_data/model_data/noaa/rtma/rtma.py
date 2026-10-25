@@ -54,23 +54,27 @@ def rtma(date,
     
     1) model (String) - Default='rtma'. The RTMA model being used:
     
-    RTMA Models
-    -----------
+    ***RTMA Models***
     
-    CONUS = 'rtma'
-    Alaska = 'ak rtma'
-    Hawaii = 'hi rtma'
-    Puerto Rico = 'pr rtma'
-    Guam = 'gu rtma'
+    i) CONUS = 'rtma'
+    
+    ii) Alaska = 'ak rtma'
+    
+    iii) Hawaii = 'hi rtma'
+    
+    iv) Puerto Rico = 'pr rtma'
+    
+    v) Guam = 'gu rtma'
     
     2) cat (String) - Default='analysis'. The category of the RTMA dataset. 
     
-    RTMA Categories
-    ---------------
+    ***RTMA Categories***
     
-    analysis - Latest RTMA Analysis
-    error - Latest RTMA Error
-    surface 1 hour forecast - RTMA Surface 1 Hour Forecast
+    i) analysis - Latest RTMA Analysis
+    
+    ii) error - Latest RTMA Error
+    
+    iii) surface 1 hour forecast - RTMA Surface 1 Hour Forecast
     
     3) path (String) - Default='RTMA/Archive'. The local directory where the data will be stored. 
     
@@ -113,13 +117,11 @@ def rtma(date,
     **If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
         establish a connection there.**
     
-    Returns
-    -------
+    **Returns**
     
     An xarray data array of the RTMA Dataset with variable keys converted from the GRIB format to a Plain Language format. 
     
-    Variable Keys
-    -------------
+    ***Variable Keys***
     
     'orography'
     'surface_pressure'

@@ -77,8 +77,7 @@ def download_current_single_station_nexrad2_radar_data(site_id,
         
     8) extract_radar_objects (Boolean) - Default=True. When set to True the radar objects are extracted using the pyart package and returned to the user.
         
-    Returns
-    -------
+    **Returns**
     
     A list of Py-ART Radar Objects for a user-specified station for a user-specified period of time.
     """
@@ -204,8 +203,7 @@ def download_current_multi_station_nexrad2_radar_data(site_ids,
         
     8) extract_radar_objects (Boolean) - Default=True. When set to True the radar objects are extracted using the pyart package and returned to the user.
         
-    Returns
-    -------
+    **Returns**
     
     A list of Py-ART Radar Objects for a user-specified list of stations and for a user-specified period of time.
     The user-specified period of time is the same for both stations. 

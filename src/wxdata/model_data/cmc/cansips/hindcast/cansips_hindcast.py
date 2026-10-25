@@ -169,8 +169,7 @@ def cansips_hindcast(western_bound=-180,
         valid level type(s): 'pressure'.
         valid levels: 850, 200 (hPa).
         
-    Returns
-    -------
+    **Returns**
     
     An xarray.array of the 30-year mean of the CanSIPS Hindcast data that corresponds to the month of the current
     CanSIPS Forecast for the purpose of finding anomalies in the forecast data.     

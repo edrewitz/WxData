@@ -6,6 +6,7 @@ This file hosts the clients that download, pre-process and post-process AIGFS Da
 (C) Eric J. Drewitz 2025-2026
 """
 import sys as _sys
+import os as _os
 import wxdata.client.client as _client
 import wxdata.post_processors.aigfs_post_processing as _aigfs_post_processing
 import warnings as _warnings
@@ -473,9 +474,9 @@ def aigfs(final_forecast_hour=384,
 
         ***Server Choices***
         
-        1) NOAA/NCEP/NOMADS - source='noaa'
+        i) NOAA/NCEP/NOMADS - `source='noaa'`
         
-        2) Amazon AWS - source='aws'
+        ii) Amazon AWS - `source='aws'`
                 
         *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
         establish a connection there.*

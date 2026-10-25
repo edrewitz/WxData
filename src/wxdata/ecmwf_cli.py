@@ -26,6 +26,46 @@ from wxdata.model_data.ecmwf.ecmwf import(
     ecmwf_aifs_wave_ens as _fetch_ecmwf_aifs_wave_ens
 )
 
+def _ecmwf_wave_var_error(model):
+    
+    """Error Message for Invalid Variable ECMWF Wave Models"""
+    
+    model = model.lower()
+    
+    if model == 'ifs':
+        
+        print(f"""
+              
+        Error: User Entered an invalid variable for IFS Wave/IFS Ensemble Wave/High Resolution IFS Wave        
+              
+        ***Variable List (ECMWF IFS Wave/IFS Wave Ensemble/High Resolution IFS Wave)***
+        
+        'mean_zero-crossing_wave_period'
+        
+        'significant_height_of_combined_waves_and_swell'
+        
+        'mean_wave_direction'
+        
+        'peak_wave_period'
+        
+        'mean_wave_period'
+        
+        """)
+        
+    else:
+        
+        print(f"""   
+              
+        ***Variable List (For ECMWF AIFS Wave/AIFS Wave Ensemble Data)***
+    
+        'significant_height_of_combined_waves_and_swell'
+        
+        'mean_wave_direction'
+        
+        'mean_wave_period'
+        
+        """)
+
 
 def _command_error_message(model):
     
@@ -65,6 +105,8 @@ def ifs():
     **Downloads The Latest ECMWF IFS Data**
     
     ***Valid Commands***
+    
+    ***IMPORTANT: All Default Settings are geared towards IFS Deterministic***
     
     -t = Type of ECMWF IFS Data. (Default='d').
     
@@ -135,117 +177,121 @@ def ifs():
     
     Here is a sample of how to query geopotential height and temperature at 500mb `wxdata-ecmwf ifs latest -v geopotential_height -v temperature -l 500`
     
-    ***Variable List***
-    
-    'Geopotential (step 0)'
-    
-    'Standard deviation of sub-gridscale orography (step 0)'
-    
-    '10-meter u-wind component'
-    
-    '10-meter v-wind component'
-    
-    '100-meter u-wind component'
-    
-    '100-meter v-wind component'
-    
-    'maximum 10-meter wind gust step 0'
-    
-    'maximum 10-meter wind gust steps 3-144'
-    
-    '2-meter temperature'
-    
-    '2-meter dewpoint temperature'
-    
-    'mean sea level pressure'
-    
-    'mean zero-crossing wave period'
-    
-    'mean wave direction'
-    
-    'mean wave period'
-    
-    'peak wave period'
-    
-    'significant wave height'
-    
+    ***Variable List (All Except for ECMWF IFS/High Resolution IFS Wave Data)***
+            
+    '10-meter_u-wind_component'
+
+    '10-meter_v-wind_component'
+
+    '100-meter_u-wind_component'
+
+    '100-meter_v-wind_component'
+
+    'maximum_10-meter_wind_gust_step_0'
+
+    'maximum_10-meter_wind_gust_steps_3-144'
+
+    '2-meter_temperature'
+
+    '2-meter_dewpoint_temperature'
+
+    'mean_sea_level_pressure'
+
+    'mean_zero-crossing_wave_period'
+
+    'mean_wave_direction'
+
+    'mean_wave_period'
+
+    'peak_wave_period'
+
+    'significant_wave_height'
+
     'runoff'
-    
-    'total precipitation'
-    
-    'surface pressure'
-    
-    'total column vertically integrated water vapor'
-    
-    'total cloud cover'
-    
-    'snow depth water equivalent'
-    
-    'snowfall water equivalent'
-    
-    'land sea mask'
-    
-    'volumetric soil moisture content'
-    
-    'soil temperature'
-    
-    'most unstable cape'
-    
-    'snow albedo'
-    
-    '3-hour minimum 2-meter temperature'
-    
-    '3-hour maximum 2-meter temperature'
-    
-    '6-hour minimum 2-meter temperature'
-    
-    '6-hour maximum 2-meter temperature'
-    
-    'total precipitation rate'
-    
-    'precipitation type'
-    
-    'top net longwave thermal radiation'
-    
-    'snow density'
-    
-    'surface net longwave thermal radiation'
-    
-    'surface net shortwave solar radiation'
-    
-    'surface shortwave radiation downward'
-    
-    'surface longwave radiation downward'
-    
-    'northward turbulent surface stress'
-    
-    'eastward turbulent surface stress'
-    
-    'eastward surface sea water velocity'
-    
-    'northward surface sea water velocity'
-    
-    'sea ice thickness'
-    
-    'sea surface height'
-    
+
+    'total_precipitation'
+
+    'surface_pressure'
+
+    'total_column_vertically_integrated_water_vapor'
+
+    'total_cloud_cover'
+
+    'snow_depth_water_equivalent'
+
+    'snowfall_water_equivalent'
+
+    'land_sea_mask'
+
+    'volumetric_soil_moisture_content'
+
+    'soil_temperature'
+
+    'most_unstable_cape'
+
+    'snow_albedo'
+
+    '3-hour_minimum_2-meter_temperature'
+
+    '3-hour_maximum_2-meter_temperature'
+
+    '6-hour_minimum_2-meter_temperature'
+
+    '6-hour_maximum_2-meter_temperature'
+
+    'total_precipitation_rate'
+
+    'precipitation_type'
+
+    'top_net_longwave_thermal_radiation'
+
+    'snow_density'
+
+    'surface_net_longwave_thermal_radiation'
+
+    'surface_net_shortwave_solar_radiation'
+
+    'surface_shortwave_radiation_downward'
+
+    'surface_longwave_radiation_downward'
+
+    'northward_turbulent_surface_stress'
+
+    'eastward_turbulent_surface_stress'
+
+    'eastward_surface_sea_water_velocity'
+
+    'northward_surface_sea_water_velocity'
+
+    'sea_ice_thickness'
+
+    'sea_surface_height'
+
     'divergence'
-    
-    'geopotential height'
-    
-    'specific humidity'
-    
-    'relative humidity'
-    
+
+    'geopotential_height'
+
+    'specific_humidity'
+
+    'relative_humidity'
+
     'temperature'
+
+    'u-wind_component'
+
+    'v-wind_component'
+
+    'vertical_velocity'
+
+    'relative_vorticity'
     
-    'u-wind component'
+    ***Variable List (ECMWF IFS Wave/IFS Wave Ensemble/High Resolution IFS Wave)***
     
-    'v-wind component'
-    
-    'vertical velocity'
-    
-    'relative vorticity'
+    'mean_zero-crossing_wave_period'
+    'significant_height_of_combined_waves_and_swell'
+    'mean_wave_direction'
+    'peak_wave_period'
+    'mean_wave_period'
         
     -ct = Convert Temperature (Default=True).
     
@@ -767,6 +813,7 @@ def fetch_ifs(type,
                 
         except SystemExit as e:
             _command_error_message('ecmwf ifs wave')
+            _ecmwf_wave_var_error('ifs')
             _sys.exit(1)
             
     elif type == 'hwd':
@@ -796,6 +843,7 @@ def fetch_ifs(type,
                 
         except SystemExit as e:
             _command_error_message('high resolution ecmwf ifs wave')
+            _ecmwf_wave_var_error('ifs')
             _sys.exit(1)
             
     elif type == 'we':
@@ -856,6 +904,7 @@ def fetch_ifs(type,
                 
         except SystemExit as e:
             _command_error_message('high resolution ecmwf ifs wave ensemble')
+            _ecmwf_wave_var_error('ifs')
             _sys.exit(1)
             
     else:
@@ -962,117 +1011,121 @@ def aifs():
     
     Here is a sample of how to query geopotential height and temperature at 500mb `wxdata-ecmwf ifs latest -v geopotential_height -v temperature -l 500`
     
-    ***Variable List***
+    ***Variable List (All Except for ECMWF AIFS Wave/AIFS Wave Ensemble Data)***
     
-    'Geopotential (step 0)'
-    
-    'Standard deviation of sub-gridscale orography (step 0)'
-    
-    '10-meter u-wind component'
-    
-    '10-meter v-wind component'
-    
-    '100-meter u-wind component'
-    
-    '100-meter v-wind component'
-    
-    'maximum 10-meter wind gust step 0'
-    
-    'maximum 10-meter wind gust steps 3-144'
-    
-    '2-meter temperature'
-    
-    '2-meter dewpoint temperature'
-    
-    'mean sea level pressure'
-    
-    'mean zero-crossing wave period'
-    
-    'mean wave direction'
-    
-    'mean wave period'
-    
-    'peak wave period'
-    
-    'significant wave height'
-    
+    '10-meter_u-wind_component'
+
+    '10-meter_v-wind_component'
+
+    '100-meter_u-wind_component'
+
+    '100-meter_v-wind_component'
+
+    'maximum_10-meter_wind_gust_step_0'
+
+    'maximum_10-meter_wind_gust_steps_3-144'
+
+    '2-meter_temperature'
+
+    '2-meter_dewpoint_temperature'
+
+    'mean_sea_level_pressure'
+
+    'mean_zero-crossing_wave_period'
+
+    'mean_wave_direction'
+
+    'mean_wave_period'
+
+    'peak_wave_period'
+
+    'significant_wave_height'
+
     'runoff'
-    
-    'total precipitation'
-    
-    'surface pressure'
-    
-    'total column vertically integrated water vapor'
-    
-    'total cloud cover'
-    
-    'snow depth water equivalent'
-    
-    'snowfall water equivalent'
-    
-    'land sea mask'
-    
-    'volumetric soil moisture content'
-    
-    'soil temperature'
-    
-    'most unstable cape'
-    
-    'snow albedo'
-    
-    '3-hour minimum 2-meter temperature'
-    
-    '3-hour maximum 2-meter temperature'
-    
-    '6-hour minimum 2-meter temperature'
-    
-    '6-hour maximum 2-meter temperature'
-    
-    'total precipitation rate'
-    
-    'precipitation type'
-    
-    'top net longwave thermal radiation'
-    
-    'snow density'
-    
-    'surface net longwave thermal radiation'
-    
-    'surface net shortwave solar radiation'
-    
-    'surface shortwave radiation downward'
-    
-    'surface longwave radiation downward'
-    
-    'northward turbulent surface stress'
-    
-    'eastward turbulent surface stress'
-    
-    'eastward surface sea water velocity'
-    
-    'northward surface sea water velocity'
-    
-    'sea ice thickness'
-    
-    'sea surface height'
-    
+
+    'total_precipitation'
+
+    'surface_pressure'
+
+    'total_column_vertically_integrated_water_vapor'
+
+    'total_cloud_cover'
+
+    'snow_depth_water_equivalent'
+
+    'snowfall_water_equivalent'
+
+    'land_sea_mask'
+
+    'volumetric_soil_moisture_content'
+
+    'soil_temperature'
+
+    'most_unstable_cape'
+
+    'snow_albedo'
+
+    '3-hour_minimum_2-meter_temperature'
+
+    '3-hour_maximum_2-meter_temperature'
+
+    '6-hour_minimum_2-meter_temperature'
+
+    '6-hour_maximum_2-meter_temperature'
+
+    'total_precipitation_rate'
+
+    'precipitation_type'
+
+    'top_net_longwave_thermal_radiation'
+
+    'snow_density'
+
+    'surface_net_longwave_thermal_radiation'
+
+    'surface_net_shortwave_solar_radiation'
+
+    'surface_shortwave_radiation_downward'
+
+    'surface_longwave_radiation_downward'
+
+    'northward_turbulent_surface_stress'
+
+    'eastward_turbulent_surface_stress'
+
+    'eastward_surface_sea_water_velocity'
+
+    'northward_surface_sea_water_velocity'
+
+    'sea_ice_thickness'
+
+    'sea_surface_height'
+
     'divergence'
-    
-    'geopotential height'
-    
-    'specific humidity'
-    
-    'relative humidity'
-    
+
+    'geopotential_height'
+
+    'specific_humidity'
+
+    'relative_humidity'
+
     'temperature'
+
+    'u-wind_component'
+
+    'v-wind_component'
+
+    'vertical_velocity'
+
+    'relative_vorticity'
     
-    'u-wind component'
+    ***Variable List (For ECMWF AIFS Wave/AIFS Wave Ensemble Data)***
     
-    'v-wind component'
+    'significant_height_of_combined_waves_and_swell'
     
-    'vertical velocity'
+    'mean_wave_direction'
     
-    'relative vorticity'
+    'mean_wave_period'
         
     -ct = Convert Temperature (Default=True).
     
@@ -1536,6 +1589,7 @@ def fetch_aifs(type,
                 
         except SystemExit as e:
             _command_error_message('ecmwf aifs wave')
+            _ecmwf_wave_var_error('aifs')
             _sys.exit(1)
             
     elif type == 'we':
@@ -1567,6 +1621,7 @@ def fetch_aifs(type,
                 
         except SystemExit as e:
             _command_error_message('ecmwf aifs wave ensemble')
+            _ecmwf_wave_var_error('aifs')
             _sys.exit(1)
             
     else:

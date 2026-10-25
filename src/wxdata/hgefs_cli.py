@@ -43,7 +43,6 @@ def hgefs_data():
 # ---------------------------------------------------------------------
 # HGEFS Commands
 # ---------------------------------------------------------------------
-@hgefs_data.group(name='fetch')
 def hgefs():
     """
     Hybrid Global Ensemble Forecast System (HGEFS) Client.

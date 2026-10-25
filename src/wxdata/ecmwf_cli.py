@@ -1374,7 +1374,7 @@ def aifs():
 
 @_click.option(
     "--ncdir",
-    default=f"ECMWF IFS/NETCDF",
+    default=f"ECMWF AIFS/NETCDF",
     type=str,
     show_default=True,
     help=("""This flag is needed when --netcdf True to define the directory where the netCDF (.nc) file will save to.
@@ -1383,7 +1383,7 @@ def aifs():
 
 @_click.option(
     "--ncfname",
-    default=f"ecmwf_ifs.nc",
+    default=f"ecmwf_aifs.nc",
     type=str,
     show_default=True,
     help=("""This flag is needed when --netcdf True to define the filename for the netCDF (.nc) file. 

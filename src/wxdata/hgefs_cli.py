@@ -48,13 +48,13 @@ def hgefs():
     """
     Hybrid Global Ensemble Forecast System (HGEFS) Client.
     
-    **Valid Commands**
+    ***Valid Commands***
     
     -c = Category (Default='mean')
     
     This determines the category of ensemble data 
     
-    **Categories**
+    ***Categories***
     
     1) mean
         
@@ -105,7 +105,7 @@ def hgefs():
     
     `wxdata-hgefs fetch latest -v geopotential_height -l 500 --netcdf True --ncdir HGEFS/Mean/NETCDF --ncfname gefs_gh500.nc`
     
-    **Variables**
+    ***Variables***
     
     'geopotential height'
 
@@ -146,7 +146,7 @@ def hgefs():
     
     This corresponds to the type of level.
                                                                 
-    **Level Types**
+    ***Level Types***
     
     'surface'
     
@@ -166,7 +166,7 @@ def hgefs():
     
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     
-    **Additional Relevant Flags when --netcdf True**
+    ***Additional Relevant Flags when --netcdf True***
     
     --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=HGEFS/NETCDF). 
     

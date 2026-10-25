@@ -48,7 +48,7 @@ def sounding():
     """
     Observed Upper-Air Soundings Client
     
-    **Globally Valid Commands**
+    ***Globally Valid Commands***
     
     -stid = Station ID. The station ID for the observed sounding site.
     
@@ -73,7 +73,7 @@ def sounding():
     
     `wxdata-soundings fetch latest -stid okx --proxy https://proxy-server-address:proxy-server-port`
     
-    **Extra Commands For Downloading Archived Data**
+    ***Extra Commands For Downloading Archived Data***
     
     -d = Datetime. The date and time of the observed sounding in the format 'YYYY-mm-dd:HH'
     

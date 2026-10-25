@@ -61,7 +61,7 @@ def rtma():
     """Real Time Mesoscale Analysis (RTMA) Client.
     
     
-    **Archived Required Commands**
+    ***Archived Required Commands***
     
     -d = Date. The date of the model run in the format of YYYY-mm-dd.
     
@@ -72,7 +72,7 @@ def rtma():
         (i.e. for the 12z run set -r 12)
     
     
-    **Globally Valid Commands (valid for both "latest" and "archived")**
+    ***Globally Valid Commands (valid for both "latest" and "archived")***
     
     -loc = Location (Default='conus'). Locations: 1) `conus`, 2) `ak` (Alaska), 3) `hi` (Hawaii), 4) `pr` (Puerto Rico), 5) `gu` (Guam).
     
@@ -117,7 +117,7 @@ def rtma():
     
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     
-    **Additional Relevant Flags when --netcdf True**
+    ***Additional Relevant Flags when --netcdf True***
     
     --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=RTMA/NETCDF). 
     

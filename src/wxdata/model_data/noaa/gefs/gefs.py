@@ -2005,10 +2005,13 @@ def gefs_0p50(cat='mean',
     
     ***Valid categories***
     
-    1) mean
-    2) members
-    3) spread
-    4) control
+    i) mean
+    
+    ii) members
+    
+    iii) spread
+    
+    iv) control
     
     2) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The GEFS0P50
     goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
@@ -2646,10 +2649,13 @@ def gefs_0p50_secondary_parameters(cat='control',
     
     ***Valid categories***
     
-    1) mean
-    2) members
-    3) spread
-    4) control
+    i) mean
+    
+    ii) members
+    
+    iii) spread
+    
+    iv) control
     
     2) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The GEFS0P50 SECONDARY PARAMETERS
     goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
@@ -3363,10 +3369,13 @@ def gefs_0p25(cat='mean',
     
     ***Valid categories***
     
-    1) mean
-    2) members
-    3) spread
-    4) control
+    i) mean
+    
+    ii) members
+    
+    iii) spread
+    
+    iv) control
     
     2) final_forecast_hour (Integer) - Default = 240. The final forecast hour the user wishes to download. The GEFS0P25
     goes out to 240 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 

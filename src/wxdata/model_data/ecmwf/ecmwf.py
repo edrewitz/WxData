@@ -5154,9 +5154,11 @@ def ecmwf_ifs(final_forecast_hour=360,
     
     These ECMWF end-to-end clients can download ECMWF data from the following sources: 
     
-            1) ECMWF Open-Data Server
-            2) Amazon AWS Server
-            3) Google Cloud Server
+        i) ECMWF Open-Data Server
+        
+        ii) Amazon AWS Server
+        
+        iii) Google Cloud Server
             
     ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
     ***If the client cannot connect to any of the servers, the system will exit.***
@@ -5209,17 +5211,24 @@ def ecmwf_ifs(final_forecast_hour=360,
     
         ***Data Sources***
         
-        - ECMWF Open-Data Server = 'ecmwf'
-        - Amazon AWS Server = 'aws'
-        - Google Cloud Server = 'google'
+       i) ECMWF Open-Data Server = 'ecmwf'
+       
+       i) Amazon AWS Server = 'aws'
+        
+       iii) Google Cloud Server = 'google'
+       
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
     
     15) level_type (String) - Default='pressure'. The level of the parameters being queried. 
     
         ***level_types***
         
-        1) 'surface'
-        2) 'pressure'
-        3) 'soil
+        i) 'surface'
+        
+        ii) 'pressure'
+        
+        iii) 'soil
     
     16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
@@ -5885,9 +5894,11 @@ def ecmwf_high_res_ifs(final_forecast_hour=360,
     
     These ECMWF end-to-end clients can download ECMWF data from the following sources: 
     
-            1) ECMWF Open-Data Server
-            2) Amazon AWS Server
-            3) Google Cloud Server
+        i) ECMWF Open-Data Server
+        
+        ii) Amazon AWS Server
+        
+        iii) Google Cloud Server
             
     ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
     ***If the client cannot connect to any of the servers, the system will exit.***
@@ -5940,16 +5951,22 @@ def ecmwf_high_res_ifs(final_forecast_hour=360,
     
         ***Data Sources***
         
-        - ECMWF Open-Data Server = 'ecmwf'
-        - Amazon AWS Server = 'aws'
-        - Google Cloud Server = 'google'
+       i) ECMWF Open-Data Server = 'ecmwf'
+       
+       i) Amazon AWS Server = 'aws'
+        
+       iii) Google Cloud Server = 'google'
+       
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
     
     15) level_type (String) - Default='pressure'. The level of the parameters being queried. 
     
         ***level_types***
         
-        1) 'surface'
-        2) 'pressure'
+        i) 'surface'
+        
+        ii) 'pressure'
     
     16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
@@ -6621,9 +6638,11 @@ def ecmwf_ifs_ens(final_forecast_hour=360,
     
     These ECMWF end-to-end clients can download ECMWF data from the following sources: 
     
-            1) ECMWF Open-Data Server
-            2) Amazon AWS Server
-            3) Google Cloud Server
+        i) ECMWF Open-Data Server
+        
+        ii) Amazon AWS Server
+        
+        iii) Google Cloud Server
             
     ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
     ***If the client cannot connect to any of the servers, the system will exit.***
@@ -6676,17 +6695,24 @@ def ecmwf_ifs_ens(final_forecast_hour=360,
     
         ***Data Sources***
         
-        - ECMWF Open-Data Server = 'ecmwf'
-        - Amazon AWS Server = 'aws'
-        - Google Cloud Server = 'google'
+       i) ECMWF Open-Data Server = 'ecmwf'
+       
+       i) Amazon AWS Server = 'aws'
+        
+       iii) Google Cloud Server = 'google'
+       
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     15) level_type (String) - Default='pressure'. The level of the parameters being queried. 
     
         ***level_types***
         
-        1) 'surface'
-        2) 'pressure'
-        3) 'soil
+        i) 'surface'
+        
+        ii) 'pressure'
+        
+        iii) 'soil
     
     16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
@@ -7404,9 +7430,11 @@ def ecmwf_high_res_ifs_ens(final_forecast_hour=144,
     
     These ECMWF end-to-end clients can download ECMWF data from the following sources: 
     
-            1) ECMWF Open-Data Server
-            2) Amazon AWS Server
-            3) Google Cloud Server
+        i) ECMWF Open-Data Server
+        
+        ii) Amazon AWS Server
+        
+        iii) Google Cloud Server
             
     ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
     ***If the client cannot connect to any of the servers, the system will exit.***
@@ -7459,16 +7487,22 @@ def ecmwf_high_res_ifs_ens(final_forecast_hour=144,
     
         ***Data Sources***
         
-        - ECMWF Open-Data Server = 'ecmwf'
-        - Amazon AWS Server = 'aws'
-        - Google Cloud Server = 'google'
+       i) ECMWF Open-Data Server = 'ecmwf'
+       
+       i) Amazon AWS Server = 'aws'
+        
+       iii) Google Cloud Server = 'google'
+       
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     15) level_type (String) - Default='pressure'. The level of the parameters being queried. 
     
         ***level_types***
         
-        1) 'surface'
-        2) 'pressure'
+        i) 'surface'
+        
+        ii) 'pressure'
     
     16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
@@ -8181,9 +8215,11 @@ def ecmwf_aifs(final_forecast_hour=360,
     
     These ECMWF end-to-end clients can download ECMWF data from the following sources: 
     
-            1) ECMWF Open-Data Server
-            2) Amazon AWS Server
-            3) Google Cloud Server
+        i) ECMWF Open-Data Server
+        
+        ii) Amazon AWS Server
+        
+        iii) Google Cloud Server
             
     ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
     ***If the client cannot connect to any of the servers, the system will exit.***
@@ -8225,17 +8261,24 @@ def ecmwf_aifs(final_forecast_hour=360,
     
         ***Data Sources***
         
-        - ECMWF Open-Data Server = 'ecmwf'
-        - Amazon AWS Server = 'aws'
-        - Google Cloud Server = 'google'
+       i) ECMWF Open-Data Server = 'ecmwf'
+       
+       i) Amazon AWS Server = 'aws'
+        
+       iii) Google Cloud Server = 'google'
+       
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     14) level_type (String) - Default='pressure'. The level of the parameters being queried. 
     
         ***level_types***
         
-        1) 'surface'
-        2) 'pressure'
-        3) 'soil
+        i) 'surface'
+        
+        ii) 'pressure'
+        
+        iii) 'soil
     
     15) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
@@ -8880,9 +8923,11 @@ def ecmwf_aifs_ens(final_forecast_hour=360,
     
     These ECMWF end-to-end clients can download ECMWF data from the following sources: 
 
-        1) ECMWF Open-Data Server
-        2) Amazon AWS Server
-        3) Google Cloud Server
+        i) ECMWF Open-Data Server
+        
+        ii) Amazon AWS Server
+        
+        iii) Google Cloud Server
             
     ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
     ***If the client cannot connect to any of the servers, the system will exit.***
@@ -8924,17 +8969,24 @@ def ecmwf_aifs_ens(final_forecast_hour=360,
     
         ***Data Sources***
         
-        - ECMWF Open-Data Server = 'ecmwf'
-        - Amazon AWS Server = 'aws'
-        - Google Cloud Server = 'google'
+       i) ECMWF Open-Data Server = 'ecmwf'
+       
+       i) Amazon AWS Server = 'aws'
+        
+       iii) Google Cloud Server = 'google'
+       
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     14) level_type (String) - Default='pressure'. The level of the parameters being queried. 
     
         ***level_types***
         
-        1) 'surface'
-        2) 'pressure'
-        3) 'soil
+        i) 'surface'
+        
+        ii) 'pressure'
+        
+        iii) 'soil
     
     15) cat (String) - Default='control'. The type of ensemble run. 
     
@@ -9016,13 +9068,11 @@ def ecmwf_aifs_ens(final_forecast_hour=360,
         
     24) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
         
-    Returns
-    -------
+    **Returns**
     
     An xarray data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
     
-    Plain Language ECMWF AIFS Ensemble Variable Keys (After Post-Processing)
-    --------------------------------------------------------------
+    ***Plain Language ECMWF AIFS Ensemble Variable Keys (After Post-Processing)***
     
     'volumetric_soil_moisture_content'
     'soil_temperature'
@@ -9600,9 +9650,11 @@ def ecmwf_ifs_wave(final_forecast_hour=360,
     
     These ECMWF end-to-end clients can download ECMWF data from the following sources: 
     
-            1) ECMWF Open-Data Server
-            2) Amazon AWS Server
-            3) Google Cloud Server
+        i) ECMWF Open-Data Server
+        
+        ii) Amazon AWS Server
+        
+        iii) Google Cloud Server
             
     ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
     ***If the client cannot connect to any of the servers, the system will exit.***
@@ -9655,9 +9707,14 @@ def ecmwf_ifs_wave(final_forecast_hour=360,
     
         ***Data Sources***
         
-        - ECMWF Open-Data Server = 'ecmwf'
-        - Amazon AWS Server = 'aws'
-        - Google Cloud Server = 'google'
+       i) ECMWF Open-Data Server = 'ecmwf'
+       
+       i) Amazon AWS Server = 'aws'
+        
+       iii) Google Cloud Server = 'google'
+       
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     15) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
@@ -10168,9 +10225,11 @@ def ecmwf_high_res_ifs_wave(final_forecast_hour=360,
     
     These ECMWF end-to-end clients can download ECMWF data from the following sources: 
     
-            1) ECMWF Open-Data Server
-            2) Amazon AWS Server
-            3) Google Cloud Server
+        i) ECMWF Open-Data Server
+        
+        ii) Amazon AWS Server
+        
+        iii) Google Cloud Server
             
     ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
     ***If the client cannot connect to any of the servers, the system will exit.***
@@ -10223,9 +10282,14 @@ def ecmwf_high_res_ifs_wave(final_forecast_hour=360,
     
         ***Data Sources***
         
-        - ECMWF Open-Data Server = 'ecmwf'
-        - Amazon AWS Server = 'aws'
-        - Google Cloud Server = 'google'
+       i) ECMWF Open-Data Server = 'ecmwf'
+       
+       i) Amazon AWS Server = 'aws'
+        
+       iii) Google Cloud Server = 'google'
+       
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     15) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
@@ -10741,9 +10805,11 @@ def ecmwf_ifs_wave_ens(final_forecast_hour=144,
     
     These ECMWF end-to-end clients can download ECMWF data from the following sources: 
     
-            1) ECMWF Open-Data Server
-            2) Amazon AWS Server
-            3) Google Cloud Server
+        i) ECMWF Open-Data Server
+        
+        ii) Amazon AWS Server
+        
+        iii) Google Cloud Server
             
     ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
     ***If the client cannot connect to any of the servers, the system will exit.***
@@ -10796,9 +10862,14 @@ def ecmwf_ifs_wave_ens(final_forecast_hour=144,
     
         ***Data Sources***
         
-        - ECMWF Open-Data Server = 'ecmwf'
-        - Amazon AWS Server = 'aws'
-        - Google Cloud Server = 'google'
+       i) ECMWF Open-Data Server = 'ecmwf'
+       
+       i) Amazon AWS Server = 'aws'
+        
+       iii) Google Cloud Server = 'google'
+       
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     15) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
@@ -11326,9 +11397,11 @@ def ecmwf_high_res_ifs_wave_ens(final_forecast_hour=144,
     
     These ECMWF end-to-end clients can download ECMWF data from the following sources: 
     
-            1) ECMWF Open-Data Server
-            2) Amazon AWS Server
-            3) Google Cloud Server
+        i) ECMWF Open-Data Server
+        
+        ii) Amazon AWS Server
+        
+        iii) Google Cloud Server
             
     ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
     ***If the client cannot connect to any of the servers, the system will exit.***
@@ -11381,9 +11454,14 @@ def ecmwf_high_res_ifs_wave_ens(final_forecast_hour=144,
     
         ***Data Sources***
         
-        - ECMWF Open-Data Server = 'ecmwf'
-        - Amazon AWS Server = 'aws'
-        - Google Cloud Server = 'google'
+       i) ECMWF Open-Data Server = 'ecmwf'
+       
+       i) Amazon AWS Server = 'aws'
+        
+       iii) Google Cloud Server = 'google'
+       
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     15) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
@@ -11906,9 +11984,11 @@ def ecmwf_aifs_wave(final_forecast_hour=360,
     
     These ECMWF end-to-end clients can download ECMWF data from the following sources: 
     
-            1) ECMWF Open-Data Server
-            2) Amazon AWS Server
-            3) Google Cloud Server
+        i) ECMWF Open-Data Server
+        
+        ii) Amazon AWS Server
+        
+        iii) Google Cloud Server
             
     ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
     ***If the client cannot connect to any of the servers, the system will exit.***
@@ -11952,9 +12032,14 @@ def ecmwf_aifs_wave(final_forecast_hour=360,
     
         ***Data Sources***
         
-        - ECMWF Open-Data Server = 'ecmwf'
-        - Amazon AWS Server = 'aws'
-        - Google Cloud Server = 'google'
+       i) ECMWF Open-Data Server = 'ecmwf'
+       
+       i) Amazon AWS Server = 'aws'
+        
+       iii) Google Cloud Server = 'google'
+       
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     15) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
@@ -12452,9 +12537,11 @@ def ecmwf_aifs_wave_ens(final_forecast_hour=360,
     
     These ECMWF end-to-end clients can download ECMWF data from the following sources: 
     
-            1) ECMWF Open-Data Server
-            2) Amazon AWS Server
-            3) Google Cloud Server
+        i) ECMWF Open-Data Server
+        
+        ii) Amazon AWS Server
+        
+        iii) Google Cloud Server
             
     ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
     ***If the client cannot connect to any of the servers, the system will exit.***
@@ -12498,9 +12585,14 @@ def ecmwf_aifs_wave_ens(final_forecast_hour=360,
     
         ***Data Sources***
         
-        - ECMWF Open-Data Server = 'ecmwf'
-        - Amazon AWS Server = 'aws'
-        - Google Cloud Server = 'google'
+       i) ECMWF Open-Data Server = 'ecmwf'
+       
+       i) Amazon AWS Server = 'aws'
+        
+       iii) Google Cloud Server = 'google'
+       
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
     15) cat (String) - Default='control'. The type of ensemble run. 
     

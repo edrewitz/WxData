@@ -43,6 +43,7 @@ def hgefs_data():
 # ---------------------------------------------------------------------
 # HGEFS Commands
 # ---------------------------------------------------------------------
+@hgefs_data.group(name='fetch')
 def hgefs():
     """
     Hybrid Global Ensemble Forecast System (HGEFS) Client.
@@ -172,7 +173,7 @@ def hgefs():
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=hgefs.nc)
     
     """
-@hgefs.command("fetch")
+@hgefs.command("latest")
 @_click.option(
     "--final_forecast_hour",
     "-f",

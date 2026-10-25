@@ -1454,12 +1454,14 @@ def gefs0p25():
     show_default=True,
     help=("""The category of the ensemble data. Default='mean'.  
     
-            Valid categories
-            -----------------
+            ***Valid Categories***
             
             1) mean
+            
             2) members
+            
             3) spread
+            
             4) control
     
           """

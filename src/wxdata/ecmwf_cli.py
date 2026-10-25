@@ -913,6 +913,14 @@ def aifs():
     
     `wxdata-ecmwf aifs latest -t e -v geopotential_height -v temperature -l 850 -l 500 -m 1 -m 2 -m 3 -m 4 -m 5 -s google`
     
+    -c = Category. (Default="control").
+    
+    ***Valid Categories***
+    
+    1) control
+    
+    2) members
+    
     -f = Final Forecast Hour (Default=360).
      
      Maximum forecast hour is 360 hours. 
@@ -1133,6 +1141,24 @@ def aifs():
           
           -we = AIFS Wave Ensemble (0.25x0.25 Degree)
           
+          """
+    )
+)
+
+@_click.option(
+    "--category",
+    "-c",
+    default="control",
+    type=str,
+    show_default=True,
+    help=("""The category of the ensemble data. Default='control'.  
+    
+            ***Valid Categories***
+            
+            1) control
+            
+            2) members
+            
           """
     )
 )

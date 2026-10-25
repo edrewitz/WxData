@@ -72,8 +72,7 @@ def gfs0p25():
     """
     Global Forecast System (GFS) 0.25x0.25 Client.
     
-    Archived Required Commands
-    --------------------------
+    ***Archived Required Commands***
     
     -d = Date. The date of the model run in the format of YYYY-mm-dd.
     
@@ -84,10 +83,8 @@ def gfs0p25():
         (i.e. for the 12z run set -r 12)
     
     
-    Globally Valid Commands (valid for both "latest" and "archived")
-    
-    -------------------------------------------------------
-    
+    ***Globally Valid Commands (valid for both "latest" and "archived")***
+        
     -t = Type (Default=primary).
     
     This determines the type of variables and levels.
@@ -466,14 +463,13 @@ def gfs0p25():
     
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     
-    **Additional Relevant Flags when --netcdf True**
+    ***Additional Relevant Flags when --netcdf True***
     
     --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=GFS0P25/NETCDF). 
     
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=gfs_0p25.nc)
     
-    Commands Only Valid for "latest"
-    --------------------------------
+    ***Commands Only Valid for "latest"***
     
     -cd = Clear Data (Default=False).
     
@@ -1166,7 +1162,7 @@ def gfs0p50():
     """
     Global Forecast System (GFS) 0.50x0.50 Client.
     
-    **Archived Required Commands**
+    ***Archived Required Commands***
 
     -d = Date. The date of the model run in the format of YYYY-mm-dd.
     
@@ -1239,9 +1235,9 @@ def gfs0p50():
                        
     The list of variables the user wants to query.
     
-    Here is a sample of how to query geopotential height and temperature `gfs 0p50 latest -v geopotential_height -v temperature`
+    Here is a sample of how to query geopotential height and temperature `wxdata-gfs 0p50 latest -v geopotential_height -v temperature`
     
-    **Variables**
+    ***Variables***
     
     best_lifted_index
     
@@ -1443,7 +1439,7 @@ def gfs0p50():
     
     Levels: 1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10
     
-    **Level Types**
+    ***Level Types***
 
     pressure
 
@@ -1477,7 +1473,7 @@ def gfs0p50():
     
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     
-    **Additional Relevant Flags when --netcdf True**
+    ***Additional Relevant Flags when --netcdf True***
     
     --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=GFS0P50/NETCDF). 
     

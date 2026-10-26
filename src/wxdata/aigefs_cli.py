@@ -52,7 +52,7 @@ def aigefs():
     """
     
     """
-    
+@aigefs.command("latest")
 @_click.option(
     "--category",
     "-c",

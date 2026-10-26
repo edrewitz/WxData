@@ -195,4 +195,11 @@ def fetch_ndfd_grids(variable,
         _command_error_message(variable)
         _sys.exit(1)
         
-        
+# ---------------------------------------------------------------------
+# Entry point
+# ---------------------------------------------------------------------
+def main():
+    ndfd_data()
+    
+if __name__ == "__main__":
+    main()

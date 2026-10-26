@@ -91,7 +91,7 @@ def gefs0p50():
     
     This determines the category of ensemble data 
     
-    **Categories**
+    ***Categories***
     
     1) mean
     
@@ -1226,7 +1226,7 @@ def gefs0p25():
     
     This determines the category of ensemble data 
     
-    **Categories**
+    ***Categories***
 
     1) mean
     

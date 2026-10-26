@@ -13,12 +13,61 @@ current_os = _platform.system()
 
 from wxdata.gridded_forecasts.noaa.nws import get_ndfd_grids as _get_ndfd_grids
 
+def _invalid_variable(variable):
+    
+    """Error Message for invalid variable"""
+    
+    print(f"Error: User entered an invalid variable of {variable}")
+    print(f"""
+          
+          ***Valid Variables***
+          
+            maximum_relative_humidity
+            mainimum_relative_humidity
+            maximum_temperature
+            minimum_temperature
+            relative_humidity
+            temperature
+            apparent_temperature
+            wind_speed
+            wind_gust
+            wind_direction
+            spc_critical_fire_weather_forecast
+            spc_dry_lightning_forecast
+            spc_convective_outlook
+            ice_accumulation
+            probability_of_hail
+            12_hour_probability_of_precipitation
+            probability_of_extreme_tornadoes
+            total_probability_of_severe_thunderstorms
+            total_probability_of_extreme_severe_thunderstorms
+            probability_of_extreme_thunderstorm_winds
+            probability_of_extreme_hail
+            probability_of_extreme_tornadoes
+            probability_of_damaging_thunderstorm_winds
+            quantitative_precipitation_forecast
+            sky_cover
+            snow_amount
+            snow_level
+            probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_34kts_cumulative
+            probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_34kts_incremental
+            probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_50kts_cumulative
+            probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_50kts_incremental
+            probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_64kts_cumulative
+            probabilistic_tropical_cyclone_surface_wind_speeds_greater_than_64kts_incremental
+            dew_point
+            visibility
+            significant_wave_height
+            warnings
+            weather       
+          
+          """)
+
 def _command_error_message(parameter):
     
     """Error Message For Invalid Commands"""
     
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
-    print(f"parameter: {parameter}")
     print(f"Please run `wxdata-ndfd -h to view the help documentation.")
     print(f"Please visit: https://github.com/edrewitz/WxData/wiki#ecmwf-open-data for full detailed documentation.")
     
@@ -180,7 +229,12 @@ def fetch_ndfd_grids(variable,
                      notifications):
     
     try:
-        variable = variable.lower()
+        try:
+            variable = variable.lower()
+        except Exception as e:
+            _invalid_variable(variable)
+            _sys.exit(1)
+            
         region = region.lower()
         source = source.lower()
         _get_ndfd_grids(variable,

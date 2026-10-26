@@ -176,6 +176,21 @@ def aigefs():
     
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=aigefs.nc)
     
+    ***Examples***
+    
+    1) Download the latest AIGEFS for 500mb and 850mb geopotential height and temperature for members 1 through 5.
+    
+    `wxdata-aigefs fetch latest -c members -v geopotential_height -v temperature -l 850 -l 500 -m 1 -m 2 -m 3 -m 4 -m 5`
+    
+    2) Download the latest AIGEFS for surface variables for members 1 through 5 from Amazon Web Services using a proxy server of address: https://proxy-server-address:proxy-server-port and
+       create a netCDF (.nc) file of the data called `aigefs_members_sfc.nc` saved at Weather_Data/AIGEFS/NETCDF.
+    
+    `wxdata-aigefs fetch latest -c members -lt surface -s aws -m 1 -m 2 -m 3 -m 4 -m 5 --netcdf True --ncdir Weather_Data/AIGEFS/NETCDF --ncfname aigefs_members_sfc.nc --proxy https://proxy-server-address:proxy-server-port`
+    
+    3) Download all variables for AIGEFS Ensemble Mean for the first 72 hours. 
+    
+    `wxdata-aigefs fetch latest -f 72`
+    
     """
 @aigefs.command("latest")
 @_click.option(

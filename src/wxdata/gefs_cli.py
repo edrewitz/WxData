@@ -469,8 +469,7 @@ def gefs0p50():
     show_default=True,
     help=("""The category of the ensemble data. Default='mean'.  
     
-            Valid categories
-            -----------------
+            ***Valid categories***
             
             1) mean
             

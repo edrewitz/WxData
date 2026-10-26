@@ -39,6 +39,7 @@ dependencies = [
 wxdata-rtma = "wxdata.rtma_cli:main"
 wxdata-gfs = "wxdata.gfs_cli:main"
 wxdata-gefs = "wxdata.gefs_cli:main"
+wxdata-aigefs = "wxdata.aigefs_cli:main"
 wxdata-hgefs = "wxdata.hgefs_cli:main"
 wxdata-ecmwf = "wxdata.ecmwf_cli:main"
 wxdata-ndfd = "wxdata.ndfd_cli:main"

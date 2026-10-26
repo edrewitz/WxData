@@ -49,7 +49,7 @@ def aigefs_data():
 # ---------------------------------------------------------------------
 @aigefs_data.group(name="fetch")
 def aigefs():
-    """
+    r"""
     AI Global Ensemble Forecast System (AIGEFS) Client
     
     ***Valid Commands***
@@ -176,20 +176,27 @@ def aigefs():
     
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=aigefs.nc)
     
-    ***Examples***
+    ***Complex Example***
     
-    1) Download the latest AIGEFS for 500mb and 850mb geopotential height and temperature for members 1 through 5.
+    1) Download the latest AIGEFS Ensemble Spread for 500mb Geopotential Height from Amazon Web Services
+     
+        - Use a proxy server of address: https://proxy-server-address:proxy-server-port 
+                
+    2) Subset the data to reflect Northern Hemisphere [-180, 180, 90, 0] = [west, east, north, south]
+        
+    3) Create a netCDF (.nc) file of the data called `aigefs_spread_gph.nc` saved at Weather_Data/AIGEFS/NETCDF.
     
-    `wxdata-aigefs fetch latest -c members -v geopotential_height -v temperature -l 850 -l 500 -m 1 -m 2 -m 3 -m 4 -m 5`
-    
-    2) Download the latest AIGEFS for surface variables for members 1 through 5 from Amazon Web Services using a proxy server of address: https://proxy-server-address:proxy-server-port and
-       create a netCDF (.nc) file of the data called `aigefs_members_sfc.nc` saved at Weather_Data/AIGEFS/NETCDF.
-    
-    `wxdata-aigefs fetch latest -c members -lt surface -s aws -m 1 -m 2 -m 3 -m 4 -m 5 --netcdf True --ncdir Weather_Data/AIGEFS/NETCDF --ncfname aigefs_members_sfc.nc --proxy https://proxy-server-address:proxy-server-port`
-    
-    3) Download all variables for AIGEFS Ensemble Mean for the first 72 hours. 
-    
-    `wxdata-aigefs fetch latest -f 72`
+    Linux Shell:
+        ```wxdata-aigefs fetch latest -c spread -v geopotential_height -l 500 \
+            -s aws -wb -180 -eb 180 -nb 90 -sb 0 \
+            --netcdf True --ncdir Weather_Data/AIGEFS/NETCDF --ncfname aigefs_spread_gph.nc \ 
+            --proxy https://proxy-server-address:proxy-server-port```
+            
+    Windows Powershell:
+        ```wxdata-aigefs fetch latest -c spread -v geopotential_height -l 500 `
+            -s aws -wb -180 -eb 180 -nb 90 -sb 0 `
+            --netcdf True --ncdir Weather_Data/AIGEFS/NETCDF --ncfname aigefs_spread_gph.nc ` 
+            --proxy https://proxy-server-address:proxy-server-port```
     
     """
 @aigefs.command("latest")

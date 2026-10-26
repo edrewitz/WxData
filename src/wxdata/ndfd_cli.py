@@ -179,11 +179,10 @@ def fetch_ndfd_grids(variable,
                      proxy,
                      notifications):
     
-    variable = variable.lower()
-    region = region.lower()
-    source = source.lower()
-    
     try:
+        variable = variable.lower()
+        region = region.lower()
+        source = source.lower()
         _get_ndfd_grids(variable,
                         region,
                         proxies=proxy,

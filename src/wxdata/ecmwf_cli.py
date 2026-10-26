@@ -131,12 +131,6 @@ def ifs():
     
     -hwe = High Resolution Wave IFS Ensemble (0.10x0.10 Degree)
     
-    ***Example***
-    
-    Download the ECMWF High Resolution IFS Ensemble for 500mb and 850mb geopotential height and temperature for members 1 through 5 from Google Cloud.
-    
-    `wxdata-ecmwf ifs latest -t he -v geopotential_height -v temperature -l 850 -l 500 -m 1 -m 2 -m 3 -m 4 -m 5 -s google`
-    
     -f = Final Forecast Hour (Default=360).
      
     00z & 12z Runs Have 360 hours
@@ -330,10 +324,6 @@ def ifs():
     
     If you are using a proxy server you can define it by using --proxy https://proxy-server-address:proxy-server-port
     
-    Example: 
-    
-    `wxdata-ecmwf ifs latest -v geopotential height -l 500 --proxy https://proxy-server-address:proxy-server-port`
-    
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     
     **Additional Relevant Flags when --netcdf True**
@@ -341,6 +331,21 @@ def ifs():
     --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=ECMWF IFS/NETCDF). 
     
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=ecmwf_ifs.nc)
+    
+    ***Examples***
+    
+    1) Download the ECMWF IFS Ensemble for 500mb and 850mb geopotential height and temperature for members 1 through 5 from Google Cloud.
+    
+    `wxdata-ecmwf ifs latest -t e -v geopotential_height -v temperature -l 850 -l 500 -m 1 -m 2 -m 3 -m 4 -m 5 -s google`
+    
+    2) Download the latest ECMWF IFS for 500mb geopotential height from Amazon Web Services using a proxy server of address: https://proxy-server-address:proxy-server-port and
+       create a netCDF (.nc) file of the data called `ecmwf_ifs_gph.nc` saved at Weather_Data/ECMWF/IFS/NETCDF.
+    
+    `wxdata-ecmwf ifs latest -v geopotential_height -l 500 -s aws --netcdf True --ncdir Weather_Data/ECMWF/IFS/NETCDF --ncfname ecmwf_ifs_gph.nc --proxy https://proxy-server-address:proxy-server-port`
+    
+    3) Download all variables for the ECMWF High Resolution IFS Wave for the first 72 hours (Keep Default to download from ECMWF-Open Data).
+    
+    `wxdata-ecmwf ifs latest -t hwd -f 72` 
     
     """
     
@@ -960,12 +965,6 @@ def aifs():
     
     -we = AIFS Wave Ensemble (0.25x0.25 Degree)
     
-    ***Example***
-    
-    Download the ECMWF High Resolution AIFS Ensemble for 500mb and 850mb geopotential height and temperature for members 1 through 5 from Google Cloud.
-    
-    `wxdata-ecmwf aifs latest -t e -v geopotential_height -v temperature -l 850 -l 500 -m 1 -m 2 -m 3 -m 4 -m 5 -s google`
-    
     -c = Category. (Default="control").
     
     ***Valid Categories***
@@ -1164,11 +1163,7 @@ def aifs():
     Client assumes user is not trying to download data through a proxy server.
     
     If you are using a proxy server you can define it by using --proxy https://proxy-server-address:proxy-server-port
-    
-    Example: 
-    
-    `wxdata-ecmwf ifs latest -v geopotential height -l 500 --proxy https://proxy-server-address:proxy-server-port`
-    
+        
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     
     **Additional Relevant Flags when --netcdf True**
@@ -1176,6 +1171,21 @@ def aifs():
     --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=ECMWF AIFS/NETCDF). 
     
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=ecmwf_aifs.nc)
+    
+    ***Examples***
+    
+    1) Download the ECMWF AIFS Ensemble for 500mb and 850mb geopotential height and temperature for members 1 through 5 from Google Cloud.
+    
+    `wxdata-ecmwf aifs latest -t e -v geopotential_height -v temperature -l 850 -l 500 -m 1 -m 2 -m 3 -m 4 -m 5 -s google`
+    
+    2) Download the latest ECMWF AIFS for 500mb geopotential height from Amazon Web Services using a proxy server of address: https://proxy-server-address:proxy-server-port and
+       create a netCDF (.nc) file of the data called `ecmwf_aifs_gph.nc` saved at Weather_Data/ECMWF/AIFS/NETCDF.
+    
+    `wxdata-ecmwf aifs latest -v geopotential_height -l 500 -s aws --netcdf True --ncdir Weather_Data/ECMWF/AIFS/NETCDF --ncfname ecmwf_aifs_gph.nc --proxy https://proxy-server-address:proxy-server-port`
+    
+    3) Download all variables for the ECMWF AIFS Wave for the first 72 hours (Keep Default to download from ECMWF-Open Data).
+    
+    `wxdata-ecmwf aifs latest -t wd -f 72` 
     
     """
     

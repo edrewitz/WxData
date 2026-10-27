@@ -1,7 +1,7 @@
 ---
 title: Line Query
 ---
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Line Query
 ```python
 def line_query(ds, 

@@ -23,38 +23,12 @@ def ecmwf_aifs_ens(final_forecast_hour=360,
                     level_type='surface',
                     cat='control',
                     clear_data=False,
-                    variables=['geopotential',
-                                'total column water',
-                                'mean sea level pressure',
-                                'standard deviation of sub-gridscale orography',
-                                'slope of sub-gridscale orography',
-                                '10-meter u-wind component',
-                                '10-meter v-wind component',
-                                '2-meter temperature',
-                                '2-meter dew point',
-                                'surface shortwave radiation downward',
-                                'land sea mask',
-                                'surface longwave radiation downward',
-                                'low cloud cover',
-                                'mid-level cloud cover',
-                                'high cloud cover',
-                                'runoff water equivalent',
-                                'convective precipitation',
-                                'snowfall water equivalent',
-                                'total cloud cover',
-                                'total precipitation',
-                                '100-meter u-wind component',
-                                '100-meter v-wind component',
-                                'skin temperature',
-                                'surface pressure',
+                    variables=['geopotential height',
                                 'specific humidity',
                                 'relative humidity',
                                 'temperature',
                                 'u-wind component',
-                                'v-wind component',
-                                'vertical velocity',
-                                'volumetric soil moisture content',
-                                'soil temperature'],
+                                'v-wind component'],
                     levels=[1000, 
                             925, 
                             850, 
@@ -72,24 +46,48 @@ def ecmwf_aifs_ens(final_forecast_hour=360,
                       11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                       21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
                       31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 
-                      41, 42, 43, 44, 45, 46, 47, 48, 49, 50]):
+                      41, 42, 43, 44, 45, 46, 47, 48, 49, 50],
+                to_netcdf=False,
+                netcdf_path=f"ECMWF AIFS ENSEMBLE/NETCDF",
+                netcdf_filename=f"ecmwf_aifs_ensemble.nc",
+                delete_previous_netcdf_file=True,
+                return_values=True):
 ```
 
-This function scans for the latest ECMWF AIFS Ensemble dataset. If the dataset on the computer is old, the old data will be deleted
-and the new data will be downloaded. 
+This function is the main client that downloads and processes ECMWF AIFS Ensemble data. 
+
+***This client can do the following:***
+
+1) Download ECMWF AIFS Ensemble data from ECMWF Open-Data, Amazon Web Services and Google Cloud servers.
+
+2) Query your download by downloading only the variables, levels and ensemble members needed. 
+
+3) Subset the GRIB data into a user-specified bounding box and decode the GRIB2 keys into plain-language.
+
+4) Convert temperature fields to user-specified units (Kelvin -> Celsius & Kelvin -> Fahrenheit)
+
+5) Convert the xarray.array of decoded GRIB2 data into a NETCDF (.nc) file. 
+
+6) Manages the ECMWF AIFS Ensemble files in the local directory.    
+
+7) Handle user-specified proxy-server protocol - Useful for users working on VPN connections and behind firewalls.  
+
+8) Automatically Rotate between ECMWF Open-Data, Amazon Web Services and Google Cloud in the event of significant server connection issues.
+
+9) Validates the download and helps the user troubleshoot if needed. 
 
 These ECMWF end-to-end clients can download ECMWF data from the following sources: 
 
-        1) ECMWF Open-Data Server
-        2) Amazon AWS Server
-        3) Google Cloud Server
+    i) ECMWF Open-Data Server
+    
+    ii) Amazon AWS Server
+    
+    iii) Google Cloud Server
         
 ***If the server of your choice is down, the client will rotate to another one and try scanning for data and downloading there.***
 ***If the client cannot connect to any of the servers, the system will exit.***
 
-1) final_forecast_hour (Integer) - Default = 360. The final forecast hour the user wishes to download. The ECMWF IFS
-goes out to 360 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-360 by the nereast increment of 3 hours. 
+1) final_forecast_hour (Integer) - Default = 360. The maximum forecast hour. 
 
 2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
@@ -99,103 +97,114 @@ goes out to 360 hours. For those who wish to have a shorter dataset, they may se
 
 5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
 
-6) step (Integer) - Default=3. The time increment of the data. Options are 3hr and 6hr. 
+6) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-7) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
-
-```python
-proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_aifs_ens(proxies=proxies)
-```
-
-8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
+  ```python
+   proxies=None ---> proxies={
+                           'http':'http://your-proxy-address:port',
+                           'https':'http://your-proxy-address:port'
+                           }
+  ```
+7) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
    data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
    
-9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-    the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-    This setting is to help preserve memory on the machine. 
+8) clear_recycle_bin (Boolean) - (Default=False). Set to True to clear your recycle bin. 
     
-10) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+9) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
     either Celsius or Fahrenheit. When False, this data remains in Kelvin.
     
-11) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+10) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
     Set convert_to='fahrenheit' for Fahrenheit. 
     
-12) custom_directory (String or None) - Default=None. The directory path where the ECMWF AIFS Ensemble files will be saved to. 
+11) custom_directory (String or None) - Default=None. The directory path where the ECMWF AIFS Ensemble files will be saved to. 
     When set to None, the path will be: "ECMWF/AIFS/ENSEMBLE {cat}/"
 
-13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+12) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
 
-14) source (String) - Default='ecmwf'. The data server choice. 
+13) source (String) - Default='ecmwf'. The data server choice. 
 
-        Data Sources
-        ------------
-        
-        - ECMWF Open-Data Server = 'ecmwf'
-        - Amazon AWS Server = 'aws'
-        - Google Cloud Server = 'google'
+    ***Data Sources***
+      
+     i) ECMWF Open-Data Server = 'ecmwf'
+     
+     i) Amazon AWS Server = 'aws'
+      
+     iii) Google Cloud Server = 'google'
+   
+  *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+  establish a connection there.*
     
-15) level_type (String) - Default='surface'. The level of the parameters being queried. 
+14) level_type (String) - Default='pressure'. The level of the parameters being queried. 
 
-        level_types
-        -----------
-        
-        1) 'surface'
-        2) 'pressure'
-        3) 'soil
-
-17) cat (String) - Default='control'. The type of ensemble run. 
-
-    Control Run - cat='control'
+    ***level_types***
     
-    Ensemble Members - cat='members'
+    i) 'surface'
+    
+    ii) 'pressure'
+    
+    iii) 'soil
 
-18) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+15) cat (String) - Default='control'. The type of ensemble run. 
+
+    Control Run - `cat='control'`
+    
+    Ensemble Members - `cat='members'`
+
+16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
     When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
-19) variables (String List) - Default is all variables. The list of variable names in plain-language. 
+17) variables (String List) - Default=['geopotential height',
+                                        'specific humidity',
+                                        'relative humidity',
+                                        'temperature',
+                                        'u-wind component',
+                                        'v-wind component']. 
+                            
+    The list of variable names in plain-language. 
 
-        variables
-        ---------
-        
-        'geopotential'
-        'total column water'
-        'mean sea level pressure'
-        'standard deviation of sub-gridscale orography'
-        'slope of sub-gridscale orography'
-        '10-meter u-wind component'
-        '10-meter v-wind component'
-        '2-meter temperature'
-        '2-meter dew point'
-        'surface shortwave radiation downward'
-        'land sea mask'
-        'surface longwave radiation downward'
-        'low cloud cover'
-        'mid-level cloud cover'
-        'high cloud cover'
-        'runoff water equivalent'
-        'convective precipitation'
-        'snowfall water equivalent'
-        'total cloud cover'
-        'total precipitation'
-        '100-meter u-wind component'
-        '100-meter v-wind component'
-        'skin temperature'
-        'surface pressure'
-        'specific humidity'
-        'relative humidity'
-        'temperature'
-        'u-wind component'
-        'v-wind component'
-        'vertical velocity'
-        'volumetric soil moisture content'
-        'soil temperature'
+    ***Variables***
     
-20) levels (Integer List) - Default=[1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50]. 
+    ```python
+    'geopotential'
+    'total column water'
+    'mean sea level pressure'
+    'standard deviation of sub-gridscale orography'
+    'slope of sub-gridscale orography'
+    '10-meter u-wind component'
+    '10-meter v-wind component'
+    '2-meter temperature'
+    '2-meter dew point'
+    'surface shortwave radiation downward'
+    'land sea mask'
+    'surface longwave radiation downward'
+    'low cloud cover'
+    'mid-level cloud cover'
+    'high cloud cover'
+    'runoff water equivalent'
+    'convective precipitation'
+    'snowfall water equivalent'
+    'total cloud cover'
+    'total precipitation'
+    '100-meter u-wind component'
+    '100-meter v-wind component'
+    'skin temperature'
+    'surface pressure'
+    'specific humidity'
+    'relative humidity'
+    'temperature'
+    'u-wind component'
+    'v-wind component'
+    'vertical velocity'
+    'volumetric soil moisture content'
+    'soil temperature'
+    ```
+    
+19) levels (Integer List or None) - Default=[1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50]. 
     When level_type='pressure', this is the list of the pressure levels. 
     
     Example: User wants only the 500 mb level: levels=[500]
     
-21) members (Integer List) - Default=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+20) members (Integer List) - Default=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
                                       11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                                       21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
                                       31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 
@@ -205,44 +214,57 @@ proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_aifs_
     
     Example: User wants only the first 5 members: members=[1,2,3,4,5]
     
+21) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+
+22) netcdf_path (String) - Default='ECMWF AIFS ENSEMBLE/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+
+23) netcdf_filename (String) - Default='ecmwf_aifs_ensemble.nc'. The name of the netCDF (.nc) file. A good practice is to 
+    name this netCDF file using the variable name. 
+    
+24) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+    new netCDF file. For users who want to archive all data set this to False. 
+    
+25) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+    
 **Returns**
 
 An xarray data array with post-processed GRIB2 Variable Keys into Plain Language Variable Keys
 
-    Plain Language ECMWF AIFS Ensemble Variable Keys (After Post-Processing)
-    --------------------------------------------------------------
-    
-    'volumetric_soil_moisture_content'
-    'soil_temperature'
-    'geopotential'
-    'specific_humidity'
-    'u_wind_component'
-    'v_wind_component'
-    'air_temperature'
-    'vertical velocity'
-    '100m_u_wind_component'
-    '100m_v_wind_component'
-    '10m_u_wind_component'
-    '10m_v_wind_component'
-    '2m_temperature'
-    '2m_dew_point'
-    '2m_relative_humidity'
-    '2m_dew_point_depression'
-    'water_runoff' 
-    'surface_geopotential_height'
-    'skin_temperature'
-    'surface_pressure'
-    'standard_deviation_of_sub_gridscale_orography'
-    'slope_of_sub_gridscale_orography'
-    'surface_shortwave_radiation_downward'
-    'land_sea_mask'
-    'surface_longwave_radiation_downward'
-    'convective_precipitation'
-    'snowfall_water_equivalent'
-    'total_precipitation'
-    'low_cloud_cover'
-    'middle_cloud_cover'
-    'high_cloud_cover'
-    'total_column_water'
-    'total_cloud_cover'
-    'mslp'
+***Plain Language ECMWF AIFS Ensemble Variable Keys (After Post-Processing)***
+
+```python
+'volumetric_soil_moisture_content'
+'soil_temperature'
+'geopotential'
+'specific_humidity'
+'u_wind_component'
+'v_wind_component'
+'air_temperature'
+'vertical velocity'
+'100m_u_wind_component'
+'100m_v_wind_component'
+'10m_u_wind_component'
+'10m_v_wind_component'
+'2m_temperature'
+'2m_dew_point'
+'2m_relative_humidity'
+'2m_dew_point_depression'
+'water_runoff' 
+'surface_geopotential_height'
+'skin_temperature'
+'surface_pressure'
+'standard_deviation_of_sub_gridscale_orography'
+'slope_of_sub_gridscale_orography'
+'surface_shortwave_radiation_downward'
+'land_sea_mask'
+'surface_longwave_radiation_downward'
+'convective_precipitation'
+'snowfall_water_equivalent'
+'total_precipitation'
+'low_cloud_cover'
+'middle_cloud_cover'
+'high_cloud_cover'
+'total_column_water'
+'total_cloud_cover'
+'mslp'
+```

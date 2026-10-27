@@ -1,7 +1,6 @@
 ---
 title: AIGEFS Members Post-Processing
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # AIGEFS Members Post-Processing
 ```python
 def aigefs_members_post_processing(paths,

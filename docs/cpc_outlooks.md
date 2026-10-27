@@ -1,7 +1,6 @@
 ---
 title: NOAA/NWS Climate Prediction Center Outlooks
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 
 # NOAA/NWS Climate Prediction Center Outlooks
 ```python

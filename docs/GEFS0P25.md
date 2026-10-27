@@ -85,7 +85,7 @@ goes out to 240 hours. For those who wish to have a shorter dataset, they may se
 12) variables (List) - Default=['temperature']. A list of variable names the user wants to download in plain language. 
 
   ***Variable Name List for GEFS0P25***
-
+  
   ```python
   'total precipitation'
   'convective available potential energy'

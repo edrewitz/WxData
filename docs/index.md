@@ -130,39 +130,39 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 #### Current Weather Model Data Clients
 
-##### ***Global Forecast System (GFS)***
+***Global Forecast System (GFS)***
 1. [GFS0P25](https://edrewitz.github.io/WxData/GFS0P25)
 2. [GFS0P25 SECONDARY PARAMETERS](https://edrewitz.github.io/WxData/GFS0P25%20Secondary%20Parameters)
 3. [GFS0P50](https://edrewitz.github.io/WxData/GFS0P50)
 
-##### ***AI Global Forecast System (AIGFS)***
+***AI Global Forecast System (AIGFS)***
 1. [AIGFS](https://edrewitz.github.io/WxData/aigfs)
 
-##### ***Climate Forecast System (CFS)***
+***Climate Forecast System (CFS)***
 1. [CFS Pressure](https://edrewitz.github.io/WxData/cfs_pressure)
 2. [CFS Flux](https://edrewitz.github.io/WxData/cfs_flux)
 
-##### ***Hybrid Global Ensemble Forecast System (HGEFS)***
+***Hybrid Global Ensemble Forecast System (HGEFS)***
 1. [HGEFS](https://edrewitz.github.io/WxData/hgefs)
 
-##### ***Global Ensemble Forecast System (GEFS)***
+***Global Ensemble Forecast System (GEFS)***
 1. [GEFS0P50](https://edrewitz.github.io/WxData/GEFS0P50)
 2. [GEFS0P50 SECONDARY PARAMETERS](https://edrewitz.github.io/WxData/GEFS0P50%20Secondary%20Parameters)
 3. [GEFS0P25](https://edrewitz.github.io/WxData/GEFS0P25)
 
-##### ***AI Global Ensemble Forecast System (AIGEFS)***
+***AI Global Ensemble Forecast System (AIGEFS)***
 1. [AIGEFS Members (Pressure Parameters)](https://edrewitz.github.io/WxData/aigefs_pressure_members)
 2. [AIGEFS Members (Surface Parameters)](https://edrewitz.github.io/WxData/aigefs_surface_members)
 3. [AIGEFS Ensemble Mean & Ensemble Spread](https://edrewitz.github.io/WxData/aigefs_single)
 
-##### ***Canadian Meteorological Centre***
+***Canadian Meteorological Centre***
 1. [GDPS](https://edrewitz.github.io/WxData/gdps)
 2. [RDPS](https://edrewitz.github.io/WxData/rdps)
 3. [HRDPS](https://edrewitz.github.io/WxData/hrdps)
 4. [GEPS](https://edrewitz.github.io/WxData/geps)
 5. [CanSIPS](https://edrewitz.github.io/WxData/cansips)
 
-##### ***ECMWF Open Data***
+***ECMWF Open Data***
 1. [ECMWF IFS](https://edrewitz.github.io/WxData/ECMWF_IFS)
 2. [ECMWF IFS Ensemble](https://edrewitz.github.io/WxData/ECMWF%20IFS%20Ensemble)
 3. [ECMWF AIFS](https://edrewitz.github.io/WxData/ECMWF_AIFS)
@@ -176,18 +176,18 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 11. [ECMWF AIFS Wave]()
 12. [ECMWF AIFS Wave Ensemble]()
    
-##### ***Real-Time Mesoscale Analysis (RTMA)***
+***Real-Time Mesoscale Analysis (RTMA)***
 1. [RTMA](https://edrewitz.github.io/WxData/rtma)
 2. [RTMA Comparison](https://edrewitz.github.io/WxData/rtma%20comparison)
 
-##### ***NOAA Storm Prediction Center Outlooks/Climate Prediction Center Outlooks/National Weather Service Forecasts***
+***NOAA Storm Prediction Center Outlooks/Climate Prediction Center Outlooks/National Weather Service Forecasts***
 1. [Get NDFD Grids](https://edrewitz.github.io/WxData/noaa)
 2. [Climate Prediction Center Outlooks](https://edrewitz.github.io/WxData/cpc_outlooks)
 
-##### ***METAR Observations***
+***METAR Observations***
 1. [METAR Observations](https://edrewitz.github.io/WxData/metars)
 
-##### ***FEMS RAWS Network***
+***FEMS RAWS Network***
 1. [Get Single Station Weather Observations](https://edrewitz.github.io/WxData/single%20raws%20weather%20obs)
 2. [Get Single Station Fuels Observations](https://edrewitz.github.io/WxData/single%20raws%20fuels%20obs)
 3. [Get Multi Station Weather Observations](https://edrewitz.github.io/WxData/multi%20raws%20weather%20obs)
@@ -203,10 +203,10 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 13. [Get Single Station Meta-Data](https://edrewitz.github.io/WxData/raws%20single%20station%20meta%20data)
 14. [Get Multi Station Meta-Data](https://edrewitz.github.io/WxData/raws%20multi%20station%20meta%20data)
 
-##### ***Observed Atmospheric Soundings***
+***Observed Atmospheric Soundings***
 1. [University Of Wyoming Soundings](https://edrewitz.github.io/WxData/wyoming_soundings)
 
-##### ***NEXRAD II Radar Data***
+***NEXRAD II Radar Data***
 1. [Single Site](https://edrewitz.github.io/WxData/nexrad2_single)
 2. [Multi-Site](https://edrewitz.github.io/WxData/nexrad2_multi)
 
@@ -214,37 +214,37 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 #### Post-Processors
 
-##### ***GFS Post-Processing***
+***GFS Post-Processing***
 1. [Primary GFS](https://edrewitz.github.io/WxData/Primary%20GFS%20Post%20Processing)
 2. [Secondary GFS](https://edrewitz.github.io/WxData/Secondary%20GFS%20Post%20Processing)
 
-##### ***AIGFS Post-Processing***
+***AIGFS Post-Processing***
 1. [AIGFS](https://edrewitz.github.io/WxData/aigfs_post_processing)
 
-##### ***CFS Post-Processing***
+***CFS Post-Processing***
 1. [CFS Pressure](https://edrewitz.github.io/WxData/cfs_pressure_post_processing)
 2. [CFS Flux](https://edrewitz.github.io/WxData/cfs_flux_post_processing)
 
-##### ***GEFS Post-Processing***
+***GEFS Post-Processing***
 1. [Primary GEFS](https://edrewitz.github.io/WxData/Primary%20GEFS%20Post-Processing)
 2. [Secondary GEFS](https://edrewitz.github.io/WxData/Secondary%20GEFS%20Post%20Processing)
 
-##### ***AIGEFS Post-Processing***
+***AIGEFS Post-Processing***
 1. [AIGEFS Members](https://edrewitz.github.io/WxData/aigefs_members_post_processing)
 2. [AIGEFS Single](https://edrewitz.github.io/WxData/aigefs_single_post_processing)
 
-##### ***HGEFS Post-Processing***
+***HGEFS Post-Processing***
 1. [HGEFS](https://edrewitz.github.io/WxData/hgefs_post_processing)
 
-##### ***ECMWF Post-Processing***
+***ECMWF Post-Processing***
 1. [ECMWF IFS and IFS Ensemble](https://edrewitz.github.io/WxData/ECMWF%20IFS%20Post%20Processing)
 2. [ECMWF AIFS and AIFS Ensemble](https://edrewitz.github.io/WxData/ECMWF%20AIFS%20Post%20Processing)
 3. [ECMWF IFS Wave and IFS Wave Ensemble](https://edrewitz.github.io/WxData/ECMWF%20IFS%20Wave%20Post%20Processing)
 
-##### ***Real-Time Mesoscale Analysis Post-Processing***
+***Real-Time Mesoscale Analysis Post-Processing***
 1. [RTMA](https://edrewitz.github.io/WxData/RTMA%20Post%20Processing)
 
-##### ***CMC Post Processing***
+***CMC Post Processing***
 1. [GDPS](https://edrewitz.github.io/WxData/gdps%20processing)
 2. [RDPS](https://edrewitz.github.io/WxData/rdps%20processing)
 3. [HRDPS](https://edrewitz.github.io/WxData/hrdps%20processing)
@@ -254,58 +254,58 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 -----------------------------------------------
 #### Archived Weather Model Data Clients
 
-##### ***Global Forecast System (GFS)***
+***Global Forecast System (GFS)***
 1. [Archived GFS0P25]()
 2. [Archived GFS0P25 SECONDARY PARAMETERS]()
 3. [Archived GFS0P50]()
 
-##### ***Global Ensemble Forecast System (GEFS)***
+***Global Ensemble Forecast System (GEFS)***
 1. [Archived GEFS0P50]()
 2. [Archived GEFS0P50 SECONDARY PARAMETERS]()
 3. [Archived GEFS0P25]()
 
-##### ***Climate Forecast System (CFS)***
+***Climate Forecast System (CFS)***
 1. [Archived CFS Pressure]()
 2. [Archived CFS Flux]()
 
-##### ***Real-Time Mesoscale Analysis (RTMA)***
+***Real-Time Mesoscale Analysis (RTMA)***
 1. [Archived RTMA]()
 -----------------------------------------------
 #### Command Line Interface & Shell Scripting
 
-##### ***Global Forecast System (GFS)***
+***Global Forecast System (GFS)***
 1. [GFS0P25]()
 2. [GFS0P25 SECONDARY PARAMETERS]()
 3. [GFS0P50]()
 
-##### ***AI Global Forecast System (AIGFS)***
+***AI Global Forecast System (AIGFS)***
 1. [AIGFS](https://edrewitz.github.io/WxData/aigfs)
 
-##### ***Climate Forecast System (CFS)***
+***Climate Forecast System (CFS)***
 1. [CFS Pressure]()
 2. [CFS Flux]()
 
-##### ***Hybrid Global Ensemble Forecast System (HGEFS)***
+***Hybrid Global Ensemble Forecast System (HGEFS)***
 1. [HGEFS]()
 
-##### ***Global Ensemble Forecast System (GEFS)***
+***Global Ensemble Forecast System (GEFS)***
 1. [GEFS0P50]()
 2. [GEFS0P50 SECONDARY PARAMETERS]()
 3. [GEFS0P25]()
 
-##### ***AI Global Ensemble Forecast System (AIGEFS)***
+***AI Global Ensemble Forecast System (AIGEFS)***
 1. [AIGEFS Members (Pressure Parameters)]()
 2. [AIGEFS Members (Surface Parameters)]()
 3. [AIGEFS Ensemble Mean & Ensemble Spread]()
 
-##### ***Canadian Meteorological Centre***
+***Canadian Meteorological Centre***
 1. [GDPS]()
 2. [RDPS]()
 3. [HRDPS]()
 4. [GEPS]()
 5. [CanSIPS]()
 
-##### ***ECMWF Open Data***
+***ECMWF Open Data***
 1. [ECMWF IFS]()
 2. [ECMWF IFS Ensemble]()
 3. [ECMWF AIFS]()
@@ -319,63 +319,57 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 11. [ECMWF AIFS Wave]()
 12. [ECMWF AIFS Wave Ensemble]()
    
-##### ***Real-Time Mesoscale Analysis (RTMA)***
+***Real-Time Mesoscale Analysis (RTMA)***
 1. [RTMA]()
 2. [RTMA Comparison]()
 
-##### ***NOAA Storm Prediction Center Outlooks/National Weather Service Forecasts***
+***NOAA Storm Prediction Center Outlooks/National Weather Service Forecasts***
 1. [Get NDFD Grids]()
 
-##### ***METAR Observations***
+***METAR Observations***
 1. [METAR Observations]()
 
 -----------------------------------------------
 
 #### Raw Data Clients
 
-##### ***Custom Gridded Data***
+***Custom Gridded Data***
 1. [Gridded Data Client](https://edrewitz.github.io/WxData/get_gridded_data)
 
-##### ***Custom CSV Data***
+***Custom CSV Data***
 2. [CSV Data Client](https://edrewitz.github.io/WxData/get_csv_data)
 
-##### ***Custom Excel Data***
+***Custom Excel Data***
 3. [Excel Data Client](https://edrewitz.github.io/WxData/get_excel_data)
-
-##### ***AWS Open Data***
-4. [AWS Open Data](https://edrewitz.github.io/WxData/get_open_aws_data)
-
-##### ***Byte-Range Requests***
-5. [Byte-Range Requests](https://edrewitz.github.io/WxData/bytes_range_request)
 
 ---------------------------------------------------------------
 
 #### Data Querying Tools
 
-##### ***Pixel Query***
+***Pixel Query***
 1. [pixel_query](https://edrewitz.github.io/WxData/pixel_query)
 
-##### ***Line Query***
+***Line Query***
 1. [line_query](https://edrewitz.github.io/WxData/line_query)
 
 --------------------------------------------------
 
 #### Data Transformation & Gap Filling Tools
 
-##### ***Cyclic Points For Hemispheric Plots***
+***Cyclic Points For Hemispheric Plots***
 1. [Cyclic Points](https://edrewitz.github.io/WxData/cyclic_point)
 
-##### ***Shifting Longitude From 0 to 360 --> -180 to 180***
+***Shifting Longitude From 0 to 360 --> -180 to 180***
 1. [shift_longitude](https://edrewitz.github.io/WxData/shift_longitude)
 
-##### ***Linear Anti-Aliasing Between Two Points***
+***Linear Anti-Aliasing Between Two Points***
 1. [linear_anti_aliasing](https://edrewitz.github.io/WxData/linear_anti_aliasing)
 
 ------------------------------------------
 
 #### Automated Python Workflow Tools
 
-##### ***Running External Python Scripts In Your Workflow***
+***Running External Python Scripts In Your Workflow***
 
 1 [run_external_scripts](https://edrewitz.github.io/WxData/run_external_scripts)
 
@@ -387,7 +381,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 ###### ***Current Weather***
 1. [Current Weather](https://edrewitz.github.io/WxData/open%20meteo%20api%20current%20weather)
 
-###### ***National Oceanic and Atmospheric Administrationn (NOAA)***
+***National Oceanic and Atmospheric Administrationn (NOAA)***
 1. [GFS](https://edrewitz.github.io/WxData/open%20meteo%20api%20noaa%20gfs)
 2. [GEFS](https://edrewitz.github.io/WxData/open%20meteo%20api%20noaa%20gefs)
 3. [AIGFS](https://edrewitz.github.io/WxData/open%20meteo%20api%20noaa%20aigfs)
@@ -395,55 +389,55 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 5. [HGEFS](https://edrewitz.github.io/WxData/open%20meteo%20api%20noaa%20hgefs)
 6. [NBM](https://edrewitz.github.io/WxData/open%20meteo%20api%20noaa%20nbm)
 
-###### ***European Centre for Medium-Range Weather Forecasts (ECMWF)***
+***European Centre for Medium-Range Weather Forecasts (ECMWF)***
 1. [IFS](https://edrewitz.github.io/WxData/open%20meteo%20api%20ecmwf%20ifs)
 2. [AIFS](https://edrewitz.github.io/WxData/open%20meteo%20api%20ecmwf%20aifs)
 3. [IFS HRES](https://edrewitz.github.io/WxData/open%20meteo%20api%20ecmwf%20ifs%20hres)
 4. [IFS Ensemble](https://edrewitz.github.io/WxData/open%20meteo%20api%20ecmwf%20ifs%20ens)
 5. [AIFS Ensemble](https://edrewitz.github.io/WxData/open%20meteo%20api%20ecmwf%20aifs%20ens)
 
-###### ***Canadian Meteorological Centre (CMC)***
+***Canadian Meteorological Centre (CMC)***
 1. [GEM](https://edrewitz.github.io/WxData/open%20meteo%20api%20cmc%20gem)
 2. [GEM Ensemble](https://edrewitz.github.io/WxData/open%20meteo%20api%20cmc%20gem%20ens)
 
-###### ***Deutscher Wetterdienst (DWD)***
+***Deutscher Wetterdienst (DWD)***
 1. [ICON](https://edrewitz.github.io/WxData/open%20meteo%20api%20dwd%20icon)
 2. [ICON EPS](https://edrewitz.github.io/WxData/open%20meteo%20api%20dwd%20icon%20eps)
 
-###### ***Meteo-France***
+***Meteo-France***
 1. [ARPEGE](https://edrewitz.github.io/WxData/open%20meteo%20api%20meteo%20france%20arpege)
 
-###### ***Japan Meteorological Agency (JMA)***
+***Japan Meteorological Agency (JMA)***
 1. [JMA](https://edrewitz.github.io/WxData/open%20meteo%20api%20jma%20jma)
 
-###### ***UK Met Office (UKMO)***
+***UK Met Office (UKMO)***
 1. [UKMO Global Ensemble](https://edrewitz.github.io/WxData/open%20meteo%20api%20ukmo%20global%20ens)
 
-###### ***Google***
+***Google***
 1. [Weather Next 2 All Ensemble Members](https://edrewitz.github.io/WxData/open%20meteo%20api%20google%20weather%20next%202%20members)
 2. [Weather Next 2 Ensemble Mean](https://edrewitz.github.io/WxData/open%20meteo%20api%20google%20weather%20next%202%20ensemble%20mean)
 
 ##### Marine Forecasts
 
-###### ***National Oceanic and Atmospheric Administrationn (NOAA)***
+***National Oceanic and Atmospheric Administrationn (NOAA)***
 1. [GFS0P25 Wave Forecasts](https://edrewitz.github.io/WxData/open%20meteo%20api%20gfs0p25%20wave)
 2. [GFS0P16 Wave Forecasts](https://edrewitz.github.io/WxData/open%20meteo%20api%20gfs0p16%20wave)
 
-###### ***European Centre for Medium-Range Weather Forecasts (ECMWF)***
+***European Centre for Medium-Range Weather Forecasts (ECMWF)***
 1. [ECMWF Wave Model](https://edrewitz.github.io/WxData/open%20meteo%20api%20ecmwf%20wam)
 2. [ECMWF Wave Model 0.25 Degree](https://edrewitz.github.io/WxData/open%20meteo%20api%20ecmwf%20wam%200p25)
 
-###### ***Meteo-France***
+***Meteo-France***
 1. [Meteo-France Wave Model](https://edrewitz.github.io/WxData/open%20meteo%20api%20meteo%20france%20wave)
 2. [Meteo-France Ocean Currents Model](https://edrewitz.github.io/WxData/open%20meteo%20api%20meteo%20france%20ocean%20currents)
 
-###### ***Deutscher Wetterdienst (DWD)***
+***Deutscher Wetterdienst (DWD)***
 1. [European Domain Wave Model](https://edrewitz.github.io/WxData/open%20meteo%20api%20ewam)
 2. [Global Domian Wave Model](https://edrewitz.github.io/WxData/open%20meteo%20api%20gwam)
 
 ##### Seasonal Forecasts
 
-###### ***Daily Forecasts***
+***Daily Forecasts***
 1. [ECMWF EC46 + SEAS5 Ensemble Members](https://edrewitz.github.io/WxData/open%20meteo%20api%20ec46%20seas5%20daily)
 2. [ECMWF EC46 Ensemble Members](https://edrewitz.github.io/WxData/open%20meteo%20api%20ec46%20daily)
 3. [ECMWF SEAS5 Ensemble Members](https://edrewitz.github.io/WxData/open%20meteo%20api%20seas5%20daily)
@@ -451,10 +445,10 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 5. [ECMWF EC46 Ensemble Mean](https://edrewitz.github.io/WxData/open%20meteo%20api%20ec46%20daily%20ensemble%20mean)
 6. [ECMWF SEAS5 Ensemble Mean](https://edrewitz.github.io/WxData/open%20meteo%20api%20seas5%20daily%20ensemble%20mean)
 
-###### ***Weekly Forecasts***
+***Weekly Forecasts***
 1. [ECMWF EC46 Mean & Anomaly](https://edrewitz.github.io/WxData/open%20meteo%20api%20ec46%20weekly%20mean%20anomaly)
 
-###### ***Monthly Forecasts***
+***Monthly Forecasts***
 1. [ECMWF SEAS5 Mean & Anomaly](https://edrewitz.github.io/WxData/open%20meteo%20api%20seas5%20monthly%20mean%20anomaly)
 
 ##### Climate Reanalysis & Forecasts
@@ -476,7 +470,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 #### Air Now API
 
-##### ***Observations***
+***Observations***
 1. [Get Current Data Bounding Box](https://edrewitz.github.io/WxData/air%20now%20api%20observations)
 2. [Get Historical Data Bounding Box](https://edrewitz.github.io/WxData/air%20now%20api%20historical%20observations)
 
@@ -1050,6 +1044,9 @@ import wxdata.api.airnow_api.observations as air_now_observations
 12) [Amazon Web Services](https://aws.amazon.com/)
 
 13) [Google Cloud](https://cloud.google.com/)
+
+
+
 
 
 

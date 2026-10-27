@@ -518,7 +518,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 ## Server List
 
-<img src="https://github.com/edrewitz/WxData/blob/main/icons/server%20rotation.png?raw=true" width="400" height="250" alt="Alt text" /> 
+<img src="https://github.com/edrewitz/WxData/blob/main/icons/server%20rotation.png?raw=true" width="600" height="400" alt="Alt text" /> 
 
 **Operational Weather Model Data Server List**
 

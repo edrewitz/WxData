@@ -1,7 +1,6 @@
 ---
 title: Open-Meteo API ECMWF SEAS5 Monthly Mean & Anomaly
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Open-Meteo API ECMWF SEAS5 Monthly Mean & Anomaly
 
 ```python

@@ -47,7 +47,12 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
                     5,
                     3,
                     2,
-                    1]):
+                    1],
+            to_netcdf=False,
+            netcdf_path=f"GFS0P25 SECONDARY PARAMETERS/NETCDF",
+            netcdf_filename=f"gfs_0p25_secondary_parameters.nc",
+            delete_previous_netcdf_file=True,
+            return_values=True):
 ```
 
 This function downloads GFS0P25 SECONDARY PARAMETERS data and saves it to a folder. 
@@ -71,153 +76,173 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
 6) step (Integer) - Default=3. Set to 3 for 3hr increments and 6 for 6hrly increments.
 
 7) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
-   data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
+data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
 
 8) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
-  ```python
-   proxies=None ---> proxies={
-                           'http':'http://your-proxy-address:port',
-                           'https':'http://your-proxy-address:port'
-                           }
-   ```
+
+```python
+proxies=None ---> proxies={
+                   'http':'http://your-proxy-address:port',
+                   'https':'http://your-proxy-address:port'
+                   }
+```
 9) variables (String List) - Default=['geopotential height',
-                                        'temperature',
-                                        'relative humidity',
-                                        'u-component of wind',
-                                        'v-component of wind']
-                   
+                    'temperature',
+                    'relative humidity',
+                    'u-component of wind',
+                    'v-component of wind']
+
 The variables the user wishes to query.
-    
-        Variables
-        ---------
-        
-        'absolute vorticity'
-        'clear sky uv-b downward solar flux'
-        'cloud mixing ratio'
-        'plant canopy surface water'
-        'uv-b downward solar flux'
-        'vertical velocity (height)'
-        'graupel'
-        'geopotential height'
-        'ice thickness'
-        'ice water mixing ratio'
-        'ozone mixing ratio'
-        'pressure'
-        'relative humidity'
-        'rain mixing ratio'
-        'snow mixing ratio'
-        'liquid volumetric soil moisture (non-frozen)'
-        'specific humidity'
-        'total cloud cover'
-        'temperature'
-        'u-component of wind'
-        'v-component of wind'
-        'vertical velocity (pressure)'
-        'vertical speed shear'      
-    
+
+***Variables***
+
+```python
+'absolute vorticity'
+'clear sky uv-b downward solar flux'
+'cloud mixing ratio'
+'plant canopy surface water'
+'uv-b downward solar flux'
+'vertical velocity (height)'
+'graupel'
+'geopotential height'
+'ice thickness'
+'ice water mixing ratio'
+'ozone mixing ratio'
+'pressure'
+'relative humidity'
+'rain mixing ratio'
+'snow mixing ratio'
+'liquid volumetric soil moisture (non-frozen)'
+'specific humidity'
+'total cloud cover'
+'temperature'
+'u-component of wind'
+'v-component of wind'
+'vertical velocity (pressure)'
+'vertical speed shear'      
+```
+
 10) custom_directory (String or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
-    the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
-    be used. 
+the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
+be used. 
 
 11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-    the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-    This setting is to help preserve memory on the machine. 
-    
+the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+This setting is to help preserve memory on the machine. 
+
 12) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
-    either Celsius or Fahrenheit. When False, this data remains in Kelvin.
-    
+either Celsius or Fahrenheit. When False, this data remains in Kelvin.
+
 13) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
-    Set convert_to='fahrenheit' for Fahrenheit. 
-    
+Set convert_to='fahrenheit' for Fahrenheit. 
+
 14) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
 
 15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
 
 16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
-    When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
 
 17) source (String) - Default='noaa'. The data server the user wants to connect the client to.
-    
-        Server List
-        -----------
-        
-        1) NOAA/NCEP/NOMADS - source='noaa'
-        2) Amazon AWS - source='aws'
-        3) Google Cloud - source='google'
-        
+
+***Server List***
+
+i) NOAA/NCEP/NOMADS - `source='noaa'`
+
+ii) Amazon AWS - `source='aws'`
+
+iii) Google Cloud - `source='google'`
+
+*If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+establish a connection there.*
+
 18) level_type (String) - Default='pressure'. The type of level for the variable.
-    
-        Level Types
-        -----------
-        
-        'pressure'
-        'height below ground'
-        'surface'
-        'height above ground'
-        'height above sea level'
-        'pressure above ground'
-        'potential vorticity surface'
-        
+
+***Level Types***
+
+```python
+'pressure'
+'height below ground'
+'surface'
+'height above ground'
+'height above sea level'
+'pressure above ground'
+'potential vorticity surface'
+```
+
 19) levels (String, Integer or Float List) - Default=[875,
-                                                        825,
-                                                        775,
-                                                        725,
-                                                        675,
-                                                        625,
-                                                        575,
-                                                        525,
-                                                        475,
-                                                        425,
-                                                        375,
-                                                        325,
-                                                        275,
-                                                        225,
-                                                        175,
-                                                        125,
-                                                        7,
-                                                        5,
-                                                        3,
-                                                        2,
-                                                        1]
-                                                        
+                                    825,
+                                    775,
+                                    725,
+                                    675,
+                                    625,
+                                    575,
+                                    525,
+                                    475,
+                                    425,
+                                    375,
+                                    325,
+                                    275,
+                                    225,
+                                    175,
+                                    125,
+                                    7,
+                                    5,
+                                    3,
+                                    2,
+                                    1]
+                                    
 The pressure, height or depth levels.
-    
+
+20) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+
+21) netcdf_path (String) - Default='GFS0P25 SECONDARY PARAMETERS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+
+22) netcdf_filename (String) - Default='gfs_0p25_secondary_parameters.nc'. The name of the netCDF (.nc) file. A good practice is to 
+name this netCDF file using the variable name. 
+
+23) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+new netCDF file. For users who want to archive all data set this to False. 
+
+24) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned.
+
 **Returns**
 
-An `xarray.array` dataset of the most recent GFS0P25 run. 
-    
-    Post-processed Variable Key List
-    --------------------------------
-    
-    'u_wind_component'
-    'v_wind_component'
-    'air_temperature'
-    'relative_humidity'
-    'absolute_vorticity'
-    'geopotential_height'
-    'ozone_mixing_ratio'
-    'total_cloud_cover'
-    'cloud_mixing_ratio'
-    'ice_water_mixing_ratio'
-    'rain_water_mixing_ratio'
-    'snow_mixing_ratio'
-    'graupel'
-    'vertical_velocity'
-    'geometric_vertical_velocity'
-    'liquid_volumetric_soil_moisture_non_frozen'
-    'plant_canopy_surface_water'
-    'sea_ice_thickness'
-    'temperature_height_above_sea'
-    'u_wind_component_height_above_sea'
-    'v_wind_component_height_above_sea'
-    'mixed_layer_temperature'
-    'mixed_layer_relative_humidity'
-    'mixed_layer_specific_humidity'
-    'mixed_layer_u_wind_component'
-    'mixed_layer_v_wind_component'
-    'potential_vorticity_level_u_wind_component'
-    'potential_vorticity_level_v_wind_component'
-    'potential_vorticity_level_temperature'
-    'potential_vorticity_level_geopotential_height'
-    'potential_vorticity_level_air_pressure'
-    'potential_vorticity_level_vertical_speed_shear' 
+An xarray.array dataset of the most recent GFS0P25 run. 
+
+***Post-processed Variable Key List***
+
+```python
+'u_wind_component'
+'v_wind_component'
+'air_temperature'
+'relative_humidity'
+'absolute_vorticity'
+'geopotential_height'
+'ozone_mixing_ratio'
+'total_cloud_cover'
+'cloud_mixing_ratio'
+'ice_water_mixing_ratio'
+'rain_water_mixing_ratio'
+'snow_mixing_ratio'
+'graupel'
+'vertical_velocity'
+'geometric_vertical_velocity'
+'liquid_volumetric_soil_moisture_non_frozen'
+'plant_canopy_surface_water'
+'sea_ice_thickness'
+'temperature_height_above_sea'
+'u_wind_component_height_above_sea'
+'v_wind_component_height_above_sea'
+'mixed_layer_temperature'
+'mixed_layer_relative_humidity'
+'mixed_layer_specific_humidity'
+'mixed_layer_u_wind_component'
+'mixed_layer_v_wind_component'
+'potential_vorticity_level_u_wind_component'
+'potential_vorticity_level_v_wind_component'
+'potential_vorticity_level_temperature'
+'potential_vorticity_level_geopotential_height'
+'potential_vorticity_level_air_pressure'
+'potential_vorticity_level_vertical_speed_shear'
+```

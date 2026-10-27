@@ -29,15 +29,24 @@ PIP Downloads:
 
 2) [Installation Instructions](https://edrewitz.github.io/WxData/#installation-instructions)
 
-3) [WxData Documentation]()
+3) [WxData Documentation](https://edrewitz.github.io/WxData/#wxdata-documentation)
+   
       1. [Current Weather Model Data Clients](https://edrewitz.github.io/WxData/#current-weather-model-data-clients)
+         
       2. [Archived Weather Model Data Clients](https://edrewitz.github.io/WxData/#archived-weather-model-data-clients)
+         
       3. [Command Line Interface & Shell Scripting](https://edrewitz.github.io/WxData/#command-line-interface--shell-scripting)
+         
       4. [Raw Data Clients](https://edrewitz.github.io/WxData/#raw-data-clients)
+         
       5. [Post-Processors](https://edrewitz.github.io/WxData/#post-processors)
+          
       6. [Data Querying Tools](https://edrewitz.github.io/WxData/#data-querying-tools)
+          
       7. [Data Transformation & Gap Filling Tools](https://edrewitz.github.io/WxData/#data-transformation--gap-filling-tools)
+          
       8. [Automated Python Workflow Tools](https://edrewitz.github.io/WxData/#automated-python-workflow-tools)
+          
       9. [Open-Meteo API](https://edrewitz.github.io/WxData/#open-meteo-api)
 
 5) [WxData Tutorials](https://edrewitz.github.io/WxData/#wxdata-tutorials)
@@ -1045,7 +1054,6 @@ import wxdata.api.airnow_api.observations as air_now_observations
 12) [Amazon Web Services](https://aws.amazon.com/)
 
 13) [Google Cloud](https://cloud.google.com/)
-
 
 
 

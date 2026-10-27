@@ -1,7 +1,6 @@
 ---
 title: Real Time Mesoscale Analysis (RTMA) Post-Processing
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Real Time Mesoscale Analysis (RTMA) Post-Processing
 
 ```python

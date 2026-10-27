@@ -1,7 +1,6 @@
 ---
 title: Primary GFS Variables Post-Processing
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Primary GFS Variables Post-Processing
 
 ```python

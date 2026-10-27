@@ -1,7 +1,6 @@
 ---
 title: Open-Meteo API UKMO Global Ensemble
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Open-Meteo API UKMO Global Ensemble
 
 ```python

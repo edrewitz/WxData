@@ -23,7 +23,7 @@ PIP Downloads:
 
 **(C) Eric J. Drewitz 2025-2026**
 
-# Table of Contents
+## Table of Contents
 
 1) [What Is WxData?](https://edrewitz.github.io/WxData/#what-is-wxdata)
 

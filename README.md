@@ -19,7 +19,7 @@ PIP Downloads:
 
 **(C) Eric J. Drewitz 2025-2026**
 
-# Table of Contents
+## Table of Contents
 
 1) [What Is WxData?](https://edrewitz.github.io/WxData/#what-is-wxdata)
 
@@ -75,6 +75,8 @@ These datasets include 20+ Weather Forecast Models, Observational Data, Radar Da
 - WxData has additional tools to assist users with Python automated workflows. 
 
 - WxData allows users who work on VPNs and behind firewalls to access data through a user-specified proxy server.
+
+[***Return To Table Of Contents]()
 
 ## Installation Instructions
 

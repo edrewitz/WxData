@@ -1,7 +1,6 @@
 ---
 title: Open-Meteo API CMCC-CM2-VHR4 Climate Reanalysis & Forecasts
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Open-Meteo API CMCC-CM2-VHR4 Climate Reanalysis & Forecasts
 
 ```python

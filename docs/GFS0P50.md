@@ -1,7 +1,7 @@
 ---
 title: GFS 0.5x0.5 Degree
 ---
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # GFS 0.5x0.5 Degree
 
 ```python

@@ -39,7 +39,13 @@ def aigefs_pressure_members(final_forecast_hour=384,
                     250,
                     150,
                     100,
-                    50]):
+                    50],
+            source='noaa',
+            to_netcdf=False,
+            netcdf_path=f"AIGEFS PRESSURE MEMBERS/NETCDF",
+            netcdf_filename=f"aigefs_pressure_members.nc",
+            delete_previous_netcdf_file=True,
+            return_values=True):
 ```
 
 This function downloads, pre-processes and post-processes the latest pressure parameter dataset of the AIGEFS and bins the files to specific folders based on ensemble number.
@@ -62,6 +68,7 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
 5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
 
 6) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
   ```python
    proxies=None ---> proxies={
                            'http':'http://your-proxy-address:port',
@@ -93,12 +100,12 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
     
 14) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
 
-15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+16) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
 
-16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+15) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
     When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
-17) variables (String List) Default=['geopotential height',
+16) variables (String List) Default=['geopotential height',
                                     'specific humidity',
                                     'temperature',
                                     'u-component of wind',
@@ -106,7 +113,7 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
                                     'vertical velocity (pressure)']
                    
     
-18) levels (Integer List) - Default=[1000,
+17) levels (Integer List) - Default=[1000,
                                     925,
                                     850,
                                     700,
@@ -118,17 +125,41 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
                                     150,
                                     100,
                                     50]
+                                    
+18) source (String) - Default='noaa'. The servers to pull the data from.
+
+  ***Server Choices***
+  
+  i) NOAA/NCEP/NOMADS - `source='noaa'`
+  
+  ii) Amazon AWS - `source='aws'`
+            
+*If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+establish a connection there.*
+
+19) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+
+20) netcdf_path (String) - Default='AIGEFS PRESSURE MEMBERS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+
+21) netcdf_filename (String) - Default='aigefs_pressure_members.nc'. The name of the netCDF (.nc) file. A good practice is to 
+    name this netCDF file using the variable name. 
+    
+22) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+    new netCDF file. For users who want to archive all data set this to False. 
+    
+23) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
 
 **Returns**
 
 An xarray data array of the AIGEFS Pressure Parameter data specified to the coordinate boundaries and variable list the user specifies. 
-    
-    Pressure-Level Plain Language Variable Keys
-    -------------------------------------------
-    
-    'geopotential_height'
-    'specific_humidity'
-    'air_temperature'
-    'u_wind_component'
-    'v_wind_component'
-    'vertical_velocity'
+
+***Pressure-Level Plain Language Variable Keys***
+
+```python
+'geopotential_height'
+'specific_humidity'
+'air_temperature'
+'u_wind_component'
+'v_wind_component'
+'vertical_velocity'
+```

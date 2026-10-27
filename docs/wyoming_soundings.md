@@ -1,7 +1,6 @@
 ---
 title: Observed Atmospheric Soundings
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Observed Atmospheric Soundings
 ```python
 def get_observed_sounding_data(station_id, 

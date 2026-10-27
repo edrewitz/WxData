@@ -184,6 +184,7 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 [***Jupyter Lab***](https://github.com/edrewitz/WxData-Jupyter-Lab#wxdata-jupyter-lab-tutorials)
 
 [***Command Line Interface***](https://github.com/edrewitz/WxData-Shell)
+
 ---------------------------------------------------
 
 ## WxData Documentation

@@ -1,7 +1,6 @@
 ---
 title: Open-Meteo API FGOALS_f3_H Climate Reanalysis & Forecasts
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Open-Meteo API FGOALS_f3_H Climate Reanalysis & Forecasts
 
 ```python

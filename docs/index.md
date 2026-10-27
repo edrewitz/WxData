@@ -48,7 +48,7 @@ These datasets include 20+ Weather Forecast Models, Observational Data, Radar Da
 
 - WxData makes it easy for users to create automated ETL pipelines for their weather operations.
 
-   - These automated ETL pipelines can be quite advanced (i.e. multiple concurrent GRIB2 file downloads between the main [i.e. NCEP/NOMADS] and cloud servers [i.e. AWS & Google Cloud] to spread the traffic between multiple servers -> extracting an `xarray.array` from the GRIB2 files -> cleaning the `xarray.array` and decoding the GRIB2 variable keys into plain-language -> transforming & exporting the cleaned and decoded `xarray.array` into a NETCDF (.nc) file.    
+   - These automated ETL pipelines can be quite advanced (i.e. multiple concurrent GRIB2 file downloads between the main [i.e. NCEP/NOMADS] and cloud servers [i.e. AWS & Google Cloud] to spread the traffic between multiple servers (and you can use a proxy server if you choose) -> extracting an `xarray.array` from the GRIB2 files -> cleaning the `xarray.array` and decoding the GRIB2 variable keys into plain-language -> transforming & exporting the cleaned and decoded `xarray.array` into a NETCDF (.nc) file.    
 
 - WxData supports GRIB -> NETCDF transformations.
 
@@ -1050,6 +1050,10 @@ import wxdata.api.airnow_api.observations as air_now_observations
 12) [Amazon Web Services](https://aws.amazon.com/)
 
 13) [Google Cloud](https://cloud.google.com/)
+
+
+
+
 
 
 

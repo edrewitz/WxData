@@ -44,7 +44,7 @@ def cansips_forecast(western_bound=-180,
             return_values=True):
     
     """
-    This function retrieves the latest CanSIPS data from https://dd.weather.gc.ca/ and returns an xarray.array of specified data.
+    This function retrieves the latest CanSIPS data from `https://dd.weather.gc.ca/` and returns an xarray.array of specified data.
     
     Required Arguments: None
     

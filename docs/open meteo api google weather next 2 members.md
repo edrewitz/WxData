@@ -1,7 +1,7 @@
 ---
 title: Google Weather Next 2 Members
 ---
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Google Weather Next 2 Members
 
 ```python

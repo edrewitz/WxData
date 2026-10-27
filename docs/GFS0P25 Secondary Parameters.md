@@ -3,7 +3,6 @@ title: GFS 0.25x0.25 Degree Secondary Parameters
 ---
 
 # GFS 0.25x0.25 Degree Secondary Parameters
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 ```python
 def gfs_0p25_secondary_parameters(final_forecast_hour=384, 
             western_bound=-180, 

@@ -1,7 +1,7 @@
 ---
 title: FEMS Multi RAWS Station Current Weather Observations
 ---
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # FEMS: Multi RAWS Station Current Weather Observations
 ```python
 def get_current_multi_raws_station_weather_observations(station_ids, 

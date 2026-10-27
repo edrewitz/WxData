@@ -1,7 +1,7 @@
 ---
 title: Real-Time Mesoscale Analysis (RTMA) Comparison
 ---
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Real-Time Mesoscale Analysis (RTMA) Comparison
 ```python
 def rtma_comparison(model='rtma', 

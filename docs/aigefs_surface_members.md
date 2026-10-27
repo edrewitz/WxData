@@ -1,7 +1,6 @@
 ---
 title: AIGEFS Members (Surface Parameters)
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 
 # AIGEFS Members (Surface Parameters)
 ```python

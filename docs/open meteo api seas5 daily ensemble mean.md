@@ -1,7 +1,6 @@
 ---
 title: Open-Meteo API ECMWF SEAS5 Ensemble Mean Daily Forecasts
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Open-Meteo API ECMWF SEAS5 Ensemble Mean Daily Forecasts
 
 ```python

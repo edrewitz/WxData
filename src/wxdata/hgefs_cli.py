@@ -101,10 +101,6 @@ def hgefs():
                        
     The list of variables the user wants to query.
     
-    Here is a sample of how to query mean 500mb geopotential height and create a netCDF file:
-    
-    `wxdata-hgefs fetch latest -v geopotential_height -l 500 --netcdf True --ncdir HGEFS/Mean/NETCDF --ncfname gefs_gh500.nc`
-    
     ***Variables***
     
     'geopotential height'

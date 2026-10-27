@@ -43,7 +43,10 @@ def _command_error_message(model):
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
     print(f"Model: {model.upper()}")
     print(f"Please run `wxdata-gfs -h to view the help documentation.")
-    print(f"Please visit: https://github.com/edrewitz/WxData/wiki#global-forecast-system-gfs for full detailed documentation.")
+    if model.lower() == "gfs0p50":
+        print(f"Please visit: https://edrewitz.github.io/WxData/GFS0P50%20CLI for full detailed documentation.")
+    else:
+        print(f"Please visit: https://edrewitz.github.io/WxData/GFS0P25%20CLI for full detailed documentation.")
 
 def _parse_proxy(value):
     if value is None:
@@ -134,8 +137,6 @@ def gfs0p25():
     -v = Variables(Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']) 
                        
     The list of variables the user wants to query.
-    
-    Here is a sample of how to query geopotential height and temperature at 500mb `wxdata-gfs 0p25 latest -v geopotential_height -v temperature -l 500`
     
     **Primary Variables**
 
@@ -366,10 +367,6 @@ def gfs0p25():
     vertical_speed_shear
     
     -l = Levels (Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10])
-                            
-    Here is a sample of how to query geopotential height and temperature at 850 and 500mb 
-    
-    `wxdata-gfs 0p25 latest -v geopotential_height -v temperature -l 850 -l 500`
     
     The default setting of levels assume pressure levels are being used and that the category is set to primary.
     
@@ -457,10 +454,6 @@ def gfs0p25():
     
     If you are using a proxy server you can define it by using --proxy https://proxy-server-address:proxy-server-port
     
-    Example: 
-    
-    `wxdata-gfs 0p25 latest -v geopotential height -l 500 --proxy https://proxy-server-address:proxy-server-port`
-    
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     
     ***Additional Relevant Flags when --netcdf True***
@@ -483,6 +476,28 @@ def gfs0p25():
     WARNING: When this feature is disabled and the user submits too many requests in a short period of time the user risks
     being rate-limited by the data server. If the user gets rate-limited, the user should wait approximately 5-10 minutes and
     retry downloading the data. 
+    
+    ***Complex Example***
+    
+    1) Download the latest GFS0P25 for 2-meter temperature and 2-meter relative humidity from Amazon Web Services
+     
+        - Use a proxy server of address: https://proxy-server-address:proxy-server-port 
+                
+    2) Subset the data to reflect CONUS [-130, -65, 50, 20] = [west, east, north, south]
+        
+    3) Create a netCDF (.nc) file of the data called `gfs0p25_t2m_rh.nc` saved at Weather_Data/GFS0P25/NETCDF.
+    
+    Linux Shell:
+        ```wxdata-gfs 0p25 latest -lt height_above_ground -l 2 -v temperature -v relative_humidity \
+            -m 1 -m 2 -m 3 -m 4 -m 5 -s aws -wb -130 -eb -65 -nb 50 -sb 20 \
+            --netcdf True --ncdir Weather_Data/GFS0P25/NETCDF --ncfname gfs0p25_t2m_rh.nc \ 
+            --proxy https://proxy-server-address:proxy-server-port```
+            
+    Windows Powershell:
+        ```wxdata-gfs 0p25 latest -lt height_above_ground -l 2 -v temperature -v relative_humidity `
+            -m 1 -m 2 -m 3 -m 4 -m 5 -s aws -wb -130 -eb -65 -nb 50 -sb 20 `
+            --netcdf True --ncdir Weather_Data/GFS0P25/NETCDF --ncfname gfs0p25_t2m_rh.nc ` 
+            --proxy https://proxy-server-address:proxy-server-port```
     
     """
     
@@ -1159,7 +1174,7 @@ def archived_gfs0p25_fetch(
 # ---------------------------------------------------------------------
 @gfs_data.group(name='0p50')
 def gfs0p50():
-    """
+    r"""
     Global Forecast System (GFS) 0.50x0.50 Client.
     
     ***Archived Required Commands***
@@ -1173,7 +1188,7 @@ def gfs0p50():
         (i.e. for the 12z run set -r 12)
     
     
-    **Globally Valid Commands (valid for both "latest" and "archived")**
+    ***Globally Valid Commands (valid for both "latest" and "archived")***
 
     -f = Final Forecast Hour (Default=384).
      
@@ -1232,10 +1247,6 @@ def gfs0p50():
     -sb = Southern Bound - The southern bound for subsetting the data range is from -90 to 90 degrees latitude. (Default=-90)
     
     -v = Variables(Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']) 
-                       
-    The list of variables the user wants to query.
-    
-    Here is a sample of how to query geopotential height and temperature `wxdata-gfs 0p50 latest -v geopotential_height -v temperature`
     
     ***Variables***
     
@@ -1419,10 +1430,6 @@ def gfs0p50():
     
     -l = Levels (Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10])          
     
-    Here is a sample of how to query geopotential height and temperature at 850 and 500mb 
-    
-    `wxdata-gfs 0p50 latest -v geopotential_height -v temperature -l 850 -l 500`
-    
     The default setting of levels assume pressure levels are being used and that the category is set to primary.
     
     -ct = Convert Temperature (Default=True).
@@ -1467,7 +1474,6 @@ def gfs0p50():
     
     If you are using a proxy server you can define it by using --proxy https://proxy-server-address:proxy-server-port
     
-    
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     
     ***Additional Relevant Flags when --netcdf True***
@@ -1475,6 +1481,28 @@ def gfs0p50():
     --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=GFS0P50/NETCDF). 
     
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=gfs_0p50.nc)
+    
+    ***Complex Example***
+    
+    1) Download the latest GFS0P50 for 2-meter temperature and 2-meter relative humidity from Amazon Web Services
+     
+        - Use a proxy server of address: https://proxy-server-address:proxy-server-port 
+                
+    2) Subset the data to reflect CONUS [-130, -65, 50, 20] = [west, east, north, south]
+        
+    3) Create a netCDF (.nc) file of the data called `gfs0p50_t2m_rh.nc` saved at Weather_Data/GFS0P50/NETCDF.
+    
+    Linux Shell:
+        ```wxdata-gfs 0p50 latest -lt height_above_ground -l 2 -v temperature -v relative_humidity \
+            -m 1 -m 2 -m 3 -m 4 -m 5 -s aws -wb -130 -eb -65 -nb 50 -sb 20 \
+            --netcdf True --ncdir Weather_Data/GFS0P50/NETCDF --ncfname gfs0p50_t2m_rh.nc \ 
+            --proxy https://proxy-server-address:proxy-server-port```
+            
+    Windows Powershell:
+        ```wxdata-gfs 0p50 latest -lt height_above_ground -l 2 -v temperature -v relative_humidity `
+            -m 1 -m 2 -m 3 -m 4 -m 5 -s aws -wb -130 -eb -65 -nb 50 -sb 20 `
+            --netcdf True --ncdir Weather_Data/GFS0P50/NETCDF --ncfname gfs0p50_t2m_rh.nc ` 
+            --proxy https://proxy-server-address:proxy-server-port```
     
     """
     

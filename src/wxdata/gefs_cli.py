@@ -41,7 +41,11 @@ def _command_error_message(model):
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
     print(f"Model: {model.upper()}")
     print(f"Please run `wxdata-gefs -h to view the help documentation.")
-    print(f"Please visit: https://github.com/edrewitz/WxData/wiki#global-ensemble-forecast-system-gefs for full detailed documentation.")
+    if model.lower() == "gefs0p25":
+        print(f"Please visit: https://edrewitz.github.io/WxData/GEFS0P25%20CLI for full detailed documentation.")
+    else:
+        print(f"Please visit: https://edrewitz.github.io/WxData/GEFS0P50%20CLI for full detailed documentation.")
+    
 
 def _parse_proxy(value):
     if value is None:

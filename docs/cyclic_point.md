@@ -1,7 +1,6 @@
 ---
 title: Using WxData To Add Cyclic Points For Hemispheric Plots
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Using WxData To Add Cyclic Points For Hemispheric Plots
 ```python
 def cyclic_point(ds, 

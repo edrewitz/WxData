@@ -2,8 +2,6 @@
 title: ECMWF AIFS Ensemble
 ---
 
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
-
 # ECMWF AIFS Ensemble
 
 ```python

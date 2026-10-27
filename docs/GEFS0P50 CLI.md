@@ -2,7 +2,7 @@
 title: GEFS0P50 CLI
 ---
 
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 
 # Global Ensemble Forecast System (GEFS) 0.50x0.50 Command Line Interface.
     

@@ -1,7 +1,6 @@
 ---
 title: Secondary GEFS Variables Post-Processing
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 
 # Secondary GEFS Variables Post-Processing
 ```python

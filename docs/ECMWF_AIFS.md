@@ -1,7 +1,6 @@
 ---
 title: ECMWF AIFS
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # ECMWF AIFS
 
 ```python

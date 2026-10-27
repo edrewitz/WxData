@@ -1270,7 +1270,7 @@ def cfs_pressure(western_bound=-180,
         'sigma level'
         'potential vorticity surface'
                                 
-    15) variable (String) - Default='geopotential height'.
+    17) variable (String) - Default='geopotential height'.
     
     The variable the user selects to download.
         

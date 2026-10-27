@@ -1,7 +1,6 @@
 ---
 title: Open-Meteo API NICAM16_8S Climate Reanalysis & Forecasts
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Open-Meteo API NICAM16_8S Climate Reanalysis & Forecasts
 
 ```python

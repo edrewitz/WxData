@@ -524,7 +524,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 <img src="https://github.com/edrewitz/WxData/blob/main/icons/server%20rotation.png?raw=true" width="600" height="400" alt="Alt text" /> 
 
-**Operational Weather Model Data Server List**
+**Operational Weather Model & Gridded Forecast Data Server List**
 
 | Client | NOAA/NCEP/NOMADS | ECMWF Open-Data | Amazon Web Services | Google Cloud | NOAA/NWS/FTP | MSC Open Data |
 | -------- | -------- | -------- | -------- | -------- | -------- | -------- | 

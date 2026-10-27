@@ -118,15 +118,15 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 ### Documentation Sections
 
-1. [Current Weather Model Data Clients](https://github.com/edrewitz/WxData?tab=readme-ov-file#end-to-end-data-clients)
+1. [Current Weather Model Data Clients](https://edrewitz.github.io/WxData/#current-weather-model-data-clients)
 2. [Archived Weather Model Data Clients]()
 3. [Command Line Interface & Shell Scripting]()
-4. [Raw Data Clients](https://github.com/edrewitz/WxData?tab=readme-ov-file#raw-data-clients)
-5. [Post-Processors](https://github.com/edrewitz/WxData?tab=readme-ov-file#post-processors)
-6. [Data Querying Tools](https://github.com/edrewitz/WxData?tab=readme-ov-file#data-querying-tools)
-7. [Data Transformation & Gap Filling Tools](https://github.com/edrewitz/WxData?tab=readme-ov-file#data-transformation--gap-filling-tools)
-8. [Automated Python Workflow Tools](https://github.com/edrewitz/WxData?tab=readme-ov-file#automated-python-workflow-tools)
-9. [Open-Meteo API](https://github.com/edrewitz/WxData/blob/main/README.md#open-meteo-api)
+4. [Raw Data Clients]()
+5. [Post-Processors]()
+6. [Data Querying Tools]()
+7. [Data Transformation & Gap Filling Tools]()
+8. [Automated Python Workflow Tools]()
+9. [Open-Meteo API]()
 
 #### Current Weather Model Data Clients
 
@@ -210,6 +210,26 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 1. [Single Site](https://edrewitz.github.io/WxData/nexrad2_single)
 2. [Multi-Site](https://edrewitz.github.io/WxData/nexrad2_multi)
 
+-----------------------------------------------
+#### Archived Weather Model Data Clients
+
+***Global Forecast System (GFS)***
+1. [Archived GFS0P25]()
+2. [Archived GFS0P25 SECONDARY PARAMETERS]()
+3. [Archived GFS0P50]()
+
+***Global Ensemble Forecast System (GEFS)***
+1. [Archived GEFS0P50]()
+2. [Archived GEFS0P50 SECONDARY PARAMETERS]()
+3. [Archived GEFS0P25]()
+
+***Climate Forecast System (CFS)***
+1. [Archived CFS Pressure]()
+2. [Archived CFS Flux]()
+
+***Real-Time Mesoscale Analysis (RTMA)***
+1. [Archived RTMA]()
+
 -----------------------------
 
 #### Post-Processors
@@ -251,25 +271,6 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 4. [GEPS](https://edrewitz.github.io/WxData/geps%20processing)
 5. [CanSIPS](https://edrewitz.github.io/WxData/cansips%20processing)
 
------------------------------------------------
-#### Archived Weather Model Data Clients
-
-***Global Forecast System (GFS)***
-1. [Archived GFS0P25]()
-2. [Archived GFS0P25 SECONDARY PARAMETERS]()
-3. [Archived GFS0P50]()
-
-***Global Ensemble Forecast System (GEFS)***
-1. [Archived GEFS0P50]()
-2. [Archived GEFS0P50 SECONDARY PARAMETERS]()
-3. [Archived GEFS0P25]()
-
-***Climate Forecast System (CFS)***
-1. [Archived CFS Pressure]()
-2. [Archived CFS Flux]()
-
-***Real-Time Mesoscale Analysis (RTMA)***
-1. [Archived RTMA]()
 -----------------------------------------------
 #### Command Line Interface & Shell Scripting
 
@@ -1044,6 +1045,10 @@ import wxdata.api.airnow_api.observations as air_now_observations
 12) [Amazon Web Services](https://aws.amazon.com/)
 
 13) [Google Cloud](https://cloud.google.com/)
+
+
+
+
 
 
 

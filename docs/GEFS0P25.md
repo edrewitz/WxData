@@ -42,15 +42,15 @@ Optional Arguments:
 
 1) cat (string) - Default='mean'. The category of the ensemble data. 
 
-  ***Valid categories***
-  
-  i) mean
-  
-  ii) members
-  
-  iii) spread
-  
-  iv) control
+    ***Valid categories***
+    
+    i) mean
+    
+    ii) members
+    
+    iii) spread
+    
+    iv) control
 
 2) final_forecast_hour (Integer) - Default = 240. The final forecast hour the user wishes to download. The GEFS0P25
 goes out to 240 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
@@ -84,44 +84,44 @@ goes out to 240 hours. For those who wish to have a shorter dataset, they may se
     
 12) variables (List) - Default=['temperature']. A list of variable names the user wants to download in plain language. 
 
-    ***Variable Name List for GEFS0P25***
+  ***Variable Name List for GEFS0P25***
 
-    ```python
-    'total precipitation'
-    'convective available potential energy'
-    'categorical freezing rain'
-    'categorical ice pellets'
-    'convective inhibition'
-    'percent frozen precipitaion'
-    'categorical rain'
-    'categorical snow'
-    'downward longwave radiation flux'
-    'downward shortwave radiation flux'
-    'dew point'
-    'wind gust'
-    'geopotential height'
-    'storm relative helicity'
-    'ice thickness'
-    'latent heat net flux'
-    'pressure'
-    'mean sea level pressure'
-    'precipitable water'
-    'relative humidity'
-    'sensible heat net flux'
-    'snow depth'
-    'volumetric soil moisture content'
-    'total cloud cover'
-    'maximum temperature'
-    'minimum temperature'
-    'temperature'
-    'soil temperature'
-    'u-component of wind'
-    'upward longwave radiation flux'
-    'upward shortwave radiation flux'
-    'v-component of wind'
-    'visibility'
-    'water equivalent of accumulated snow depth'
-    ```
+  ```python
+  'total precipitation'
+  'convective available potential energy'
+  'categorical freezing rain'
+  'categorical ice pellets'
+  'convective inhibition'
+  'percent frozen precipitaion'
+  'categorical rain'
+  'categorical snow'
+  'downward longwave radiation flux'
+  'downward shortwave radiation flux'
+  'dew point'
+  'wind gust'
+  'geopotential height'
+  'storm relative helicity'
+  'ice thickness'
+  'latent heat net flux'
+  'pressure'
+  'mean sea level pressure'
+  'precipitable water'
+  'relative humidity'
+  'sensible heat net flux'
+  'snow depth'
+  'volumetric soil moisture content'
+  'total cloud cover'
+  'maximum temperature'
+  'minimum temperature'
+  'temperature'
+  'soil temperature'
+  'u-component of wind'
+  'upward longwave radiation flux'
+  'upward shortwave radiation flux'
+  'v-component of wind'
+  'visibility'
+  'water equivalent of accumulated snow depth'
+  ```
     
 13) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
     the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
@@ -146,30 +146,30 @@ goes out to 240 hours. For those who wish to have a shorter dataset, they may se
 
 20) source (String) - Default='noaa'. The data server the user wants to connect the client to.
 
-    ***Server List***
-    
-    i) NOAA/NCEP/NOMADS - `source='noaa'`
-    
-    ii) Amazon AWS - `source='aws'`
-    
-    iii) Google Cloud - `source='google'`
-    
-    *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
-    establish a connection there.*
+  ***Server List***
+  
+  i) NOAA/NCEP/NOMADS - `source='noaa'`
+  
+  ii) Amazon AWS - `source='aws'`
+  
+  iii) Google Cloud - `source='google'`
+  
+  *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+  establish a connection there.*
     
 21) level_type (String) - Default='height above ground'. The type of level for the variable.
 
-    ***Level Types***
+  ***Level Types***
 
-    ```python
-    'surface'
-    'mean sea level'
-    'height above ground'
-    'height below ground'
-    'entire atmosphere (considered as a single layer)'
-    'cloud ceiling'
-    'pressure above ground'
-    ```
+  ```python
+  'surface'
+  'mean sea level'
+  'height above ground'
+  'height below ground'
+  'entire atmosphere (considered as a single layer)'
+  'cloud ceiling'
+  'pressure above ground'
+  ```
     
 22) levels (String, Integer or Float List) - Default=[2] 
                                                         

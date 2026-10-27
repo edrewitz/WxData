@@ -1,7 +1,7 @@
 ---
 title: ECMWF AIFS and AIFS Ensemble Post-Processing
 ---
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 
 # ECMWF AIFS and AIFS Ensemble Post-Processing
 

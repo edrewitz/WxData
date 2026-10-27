@@ -25,10 +25,15 @@ def geps(final_forecast_hour=384,
              clear_data=False,
              variable='geopotential height',
              level=500,
-             cat='members'):
+             cat='members',
+            to_netcdf=False,
+            netcdf_path=f"GEPS/NETCDF",
+            netcdf_filename=f"geopotential_height.nc",
+            delete_previous_netcdf_file=True,
+            return_values=True):
 ```
 
-This function retrieves the latest GEPS data from `https://dd.weather.gc.ca/` and returns an `xarray.array` of specified data.
+This function retrieves the latest GEPS data from `https://dd.weather.gc.ca/` and returns an xarray.array of specified data.
 
 Required Arguments: None
 
@@ -58,12 +63,12 @@ Optional Arguments:
                            'https':'http://your-proxy-address:port'
                            }
   ```
-
+                           
 9) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
     with each run of the program you are calling WxData. This setting is to help preserve memory on the machine.
     
 10) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
-   data via their own external method, set `process_data=False` which means the data will be downloaded but not processed and no values
+   data via their own external method, set process_data=False which means the data will be downloaded but not processed and no values
    returned to the user.
    
 11) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
@@ -78,28 +83,39 @@ Optional Arguments:
 
 15) level_type (String) - Default='pressure'. The type of level for the variable.
 
-***Level Types***
+    ***Level Types***
 
-```python
-'pressure'
-'height above ground'
-'depth below surface'
-'surface'
-'mean sea level'
-'nominal top'
-'entire atmosphere'
-```
+    ```python
+    'pressure'
+    'height above ground'
+    'depth below surface'
+    'surface'
+    'mean sea level'
+    'nominal top'
+    'entire atmosphere'
+    ```
     
-16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
     When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
-17) variable (String) - Default='geopotential height'. The variable the user wishes to download.
+18) variable (String) - Default='geopotential height'. The variable the user wishes to download.
 
-18) level (Integer) - Default=500. For parameters that have multiple levels, here is where you select the level to 
+19) level (Integer) - Default=500. For parameters that have multiple levels, here is where you select the level to 
     download. Default is 500mb. Units for height above ground are (m) and depth below surface (cm). 
     
-19) cat (String) - Default='members'. Set `cat='members'` for all ensemble members OR set `cat='control'` for control run.
+20) cat (String) - Default='members'. Set cat='members' for all ensemble members OR set cat='control' for control run.
     
+21) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+
+22) netcdf_path (String) - Default='GEPS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+
+23) netcdf_filename (String) - Default='geopotential_height.nc'. The name of the netCDF (.nc) file. A good practice is to 
+    name this netCDF file using the variable name. 
+    
+24) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+    new netCDF file. For users who want to archive all data set this to False. 
+    
+25) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
 
 ***Variables & Proper level_type & level***
 
@@ -258,11 +274,11 @@ Any area where valid_levels = None -> Users do not need to edit the optional arg
 'wind speed':
     valid level type(s) = 'height above ground'.
     valid levels:
-        level_type='height above ground' (m): 2, 40, 80, 120.   
+        level_type='height above ground' (m): 2, 40, 80, 120.
 ```
 
 **Returns**
 
-An `xarray.array` of the latest GEPS forecast data for a user-specified variable, `level`/`layer` and `level_type`.
+An xarray.array of the latest GEPS forecast data for a user-specified variable, level/layer and level_type.
 
 GEPS files are saved to directory {path}  

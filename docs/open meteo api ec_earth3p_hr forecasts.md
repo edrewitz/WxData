@@ -1,7 +1,6 @@
 ---
 title: Open-Meteo API EC_Earth3P_HR Climate Reanalysis & Forecasts
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Open-Meteo API EC_Earth3P_HR Climate Reanalysis & Forecasts
 
 ```python

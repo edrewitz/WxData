@@ -1,7 +1,6 @@
 ---
 title: AIGFS
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # AIGFS
 
 ```python

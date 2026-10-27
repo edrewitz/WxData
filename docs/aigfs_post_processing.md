@@ -1,7 +1,6 @@
 ---
 title: AIGFS Post-Processing
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # AIGFS Post-Processing
 ```python
 def aigfs_post_processing(path,

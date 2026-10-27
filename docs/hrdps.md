@@ -2,7 +2,6 @@
 title: Canadian Meteorological Centre HRDPS
 ---
 
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 
 # Canadian High Resolution Deterministic Prediction System (HRDPS)
 

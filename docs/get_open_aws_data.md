@@ -1,7 +1,6 @@
 ---
 title: Get AWS Open Data
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Get AWS Open Data
 ```python
 def get_aws_open_data(url,

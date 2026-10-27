@@ -303,17 +303,14 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 2. [CFS Flux]()
 
 ***Hybrid Global Ensemble Forecast System (HGEFS)***
-1. [HGEFS]()
+1. [HGEFS](https://edrewitz.github.io/WxData/HGEFS%20CLI)
 
 ***Global Ensemble Forecast System (GEFS)***
-1. [GEFS0P50]()
-2. [GEFS0P50 SECONDARY PARAMETERS]()
-3. [GEFS0P25]()
+1. [GEFS0P50](https://edrewitz.github.io/WxData/GEFS0P50%20CLI)
+2. [GEFS0P25](https://edrewitz.github.io/WxData/GEFS0P25%20CLI)
 
 ***AI Global Ensemble Forecast System (AIGEFS)***
-1. [AIGEFS Members (Pressure Parameters)]()
-2. [AIGEFS Members (Surface Parameters)]()
-3. [AIGEFS Ensemble Mean & Ensemble Spread]()
+1. [AIGEFS](https://edrewitz.github.io/WxData/AI%20GEFS%20CLI)
 
 ***Canadian Meteorological Centre***
 1. [GDPS]()
@@ -323,22 +320,11 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 5. [CanSIPS]()
 
 ***ECMWF Open Data***
-1. [ECMWF IFS]()
-2. [ECMWF IFS Ensemble]()
-3. [ECMWF AIFS]()
-4. [ECMWF AIFS Ensemble]()
-5. [ECMWF IFS Wave]()
-6. [ECMWF IFS Wave Ensemble]()
-7. [ECMWF High Resolution IFS]()
-8. [ECMWF High Resolution IFS Ensemble]()
-9. [ECMWF High Resolution IFS Wave]()
-10. [ECMWF High Resolution IFS Wave Ensemble]()
-11. [ECMWF AIFS Wave]()
-12. [ECMWF AIFS Wave Ensemble]()
-   
+1. [ECMWF IFS](https://edrewitz.github.io/WxData/ECMWF%20IFS%20CLI)
+2. [ECMWF AIFS](https://edrewitz.github.io/WxData/ECMWF%20AIFS%20CLI)
+
 ***Real-Time Mesoscale Analysis (RTMA)***
 1. [RTMA]()
-2. [RTMA Comparison]()
 
 ***NOAA Storm Prediction Center Outlooks/National Weather Service Forecasts***
 1. [Get NDFD Grids]()
@@ -1085,7 +1071,6 @@ import wxdata.api.airnow_api.observations as air_now_observations
 
 
 [***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
-
 
 
 

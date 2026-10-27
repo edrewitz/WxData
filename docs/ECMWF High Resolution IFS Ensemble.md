@@ -1,7 +1,7 @@
 ---
 title: ECMWF High Resolution IFS Ensemble
 ---
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # ECMWF High Resolution IFS Ensemble
 
 ```python

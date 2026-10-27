@@ -1,8 +1,6 @@
 ---
 title: HGEFS CLI
 ---
-
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
     
 # Hybrid Global Ensemble Forecast System (HGEFS) Command Line Interface
     

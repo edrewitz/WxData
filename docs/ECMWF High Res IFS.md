@@ -1,7 +1,6 @@
 ---
 title: ECMWF High Resolution IFS
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # ECMWF High Resolution IFS
 
 ```python

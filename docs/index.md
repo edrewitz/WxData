@@ -11,8 +11,6 @@ title: My Project Home
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17727621.svg)](https://doi.org/10.5281/zenodo.17727621)
 
-
-
 Anaconda Downloads
 
 [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/wxdata.svg)](https://anaconda.org/conda-forge/wxdata)
@@ -27,9 +25,9 @@ PIP Downloads:
 
 # Table of Contents
 
-1) [What Is WxData?]()
+1) [What Is WxData?](https://edrewitz.github.io/WxData/#what-is-wxdata)
 
-2) [Installation Instructions](https://github.com/edrewitz/WxData/wiki#installation-instructions)
+2) [Installation Instructions](https://edrewitz.github.io/WxData/#installation-instructions)
 
 3) [WxData Documentation](https://github.com/edrewitz/WxData/wiki#wxdata-documentation)
 
@@ -37,11 +35,9 @@ PIP Downloads:
 
 5) [Server List](https://github.com/edrewitz/WxData/wiki#server-list)
 
-6) [Proxy Server Configuration](https://github.com/edrewitz/WxData/wiki#proxy-server-configuration)
+6) [Citations](https://github.com/edrewitz/WxData/wiki#citations)
 
-7) [Citations](https://github.com/edrewitz/WxData/wiki#citations)
-
-8) [Data Sources](https://github.com/edrewitz/WxData/wiki#data-sources)
+7) [Data Sources](https://github.com/edrewitz/WxData/wiki#data-sources)
 
 ## What is WxData?
 
@@ -54,7 +50,9 @@ These datasets include 20+ Weather Forecast Models, Observational Data, Radar Da
 
 - WxData supports GRIB -> NETCDF transformations.
 
-- WxData decodes GRIB2 variable keys into plain-language and returns an `xarray.array` with the decoded variable keys. 
+- WxData decodes GRIB2 variable keys into plain-language and returns an `xarray.array` with the decoded variable keys.
+
+- WxData allows users who work on VPNs and behind firewalls to access data through a user-specified proxy server. 
 
 ## Installation Instructions
 
@@ -106,92 +104,7 @@ i) Install wxdata via Anaconda/Miniconda3 --> `conda install wxdata`
 
 ii) Set up a new environment with an earlier version of Python (must be Python >= 3.10) and then `pip install wxdata`
 
----------------------------------------------------------
-## Server List
-
-<img src="https://github.com/edrewitz/WxData/blob/main/icons/noaa_rotation.png?raw=true" width="200" alt="Alt text" /> <img src="https://github.com/edrewitz/WxData/blob/main/icons/ecmwf_rotation.png?raw=true" width="200" alt="Alt text" />
-
-End-To-End clients with multiple servers to pull data from can find the different options for `source` by the table below.
-
-*`source` is only a valid argument for clients with multiple data servers.*
-
-`source='noaa' - NOAA/NCEP/NOMADS OR NOAA/NWS/FTP`
-
-`source='ecmwf' - ECMWF Open-Data Server`
-
-`source='aws' - Amazon Web Services (AWS)`
-
-`source='google' - Google Cloud`
-
-**Operational Weather Model Data Server List**
-
-| Client | NOAA/NCEP/NOMADS | ECMWF Open-Data | Amazon AWS | Google Cloud | NOAA/NWS/FTP | MSC Open Data |
-| -------- | -------- | -------- | -------- | -------- | -------- | -------- | 
-| GFS0P25  |Y|N|Y|Y|N|N|
-| GFS0P25 SECONDARY PARAMETERS  |Y|N|Y|Y|N|N| 
-| GFS0P50  |Y|N|Y|Y|N|N|
-| GEFS0P50  |Y|N|Y|Y|N|N|
-| GEFS0P50 SECONDARY PARAMETERS  |Y|N|Y|Y|N|N|
-| GEFS0P25  |Y|N|Y|Y|N|N|
-| ECMWF IFS |N|Y|Y|Y|N|N|
-| ECMWF IFS Ensemble |N|Y|Y|Y|N|N|
-| ECMWF AIFS|N|Y|Y|Y|N|N|
-| ECMWF AIFS Ensemble|N|Y|Y|Y|N|N|
-| ECMWF IFS Wave |N|Y|Y|Y|N|N|
-| ECMWF IFS Wave Ensemble |N|Y|Y|Y|N|N|
-| Get NDFD Grids |N|N|Y|N|Y|N|
-| RTMA |Y|N|Y|N|N|N|
-| AIGFS |Y|N|Y|N|N|N|
-| AIGEFS Pressure Members |Y|N|Y|N|N|N|
-| AIGEFS Surface Members |Y|N|Y|N|N|N|
-| AIGEFS Single (Ensemble Statistics) |Y|N|N|N|N|N|
-| HGEFS |Y|N|N|N|N|N|
-| CFS |Y|N|Y|N|N|N|
-| GDPS |N|N|N|N|N|Y|
-| RDPS |N|N|N|N|N|Y|
-| HRDPS |N|N|N|N|N|Y|
-| GEPS |N|N|N|N|N|Y|
-| CanSIPS |N|N|N|N|N|Y|
-
----------------------------------------------------------
-
-## Proxy Server Configuration
-
-**Friendly for users working on VPN/PROXY connections**
-
-***Example: We want to download the latest Observed Sounding Data for San Diego, CA (NKX)***
-
-```python
-proxies=None ---> proxies={
-                       'http':'http://your-proxy-address:port',
-                       'https':'http://your-proxy-address:port'
-                       }
-```
-```python
-# Here is our program
-from wxdata import get_observed_sounding_data
-
-proxies={
-        'http':'http://your-proxy-address:port',
-        'https':'http://your-proxy-address:port'
-        }
-
-data = sounding_data = get_observed_sounding_data('nkx', proxies=proxies)
-```
-
-<img src="https://github.com/edrewitz/WxData/blob/main/diagrams/proxy.png?raw=true" width="500" alt="Alt text" /> 
-
-For more information on configuring proxies: https://requests.readthedocs.io/en/latest/user/advanced/#proxies
-
------------------------------------------------
-    
-## WxData Tutorials
-
-[***Jupyter Lab***](https://github.com/edrewitz/WxData-Jupyter-Lab#wxdata-jupyter-lab-tutorials)
-
-[***Command Line Interface***](https://github.com/edrewitz/WxData-Shell)
-
----------------------------------------------------
+--------------------------------------------------------------------------------------------
 
 ## WxData Documentation
 
@@ -561,6 +474,69 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 
 ---------------------------------------
 
+## WxData Tutorials
+
+[***Jupyter Lab***](https://github.com/edrewitz/WxData-Jupyter-Lab#wxdata-jupyter-lab-tutorials)
+
+[***Command Line Interface***](https://github.com/edrewitz/WxData-Shell)
+
+---------------------------------------------------
+
+## Server List
+
+<img src="https://github.com/edrewitz/WxData/blob/main/icons/noaa_rotation.png?raw=true" width="200" alt="Alt text" /> <img src="https://github.com/edrewitz/WxData/blob/main/icons/ecmwf_rotation.png?raw=true" width="200" alt="Alt text" />
+
+**Operational Weather Model Data Server List**
+
+| Client | NOAA/NCEP/NOMADS | ECMWF Open-Data | Amazon Web Services | Google Cloud | NOAA/NWS/FTP | MSC Open Data |
+| -------- | -------- | -------- | -------- | -------- | -------- | -------- | 
+| GFS0P25  |Y|N|Y|Y|N|N|
+| GFS0P25 SECONDARY PARAMETERS  |Y|N|Y|Y|N|N| 
+| GFS0P50  |Y|N|Y|Y|N|N|
+| GEFS0P50  |Y|N|Y|Y|N|N|
+| GEFS0P50 SECONDARY PARAMETERS  |Y|N|Y|Y|N|N|
+| GEFS0P25  |Y|N|Y|Y|N|N|
+| ECMWF IFS |N|Y|Y|Y|N|N|
+| ECMWF High Resolution IFS |N|Y|Y|Y|N|N|
+| ECMWF IFS Ensemble |N|Y|Y|Y|N|N|
+| ECMWF High Resolution IFS Ensemble |N|Y|Y|Y|N|N|
+| ECMWF IFS Wave |N|Y|Y|Y|N|N|
+| ECMWF High Resolution IFS Wave |N|Y|Y|Y|N|N|
+| ECMWF IFS Wave Ensemble |N|Y|Y|Y|N|N|
+| ECMWF High Resolution IFS Wave Ensemble |N|Y|Y|Y|N|N|
+| ECMWF AIFS |N|Y|Y|Y|N|N|
+| ECMWF AIFS Ensemble |N|Y|Y|Y|N|N|
+| ECMWF AIFS Wave |N|Y|Y|Y|N|N|
+| ECMWF AIFS Wave Ensemble |N|Y|Y|Y|N|N|
+| Get NDFD Grids |N|N|Y|N|Y|N|
+| RTMA |Y|N|Y|N|N|N|
+| AIGFS |Y|N|Y|N|N|N|
+| AIGEFS Pressure Members |Y|N|Y|N|N|N|
+| AIGEFS Surface Members |Y|N|Y|N|N|N|
+| AIGEFS Single (Ensemble Statistics) |Y|N|N|N|N|N|
+| HGEFS |Y|N|N|N|N|N|
+| CFS |Y|N|Y|N|N|N|
+| GDPS |N|N|N|N|N|Y|
+| RDPS |N|N|N|N|N|Y|
+| HRDPS |N|N|N|N|N|Y|
+| GEPS |N|N|N|N|N|Y|
+| CanSIPS |N|N|N|N|N|Y|
+
+**Archived Weather Model Data Server List**
+
+| Client | Amazon Web Services | Google Cloud |
+| -------- | -------- | -------- | 
+| GFS0P25  |Y|Y|
+| GFS0P25 SECONDARY PARAMETERS  |Y|Y|
+| GFS0P50  |Y|Y|
+| GEFS0P50  |Y|Y|
+| GEFS0P50 SECONDARY PARAMETERS  |Y|Y|
+| GEFS0P25  |Y|Y|
+| RTMA |Y|N|
+| CFS |Y|N|
+
+---------------------------------------------------------
+    
 ## Importing Functions from WxData
 
 ```python
@@ -1066,6 +1042,9 @@ import wxdata.api.airnow_api.observations as air_now_observations
 12) [Amazon Web Services](https://aws.amazon.com/)
 
 13) [Google Cloud](https://cloud.google.com/)
+
+
+
 
 
 

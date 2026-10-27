@@ -48,11 +48,13 @@ PIP Downloads:
 WxData is a Python package that has many clients for retrieving and processing various types of meteorological datasets (both real-time and archived) with a focus on automation. 
 These datasets include 20+ Weather Forecast Models, Observational Data, Radar Data, Fuels Data (Fire Weather), Observed Upper-Air Sounding Data, Real-Time Mesoscale Analysis, Gridded National Weather Service Forecasts and Gridded Storm Prediction Center Outlooks as well as interfaces with the Open-Meteo and AirNow APIs. 
 
-WxData is also available in the command-line so users can write shell scripts to retrieve weather data. 
+- WxData is also available in the command-line so users can write shell scripts to retrieve weather data. 
 
-WxData makes it easy for users to create automated ETL pipelines for their weather operations.
+- WxData makes it easy for users to create automated ETL pipelines for their weather operations.
 
-WxData supports GRIB -> NETCDF transformations.
+- WxData supports GRIB -> NETCDF transformations.
+
+- WxData decodes GRIB2 variable keys into plain-language and returns an `xarray.array` with the decoded variable keys. 
 
 ## Installation Instructions
 
@@ -1064,6 +1066,10 @@ import wxdata.api.airnow_api.observations as air_now_observations
 12) [Amazon Web Services](https://aws.amazon.com/)
 
 13) [Google Cloud](https://cloud.google.com/)
+
+
+
+
 
 
 

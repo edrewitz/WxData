@@ -1,7 +1,6 @@
 ---
 title: Open-Meteo API Meteo-France Ocean Currents
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 
 # Open-Meteo API Meteo-France Ocean Currents
 

@@ -1,7 +1,6 @@
 ---
 title: Open-Meteo API MPI_ESM1_2_XR Climate Reanalysis & Forecasts
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Open-Meteo API MPI_ESM1_2_XR Climate Reanalysis & Forecasts
 
 ```python

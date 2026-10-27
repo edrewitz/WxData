@@ -14,13 +14,20 @@ def aigefs_surface_members(final_forecast_hour=384,
              members=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
                       11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                       21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
-             process_data=True,
-             clear_recycle_bin=False,
+            process_data=True,
+            clear_recycle_bin=False,
             convert_temperature=True,
             convert_to='celsius',
             custom_directory=None,
             chunk_size=8192,
-            notifications='off'):
+            notifications='off',
+            clear_data=False,
+            source='noaa',
+            to_netcdf=False,
+            netcdf_path=f"AIGEFS SURFACE MEMBERS/NETCDF",
+            netcdf_filename=f"aigefs_surface_members.nc",
+            delete_previous_netcdf_file=True,
+            return_values=True):
 ```
 
 This function downloads, pre-processes and post-processes the latest surface parameter dataset of the AIGEFS and bins the files to specific folders based on ensemble number.
@@ -43,6 +50,7 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
 5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
 
 6) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
   ```python
    proxies=None ---> proxies={
                            'http':'http://your-proxy-address:port',
@@ -55,8 +63,9 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
 8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
    data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
    
-9) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-    of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+    the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
+    This setting is to help preserve memory on the machine. 
         
 10) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
     the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
@@ -76,14 +85,42 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
 
 15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
 
+16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+    When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+    
+17) source (String) - Default='noaa'. The servers to pull the data from.
+
+    ***Server Choices***
+    
+    i) NOAA/NCEP/NOMADS - `source='noaa'`
+    
+    ii) Amazon AWS - `source='aws'`
+    
+    *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+    establish a connection there.*
+
+18) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+
+19) netcdf_path (String) - Default='AIGEFS SURFACE MEMBERS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+
+20) netcdf_filename (String) - Default='aigefs_surface_members.nc'. The name of the netCDF (.nc) file. A good practice is to 
+    name this netCDF file using the variable name. 
+    
+21) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+    new netCDF file. For users who want to archive all data set this to False. 
+    
+22) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+
+
 **Returns**
 
 An xarray data array of the AIGEFS Surface Parameter data specified to the coordinate boundaries and variable list the user specifies. 
-    
-    Surface-Level Plain Language Variable Keys
-    ------------------------------------------
-    
-    '10m_u_wind_component'
-    '10m_v_wind_component'
-    'mslp'
-    '2m_temperature'
+
+***Surface-Level Plain Language Variable Keys***
+
+```python
+'10m_u_wind_component'
+'10m_v_wind_component'
+'mslp'
+'2m_temperature'
+```

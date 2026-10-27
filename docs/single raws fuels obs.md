@@ -1,7 +1,6 @@
 ---
 title: FEMS Single RAWS Station Fuels Observations
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # FEMS: Single RAWS Station Fuels Observations
 ```python
 def get_single_raws_station_fuels_observations(station_id, 

@@ -1,7 +1,7 @@
 ---
 title: AIGEFS Members (Pressure Parameters)
 ---
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 
 # AIGEFS Members (Pressure Parameters)
 ```python

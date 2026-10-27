@@ -1,7 +1,7 @@
 ---
 title: NEXRAD II Single Radar
 ---
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # NEXRAD II Single Radar
 ```python
 def download_current_single_station_nexrad2_radar_data(site_id,

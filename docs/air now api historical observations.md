@@ -1,7 +1,6 @@
 ---
 title: Air Now API Historical Observations
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Air Now API Historical Observations
 
 ```python

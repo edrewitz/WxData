@@ -332,12 +332,15 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 #### Raw Data Clients
 
 ***Custom Gridded Data***
+
 1. [Gridded Data Client](https://edrewitz.github.io/WxData/get_gridded_data)
 
 ***Custom CSV Data***
+
 2. [CSV Data Client](https://edrewitz.github.io/WxData/get_csv_data)
 
 ***Custom Excel Data***
+
 3. [Excel Data Client](https://edrewitz.github.io/WxData/get_excel_data)
 
 ---------------------------------------------------------------
@@ -1042,6 +1045,9 @@ import wxdata.api.airnow_api.observations as air_now_observations
 12) [Amazon Web Services](https://aws.amazon.com/)
 
 13) [Google Cloud](https://cloud.google.com/)
+
+
+
 
 
 

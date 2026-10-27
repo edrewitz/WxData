@@ -1,7 +1,6 @@
 ---
 title: Climate Forecast System (CFS) Pressure
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Climate Forecast System (CFS) Pressure
 ```python
 def cfs_pressure(western_bound=-180, 

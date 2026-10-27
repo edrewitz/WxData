@@ -1,7 +1,6 @@
 ---
 title: GFS 0.25x0.25 Degree
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 
 # GFS 0.25x0.25 Degree
 

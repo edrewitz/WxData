@@ -1,7 +1,7 @@
 ---
 title: Open-Meteo API ECMWF WAM 0.25 Degree
 ---
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 
 # Open-Meteo API ECMWF WAM 0.25 Degree
 

@@ -80,7 +80,7 @@ These datasets include 20+ Weather Forecast Models, Observational Data, Radar Da
 
 - WxData allows users who work on VPNs and behind firewalls to access data through a user-specified proxy server.
 
-[***Return To Table Of Contents](https://edrewitz.github.io/WxData/#table-of-contents)
+[***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
 
 ## Installation Instructions
 
@@ -132,7 +132,7 @@ i) Install wxdata via Anaconda/Miniconda3 --> `conda install wxdata`
 
 ii) Set up a new environment with an earlier version of Python (must be Python >= 3.10) and then `pip install wxdata`
 
-[***Return To Table Of Contents](https://edrewitz.github.io/WxData/#table-of-contents)
+[***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
 
 --------------------------------------------------------------------------------------------
 
@@ -220,7 +220,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 1. [Single Site](https://edrewitz.github.io/WxData/nexrad2_single)
 2. [Multi-Site](https://edrewitz.github.io/WxData/nexrad2_multi)
 
-[***Return To Table Of Contents](https://edrewitz.github.io/WxData/#table-of-contents)
+[***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
 
 -----------------------------------------------
 #### Archived Weather Model Data Clients
@@ -242,7 +242,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 ***Real-Time Mesoscale Analysis (RTMA)***
 1. [Archived RTMA]()
 
-[***Return To Table Of Contents](https://edrewitz.github.io/WxData/#table-of-contents)
+[***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
 
 -----------------------------
 
@@ -285,7 +285,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 4. [GEPS](https://edrewitz.github.io/WxData/geps%20processing)
 5. [CanSIPS](https://edrewitz.github.io/WxData/cansips%20processing)
 
-[***Return To Table Of Contents](https://edrewitz.github.io/WxData/#table-of-contents)
+[***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
 
 -----------------------------------------------
 #### Command Line Interface & Shell Scripting
@@ -346,7 +346,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 ***METAR Observations***
 1. [METAR Observations]()
 
-[***Return To Table Of Contents](https://edrewitz.github.io/WxData/#table-of-contents)
+[***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
 
 -----------------------------------------------
 
@@ -364,7 +364,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 3. [Excel Data Client](https://edrewitz.github.io/WxData/get_excel_data)
 
-[***Return To Table Of Contents](https://edrewitz.github.io/WxData/#table-of-contents)
+[***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
 
 ---------------------------------------------------------------
 
@@ -376,7 +376,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 ***Line Query***
 1. [line_query](https://edrewitz.github.io/WxData/line_query)
 
-[***Return To Table Of Contents](https://edrewitz.github.io/WxData/#table-of-contents)
+[***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
 
 --------------------------------------------------
 
@@ -391,7 +391,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 ***Linear Anti-Aliasing Between Two Points***
 1. [linear_anti_aliasing](https://edrewitz.github.io/WxData/linear_anti_aliasing)
 
-[***Return To Table Of Contents](https://edrewitz.github.io/WxData/#table-of-contents)
+[***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
 
 ------------------------------------------
 
@@ -401,7 +401,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 1 [run_external_scripts](https://edrewitz.github.io/WxData/run_external_scripts)
 
-[***Return To Table Of Contents](https://edrewitz.github.io/WxData/#table-of-contents)
+[***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
 
 ---------------------------------------
 
@@ -496,7 +496,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 ##### Solar Radiation Forecasts
 1. [Solar Radiation Forecast](https://edrewitz.github.io/WxData/open%20meteo%20api%20solar%20radiation)
 
-[***Return To Table Of Contents](https://edrewitz.github.io/WxData/#table-of-contents)
+[***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
 
 ---------------------------------------
 
@@ -506,7 +506,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 1. [Get Current Data Bounding Box](https://edrewitz.github.io/WxData/air%20now%20api%20observations)
 2. [Get Historical Data Bounding Box](https://edrewitz.github.io/WxData/air%20now%20api%20historical%20observations)
 
-[***Return To Table Of Contents](https://edrewitz.github.io/WxData/#table-of-contents)
+[***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
 
 ---------------------------------------
 
@@ -516,7 +516,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 [***Command Line Interface***](https://github.com/edrewitz/WxData-Shell)
 
-[***Return To Table Of Contents](https://edrewitz.github.io/WxData/#table-of-contents)
+[***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
 
 ---------------------------------------------------
 
@@ -573,7 +573,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 | RTMA |Y|N|
 | CFS |Y|N|
 
-[***Return To Table Of Contents](https://edrewitz.github.io/WxData/#table-of-contents)
+[***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
 
 ---------------------------------------------------------
     
@@ -1082,13 +1082,6 @@ import wxdata.api.airnow_api.observations as air_now_observations
 12) [Amazon Web Services](https://aws.amazon.com/)
 
 13) [Google Cloud](https://cloud.google.com/)
-
-
-
-
-
-
-
 
 
 

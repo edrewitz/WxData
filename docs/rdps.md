@@ -2,7 +2,6 @@
 title: Canadian Meteorological Centre RDPS
 ---
 
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 
 # Canadian Regional Deterministic Prediction System (RDPS)
 

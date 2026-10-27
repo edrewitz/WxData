@@ -1,7 +1,7 @@
 ---
 title: Climate Forecast System (CFS) Flux Post-Processing
 ---
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Climate Forecast System (CFS) Flux Post-Processing
 ```python
 def cfs_flux_post_processing(path):

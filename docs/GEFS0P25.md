@@ -1,7 +1,6 @@
 ---
 title: Global Ensemble Forecast System 0.25 X 0.25 DEGREE (GEFS0P25)
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Global Ensemble Forecast System 0.25 X 0.25 DEGREE (GEFS0P25)
 
 ```python

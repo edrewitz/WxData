@@ -1,7 +1,6 @@
 ---
 title: Running External Python Scripts In Your Workflow With WxData
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Running External Python Scripts In Your Workflow With WxData
 ```python
 def run_external_scripts(paths,

@@ -1,5 +1,5 @@
 # ECMWF IFS and IFS Ensemble Post-Processing
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 ```python
 def ecmwf_ifs_post_processing(path,
                             western_bound, 

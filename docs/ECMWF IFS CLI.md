@@ -2,7 +2,7 @@
 title: ECMWF IFS CLI
 ---
 
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 
 # European Centre for Medium-Range Weather Forecasts (ECMWF) IFS Command Line Interface
     

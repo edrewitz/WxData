@@ -1,7 +1,6 @@
 ---
 title: Open-Meteo API GWAM
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Open-Meteo API DWD GWAM
 
 ```python

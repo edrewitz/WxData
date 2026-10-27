@@ -1,7 +1,6 @@
 ---
 title: Archived Climate Forecast System (CFS) Flux
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Archived Climate Forecast System (CFS) Flux
 
 ```python

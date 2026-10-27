@@ -25,18 +25,23 @@ def gdps(final_forecast_hour=240,
              clear_data=False,
             variable='geopotential height',
             level=500,
-            layer=[1000, 500]):
+            layer=[1000, 500],
+            to_netcdf=False,
+            netcdf_path=f"GDPS/NETCDF",
+            netcdf_filename=f"geopotential_height.nc",
+            delete_previous_netcdf_file=True,
+            return_values=True):
 ```
 
-This function retrieves the latest GDPS data from *https://dd.weather.gc.ca/* and returns an xarray.array of specified data.
+This function retrieves the latest GDPS data from `https://dd.weather.gc.ca/` and returns an xarray.array of specified data.
 
 Required Arguments: None
 
 Optional Arguments:
 
 1) final_forecast_hour (Integer) - Default = 240. The final forecast hour the user wishes to download. The GDPS
-  goes out to 240 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
-  240 by the nereast increment of 1 hour. 
+    goes out to 240 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
+    240 by the nereast increment of 1 hour. 
 
 2) western_bound (Float or Integer) - Default=-180. The western bound of the data needed. 
 
@@ -52,45 +57,44 @@ Optional Arguments:
 
 8) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-```python
- proxies=None ---> proxies={
-                         'http':'http://your-proxy-address:port',
-                         'https':'http://your-proxy-address:port'
-                         }
-```                    
+  ```python
+   proxies=None ---> proxies={
+                           'http':'http://your-proxy-address:port',
+                           'https':'http://your-proxy-address:port'
+                           }
+  ```
+                       
 9) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
-  with each run of the program you are calling WxData. This setting is to help preserve memory on the machine.
-  
-10) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
- data via their own external method, set process_data=False which means the data will be downloaded but not processed and no values
- returned to the user.
- 
+    with each run of the program you are calling WxData. This setting is to help preserve memory on the machine.
+    
+10) process_data (Boolean) - Default=True. When set to True, WxData will clean up and decode the GRIB2 keys into plain language.
+   
 11) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
-  either Celsius or Fahrenheit. When False, this data remains in Kelvin.
-  
+    either Celsius or Fahrenheit. When False, this data remains in Kelvin.
+    
 12) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
-  Set convert_to='fahrenheit' for Fahrenheit. 
-  
+    Set convert_to='fahrenheit' for Fahrenheit. 
+    
 13) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
 
 14) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
 
 15) level_type (String) - Default='pressure'. The type of level for the variable.
 
-  ***Level Types***
+    ***Level Types***
 
-```python
-'pressure'
-'height above ground'
-'potential vorticity surface'
-'pressure layer'
-'depth below surface'
-'surface'
-'mean sea level'
-'nominal top'
-'entire atmosphere'
-```
-        
+    ```python
+    'pressure'
+    'height above ground'
+    'potential vorticity surface'
+    'pressure layer'
+    'depth below surface'
+    'surface'
+    'mean sea level'
+    'nominal top'
+    'entire atmosphere'
+    ```
+    
 16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
     When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
     
@@ -106,13 +110,24 @@ Optional Arguments:
     
     level_type='depth below surface': -> layer=[upper level, lower level] (i.e. layer=[0, 10] for 0cm to 10cm below the surface).
     
+20) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+
+21) netcdf_path (String) - Default='GDPS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+
+22) netcdf_filename (String) - Default='geopotential_height.nc'. The name of the netCDF (.nc) file. A good practice is to 
+    name this netCDF file using the variable name. 
     
+23) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+    new netCDF file. For users who want to archive all data set this to False. 
+    
+24) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+
+
 ***Variables & Proper level_type & level***
-    
+
 Any area where valid_levels = None -> Users do not need to edit the optional argument `level`
 
 ```python
-
 'absolute vorticity': 
     valid level type(s): 'pressure'
     valid levels: 
@@ -507,9 +522,10 @@ Any area where valid_levels = None -> Users do not need to edit the optional arg
                                350, 300, 275, 250, 225, 200, 175, 150, 100, 50, 30, 20, 10, 5, 1.
                                
         level_type='height above ground' (m): 10, 40, 80, 120
-```          
+```
+
 **Returns**
 
-An `xarray.array` of the latest GDPS forecast data for a user-specified variable, `level`/`layer` and `level_type`.
+An xarray.array of the latest GDPS forecast data for a user-specified variable, `level`/`layer` and `level_type`.
 
-GDPS files are saved to directory `{path}` 
+GDPS files are saved to directory {path}  

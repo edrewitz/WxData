@@ -1,7 +1,6 @@
 ---
 title: Open-Meteo API MRI_AGCM3_2_S Climate Reanalysis & Forecasts
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Open-Meteo API MRI_AGCM3_2_S Climate Reanalysis & Forecasts
 
 ```python

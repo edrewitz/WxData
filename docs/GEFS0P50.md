@@ -78,12 +78,12 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
 
 8) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-	```python
-   proxies=None ---> proxies={
-				   'http':'http://your-proxy-address:port',
-				   'https':'http://your-proxy-address:port'
-				   }
-	```
+```python
+proxies=None ---> proxies={
+			   'http':'http://your-proxy-address:port',
+			   'https':'http://your-proxy-address:port'
+			   }
+```
  
 9) members (List) - Default=All 30 ensemble members. The individual ensemble members. There are 30 members in this ensemble.  
 

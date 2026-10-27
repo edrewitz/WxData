@@ -38,7 +38,12 @@ def aigefs_single(final_forecast_hour=384,
                     250,
                     150,
                     100,
-                    50]):
+                    50],
+            to_netcdf=False,
+            netcdf_path=f"AIGEFS SINGLE/NETCDF",
+            netcdf_filename=f"aigefs_single.nc",
+            delete_previous_netcdf_file=True,
+            return_values=True):    
 ```
 
 This function downloads, pre-processes and post-processes the latest AIGEFS Ensemble Mean or Ensemble Spread for either the Pressure or Surface Parameters. 
@@ -61,12 +66,14 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
 5) southern_bound (Float or Integer) - Default=-90. The southern bound of the data needed.
 
 6) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
+
   ```python
    proxies=None ---> proxies={
                            'http':'http://your-proxy-address:port',
                            'https':'http://your-proxy-address:port'
                            }
   ```
+
 7) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
    data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
    
@@ -87,25 +94,25 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
 12) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
     Set convert_to='fahrenheit' for Fahrenheit. 
     
-13) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+13 chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
 
 14) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
 
 15) cat (String) - Default='mean'. The category of the data.
 
-        Catagories
-        ----------
-        
-        1) mean
-        2) spread
+    ***Catagories***
+    
+    i) mean
+    
+    ii) spread
     
 16) level_type (String) - Default='pressure'. The type of level the data is in.
 
-        Types of Levels
-        ---------------
-        
-        1) pressure
-        2) surface
+    ***Types of Levels***
+    
+    i) pressure
+    
+    ii) surface
     
 17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
     When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
@@ -118,8 +125,8 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
                                                                     'v-component of wind',
                                                                     'vertical velocity (pressure)']
                    
-When the level_type = 'pressure', the user can filter by variable to the variable they want. (Surface level files are very small 
-compared to pressure level files).
+  *When the level_type = 'pressure', the user can filter by variable to the variable they want. (Surface level files are very small 
+  compared to pressure level files).*
     
 19) levels (Integer List) **level_type='pressure'** - Default=[1000,
                                                                     925,
@@ -134,27 +141,41 @@ compared to pressure level files).
                                                                     100,
                                                                     50]
                                                                     
-When the level_type = 'pressure', the user can filter by level to the level they want. (Surface level files are very small 
-compared to pressure level files).
+  *When the level_type = 'pressure', the user can filter by level to the level they want. (Surface level files are very small 
+  compared to pressure level files).*
+    
+20) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+
+21) netcdf_path (String) - Default='AIGEFS SINGLE/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+
+22) netcdf_filename (String) - Default='aigefs_single.nc'. The name of the netCDF (.nc) file. A good practice is to 
+    name this netCDF file using the variable name. 
+    
+23) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+    new netCDF file. For users who want to archive all data set this to False. 
+    
+24) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
 
 **Returns**
 
 An xarray data array of the AIGEFS data specified to the coordinate boundaries and variable list the user specifies. 
-    
-    Pressure-Level Plain Language Variable Keys
-    -------------------------------------------
-    
-    'geopotential_height'
-    'specific_humidity'
-    'air_temperature'
-    'u_wind_component'
-    'v_wind_component'
-    'vertical_velocity'
-    
-    Surface-Level Plain Language Variable Keys
-    ------------------------------------------
-    
-    '10m_u_wind_component'
-    '10m_v_wind_component'
-    'mslp'
-    '2m_temperature'
+
+***Pressure-Level Plain Language Variable Keys***
+
+```python
+'geopotential_height'
+'specific_humidity'
+'air_temperature'
+'u_wind_component'
+'v_wind_component'
+'vertical_velocity'
+```
+
+***Surface-Level Plain Language Variable Keys***
+
+```python
+'10m_u_wind_component'
+'10m_v_wind_component'
+'mslp'
+'2m_temperature'
+```

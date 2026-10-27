@@ -1,7 +1,7 @@
 ---
 title: AIGEFS Ensemble Mean & Ensemble Spread
 ---
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 
 # AIGEFS Ensemble Mean & Ensemble Spread
 ```python

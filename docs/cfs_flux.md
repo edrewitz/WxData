@@ -18,71 +18,15 @@ def cfs_flux(western_bound=-180,
             process_data=True,
             convert_temperature=True,
             convert_to='celsius',
-            variables=['aerodynamic conductance',
-                        'albedo',
-                        'clear sky uv-b downward solar flux',
-                        'plant canopy surface water',
-                        'convective precipitation rate',
-                        'categorical rain',
-                        'clear sky downward longwave flux',
-                        'clear sky downward solar flux (surface)',
-                        'clear sky downward solar flux (top of the atmosphere)',
-                        'clear sky upward solar flux',
-                        'cloud work function',
-                        'downward longwave radiation flux',
-                        'downward shortwave radiation flux',
-                        'clear sky uv-b downward solar flux',
-                        'direct evaporation from bare soil',
-                        'canopy water evaporation',
-                        'surface friction velocity',
-                        'ground heat flux',
-                        'geopotential height',
-                        'planetary boundary layer height',
-                        'ice cover',
-                        'ice thickness',
-                        'land cover',
-                        'latent heat net flux',
-                        'near ir beam downward solar flux',
-                        'near ir diffuse downward solar flux',
-                        'potential evaporation rate',
-                        'precipitation rate',
-                        'pressure',
-                        'precipitable water',
-                        '2-meter maximum specific humidity',
-                        '2-meter minimum specific humidity',
-                        'sublimation (evaporation from snow)',
-                        'surface roughness',
-                        'sedimentation mass flux',
-                        'sensible heat net flux',
-                        'surface slope type',
-                        'snow depth',
-                        'snow phase-change heat flux',
-                        'snow cover',
-                        'liquid volumetric soil moisture (non-frozen)',
-                        'soil moisture content',
-                        'volumetric soil moisture content',
-                        'soil type',
-                        'specific humidity',
-                        'snowfall rate water equivalent',
-                        'storm surface runoff (non-infiltrating)',
-                        'total cloud cover',
-                        'maximum temperature',
-                        'minimum temperature',
-                        'temperature',
-                        'transpiration',
-                        'momentum flux (u-component)',
-                        'u-component of wind',
-                        'zonal flux of gravity wave stress',
-                        'upward longwave radiation flux',
-                        'upward shortwave radiation flux',
-                        'visible beam downward solar flux',
-                        'vegetation',
-                        'momentum flux (v-component)',
-                        'v-component of wind',
-                        'vegetation type',
-                        'meridional flux of gravity wave stress',
-                        'water runoff',
-                        'water equivalent of accumulated snow depth']):
+            source='aws',
+            level_type='height above ground',
+            variable='temperature',
+            levels=[2],
+            to_netcdf=False,
+            netcdf_path=f"CFS FLUX/NETCDF",
+            netcdf_filename=f"cfs_flux.nc",
+            delete_previous_netcdf_file=True,
+            return_values=True):
 ```
 
 This function is an end-to-end client that downloads, pre-processes, post-processes CFS Flux data.
@@ -106,13 +50,13 @@ Optional Arguments:
 
 6) proxies (dict or None) - If the user is using proxy server(s), the user must change the following:
 
-   ```python
-   proxies=None ---> proxies={
-						   'http':'http://your-proxy-address:port',
-						   'https':'http://your-proxy-address:port'
-						   }
-	```						   
-	
+```python
+proxies=None ---> proxies={
+			   'http':'http://your-proxy-address:port',
+			   'https':'http://your-proxy-address:port'
+			   }
+					   
+```
 7) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be 
 	deleted with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
 	
@@ -133,168 +77,221 @@ Optional Arguments:
 	
 14) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
 	Set convert_to='fahrenheit' for Fahrenheit. 
+	
+15) source (String) - Default='aws'. The servers to pull the data from.
+
+	***Server Choices***
+	
+	i) NOAA/NCEP/NOMADS - `source='noaa'`
+	
+	ii) Amazon AWS - `source='aws'`
+	
+*If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+establish a connection there.*
+	
+16) level_type (String) - Default='height above ground'. The type of vertical coordinates for the list of variables.
+
+	***Level Types***
+
+	```python
+	'surface'
+	'height above ground'
+	'height below ground'
+	'entire atmosphere'
+	'top of atmosphere'
+	'high cloud top level'
+	'middle cloud top level'
+	'low cloud top level'
+	'high cloud bottom level'
+	'middle cloud bottom level'
+	'low cloud bottom level'
+	'convective cloud layer'
+	'boundary layer cloud layer'
+	'height above sea level'
+	'hybrid'
+	```
 							
-15) variables (List) - A list of variable names the user wants to download in plain language. 
-    
-        Variable Name List for CFS Flux
-        -------------------------------
-        
-			'aerodynamic conductance'
-            'albedo'
-            'clear sky uv-b downward solar flux'
-            'plant canopy surface water'
-            'convective precipitation rate'
-            'categorical rain'
-            'clear sky downward longwave flux'
-            'clear sky downward solar flux (surface)'
-            'clear sky downward solar flux (top of the atmosphere)'
-            'clear sky upward solar flux'
-            'cloud work function'
-            'downward longwave radiation flux'
-            'downward shortwave radiation flux'
-            'clear sky uv-b downward solar flux'
-            'direct evaporation from bare soil'
-            'canopy water evaporation'
-            'surface friction velocity'
-            'ground heat flux'
-            'geopotential height'
-            'planetary boundary layer height'
-            'ice cover'
-            'ice thickness'
-            'land cover'
-            'latent heat net flux'
-            'near ir beam downward solar flux'
-            'near ir diffuse downward solar flux'
-            'potential evaporation rate'
-            'precipitation rate'
-            'pressure'
-            'precipitable water'
-            '2-meter maximum specific humidity'
-            '2-meter minimum specific humidity'
-            'sublimation (evaporation from snow)'
-            'surface roughness'
-            'sedimentation mass flux'
-            'sensible heat net flux'
-            'surface slope type'
-            'snow depth'
-            'snow phase-change heat flux'
-            'snow cover'
-            'liquid volumetric soil moisture (non-frozen)'
-            'soil moisture content'
-            'volumetric soil moisture content'
-            'soil type'
-            'specific humidity'
-            'snowfall rate water equivalent'
-            'storm surface runoff (non-infiltrating)'
-            'total cloud cover'
-            'maximum temperature'
-            'minimum temperature'
-            'temperature'
-            'transpiration'
-            'momentum flux (u-component)'
-            'u-component of wind'
-            'zonal flux of gravity wave stress'
-            'upward longwave radiation flux'
-            'upward shortwave radiation flux'
-            'visible beam downward solar flux'
-            'vegetation'
-            'momentum flux (v-component)'
-            'v-component of wind'
-            'vegetation type'
-            'meridional flux of gravity wave stress'
-            'water runoff'
-            'water equivalent of accumulated snow depth'
-            
+17) variable (String) - Default='temperature'.
+
+	The variable the user selects to download.
+
+	***Variable Name List for CFS Flux Data***
+
+```python
+'aerodynamic conductance'
+'albedo'
+'clear sky uv-b downward solar flux'
+'plant canopy surface water'
+'convective precipitation rate'
+'categorical rain'
+'clear sky downward longwave flux'
+'clear sky downward solar flux (surface)'
+'clear sky downward solar flux (top of the atmosphere)'
+'clear sky upward solar flux'
+'cloud work function'
+'downward longwave radiation flux'
+'downward shortwave radiation flux'
+'clear sky uv-b downward solar flux'
+'direct evaporation from bare soil'
+'canopy water evaporation'
+'surface friction velocity'
+'ground heat flux'
+'geopotential height'
+'planetary boundary layer height'
+'ice cover'
+'ice thickness'
+'land cover'
+'latent heat net flux'
+'near ir beam downward solar flux'
+'near ir diffuse downward solar flux'
+'potential evaporation rate'
+'precipitation rate'
+'pressure'
+'precipitable water'
+'2-meter maximum specific humidity'
+'2-meter minimum specific humidity'
+'sublimation (evaporation from snow)'
+'surface roughness'
+'sedimentation mass flux'
+'sensible heat net flux'
+'surface slope type'
+'snow depth'
+'snow phase-change heat flux'
+'snow cover'
+'liquid volumetric soil moisture (non-frozen)'
+'soil moisture content'
+'volumetric soil moisture content'
+'soil type'
+'specific humidity'
+'snowfall rate water equivalent'
+'storm surface runoff (non-infiltrating)'
+'total cloud cover'
+'maximum temperature'
+'minimum temperature'
+'temperature'
+'transpiration'
+'momentum flux (u-component)'
+'u-component of wind'
+'zonal flux of gravity wave stress'
+'upward longwave radiation flux'
+'upward shortwave radiation flux'
+'visible beam downward solar flux'
+'vegetation'
+'momentum flux (v-component)'
+'v-component of wind'
+'vegetation type'
+'meridional flux of gravity wave stress'
+'water runoff'
+'water equivalent of accumulated snow depth'
+```
+		
+18) levels (Integer List) - Default=[2].
+
+The units for the level in the atmosphere (i.e. levels=[2] -> 2-meters above ground)
+
+19) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+
+20) netcdf_path (String) - Default='CFS FLUX/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+
+21) netcdf_filename (String) - Default='cfs_flux.nc'. The name of the netCDF (.nc) file. A good practice is to 
+	name this netCDF file using the variable name. 
+	
+22) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+	new netCDF file. For users who want to archive all data set this to False. 
+	
+23) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+		
 **Returns**
 
 A post-processes xarray.array where the GRIB variable keys are decoded into a plain-language format.
-    
-    CFS Flux Data Variables In Plain-Language Format
-    -------------------------------------------------
-    
-        'volumetric_soil_moisture_content'
-        'soil_temperature'
-        'liquid_volumetric_soil_moisture_non_frozen'
-        'soil_moisture_content'
-        'u_component_atmospheric_surface_momentum_flux'
-        'v_component_atmospheric_surface_momentum_flux'
-        'instantaneous_surface_sensible_heat_net_flux'
-        'surface_latent_heat_net_flux'
-        'surface_temperature'
-        'water_equivalent_of_accumulated_snow_depth'
-        'surface_downward_longwave_radiation_flux'
-        'surface_upward_longwave_radiation_flux'
-        'surface_upward_shortwave_radiation_flux'
-        'surface_downward_shortwave_radiation_flux'
-        'clear_sky_uv_b_downward_solar_flux'
-        'precipitation_rate'
-        'convective_precipitation_rate'
-        'ground_heat_flux'
-        'land_sea_mask'
-        'sea_ice_area_fraction'
-        'surface_pressure'
-        'instantaneous_eastward_gravity_wave_surface_flux'
-        'instantaneous_northward_gravity_wave_surface_flux'
-        'surface_albedo'
-        'sea_ice_thickness'
-        'snow_depth'
-        'plant_canopy_surface_water'
-        'surface_roughness'
-        'vegetation'
-        'vegetation_type'
-        'soil_type'
-        'surface_slope_type'
-        'frictional_velocity'
-        'orography'
-        'categorical_rain'
-        'exchange_coefficient'
-        'aerodynamic_conductance'
-        'storm_surface_runoff'
-        'direct_evaporation_from_bare_soil'
-        'canopy_water_evaporation'
-        'transpiration'
-        'sublimation'
-        'snow_cover'
-        'clear_sky_downward_longwave_flux'
-        'clear_sky_upward_solar_flux'
-        'clear_sky_downward_solar_flux'
-        'clear_sky_upward_longwave_flux'
-        'snow_phase_change_heat_flux'
-        'visible_beam_downward_solar_flux'
-        'near_ir_beam_downward_solar_flux'
-        'near_ir_diffuse_downward_solar_flux'
-        'snowfall_rate_water_equivalent'
-        'nominal_top_of_the_atmosphere_upward_longwave_radiation_flux'
-        'nominal_top_of_the_atmosphere_upward_shortwave_radiation_flux'
-        'nominal_top_of_the_atmosphere_downward_shortwave_radiation_flux'
-        'nominal_top_of_the_atmosphere_clear_sky_upward_longwave_radiation_flux'
-        'nominal_top_of_the_atmosphere_clear_sky_upward_solar_flux'
-        'total_high_cloud_cover'
-        'high_cloud_top_level_pressure'
-        'high_cloud_top_level_temperature'
-        'high_cloud_bottom_pressure'
-        'total_middle_cloud_cover'
-        'middle_cloud_top_level_pressure'
-        'middle_cloud_top_level_temperature'
-        'middle_cloud_bottom_pressure'
-        'total_low_cloud_cover'
-        'low_cloud_top_level_pressure'
-        'low_cloud_top_level_temperature'
-        'low_cloud_bottom_pressure'
-        '10m_u_wind_component'
-        '10m_v_wind_component'
-        '2m_temperature'
-        '2m_specific_humidity'
-        'maximum_temperature'
-        'minimum_temperature'
-        'maximum_specific_humidity'
-        'minimum_specific_humidity'
-        'cloud_work_function'
-        'precipitable_water'
-        'total_cloud_cover'
-        'total_convective_cloud_cover'
-        'total_cloud_cover_boundary_layer'
-        '995_sigma_temperature'
-        '995_sigma_specific_humidity'
-        '995_sigma_u_wind_component'
-        '995_sigma_geopotential_height'   
+
+***CFS Flux Data Variables In Plain-Language Format***
+
+```python
+'volumetric_soil_moisture_content'
+'soil_temperature'
+'liquid_volumetric_soil_moisture_non_frozen'
+'soil_moisture_content'
+'u_component_atmospheric_surface_momentum_flux'
+'v_component_atmospheric_surface_momentum_flux'
+'instantaneous_surface_sensible_heat_net_flux'
+'surface_latent_heat_net_flux'
+'surface_temperature'
+'water_equivalent_of_accumulated_snow_depth'
+'surface_downward_longwave_radiation_flux'
+'surface_upward_longwave_radiation_flux'
+'surface_upward_shortwave_radiation_flux'
+'surface_downward_shortwave_radiation_flux'
+'clear_sky_uv_b_downward_solar_flux'
+'precipitation_rate'
+'convective_precipitation_rate'
+'ground_heat_flux'
+'land_sea_mask'
+'sea_ice_area_fraction'
+'surface_pressure'
+'instantaneous_eastward_gravity_wave_surface_flux'
+'instantaneous_northward_gravity_wave_surface_flux'
+'surface_albedo'
+'sea_ice_thickness'
+'snow_depth'
+'plant_canopy_surface_water'
+'surface_roughness'
+'vegetation'
+'vegetation_type'
+'soil_type'
+'surface_slope_type'
+'frictional_velocity'
+'orography'
+'categorical_rain'
+'exchange_coefficient'
+'aerodynamic_conductance'
+'storm_surface_runoff'
+'direct_evaporation_from_bare_soil'
+'canopy_water_evaporation'
+'transpiration'
+'sublimation'
+'snow_cover'
+'clear_sky_downward_longwave_flux'
+'clear_sky_upward_solar_flux'
+'clear_sky_downward_solar_flux'
+'clear_sky_upward_longwave_flux'
+'snow_phase_change_heat_flux'
+'visible_beam_downward_solar_flux'
+'near_ir_beam_downward_solar_flux'
+'near_ir_diffuse_downward_solar_flux'
+'snowfall_rate_water_equivalent'
+'nominal_top_of_the_atmosphere_upward_longwave_radiation_flux'
+'nominal_top_of_the_atmosphere_upward_shortwave_radiation_flux'
+'nominal_top_of_the_atmosphere_downward_shortwave_radiation_flux'
+'nominal_top_of_the_atmosphere_clear_sky_upward_longwave_radiation_flux'
+'nominal_top_of_the_atmosphere_clear_sky_upward_solar_flux'
+'total_high_cloud_cover'
+'high_cloud_top_level_pressure'
+'high_cloud_top_level_temperature'
+'high_cloud_bottom_pressure'
+'total_middle_cloud_cover'
+'middle_cloud_top_level_pressure'
+'middle_cloud_top_level_temperature'
+'middle_cloud_bottom_pressure'
+'total_low_cloud_cover'
+'low_cloud_top_level_pressure'
+'low_cloud_top_level_temperature'
+'low_cloud_bottom_pressure'
+'10m_u_wind_component'
+'10m_v_wind_component'
+'2m_temperature'
+'2m_specific_humidity'
+'maximum_temperature'
+'minimum_temperature'
+'maximum_specific_humidity'
+'minimum_specific_humidity'
+'cloud_work_function'
+'precipitable_water'
+'total_cloud_cover'
+'total_convective_cloud_cover'
+'total_cloud_cover_boundary_layer'
+'995_sigma_temperature'
+'995_sigma_specific_humidity'
+'995_sigma_u_wind_component'
+'995_sigma_geopotential_height'
+```

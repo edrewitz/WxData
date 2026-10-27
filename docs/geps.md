@@ -2,7 +2,6 @@
 title: Canadian Meteorological Centre GEPS
 ---
 
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 
 # Canadian Global Ensemble Prediction System (GEPS)
 

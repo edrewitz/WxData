@@ -1,7 +1,6 @@
 ---
 title: Open-Meteo API ECMWF EC46 Weekly Mean & Anomaly
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Open-Meteo API ECMWF EC46 Weekly Mean & Anomaly
 
 ```python

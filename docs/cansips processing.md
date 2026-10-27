@@ -2,7 +2,6 @@
 title: CanSIPS Processing
 ---
 
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 
 # Canadian Seasonal to Inter-annual Prediction System (CanSIPS) Processing
 

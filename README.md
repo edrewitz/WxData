@@ -19,37 +19,36 @@ PIP Downloads:
 [![PyPI Downloads](https://static.pepy.tech/personalized-badge/wxdata?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/wxdata)
 
 
-
 **(C) Eric J. Drewitz 2025-2026**
-
-A Python package consisting of the following:
-
-1) End-to-end weather data clients with VPN/PROXY support
-2) Raw data clients with VPN/PROXY support
-3) Data processors that decode variable keys from GRIB format into a plain-language format
-4) Various tools for assisting Python automated workflows, querying meteorological datasets and filling gaps in meteorological data.
-5) Has interfaces with various weather APIs. 
 
 # Table of Contents
 
-1) [Installation Instructions](https://github.com/edrewitz/WxData/wiki#installation-instructions)
+1) [What Is WxData?]()
 
-2) [Server List (For End-To-End Clients That Can Rotate Between Servers)](https://github.com/edrewitz/WxData/wiki#server-list)
+2) [Installation Instructions](https://github.com/edrewitz/WxData/wiki#installation-instructions)
 
-3) [Proxy Server Configuration](https://github.com/edrewitz/WxData/wiki#proxy-server-configuration)
+3) [WxData Documentation](https://github.com/edrewitz/WxData/wiki#wxdata-documentation)
 
-4) [What makes WxData unique among various meteorological Python packages?](https://github.com/edrewitz/WxData/wiki#what-makes-wxdata-unique-among-various-meteorological-python-packages)
+4) [WxData Tutorials](https://github.com/edrewitz/WxData/wiki#wxdata-tutorials)
 
-5) [WxData Tutorials](https://github.com/edrewitz/WxData/wiki#wxdata-tutorials)
+5) [Server List](https://github.com/edrewitz/WxData/wiki#server-list)
 
-6) [WxData Documentation](https://github.com/edrewitz/WxData/wiki#wxdata-documentation)
+6) [Proxy Server Configuration](https://github.com/edrewitz/WxData/wiki#proxy-server-configuration)
 
-7) [Importing Functions from WxData](https://github.com/edrewitz/WxData/wiki#importing-functions-from-wxdata)
+7) [Citations](https://github.com/edrewitz/WxData/wiki#citations)
 
-8) [Citations](https://github.com/edrewitz/WxData/wiki#citations)
+8) [Data Sources](https://github.com/edrewitz/WxData/wiki#data-sources)
 
-9) [Data Sources](https://github.com/edrewitz/WxData/wiki#data-sources)
+## What is WxData?
 
+WxData is a Python package that has many clients for retrieving and processing various types of meteorological datasets (both real-time and archived) with a focus on automation. 
+These datasets include 20+ Weather Forecast Models, Observational Data, Radar Data, Fuels Data (Fire Weather), Observed Upper-Air Sounding Data, Real-Time Mesoscale Analysis, Gridded National Weather Service Forecasts and Gridded Storm Prediction Center Outlooks as well as interfaces with the Open-Meteo and AirNow APIs. 
+
+WxData is also available in the command-line so users can write shell scripts to retrieve weather data. 
+
+WxData makes it easy for users to create automated ETL pipelines for their weather operations.
+
+WxData supports GRIB -> NETCDF transformations.
 
 ## Installation Instructions
 
@@ -104,8 +103,6 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 ---------------------------------------------------------
 ## Server List
 
-
-
 <img src="https://github.com/edrewitz/WxData/blob/main/icons/noaa_rotation.png?raw=true" width="200" alt="Alt text" /> <img src="https://github.com/edrewitz/WxData/blob/main/icons/ecmwf_rotation.png?raw=true" width="200" alt="Alt text" />
 
 End-To-End clients with multiple servers to pull data from can find the different options for `source` by the table below.
@@ -154,21 +151,9 @@ End-To-End clients with multiple servers to pull data from can find the differen
 
 ## Proxy Server Configuration
 
-***Friendly for users working on VPN/PROXY connections***
+**Friendly for users working on VPN/PROXY connections**
 
-   Depending on which client, the proxy-address:port must be entered as either a dictionary or a string.
-
-   The clients that use a string for proxies are:
-
-   1) All ECMWF clients.
-
-   2) METAR Observations Client.
-      
-   3) `pixel_query()` tool if the user needs to download the airport station codes list.
-
-   All other clients use proxies as a dictionary
-
-Example: We want to download the latest Observed Sounding Data for San Diego, CA (NKX)
+***Example: We want to download the latest Observed Sounding Data for San Diego, CA (NKX)***
 
 ```python
 proxies=None ---> proxies={
@@ -188,134 +173,34 @@ proxies={
 data = sounding_data = get_observed_sounding_data('nkx', proxies=proxies)
 ```
 
-Example: We want to download the ECMWF IFS Data:
-
-```python
-proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = ecmwf_ifs(proxies=proxies)
-```
-```python
-# Here is our program
-from wxdata import ecmwf_ifs
-
-proxies="https://your-proxy-address:port"
-
-data = ecmwf_ifs(proxies=proxies)
-```
-
 <img src="https://github.com/edrewitz/WxData/blob/main/diagrams/proxy.png?raw=true" width="500" alt="Alt text" /> 
 
-
 For more information on configuring proxies: https://requests.readthedocs.io/en/latest/user/advanced/#proxies
-
----------------------------------------------------------------------
-
-## What makes WxData unique among various meteorological Python packages?
-       
-1) Converts GRIB variable keys into variable keys that are in plain language.
-    - (e.g. 'r2' ---> '2m_relative_humidity')
-      
-2) Has a scanner that checks if the data files on your PC are up to date with those on the data server.
-   - This is a safeguard to protect newer developers from getting temporary IP address bans from the various data servers.
-   - Improves performance by preventing the potential of repetative downloading the same dataset.
-
-3) Preserves system memory via the following methods:
-   - Clears out old data files before each new data download.
-   - Optional setting `clear_recycle_bin` in all functions.
-        - When `clear_recycle_bin=True` the computer's recycle/trash bin is cleared with each run of the script using any WxData function.
-        - If a user wishes to not clear out their recycle bin `set clear_recycle_bin=False`.
-        - Default: `clear_recycle_bin=False`.
-    
-4) Has built-in support for users on VPN/PROXY connections.
-
-5) Consists of both observational and model data.
-
-6) Has additional tools to assist querying data, resolving gaps in data and automating your Python workflow.
-
-7) Utilizes byte-range requests to subset and speed up download times.
-
-8) Several end-to-end clients have the ability to pull from multiple servers (NOAA/NCEP/NOMADS, ECMWF Open-Data, Amazon Web Services (AWS), Google Cloud and NOAA/NWS/FTP).
-
-9) Clients can automatically rotate to a new server when experiencing connectivity issues to the initial server. 
 
 -----------------------------------------------
     
 ## WxData Tutorials
 
-### Regular Users
-1) [Downloading METAR Data](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/metars.ipynb)
-2) [Downloading Observed Sounding Data](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/soundings.ipynb)
-3) [Downloading the first 72 hours of the ECMWF IFS and ECMWF AIFS](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/ecmwf.ipynb)
-4) [Downloading the GEFS members p01 and p02 for only Temperature](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/gefs.ipynb)
-5) [Downloading the Real-Time Mesoscale Analysis (RTMA)](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/rtma.ipynb)
-6) [Downloading the SPC Convective Outlook for CONUS](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/spc.ipynb)
-7) [Downloading NWS Maximum Temperature Forecast for Hawaii](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/nws_hi.ipynb)
-8) [Downloading the GFS0P25 then performing pixel and line queries on the data](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/GFS.ipynb)
+[***Jupyter Lab***](https://github.com/edrewitz/WxData-Jupyter-Lab#wxdata-jupyter-lab-tutorials)
 
-9) [Downloading various datasets from the Applied Climate Information System (ACIS)](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/xmacis2.ipynb)
-
-10) [Downloading AIGFS Data](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/aigfs.ipynb)
-
-11) [Downloading AIGEFS Data](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/aigefs.ipynb)
-
-12) [Downloading and plotting the Climate Prediction Center 6-10 Day Precipitation Outlook](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/cpc_precip_outlook.ipynb)
-
-13) [Downloading OUN Sounding Data and Using The WxData Linear Anti Aliasing Tool To Interpolate 100 Points Between Each Observed Data Point And Visualize Both Data Sets](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/linear_anti_aliasing.ipynb)
-
-14) [Downloading Subsets Of ECMWF IFS Ensemble and AIFS Ensemble Data](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/ecmwf_ens.ipynb)
-
-15) [Downloading the ECMWF IFS 500 mb Geopotential Height Initial Analysis And Plot A North Pole Stereographic Resolving The Meridian With The WxData Cyclic Point Tool](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/cyclic.ipynb)
-
-16) [Downloading Observed Fuels Data For The Past Year For Acton RAWS and Plotting 1000-HR Dead Fuel Moisture](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/acton_raws.ipynb)
-
-17) [Downloading the 7-Day NFDRS Forecast for Acton RAWS and Plotting Forecast 100-HR Dead Fuel Moisture](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/acton_raws_forecast.ipynb)
-
-18) [Downloading Current RAWS and METAR Data and Plotting Current Relative Humidity Observations Across California and Nevada](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/metar_raws_observed_rh.ipynb)
-
-19) [Downloading Current RAWS Data and Plotting Current Energy Release Components (ERCs) Observations Across California and Nevada](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/observed_erc_map.ipynb)
-
-20) [Downloading NEXRAD II Radar Data and then plotting it in Py-ART](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/NEXRADII.ipynb)
-
-21) [Downloading 30 Days of 6hrly CFS Data and plotting the 30-Day time-mean for mean sea level pressure across the Northern Hemisphere](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/cfs.ipynb)
-
-22) [Download all 50 Ensemble Members of the ECMWF IFS Ensemble for 2-Meter Temperature Using the Open-Meteo API and Make an Ensemble Spaghetti Plot](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/ecmwf_ifs_ens_spaghetti.ipynb)
-
-23) [Download Solar Radiation Forecasts Using Open-Meteo API](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/open_meteo_api_solar_radiation.ipynb)
-
-24) [Download Latest Fine Particulates (PM2.5) and Ozone (O3) Observations Using Air Now API](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/air_now_api.ipynb)
-
-25) [Download and plot the first 24 hours of the GDPS 500mb Geopotential Height, Relative Vorticity and Wind Forecast across CONUS & Southern Canada](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/gdps.ipynb)
-
-26) [Download and plot the first 24 hours of the RDPS 2-Meter Temperature & 10-Meter Wind Forecast across CONUS & Southern Canada](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/rdps.ipynb)
-
-27) [Download and plot the first 12 hours of the HRDPS 0-10cm Soil Temperature across British Columbia & Alberta](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/hrdps.ipynb)
-
-28) [Download the first 24 hours of the GEPS 850mb Temperature Forecast, find the ensemble mean and plot the GEPS Ensemble Mean 850mb Temperature Forecast](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/geps.ipynb)
-
-29) [Use the `cansips_forecast()` and `cansips_hindcast()` clients to download and plot the monthly 500mb Geopotential Height & 850mb Temperature Forecasts & Forecast Anomalies](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/cansips.ipynb)
-
-### Advanced Users
-
-1) [Using the `client` module to download the latest HadCRUT5 Analysis netCDF file and open this dataset in xarray](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/hadcrut5.ipynb)
-
-2) [Downloading the GFS0P25 for temperature fields and using run_external_scripts() to post-process this GFS0P25 dataset in an external Python script](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/external_scripts.ipynb)
-
-3) [Downloading GFS Data Using Byte-Range Requests](https://github.com/edrewitz/WxData-JupyterLab-Examples/blob/main/bytes_range_request.ipynb)
-
+[***Command Line Interface***](https://github.com/edrewitz/WxData-Shell)
 ---------------------------------------------------
 
 ## WxData Documentation
 
 ### Documentation Sections
 
-1. [End-To-End Data Clients](https://github.com/edrewitz/WxData?tab=readme-ov-file#end-to-end-data-clients)
-2. [Raw Data Clients](https://github.com/edrewitz/WxData?tab=readme-ov-file#raw-data-clients)
-3. [Post-Processors](https://github.com/edrewitz/WxData?tab=readme-ov-file#post-processors)
-4. [Data Querying Tools](https://github.com/edrewitz/WxData?tab=readme-ov-file#data-querying-tools)
-5. [Data Transformation & Gap Filling Tools](https://github.com/edrewitz/WxData?tab=readme-ov-file#data-transformation--gap-filling-tools)
-6. [Automated Python Workflow Tools](https://github.com/edrewitz/WxData?tab=readme-ov-file#automated-python-workflow-tools)
-7. [Open-Meteo API](https://github.com/edrewitz/WxData/blob/main/README.md#open-meteo-api)
+1. [Current Weather Model Data Clients](https://github.com/edrewitz/WxData?tab=readme-ov-file#end-to-end-data-clients)
+2. [Archived Weather Model Data Clients]()
+3. [Command Line Interface & Shell Scripting]()
+4. [Raw Data Clients](https://github.com/edrewitz/WxData?tab=readme-ov-file#raw-data-clients)
+5. [Post-Processors](https://github.com/edrewitz/WxData?tab=readme-ov-file#post-processors)
+6. [Data Querying Tools](https://github.com/edrewitz/WxData?tab=readme-ov-file#data-querying-tools)
+7. [Data Transformation & Gap Filling Tools](https://github.com/edrewitz/WxData?tab=readme-ov-file#data-transformation--gap-filling-tools)
+8. [Automated Python Workflow Tools](https://github.com/edrewitz/WxData?tab=readme-ov-file#automated-python-workflow-tools)
+9. [Open-Meteo API](https://github.com/edrewitz/WxData/blob/main/README.md#open-meteo-api)
 
-#### End-To-End Data Clients
+#### Current Weather Model Data Clients
 
 ##### ***Global Forecast System (GFS)***
 1. [GFS0P25](https://edrewitz.github.io/WxData/GFS0P25)
@@ -356,6 +241,12 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 4. [ECMWF AIFS Ensemble](https://edrewitz.github.io/WxData/ECMWF%20AIFS%20Ensemble)
 5. [ECMWF IFS Wave](https://edrewitz.github.io/WxData/ECMWF_IFS_Wave)
 6. [ECMWF IFS Wave Ensemble](https://edrewitz.github.io/WxData/ECMWF%20IFS%20Wave%20Ensemble)
+7. [ECMWF High Resolution IFS]()
+8. [ECMWF High Resolution IFS Ensemble]()
+9. [ECMWF High Resolution IFS Wave]()
+10. [ECMWF High Resolution IFS Wave Ensemble]()
+11. [ECMWF AIFS Wave]()
+12. [ECMWF AIFS Wave Ensemble]()
    
 ##### ***Real-Time Mesoscale Analysis (RTMA)***
 1. [RTMA](https://edrewitz.github.io/WxData/rtma)
@@ -431,6 +322,84 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 3. [HRDPS](https://edrewitz.github.io/WxData/hrdps%20processing)
 4. [GEPS](https://edrewitz.github.io/WxData/geps%20processing)
 5. [CanSIPS](https://edrewitz.github.io/WxData/cansips%20processing)
+
+-----------------------------------------------
+#### Archived Weather Model Data Clients
+
+##### ***Global Forecast System (GFS)***
+1. [Archived GFS0P25]()
+2. [Archived GFS0P25 SECONDARY PARAMETERS]()
+3. [Archived GFS0P50]()
+
+##### ***Global Ensemble Forecast System (GEFS)***
+1. [Archived GEFS0P50]()
+2. [Archived GEFS0P50 SECONDARY PARAMETERS]()
+3. [Archived GEFS0P25]()
+
+##### ***Climate Forecast System (CFS)***
+1. [Archived CFS Pressure]()
+2. [Archived CFS Flux]()
+
+##### ***Real-Time Mesoscale Analysis (RTMA)***
+1. [Archived RTMA]()
+-----------------------------------------------
+#### Command Line Interface & Shell Scripting
+
+##### ***Global Forecast System (GFS)***
+1. [GFS0P25]()
+2. [GFS0P25 SECONDARY PARAMETERS]()
+3. [GFS0P50]()
+
+##### ***AI Global Forecast System (AIGFS)***
+1. [AIGFS](https://edrewitz.github.io/WxData/aigfs)
+
+##### ***Climate Forecast System (CFS)***
+1. [CFS Pressure]()
+2. [CFS Flux]()
+
+##### ***Hybrid Global Ensemble Forecast System (HGEFS)***
+1. [HGEFS]()
+
+##### ***Global Ensemble Forecast System (GEFS)***
+1. [GEFS0P50]()
+2. [GEFS0P50 SECONDARY PARAMETERS]()
+3. [GEFS0P25]()
+
+##### ***AI Global Ensemble Forecast System (AIGEFS)***
+1. [AIGEFS Members (Pressure Parameters)]()
+2. [AIGEFS Members (Surface Parameters)]()
+3. [AIGEFS Ensemble Mean & Ensemble Spread]()
+
+##### ***Canadian Meteorological Centre***
+1. [GDPS]()
+2. [RDPS]()
+3. [HRDPS]()
+4. [GEPS]()
+5. [CanSIPS]()
+
+##### ***ECMWF Open Data***
+1. [ECMWF IFS]()
+2. [ECMWF IFS Ensemble]()
+3. [ECMWF AIFS]()
+4. [ECMWF AIFS Ensemble]()
+5. [ECMWF IFS Wave]()
+6. [ECMWF IFS Wave Ensemble]()
+7. [ECMWF High Resolution IFS]()
+8. [ECMWF High Resolution IFS Ensemble]()
+9. [ECMWF High Resolution IFS Wave]()
+10. [ECMWF High Resolution IFS Wave Ensemble]()
+11. [ECMWF AIFS Wave]()
+12. [ECMWF AIFS Wave Ensemble]()
+   
+##### ***Real-Time Mesoscale Analysis (RTMA)***
+1. [RTMA]()
+2. [RTMA Comparison]()
+
+##### ***NOAA Storm Prediction Center Outlooks/National Weather Service Forecasts***
+1. [Get NDFD Grids]()
+
+##### ***METAR Observations***
+1. [METAR Observations]()
 
 -----------------------------------------------
 
@@ -589,54 +558,73 @@ For more information on configuring proxies: https://requests.readthedocs.io/en/
 
 ```python
 """
-This file hosts all of the functions in the WxData Python library that directly interact with the user. 
 
-(C) Eric J. Drewitz 2025-2026
+***********************************************************************************************
+
+
+************  This section hosts the Archived Model Data Clients ******************************
+
+
+***********************************************************************************************
+"""
+
+# Global Forecast System (GFS)
+# - GFS 0.25x0.25 Degree Primary Parameters
+# - GFS 0.25x0.25 Degree Secondary Parameters
+# - GFS 0.5x0.5 Degree
+from wxdata.archived_data.model_data.noaa.gfs.gfs import(
+    gfs_0p25 as archived_gfs_0p25,
+    gfs_0p25_secondary_parameters as archived_gfs_0p25_secondary_parameters,
+    gfs_0p50 as archived_gfs_0p50
+)
+
+# Global Ensemble Forecast System (GEFS)
+# - GEFS 0.5x0.5 Degree Primary Parameters
+# - GEFS 0.5x0.5 Degree Secondary Parameters
+# - GEFS 0.25x0.25 Degree
+from wxdata.archived_data.model_data.noaa.gefs.gefs import(
+    gefs_0p50 as archived_gefs_0p50,
+    gefs_0p50_secondary_parameters as archived_gefs_0p50_secondary_parameters,
+    gefs_0p25 as archived_gefs_0p25
+)
+
+# Climate Forecast System (CFS)
+# - CFS Flux Products
+# - CFS Pressure Products
+from wxdata.archived_data.model_data.noaa.cfs.cfs import(
+    get_archived_cfs_flux,
+    get_archived_cfs_pressure
+)
+
+# Real-Time Mesoscale Analysis (RTMA)
+from wxdata.archived_data.model_data.noaa.rtma.rtma import rtma as archived_rtma
+
+"""
+
+***********************************************************************************************
+
+
+************  This section hosts the Archived Radar Data Clients ******************************
+
+
+***********************************************************************************************
 """
 
 
-"""
-This section of functions are for users who want full wxdata functionality.
-
-These functions do the following:
-
-1) Scan for the latest available data. 
-    - If the data on your local machine is not up to date, new data will download automatically.
-    - If the data on your local machine is up to date, new data download is bypassed.
-    - This is a safeguard that prevents excessive requests on the data servers.
-    
-2) Builds the wxdata directory to store the weather data files. 
-    - Scans for the directory branch and builds the branch if it does not exist. 
-
-3) Downloads the data.
-    - Users can define their VPN/PROXY IP Address as a (dict) in their script and pass their
-      VPN/PROXY IP address into the function to avoid SSL Certificate errors when requesting data.
-    - Algorithm allows for up to 5 retries with a 30 second break between each retry to resolve connection
-      interruptions while not overburdening the data servers. 
-
-4) Pre-processes the data via filename formatting and correctly filing in the wxdata directory. 
-
-5) Post-processing by doing the following tasks:
-     - Remapping GRIB2 variable keys into plain language variable keys.
-     - Fixing dataset build errors and grouping all variables together.
-     - Transforms longitude from 0 to 360 degrees into -180 to 180 degrees.
-     - Subsetting the data to the latitude/longitude boundaries specified by the user. 
-     - Converting temperature from kelvin to units the user wants (default is Celsius).
-     - Returning a post-processed xarray.array to the user. 
-     
-6) Preserves system memory by doing the following:
-     - Deleting old data files before each new download.
-     - When clear_recycle_bin=True, the user's recycle bin is also cleared. 
-"""
+from wxdata.archived_data.radar_data.nexrad2 import(
+    download_archived_single_station_nexrad2_radar_data,
+    download_archived_multi_station_nexrad2_radar_data
+)
 
 """
-********************************************************************************
+
+***********************************************************************************************
 
 
-************  This section hosts the Model Data Clients. ***********************
+************  This section hosts the Model Data Clients (Latest Data). ************************
 
 
-********************************************************************************
+***********************************************************************************************
 """
 
 ##############
@@ -697,19 +685,31 @@ from wxdata.model_data.noaa.rtma.rtma import(
 ##############################################################
 # European Centre for Medium-Range Weather Forecasts (ECMWF) #
 ##############################################################
-# - ECMWF IFS
-# - ECMWF IFS Ensemble
-# - ECMWF AIFS
-# - ECMWF AIFS Ensemble
-# - ECMWF IFS Wave
-# - ECMWF IFS Wave Ensemble
+# - ECMWF IFS (0.25x0.25 Degree)
+# - ECMWF IFS Ensemble (0.25x0.25 Degree)
+# - ECMWF AIFS (0.25x0.25 Degree)
+# - ECMWF AIFS Ensemble (0.25x0.25 Degree)
+# - ECMWF IFS Wave (0.25x0.25 Degree)
+# - ECMWF IFS Wave Ensemble (0.25x0.25 Degree)
+# - ECMWF AIFS Wave (0.25x0.25 Degree)
+# - ECMWF AIFS Wave Ensemble (0.25x0.25 Degree)
+# - ECMWF High Resolution IFS (0.10x0.10 Degree)
+# - ECMWF High Resolution IFS Ensemble (0.10x0.10 Degree)
+# - ECMWF High Resolution IFS Wave (0.10x0.10 Degree)
+# - ECMWF High Resolution IFS Wave Ensemble (0.10x0.10 Degree)
 from wxdata.model_data.ecmwf.ecmwf import(
     ecmwf_ifs,
     ecmwf_ifs_ens,
     ecmwf_aifs,
     ecmwf_aifs_ens,
     ecmwf_ifs_wave,
-    ecmwf_ifs_wave_ens
+    ecmwf_ifs_wave_ens,
+    ecmwf_aifs_wave,
+    ecmwf_aifs_wave_ens,
+    ecmwf_high_res_ifs,
+    ecmwf_high_res_ifs_ens,
+    ecmwf_high_res_ifs_wave,
+    ecmwf_high_res_ifs_wave_ens
 )
 
 ##################################
@@ -896,6 +896,9 @@ from wxdata.utils.tools import(
 
 # This function executes a list of Python scripts in the order the user lists them
 from wxdata.utils.scripts import run_external_scripts
+
+# This function transforms an xarray.array in GRIB2 format to netCDF4 format and writes a netCDF (.nc) file to a user-specified file path. 
+from wxdata.utils.transforms import grib_to_netcdf
 
 """
 ***************************************************************************

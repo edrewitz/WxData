@@ -1,7 +1,6 @@
 ---
 title: Open-Meteo API GFS0P25 Wave Forecasts
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Open-Meteo API GFS0P25 Wave Forecasts
 
 ```python

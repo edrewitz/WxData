@@ -237,7 +237,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 ***Climate Forecast System (CFS)***
 1. [Archived CFS Pressure]()
-2. [Archived CFS Flux]()
+2. [Archived CFS Flux](https://edrewitz.github.io/WxData/Archived%20CFS%20Flux)
 
 ***Real-Time Mesoscale Analysis (RTMA)***
 1. [Archived RTMA]()
@@ -246,48 +246,6 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 -----------------------------
 
-#### Post-Processors
-
-***GFS Post-Processing***
-1. [Primary GFS](https://edrewitz.github.io/WxData/Primary%20GFS%20Post%20Processing)
-2. [Secondary GFS](https://edrewitz.github.io/WxData/Secondary%20GFS%20Post%20Processing)
-
-***AIGFS Post-Processing***
-1. [AIGFS](https://edrewitz.github.io/WxData/aigfs_post_processing)
-
-***CFS Post-Processing***
-1. [CFS Pressure](https://edrewitz.github.io/WxData/cfs_pressure_post_processing)
-2. [CFS Flux](https://edrewitz.github.io/WxData/cfs_flux_post_processing)
-
-***GEFS Post-Processing***
-1. [Primary GEFS](https://edrewitz.github.io/WxData/Primary%20GEFS%20Post-Processing)
-2. [Secondary GEFS](https://edrewitz.github.io/WxData/Secondary%20GEFS%20Post%20Processing)
-
-***AIGEFS Post-Processing***
-1. [AIGEFS Members](https://edrewitz.github.io/WxData/aigefs_members_post_processing)
-2. [AIGEFS Single](https://edrewitz.github.io/WxData/aigefs_single_post_processing)
-
-***HGEFS Post-Processing***
-1. [HGEFS](https://edrewitz.github.io/WxData/hgefs_post_processing)
-
-***ECMWF Post-Processing***
-1. [ECMWF IFS and IFS Ensemble](https://edrewitz.github.io/WxData/ECMWF%20IFS%20Post%20Processing)
-2. [ECMWF AIFS and AIFS Ensemble](https://edrewitz.github.io/WxData/ECMWF%20AIFS%20Post%20Processing)
-3. [ECMWF IFS Wave and IFS Wave Ensemble](https://edrewitz.github.io/WxData/ECMWF%20IFS%20Wave%20Post%20Processing)
-
-***Real-Time Mesoscale Analysis Post-Processing***
-1. [RTMA](https://edrewitz.github.io/WxData/RTMA%20Post%20Processing)
-
-***CMC Post Processing***
-1. [GDPS](https://edrewitz.github.io/WxData/gdps%20processing)
-2. [RDPS](https://edrewitz.github.io/WxData/rdps%20processing)
-3. [HRDPS](https://edrewitz.github.io/WxData/hrdps%20processing)
-4. [GEPS](https://edrewitz.github.io/WxData/geps%20processing)
-5. [CanSIPS](https://edrewitz.github.io/WxData/cansips%20processing)
-
-[***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
-
------------------------------------------------
 #### Command Line Interface & Shell Scripting
 
 ***Global Forecast System (GFS)***
@@ -331,6 +289,49 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 ***METAR Observations***
 1. [METAR Observations]()
+
+[***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
+
+-----------------------------
+
+#### Post-Processors
+
+***GFS Post-Processing***
+1. [Primary GFS](https://edrewitz.github.io/WxData/Primary%20GFS%20Post%20Processing)
+2. [Secondary GFS](https://edrewitz.github.io/WxData/Secondary%20GFS%20Post%20Processing)
+
+***AIGFS Post-Processing***
+1. [AIGFS](https://edrewitz.github.io/WxData/aigfs_post_processing)
+
+***CFS Post-Processing***
+1. [CFS Pressure](https://edrewitz.github.io/WxData/cfs_pressure_post_processing)
+2. [CFS Flux](https://edrewitz.github.io/WxData/cfs_flux_post_processing)
+
+***GEFS Post-Processing***
+1. [Primary GEFS](https://edrewitz.github.io/WxData/Primary%20GEFS%20Post-Processing)
+2. [Secondary GEFS](https://edrewitz.github.io/WxData/Secondary%20GEFS%20Post%20Processing)
+
+***AIGEFS Post-Processing***
+1. [AIGEFS Members](https://edrewitz.github.io/WxData/aigefs_members_post_processing)
+2. [AIGEFS Single](https://edrewitz.github.io/WxData/aigefs_single_post_processing)
+
+***HGEFS Post-Processing***
+1. [HGEFS](https://edrewitz.github.io/WxData/hgefs_post_processing)
+
+***ECMWF Post-Processing***
+1. [ECMWF IFS and IFS Ensemble](https://edrewitz.github.io/WxData/ECMWF%20IFS%20Post%20Processing)
+2. [ECMWF AIFS and AIFS Ensemble](https://edrewitz.github.io/WxData/ECMWF%20AIFS%20Post%20Processing)
+3. [ECMWF IFS Wave and IFS Wave Ensemble](https://edrewitz.github.io/WxData/ECMWF%20IFS%20Wave%20Post%20Processing)
+
+***Real-Time Mesoscale Analysis Post-Processing***
+1. [RTMA](https://edrewitz.github.io/WxData/RTMA%20Post%20Processing)
+
+***CMC Post Processing***
+1. [GDPS](https://edrewitz.github.io/WxData/gdps%20processing)
+2. [RDPS](https://edrewitz.github.io/WxData/rdps%20processing)
+3. [HRDPS](https://edrewitz.github.io/WxData/hrdps%20processing)
+4. [GEPS](https://edrewitz.github.io/WxData/geps%20processing)
+5. [CanSIPS](https://edrewitz.github.io/WxData/cansips%20processing)
 
 [***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
 

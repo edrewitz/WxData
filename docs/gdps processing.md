@@ -2,7 +2,6 @@
 title: GDPS Processing
 ---
 
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 
 # Canadian Global Deterministic Prediction System (GDPS) Processing
 

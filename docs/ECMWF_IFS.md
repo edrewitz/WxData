@@ -1,7 +1,6 @@
 ---
 title: ECMWF IFS
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # ECMWF IFS
 
 ```python

@@ -1,7 +1,6 @@
 ---
 title: NEXRAD II Multi-Radar
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # NEXRAD II Multi-Radar
 ```python
 def download_current_multi_station_nexrad2_radar_data(site_ids,

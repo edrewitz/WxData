@@ -3,7 +3,7 @@ title: Open-Meteo API GEM Ensemble
 ---
 
 # Open-Meteo API GEM Ensemble
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 ```python
 def gem_hourly_ensemble_point_forecast(latitude,
             longitude,

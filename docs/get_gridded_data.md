@@ -1,7 +1,6 @@
 ---
 title: Get Gridded Data
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Get Gridded Data
 ```python
 def get_gridded_data(url,

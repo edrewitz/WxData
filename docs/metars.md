@@ -1,7 +1,6 @@
 ---
 title: METAR Observations
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # METAR Observations
 ```python
 def download_metar_data(clear_recycle_bin=False,

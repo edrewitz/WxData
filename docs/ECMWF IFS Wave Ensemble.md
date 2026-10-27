@@ -1,7 +1,7 @@
 ---
 title: ECMWF IFS Wave Ensemble
 ---
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # ECMWF IFS Wave Ensemble
 
 ```python

@@ -1,7 +1,7 @@
 ---
 title: Pixel Query
 ---
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Pixel Query
 ```python
 def pixel_query(ds, 

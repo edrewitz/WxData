@@ -22,7 +22,12 @@ def cansips_hindcast(western_bound=-180,
                      path=f"CanSIPS/Hindcast",
                      chunk_size=8192,
                      notifications='off',
-                     clear_data=False):
+                     clear_data=False,
+                    to_netcdf=False,
+                    netcdf_path=f"CanSIPS/Hindcast/NETCDF",
+                    netcdf_filename=f"geopotential_height.nc",
+                    delete_previous_netcdf_file=True,
+                    return_values=True):
 ```
 
 This function is a client that retrieves the CanSIPS Hindcast Data for the current month and calculates the
@@ -49,31 +54,31 @@ Optional Arguments:
 5) level_type (String) - The type of level surface for the variable.
 
 ***Level Types***
-
-```python
-'height above ground'
-'pressure'
-'surface'
-'geoid'
-'mean sea level'
-```
+  
+  ```python
+  'height above ground'
+  'pressure'
+  'surface'
+  'geoid'
+  'mean sea level'
+  ```
     
 6) level (Integer) - The pressure level in hPa or height above ground in meters.
 
 7) variable (String) - Variable the user is requesting.
 
 ***Variable List***
-
-```python
-'temperature'
-'geopotential height'
-'precipitation rate'
-'pressure'
-'sea surface height'
-'sea surface temperature'
-'u-wind component'
-'v-wind component'
-```
+  
+  ```python
+  'temperature'
+  'geopotential height'
+  'precipitation rate'
+  'pressure'
+  'sea surface height'
+  'sea surface temperature'
+  'u-wind component'
+  'v-wind component'
+  ```
     
 8) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
@@ -82,7 +87,8 @@ Optional Arguments:
                            'http':'http://your-proxy-address:port',
                            'https':'http://your-proxy-address:port'
                            }
-  ```                           
+  ```
+                           
 9) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
     with each run of the program you are calling WxData. This setting is to help preserve memory on the machine.
     
@@ -105,6 +111,18 @@ Optional Arguments:
 
 16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
     When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+    
+17) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+
+18) netcdf_path (String) - Default='CanSIPS/Hindcast/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+
+19) netcdf_filename (String) - Default='geopotential_height.nc'. The name of the netCDF (.nc) file. A good practice is to 
+    name this netCDF file using the variable name. 
+    
+20) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+    new netCDF file. For users who want to archive all data set this to False. 
+    
+21) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
     
 ***Variables & Proper level_type & level & category & period***
 
@@ -146,5 +164,5 @@ Optional Arguments:
 
 **Returns**
 
-An `xarray.array` of the 30-year mean of the CanSIPS Hindcast data that corresponds to the month of the current
-CanSIPS Forecast for the purpose of finding anomalies in the forecast data.   
+An xarray.array of the 30-year mean of the CanSIPS Hindcast data that corresponds to the month of the current
+CanSIPS Forecast for the purpose of finding anomalies in the forecast data.     

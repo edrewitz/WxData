@@ -1,7 +1,6 @@
 ---
 title: ECMWF IFS Wave
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # ECMWF IFS Wave
 
 ```python

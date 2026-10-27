@@ -1,7 +1,7 @@
 ---
 title: FEMS RAWS Station Current Fuels Observations By State
 ---
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # FEMS: RAWS Station Current Fuels Observations By State
 ```python
 def get_current_all_raws_station_fuels_observations(state='all',

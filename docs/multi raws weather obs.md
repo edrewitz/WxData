@@ -1,7 +1,6 @@
 ---
 title: FEMS Multi RAWS Station Weather Observations
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # FEMS: Multi RAWS Station Weather Observations
 ```python
 def get_multi_raws_station_weather_observations(station_ids, 

@@ -334,6 +334,8 @@ def ifs():
     
     ***Complex Example***
     
+    *Important*: Any parameter of the command not explicitly stated results in the default value being used.
+    
     1) Download the latest IFS High Resolution Ensemble for 2-meter temperature from Amazon Web Services
      
         - Use a proxy server of address: https://proxy-server-address:proxy-server-port 
@@ -1182,6 +1184,8 @@ def aifs():
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=ecmwf_aifs.nc)
     
     ***Complex Example***
+    
+    *Important*: Any parameter of the command not explicitly stated results in the default value being used.
     
     1) Download the latest AIFS Ensemble for 2-meter temperature from Amazon Web Services
      

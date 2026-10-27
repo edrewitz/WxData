@@ -178,6 +178,8 @@ def aigefs():
     
     ***Complex Example***
     
+    *Important*: Any parameter of the command not explicitly stated results in the default value being used.
+    
     1) Download the latest AIGEFS Ensemble Spread for 500mb Geopotential Height from Amazon Web Services
      
         - Use a proxy server of address: https://proxy-server-address:proxy-server-port 

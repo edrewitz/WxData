@@ -170,6 +170,8 @@ def hgefs():
     
     ***Complex Example***
     
+    *Important*: Any parameter of the command not explicitly stated results in the default value being used. 
+    
     1) Download the latest HGEFS Ensemble Mean for 500mb Geopotential Height
      
         - Use a proxy server of address: https://proxy-server-address:proxy-server-port 

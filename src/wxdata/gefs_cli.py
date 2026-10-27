@@ -1435,6 +1435,8 @@ def gefs0p25():
     
     ***Complex Example***
     
+    *Important*: Any parameter of the command not explicitly stated results in the default value being used.
+    
     1) Download the latest GEFS0P25 for 2-meter temperature and 2-meter relative humidity from Amazon Web Services
      
         - Use a proxy server of address: https://proxy-server-address:proxy-server-port 

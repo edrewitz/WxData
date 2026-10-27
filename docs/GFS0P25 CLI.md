@@ -2,7 +2,7 @@
 title: GFS0P25 CLI
 ---
 
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 
 # Global Forecast System (GEFS) 0.25x0.25 Command Line Interface.
 

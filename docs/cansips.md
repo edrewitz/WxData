@@ -7,7 +7,7 @@ title: Canadian Meteorological Centre CanSIPS
 # Canadian Seasonal to Inter-annual Prediction System (CanSIPS) Forecast
 
 ```python
-def cansips(western_bound=-180,
+def cansips_forecast(western_bound=-180,
             eastern_bound=180,
             northern_bound=90,
             southern_bound=-90,
@@ -24,10 +24,15 @@ def cansips(western_bound=-180,
             clear_recycle_bin=False,
             convert_temperature=True,
             convert_to='celsius',
-            process_data=True):
+            process_data=True,
+            to_netcdf=False,
+            netcdf_path=f"CanSIPS/Forecast/NETCDF",
+            netcdf_filename=f"geopotential_height.nc",
+            delete_previous_netcdf_file=True,
+            return_values=True):
 ```
 
-This function retrieves the latest CanSIPS data from `https://dd.weather.gc.ca/` and returns an `xarray.array` of specified data.
+This function retrieves the latest CanSIPS data from `https://dd.weather.gc.ca/` and returns an xarray.array of specified data.
 
 Required Arguments: None
 
@@ -56,7 +61,7 @@ Optional Arguments:
 'u-wind component'
 'v-wind component'
 ```
-    
+
 6) level (Integer) - The pressure level in hPa or height above ground in meters.
 
 7) level_type (String) - The type of level surface for the variable.
@@ -70,7 +75,7 @@ Optional Arguments:
 'geoid'
 'mean sea level'
 ```
-    
+
 8) period (String) - The forecast increment (monthly or seasonal [3-month])
 
 9) category (String or None) - The type of probabilistic category. If not requesting a probabilistic forecast set this to None.
@@ -94,125 +99,137 @@ Optional Arguments:
 
 10) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-  ```python
-   proxies=None ---> proxies={
-                           'http':'http://your-proxy-address:port',
-                           'https':'http://your-proxy-address:port'
-                           }
-  ```
+```python
+proxies=None ---> proxies={
+                   'http':'http://your-proxy-address:port',
+                   'https':'http://your-proxy-address:port'
+                   }
+```
 
 11) path (String) - Default="CanSIPS/Forecast/Geopotential Height/500mb/Monthly". 
-   The parent directory for the GRIB2 files on the local machine.
-   
+The parent directory for the GRIB2 files on the local machine.
+
 12) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
 
 13) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
 
 14) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
-    When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
-    
+When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+
 15) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
-    with each run of the program you are calling WxData. This setting is to help preserve memory on the machine.
-    
+with each run of the program you are calling WxData. This setting is to help preserve memory on the machine.
+
 16) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
-    either Celsius or Fahrenheit. When False, this data remains in Kelvin.
-    
+either Celsius or Fahrenheit. When False, this data remains in Kelvin.
+
 17) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
-    Set convert_to='fahrenheit' for Fahrenheit. 
-    
+Set convert_to='fahrenheit' for Fahrenheit. 
+
 18) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
-   data via their own external method, set process_data=False which means the data will be downloaded but not processed and no values
-   returned to the user.
-   
+data via their own external method, set process_data=False which means the data will be downloaded but not processed and no values
+returned to the user.
+
+19) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+
+20) netcdf_path (String) - Default='CanSIPS/Forecast/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+
+21) netcdf_filename (String) - Default='geopotential_height.nc'. The name of the netCDF (.nc) file. A good practice is to 
+name this netCDF file using the variable name. 
+
+22) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+new netCDF file. For users who want to archive all data set this to False. 
+
+23) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+
 ***Variables & Proper level_type & level & category & period***
 
 ```python
 'temperature':
-    valid level type(s): 'pressure', 'height above ground'.
-    valid levels:
-        level_type='pressure' (hPa): 850.                              
-        level_type='height above ground' (m): 2.
-    valid categories: 
-        level_type='height above ground':
-            1)  'probability above normal'
-            2)  'probability below normal'
-            3)  'probability near normal'
-            4)   'probability > 10th percentile'
-            5)   'probability > 20th percentile'
-            6)   'probability > 30th percentile'
-            7)   'probability > 40th percentile'
-            8)   'probability > 50th percentile'
-            9)   'probability > 60th percentile'
-            10)  'probability > 70th percentile'
-            11)  'probability > 80th percentile'
-            12)  'probability > 90th percentile'
-        
-        level_type='pressure':
-            1) None (There are no probabilistic forecasts for this level_type)
-    valid_period(s): 'seasonal', 'monthly'.
-    
+valid level type(s): 'pressure', 'height above ground'.
+valid levels:
+level_type='pressure' (hPa): 850.                              
+level_type='height above ground' (m): 2.
+valid categories: 
+level_type='height above ground':
+    1)  'probability above normal'
+    2)  'probability below normal'
+    3)  'probability near normal'
+    4)   'probability > 10th percentile'
+    5)   'probability > 20th percentile'
+    6)   'probability > 30th percentile'
+    7)   'probability > 40th percentile'
+    8)   'probability > 50th percentile'
+    9)   'probability > 60th percentile'
+    10)  'probability > 70th percentile'
+    11)  'probability > 80th percentile'
+    12)  'probability > 90th percentile'
+
+level_type='pressure':
+    1) None (There are no probabilistic forecasts for this level_type)
+valid_period(s): 'seasonal', 'monthly'.
+
 'geopotential height':
-    valid level type(s): 'pressure'.
-    valid_levels: 500 (hPa)
-    valid categories: None (There are no probabilistic forecasts for this level_type)
-    valid period(s): 'monthly'. 
-    
+valid level type(s): 'pressure'.
+valid_levels: 500 (hPa)
+valid categories: None (There are no probabilistic forecasts for this level_type)
+valid period(s): 'monthly'. 
+
 'precipitation':
-    valid level type(s): 'surface'.
-    valid levels: N/A - User does not need to change around anything here as the only level is surface.
-    valid categories: 
-        1)  'probability above normal'
-        2)  'probability below normal'
-        3)  'probability near normal'
-        4)   'probability > 10th percentile'
-        5)   'probability > 20th percentile'
-        6)   'probability > 30th percentile'
-        7)   'probability > 40th percentile'
-        8)   'probability > 50th percentile'
-        9)   'probability > 60th percentile'
-        10)  'probability > 70th percentile'
-        11)  'probability > 80th percentile'
-        12)  'probability > 90th percentile'
-        
-    valid_period(s): 'seasonal', 'monthly'.
+valid level type(s): 'surface'.
+valid levels: N/A - User does not need to change around anything here as the only level is surface.
+valid categories: 
+1)  'probability above normal'
+2)  'probability below normal'
+3)  'probability near normal'
+4)   'probability > 10th percentile'
+5)   'probability > 20th percentile'
+6)   'probability > 30th percentile'
+7)   'probability > 40th percentile'
+8)   'probability > 50th percentile'
+9)   'probability > 60th percentile'
+10)  'probability > 70th percentile'
+11)  'probability > 80th percentile'
+12)  'probability > 90th percentile'
+
+valid_period(s): 'seasonal', 'monthly'.
 
 'precipitation rate':    
-    valid level type(s): 'surface'.
-    valid levels: N/A - User does not need to change around anything here as the only level is surface.
-    valid categories: None (There are no probabilistic forecasts for this level_type)
-    valid period(s): 'monthly'. 
-    
+valid level type(s): 'surface'.
+valid levels: N/A - User does not need to change around anything here as the only level is surface.
+valid categories: None (There are no probabilistic forecasts for this level_type)
+valid period(s): 'monthly'. 
+
 'pressure':
-    valid level type(s): 'surface'.
-    valid levels: N/A - User does not need to change around anything here as the only level is surface.
-    valid categories: None (There are no probabilistic forecasts for this level_type)
-    valid period(s): 'monthly'. 
-    
+valid level type(s): 'surface'.
+valid levels: N/A - User does not need to change around anything here as the only level is surface.
+valid categories: None (There are no probabilistic forecasts for this level_type)
+valid period(s): 'monthly'. 
+
 'sea surface height':        
-    valid level type(s): 'geoid'.
-    valid levels: N/A - User does not need to change around anything here as the only level is geoid.
-    valid categories: None (There are no probabilistic forecasts for this level_type)
-    valid period(s): 'monthly'. 
-    
+valid level type(s): 'geoid'.
+valid levels: N/A - User does not need to change around anything here as the only level is geoid.
+valid categories: None (There are no probabilistic forecasts for this level_type)
+valid period(s): 'monthly'. 
+
 'sea surface temperature':
-    valid level type(s): 'surface'.
-    valid levels: N/A - User does not need to change around anything here as the only level is surface.
-    valid categories: None (There are no probabilistic forecasts for this level_type)
-    valid period(s): 'monthly'. 
-    
+valid level type(s): 'surface'.
+valid levels: N/A - User does not need to change around anything here as the only level is surface.
+valid categories: None (There are no probabilistic forecasts for this level_type)
+valid period(s): 'monthly'. 
+
 'u-wind component':
-    valid level type(s): 'pressure'.
-    valid levels: 850, 200 (hPa).
-    valid categories: None (There are no probabilistic forecasts for this level_type)
-    valid period(s): 'monthly'.  
-    
+valid level type(s): 'pressure'.
+valid levels: 850, 200 (hPa).
+valid categories: None (There are no probabilistic forecasts for this level_type)
+valid period(s): 'monthly'.  
+
 'v-wind component':
-    valid level type(s): 'pressure'.
-    valid levels: 850, 200 (hPa).
-    valid categories: None (There are no probabilistic forecasts for this level_type)
-    valid period(s): 'monthly'. 
+valid level type(s): 'pressure'.
+valid levels: 850, 200 (hPa).
+valid categories: None (There are no probabilistic forecasts for this level_type)
+valid period(s): 'monthly'. 
 ```
 
 **Returns**
 
-An `xarray.array` of the requested CanSIPS data.    
+An xarray.array of the requested CanSIPS data.   

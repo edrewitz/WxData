@@ -1,7 +1,7 @@
 ---
 title: Open-Meteo API HiRAM_SIT_HR Climate Reanalysis & Forecasts
 ---
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Open-Meteo API HiRAM_SIT_HR Climate Reanalysis & Forecasts
 
 ```python

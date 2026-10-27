@@ -1,7 +1,6 @@
 ---
 title: Open-Meteo API AIGFS
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Open-Meteo API AIGFS
 
 ```python

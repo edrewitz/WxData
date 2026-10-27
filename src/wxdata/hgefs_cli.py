@@ -45,7 +45,7 @@ def hgefs_data():
 # ---------------------------------------------------------------------
 @hgefs_data.group(name='fetch')
 def hgefs():
-    """
+    r"""
     Hybrid Global Ensemble Forecast System (HGEFS) Client.
     
     ***Valid Commands***
@@ -160,10 +160,6 @@ def hgefs():
     
     If you are using a proxy server you can define it by using --proxy https://proxy-server-address:proxy-server-port
     
-    Example: 
-    
-    `wxdata-hgefs fetch latest -v temperature -l 850 --proxy https://proxy-server-address:proxy-server-port`
-    
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     
     ***Additional Relevant Flags when --netcdf True***
@@ -171,6 +167,28 @@ def hgefs():
     --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=HGEFS/NETCDF). 
     
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=hgefs.nc)
+    
+    ***Complex Example***
+    
+    1) Download the latest HGEFS Ensemble Mean for 500mb Geopotential Height
+     
+        - Use a proxy server of address: https://proxy-server-address:proxy-server-port 
+                
+    2) Subset the data to reflect CONUS [-130, -65, 50, 20] = [west, east, north, south]
+        
+    3) Create a netCDF (.nc) file of the data called `hgefs_mean_gph_500.nc` saved at Weather_Data/HGEFS/NETCDF.
+    
+    Linux Shell:
+        ```wxdata-hgefs fetch latest -v geopotential_height -l 500 \
+            -wb -130 -eb -65 -nb 50 -sb 20 \
+            --netcdf True --Weather_Data/HGEFS/NETCDF --ncfname hgefs_mean_gph_500.nc \ 
+            --proxy https://proxy-server-address:proxy-server-port```
+            
+    Windows Powershell:
+        ```wxdata-hgefs fetch latest -v geopotential_height -l 500 `
+            -wb -130 -eb -65 -nb 50 -sb 20 `
+            --netcdf True --Weather_Data/HGEFS/NETCDF --ncfname hgefs_mean_gph_500.nc ` 
+            --proxy https://proxy-server-address:proxy-server-port```
     
     """
 @hgefs.command("latest")

@@ -21,10 +21,15 @@ def rdps(final_forecast_hour=84,
              clear_data=False,
             variable='geopotential height',
             level=500,
-            layer=[1000, 500]):
+            layer=[1000, 500],
+            to_netcdf=False,
+            netcdf_path=f"RDPS/NETCDF",
+            netcdf_filename=f"geopotential_height.nc",
+            delete_previous_netcdf_file=True,
+            return_values=True):
 ```
 
-This function retrieves the latest RDPS data from *https://dd.weather.gc.ca/* and returns an xarray.array of specified data.
+This function retrieves the latest RDPS data from `https://dd.weather.gc.ca/` and returns an xarray.array of specified data.
 
 Required Arguments: None
 
@@ -45,7 +50,8 @@ Optional Arguments:
                            'http':'http://your-proxy-address:port',
                            'https':'http://your-proxy-address:port'
                            }
-  ```                       
+  ```
+                   
 5) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin will be deleted 
     with each run of the program you are calling WxData. This setting is to help preserve memory on the machine.
     
@@ -65,20 +71,20 @@ Optional Arguments:
 
 11) level_type (String) - Default='pressure'. The type of level for the variable.
 
-***Level Types***
+    ***Level Types***
 
-```python
-'pressure'
-'height above ground'
-'potential vorticity surface'
-'pressure layer'
-'depth below surface'
-'surface'
-'mean sea level'
-'nominal top'
-'entire atmosphere'
-'eta'
-```
+    ```python
+    'pressure'
+    'height above ground'
+    'potential vorticity surface'
+    'pressure layer'
+    'depth below surface'
+    'surface'
+    'mean sea level'
+    'nominal top'
+    'entire atmosphere'
+    'eta'
+    ```
     
 12) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
     When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
@@ -95,6 +101,17 @@ Optional Arguments:
     
     level_type='depth below surface': -> layer=[upper level, lower level] (i.e. layer=[0, 10] for 0cm to 10cm below the surface).
 
+16) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+
+17) netcdf_path (String) - Default='RDPS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+
+18) netcdf_filename (String) - Default='geopotential_height.nc'. The name of the netCDF (.nc) file. A good practice is to 
+    name this netCDF file using the variable name. 
+    
+19) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+    new netCDF file. For users who want to archive all data set this to False. 
+    
+20) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
 
 ***Variables & Proper level_type & level***
 
@@ -470,7 +487,7 @@ Any area where valid_levels = None -> Users do not need to edit the optional arg
 'upward longwave radiation flux':
     valid level type(s): 'nominal top'
     valid levels: None (level_type='nominal top' -> 'nominal top' is the only level)
-
+    
 'upward shortwave radiation flux':
     valid level type(s): 'nominal top'
     valid levels: None (level_type='nominal top' -> 'nominal top' is the only level)
@@ -523,11 +540,11 @@ Any area where valid_levels = None -> Users do not need to edit the optional arg
         
 'vertical wind shear':
     valid level type(s): 'eta'
-    valid levels: None (level_type='eta' -> 'eta' is the only level)
+    valid levels: None (level_type='eta' -> 'eta' is the only level)     
 ```
 
 **Returns**
 
-An `xarray.array` of the latest RDPS forecast data for a user-specified variable, `level`/`layer` and `level_type`.
+An xarray.array of the latest RDPS forecast data for a user-specified variable, level/layer and level_type.
 
-RDPS files are saved to directory `{path}`  
+RDPS files are saved to directory {path}  

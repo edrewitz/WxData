@@ -1,7 +1,6 @@
 ---
 title: FEMS Single RAWS Station Meta-Data
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # FEMS: Single RAWS Station Meta-Data
 ```python
 def get_single_raws_station_meta_data(station_id, 

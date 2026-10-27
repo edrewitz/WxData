@@ -1,7 +1,6 @@
 ---
 title: ECMWF IFS Wave and IFS Wave Ensemble Post-Processing
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # ECMWF IFS Wave and IFS Wave Ensemble Post-Processing
 
 ```python

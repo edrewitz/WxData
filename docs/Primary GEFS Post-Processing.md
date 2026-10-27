@@ -1,7 +1,6 @@
 ---
 title: Primary GEFS Variables Post-Processing
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Primary GEFS Variables Post-Processing
 ```python
 def primary_gefs_post_processing(paths,

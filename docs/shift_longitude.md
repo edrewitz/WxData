@@ -1,7 +1,6 @@
 ---
 title: Shift Longitude
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Shift Longitude
 ```python
 def shift_longitude(ds, 

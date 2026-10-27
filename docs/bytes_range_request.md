@@ -1,7 +1,6 @@
 ---
 title: Byte-Range Request
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Byte-Range Request
 ```python
 def byte_range_request(grib_url,

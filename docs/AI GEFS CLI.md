@@ -2,8 +2,6 @@
 title: AIGEFS CLI
 ---
 
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
-
 # AI Global Ensemble Forecast System (AIGEFS) Command Line Interface
 
 ***Valid Commands***

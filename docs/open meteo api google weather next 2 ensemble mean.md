@@ -1,7 +1,6 @@
 ---
 title: Google Weather Next 2 Ensemble Mean
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Google Weather Next 2 Ensemble Mean
 
 ```python

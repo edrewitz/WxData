@@ -1,7 +1,7 @@
 ---
 title: Hybrid Global Ensemble Forecast System (HGEFS) Post-Processing
 ---
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 
 # Hybrid Global Ensemble Forecast System (HGEFS) Post-Processing
 ```python

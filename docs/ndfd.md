@@ -1,7 +1,7 @@
 ---
 title: National Weather Service Gridded Forecast (NDFD)
 ---
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # National Weather Service Gridded Forecast (NDFD)
 
 ```python

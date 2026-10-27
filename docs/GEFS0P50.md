@@ -38,7 +38,12 @@ def gefs_0p50(cat='mean',
                     200,
                     100,
                     50,
-                    10]):
+                    10],
+            to_netcdf=False,
+            netcdf_path=f"GEFS0P50/NETCDF",
+            netcdf_filename=f"gefs_0p50.nc",
+            delete_previous_netcdf_file=True,
+            return_values=True):
 ```
 This function downloads the latest GEFS0P50 data for a region specified by the user
 
@@ -47,15 +52,17 @@ Required Arguments: None
 Optional Arguments:
 
 1) cat (string) - Default='mean'. The category of the ensemble data. 
-    
-	    Valid categories
-	    -----------------
-	    
-	    1) mean
-	    2) members
-	    3) spread
-	    4) control
-    
+
+	***Valid categories***
+	
+	i) mean
+	
+	ii) members
+	
+	iii) spread
+	
+	iv) control
+
 2) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The GEFS0P50
 goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
 384 by the nereast increment of 3 hours. 
@@ -72,13 +79,13 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
 
 8) proxies (dict or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-```python	
-proxies=None ---> proxies={
-					   'http':'http://your-proxy-address:port',
-					   'https':'http://your-proxy-address:port'
-					   }
-```
-
+	```python
+   proxies=None ---> proxies={
+				   'http':'http://your-proxy-address:port',
+				   'https':'http://your-proxy-address:port'
+				   }
+	```
+ 
 9) members (List) - Default=All 30 ensemble members. The individual ensemble members. There are 30 members in this ensemble.  
 
 10) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
@@ -91,41 +98,42 @@ proxies=None ---> proxies={
 12) variables (List) - Default=['geopotential height'].
 
 	A list of variable names the user wants to download in plain language. 
-    
-        Variable Name List for GEFS0P50
-        -------------------------------
-        
-			'total precipitation'
-            'convective available potential energy'
-            'categorical freezing rain'
-            'categorical ice pellets'
-            'categorical rain'
-            'categorical snow'
-            'convective inhibition'
-            'downward longwave radiation flux'
-            'downward shortwave radiation flux'
-            'geopotential height'
-            'ice thickness'
-            'latent heat net flux'
-            'pressure'
-            'mean sea level pressure'
-            'precipitable water'
-            'relative humidity'
-            'sensible heat net flux'
-            'snow depth'
-            'volumetric soil moisture content'
-            'total cloud cover'
-            'maximum temperature'
-            'minimum temperature'
-            'temperature'
-            'soil temperature'
-            'u-component of wind'
-            'upward longwave radiation flux'
-            'upward shortwave radiation flux'
-            'v-component of wind'
-            'vertical velocity'
-            'water equivalent of accumulated snow depth'
-            
+
+***Variable Name List for GEFS0P50***
+
+```python
+'total precipitation'
+'convective available potential energy'
+'categorical freezing rain'
+'categorical ice pellets'
+'categorical rain'
+'categorical snow'
+'convective inhibition'
+'downward longwave radiation flux'
+'downward shortwave radiation flux'
+'geopotential height'
+'ice thickness'
+'latent heat net flux'
+'pressure'
+'mean sea level pressure'
+'precipitable water'
+'relative humidity'
+'sensible heat net flux'
+'snow depth'
+'volumetric soil moisture content'
+'total cloud cover'
+'maximum temperature'
+'minimum temperature'
+'temperature'
+'soil temperature'
+'u-component of wind'
+'upward longwave radiation flux'
+'upward shortwave radiation flux'
+'v-component of wind'
+'vertical velocity'
+'water equivalent of accumulated snow depth'
+```
+		
 13) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
 	the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
 	be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
@@ -138,7 +146,7 @@ proxies=None ---> proxies={
 	
 16) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
 	Set convert_to='fahrenheit' for Fahrenheit. 
-		
+	
 17) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
 
 18) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
@@ -147,29 +155,32 @@ proxies=None ---> proxies={
 	When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
 
 20) source (String) - Default='noaa'. The data server the user wants to connect the client to.
-    
-        Server List
-        -----------
-        
-        1) NOAA/NCEP/NOMADS - source='noaa'
-        2) Amazon AWS - source='aws'
-        3) Google Cloud - source='google'
-        
+
+	***Server List***
+	
+	i) NOAA/NCEP/NOMADS - `source='noaa'`
+	
+	ii) Amazon AWS - `source='aws'`
+	
+	iii) Google Cloud - `source='google'`
+	
+	*If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+	establish a connection there.*
+	
 21) level_type (String) - Default='pressure'. The type of level for the variable.
-    
-        Level Types
-        -----------
-        
-        'pressure'
-        'height below ground'
-        'surface'
-        'height above ground'
-        'top of atmosphere'
-        'pressure above ground'
-        'mean sea level'
-        
-        
-        
+
+	***Level Types***
+	
+	```python
+	'pressure'
+	'height below ground'
+	'surface'
+	'height above ground'
+	'top of atmosphere'
+	'pressure above ground'
+	'mean sea level'
+	```
+	
 22) levels (String, Integer or Float List) - Default==[1000,
 														925,
 														850,
@@ -183,49 +194,60 @@ proxies=None ---> proxies={
 														50,
 														10]  
 														
+	The pressure, height or depth levels.
+	
+23) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
 
-The pressure, height or depth levels.
-    
+24) netcdf_path (String) - Default='GEFS0P50/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+
+25) netcdf_filename (String) - Default='gefs_0p50.nc'. The name of the netCDF (.nc) file. A good practice is to 
+	name this netCDF file using the variable name. 
+	
+26) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+	new netCDF file. For users who want to archive all data set this to False. 
+	
+27) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+
 **Returns**
 
 An xarray data array of the GEFS0P50 data specified to the coordinate boundaries and variable list the user specifies. 
 
 GEFS0P50 files are saved to f:GEFS0P50/{cat} or in the case of ensemble members f:GEFS0P50/{cat}/{member}
-    
-    Variables
-    ---------
-    
-    'surface_pressure'
-    'total_precipitation'
-    'categorical_snow'
-    'categorical_ice_pellets'
-    'categorical_freezing_rain'
-    'categorical_rain'
-    'time_mean_surface_latent_heat_flux'
-    'time_mean_surface_sensible_heat_flux'
-    'surface_downward_shortwave_radiation_flux'
-    'surface_downward_longwave_radiation_flux'
-    'surface_upward_shortwave_radiation_flux'
-    'surface_upward_longwave_radiation_flux'
-    'orography'
-    'water_equivalent_of_accumulated_snow_depth'
-    'snow_depth'
-    'sea_ice_thickness'
-    'mslp'
-    'soil_temperature'
-    'volumetric_soil_moisture_content'
-    '2m_temperature'
-    '2m_relative_humidity'
-    'maximum_temperature'
-    'minimum_temperature'
-    '10m_u_wind_component'
-    '10m_v_wind_component'
-    'precipitable_water'
-    'convective_available_potential_energy'
-    'convective_inhibition'
-    'geopotential_height'
-    'air_temperature'
-    'relative_humidity'
-    'u_wind_component'
-    'v_wind_component'
-    
+
+***Variables***
+
+```python
+'surface_pressure'
+'total_precipitation'
+'categorical_snow'
+'categorical_ice_pellets'
+'categorical_freezing_rain'
+'categorical_rain'
+'time_mean_surface_latent_heat_flux'
+'time_mean_surface_sensible_heat_flux'
+'surface_downward_shortwave_radiation_flux'
+'surface_downward_longwave_radiation_flux'
+'surface_upward_shortwave_radiation_flux'
+'surface_upward_longwave_radiation_flux'
+'orography'
+'water_equivalent_of_accumulated_snow_depth'
+'snow_depth'
+'sea_ice_thickness'
+'mslp'
+'soil_temperature'
+'volumetric_soil_moisture_content'
+'2m_temperature'
+'2m_relative_humidity'
+'maximum_temperature'
+'minimum_temperature'
+'10m_u_wind_component'
+'10m_v_wind_component'
+'precipitable_water'
+'convective_available_potential_energy'
+'convective_inhibition'
+'geopotential_height'
+'air_temperature'
+'relative_humidity'
+'u_wind_component'
+'v_wind_component'
+```

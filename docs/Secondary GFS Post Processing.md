@@ -1,7 +1,6 @@
 ---
 title: Secondary GFS Variables Post-Processing
 ---
-[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 # Secondary GFS Variables Post-Processing
 ```python
 def secondary_gfs_post_processing(path,

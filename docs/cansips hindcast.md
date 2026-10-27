@@ -2,7 +2,7 @@
 title: Canadian Meteorological Centre CanSIPS Hindcast
 ---
 
-[***Return To WxData Wiki Main Page***](https://github.com/edrewitz/WxData/wiki)
+[***Return To WxData Main Page***](https://edrewitz.github.io/WxData/)
 
 # Canadian Seasonal to Inter-annual Prediction System (CanSIPS) Hindcast
 

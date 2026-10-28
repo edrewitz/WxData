@@ -536,54 +536,62 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 <img src="https://github.com/edrewitz/WxData/blob/main/icons/server%20rotation.png?raw=true" width="600" height="400" alt="Alt text" /> 
 
-**Operational Weather Model & Gridded Forecast Data Server List**
+**Real-Time Data Server List**
 
-| Client | NOAA/NCEP/NOMADS | ECMWF Open-Data | Amazon Web Services | Google Cloud | NOAA/NWS/FTP | MSC Open Data |
-| -------- | -------- | -------- | -------- | -------- | -------- | -------- | 
-| GFS0P25  |Y|N|Y|Y|N|N|
-| GFS0P25 Secondary Levels & Parameters  |Y|N|Y|Y|N|N| 
-| GFS0P50  |Y|N|Y|Y|N|N|
-| GEFS0P50  |Y|N|Y|Y|N|N|
-| GEFS0P50 Secondary Levels & Parameters  |Y|N|Y|Y|N|N|
-| GEFS0P25  |Y|N|Y|Y|N|N|
-| ECMWF IFS |N|Y|Y|Y|N|N|
-| ECMWF High Resolution IFS |N|Y|Y|Y|N|N|
-| ECMWF IFS Ensemble |N|Y|Y|Y|N|N|
-| ECMWF High Resolution IFS Ensemble |N|Y|Y|Y|N|N|
-| ECMWF IFS Wave |N|Y|Y|Y|N|N|
-| ECMWF High Resolution IFS Wave |N|Y|Y|Y|N|N|
-| ECMWF IFS Wave Ensemble |N|Y|Y|Y|N|N|
-| ECMWF High Resolution IFS Wave Ensemble |N|Y|Y|Y|N|N|
-| ECMWF AIFS |N|Y|Y|Y|N|N|
-| ECMWF AIFS Ensemble |N|Y|Y|Y|N|N|
-| ECMWF AIFS Wave |N|Y|Y|Y|N|N|
-| ECMWF AIFS Wave Ensemble |N|Y|Y|Y|N|N|
-| NOAA/NWS NDFD Grids |N|N|Y|N|Y|N|
-| RTMA |Y|N|Y|N|N|N|
-| AIGFS |Y|N|Y|N|N|N|
-| AIGEFS Pressure Members |Y|N|Y|N|N|N|
-| AIGEFS Surface Members |Y|N|Y|N|N|N|
-| AIGEFS Single (Ensemble Statistics) |Y|N|N|N|N|N|
-| HGEFS |Y|N|N|N|N|N|
-| CFS |Y|N|Y|N|N|N|
-| GDPS |N|N|N|N|N|Y|
-| RDPS |N|N|N|N|N|Y|
-| HRDPS |N|N|N|N|N|Y|
-| GEPS |N|N|N|N|N|Y|
-| CanSIPS |N|N|N|N|N|Y|
+| Client | NOAA/NCEP/NOMADS | ECMWF Open-Data | Amazon Web Services | Google Cloud | NOAA/NWS/FTP | MSC Open Data | University of Wyoming | NOAA/AWC | USDA/FEMS |
+| -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- |  
+| GFS0P25  |Y|N|Y|Y|N|N|N|N|N|
+| GFS0P25 Secondary Levels & Parameters  |Y|N|Y|Y|N|N|N|N|N| 
+| GFS0P50  |Y|N|Y|Y|N|N|N|N|N|
+| GEFS0P50  |Y|N|Y|Y|N|N|N|N|N|
+| GEFS0P50 Secondary Levels & Parameters  |Y|N|Y|Y|N|N|N|N|N|
+| GEFS0P25  |Y|N|Y|Y|N|N|N|N|N|
+| ECMWF IFS |N|Y|Y|Y|N|N|N|N|N|
+| ECMWF High Resolution IFS |N|Y|Y|Y|N|N|N|N|N|
+| ECMWF IFS Ensemble |N|Y|Y|Y|N|N|N|N|N|
+| ECMWF High Resolution IFS Ensemble |N|Y|Y|Y|N|N|N|N|N|
+| ECMWF IFS Wave |N|Y|Y|Y|N|N|N|N|N|
+| ECMWF High Resolution IFS Wave |N|Y|Y|Y|N|N|N|N|N|
+| ECMWF IFS Wave Ensemble |N|Y|Y|Y|N|N|N|
+| ECMWF High Resolution IFS Wave Ensemble |N|Y|Y|Y|N|N|N|N|N|
+| ECMWF AIFS |N|Y|Y|Y|N|N|N|N|N|
+| ECMWF AIFS Ensemble |N|Y|Y|Y|N|N|N|N|N|
+| ECMWF AIFS Wave |N|Y|Y|Y|N|N|N|N|N|
+| ECMWF AIFS Wave Ensemble |N|Y|Y|Y|N|N|N|N|N|
+| NOAA/NWS NDFD Grids |N|N|Y|N|Y|N|N|N|N|
+| RTMA |Y|N|Y|N|N|N|N|N|N|
+| AIGFS |Y|N|Y|N|N|N|N|N|N|
+| AIGEFS Pressure Members |Y|N|Y|N|N|N|N|N|N|
+| AIGEFS Surface Members |Y|N|Y|N|N|N|N|N|N|
+| AIGEFS Single (Ensemble Statistics) |Y|N|N|N|N|N|N|N|N|
+| HGEFS |Y|N|N|N|N|N|N|N|N|
+| CFS |Y|N|Y|N|N|N|N|N|N|
+| GDPS |N|N|N|N|N|Y|N|N|N|
+| RDPS |N|N|N|N|N|Y|N|N|N|
+| HRDPS |N|N|N|N|N|Y|N|N|N|
+| GEPS |N|N|N|N|N|Y|N|N|N|
+| CanSIPS |N|N|N|N|N|Y|N|N|N|
+| NEXRAD II Radar |N|N|Y|N|N|N|N|N|N| 
+| Observed Soundings |N|N|N|N|N|N|Y|N|N|
+| METAR Observations |N|N|N|N|N|N|N|Y|N|
+| RAWS Observations & Forecasts |N|N|N|N|N|N|N|N|Y|
+| NFDRS Data |N|N|N|N|N|N|N|N|Y|
 
-**Archived Weather Model Data Server List**
+**Archived Data Server List**
 
-| Client | Amazon Web Services | Google Cloud |
-| -------- | -------- | -------- | 
-| GFS0P25  |Y|Y|
-| GFS0P25 Secondary Levels & Parameters  |Y|Y|
-| GFS0P50  |Y|Y|
-| GEFS0P50  |Y|Y|
-| GEFS0P50 Secondary Levels & Parameters  |Y|Y|
-| GEFS0P25  |Y|Y|
-| RTMA |Y|N|
-| CFS |Y|N|
+| Client | Amazon Web Services | Google Cloud | University of Wyoming | USDA/FEMS |
+| -------- | -------- | -------- |  -------- |  -------- |
+| GFS0P25  |Y|Y|N|N|
+| GFS0P25 Secondary Levels & Parameters  |Y|Y|N|N|
+| GFS0P50  |Y|Y|N|N|
+| GEFS0P50  |Y|Y|N|N|
+| GEFS0P50 Secondary Levels & Parameters  |Y|Y|N|N|
+| GEFS0P25  |Y|Y|N|N|
+| RTMA |Y|N|N|N|
+| CFS |Y|N|N|N|
+| NEXRAD II Radar |Y|N|N|N|
+| Observed Soundings |N|N|Y|N|
+| RAWS Observations |N|N|N|Y|
 
 
 [***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)

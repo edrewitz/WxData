@@ -21,6 +21,12 @@ title: GFS0P25 CLI
 
 This determines the type of variables and levels.
 
+***Types***
+
+1) primary
+
+2) secondary
+
 -f = Final Forecast Hour (Default=384).
  
 The last hour the user wishes to download in the dataset. GFS0P25 has 384 forecast hours.

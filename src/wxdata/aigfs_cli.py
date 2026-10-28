@@ -54,7 +54,7 @@ def aigefs_data():
 @aigfs_data.group(name="fetch")
 def aigfs():
     r"""
-    AI Global Forecast System (AIGEFS) Client
+    AI Global Forecast System (AIGFS) Client
     
     ***Valid Commands***
 
@@ -161,7 +161,7 @@ def aigfs():
     
     ***Additional Relevant Flags when --netcdf True***
     
-    --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=AIGEFS/NETCDF). 
+    --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=AIGFS/NETCDF). 
     
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=aigfs.nc)
     
@@ -305,7 +305,7 @@ def aigfs():
                   
                   Default=['geopotential_height', 'specific humidity', 'temperature', 'u-component_of_wind', 'v-component_of_wind', 'vertical velocity']
                   
-                  See https://edrewitz.github.io/WxData/GEFS0P25 for available variables."""
+                  See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
                   
                   )
 )

@@ -31,9 +31,9 @@ title: My Project Home
 
 3) [WxData Documentation](https://edrewitz.github.io/WxData/#wxdata-documentation)
    
-   1. [Current Weather Model Data Clients](https://edrewitz.github.io/WxData/#current-weather-model-data-clients)
+   1. [Real-Time Data Clients](https://edrewitz.github.io/WxData/#current-weather-model-data-clients)
       
-   2. [Archived Weather Model Data Clients](https://edrewitz.github.io/WxData/#archived-weather-model-data-clients)
+   2. [Archived Data Clients](https://edrewitz.github.io/WxData/#archived-weather-model-data-clients)
       
    3. [Command Line Interface & Shell Scripting](https://edrewitz.github.io/WxData/#command-line-interface--shell-scripting)
       
@@ -144,7 +144,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 ## WxData Documentation
 
-#### Current Weather Model Data Clients
+#### Real-Time Data Clients
 
 ***Global Forecast System (GFS)***
 1. [GFS0P25](https://edrewitz.github.io/WxData/GFS0P25)
@@ -229,7 +229,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 [***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
 
 -----------------------------------------------
-#### Archived Weather Model Data Clients
+#### Archived Data Clients
 
 ***Global Forecast System (GFS)***
 1. [Archived GFS0P25](https://edrewitz.github.io/WxData/Archived%20GFS0P25)
@@ -247,6 +247,9 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 ***Real-Time Mesoscale Analysis (RTMA)***
 1. [Archived RTMA](https://edrewitz.github.io/WxData/Archived%20RTMA)
+
+***NEXRAD II Radar Data***
+1. [Archived NEXRAD II Radar Data]()
 
 [***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
 
@@ -291,7 +294,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 1. [RTMA](https://edrewitz.github.io/WxData/RTMA%20CLI)
 
 ***NOAA Storm Prediction Center Outlooks/National Weather Service Forecasts***
-1. [Get NDFD Grids]()
+1. [Get NDFD Grids](https://edrewitz.github.io/WxData/NDFD%20CLI)
 
 ***METAR Observations***
 1. [METAR Observations]()

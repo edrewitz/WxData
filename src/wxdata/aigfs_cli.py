@@ -472,7 +472,7 @@ def fetch_aigfs_data(final_forecast_hour,
                      return_values=False)
     
         if custom_directory != "none" and custom_directory != None:
-            _click.echo(f"AIGFS {category.upper()} latest download complete, data files saved to {custom_directory}")
+            _click.echo(f"AIGFS latest download complete, data files saved to {custom_directory}")
         else:
             if current_os != "Windows":
                 _click.echo(f"AIGFS latest download complete, data files saved to AIGFS/{level_type.upper()}")

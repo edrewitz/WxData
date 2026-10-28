@@ -49,13 +49,13 @@ title: My Project Home
        
    9. [Open-Meteo API](https://edrewitz.github.io/WxData/#open-meteo-api)
 
-5) [WxData Tutorials](https://edrewitz.github.io/WxData/#wxdata-tutorials)
+4) [WxData Tutorials](https://edrewitz.github.io/WxData/#wxdata-tutorials)
 
-6) [Server List](https://edrewitz.github.io/WxData/#server-list)
+5) [Server List](https://edrewitz.github.io/WxData/#server-list)
 
-7) [Citations](https://edrewitz.github.io/WxData/#citations)
+6) [Citations](https://edrewitz.github.io/WxData/#citations)
 
-8) [Data Sources](https://edrewitz.github.io/WxData/#data-sources)
+7) [Data Sources](https://edrewitz.github.io/WxData/#data-sources)
 
 ## What is WxData?
 

@@ -52,7 +52,7 @@ Required Arguments: None
 
 Optional Arguments:
 
-1) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The AIGEFS
+1) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The AIGFS
 goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
 384 by the nereast increment of 6 hours. 
 
@@ -76,8 +76,7 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
 7) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
    data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
    
-8) clear_recycle_bin (Boolean) - Default=True. When set to True, the contents in your recycle/trash bin will be deleted with each run
-    of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+8) clear_recycle_bin (Boolean) - (Default=False). Set to True to clear your recycle bin. 
         
 9) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
     the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
@@ -159,7 +158,7 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
 
 **Returns**
 
-An xarray data array of the AIGEFS data specified to the coordinate boundaries and variable list the user specifies. 
+An xarray data array of the AIGFS data specified to the coordinate boundaries and variable list the user specifies. 
 
 ***Pressure-Level Plain Language Variable Keys***
 

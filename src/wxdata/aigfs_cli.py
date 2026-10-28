@@ -450,7 +450,6 @@ def fetch_aigfs_data(final_forecast_hour,
             
         level_type = level_type.replace('_', ' ')
         
-        category = category.lower()
         convert_to = convert_to.lower()
         
         _fetch_aigfs(final_forecast_hour=final_forecast_hour,

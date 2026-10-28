@@ -81,7 +81,7 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
         
 9) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
     the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
-    be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
+    be used. 
 
 10) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
     the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 

@@ -22,6 +22,12 @@ title: GEFS0P50 CLI
 
 This determines the type of variables and levels.
 
+***Types***
+
+1) primary
+
+2) secondary
+
 -c = Category (Default='mean')
 
 This determines the category of ensemble data 

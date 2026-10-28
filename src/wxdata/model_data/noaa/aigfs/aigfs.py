@@ -166,7 +166,7 @@ def _aigfs_client(final_forecast_hour=384,
     Returns
     -------
     
-    An xarray data array of the AIGEFS data specified to the coordinate boundaries and variable list the user specifies. 
+    An xarray data array of the AIGFS data specified to the coordinate boundaries and variable list the user specifies. 
     
     Pressure-Level Plain Language Variable Keys
     -------------------------------------------
@@ -390,7 +390,7 @@ def aigfs(final_forecast_hour=384,
     
     Optional Arguments:
     
-    1) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The AIGEFS
+    1) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The AIGFS
     goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
     384 by the nereast increment of 6 hours. 
     
@@ -417,11 +417,9 @@ def aigfs(final_forecast_hour=384,
             
     9) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
         the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
-        be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
+        be used. 
     
-    10) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
+    10) clear_recycle_bin (Boolean) - (Default=False). Set to True to clear your recycle bin. 
         
     11) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
@@ -495,7 +493,7 @@ def aigfs(final_forecast_hour=384,
     
     **Returns**
     
-    An xarray data array of the AIGEFS data specified to the coordinate boundaries and variable list the user specifies. 
+    An xarray data array of the AIGFS data specified to the coordinate boundaries and variable list the user specifies. 
     
     ***Pressure-Level Plain Language Variable Keys***
     

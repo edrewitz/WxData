@@ -1400,7 +1400,7 @@ def _gfs_0p50_client(
         pass      
     
 
-def gfs_0p25(date,
+def get_archived_gfs_0p25(date,
              run,
             path=f"GFS0P25/Archive",
             final_forecast_hour=384, 
@@ -1882,7 +1882,7 @@ def gfs_0p25(date,
     else:
         pass
 
-def gfs_0p50(
+def get_archived_gfs_0p50(
             date,
             run,
             path=f"GFS0P50/Archive",
@@ -2450,7 +2450,7 @@ def gfs_0p50(
     else:
         pass
 
-def gfs_0p25_secondary_parameters(
+def get_archived_gfs_0p25_secondary_parameters(
             date,
             run,
             path=f"GFS0P25 SECONDARY PARAMETERS/Archive",

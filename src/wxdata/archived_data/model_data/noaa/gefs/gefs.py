@@ -1446,7 +1446,7 @@ def _gefs_0p25_client(date,
 
     
     
-def gefs_0p50(date,
+def get_archived_gefs_0p50(date,
               run,
              cat='mean', 
              final_forecast_hour=384, 
@@ -1885,7 +1885,7 @@ def gefs_0p50(date,
         
 
 
-def gefs_0p50_secondary_parameters(date,
+def get_archived_gefs_0p50_secondary_parameters(date,
               run,
              cat='mean', 
              final_forecast_hour=384, 
@@ -2401,7 +2401,7 @@ def gefs_0p50_secondary_parameters(date,
         
 
 
-def gefs_0p25(date,
+def get_archived_gefs_0p25(date,
               run,
              cat='mean', 
              final_forecast_hour=240, 

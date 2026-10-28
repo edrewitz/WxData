@@ -23,7 +23,7 @@ from wxdata.utils.recycle_bin import(
 
 _eccodes_warning()
 
-def rtma(date,
+def get_archived_rtma(date,
          run,
          model='rtma', 
          cat='analysis',

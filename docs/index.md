@@ -232,21 +232,21 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 #### Archived Weather Model Data Clients
 
 ***Global Forecast System (GFS)***
-1. [Archived GFS0P25]()
-2. [Archived GFS0P25 SECONDARY PARAMETERS]()
-3. [Archived GFS0P50]()
+1. [Archived GFS0P25](https://edrewitz.github.io/WxData/Archived%20GFS0P25)
+2. [Archived GFS0P25 Secondary Parameters & Levels](https://edrewitz.github.io/WxData/Archived%20GFS0P25%20Secondary%20Parameters)
+3. [Archived GFS0P50](https://edrewitz.github.io/WxData/Archived%20GFS0P50)
 
 ***Global Ensemble Forecast System (GEFS)***
-1. [Archived GEFS0P50]()
-2. [Archived GEFS0P50 SECONDARY PARAMETERS]()
-3. [Archived GEFS0P25]()
+1. [Archived GEFS0P50](https://edrewitz.github.io/WxData/Archived%20GEFS0P50)
+2. [Archived GEFS0P50 Secondary Parameters & Levels](https://edrewitz.github.io/WxData/Archived%20GEFS0P50%20Secondary%20Parameters)
+3. [Archived GEFS0P25](https://edrewitz.github.io/WxData/Archived%20GEFS0P25)
 
 ***Climate Forecast System (CFS)***
-1. [Archived CFS Pressure]()
+1. [Archived CFS Pressure](https://edrewitz.github.io/WxData/Archived%20CFS%20Pressure)
 2. [Archived CFS Flux](https://edrewitz.github.io/WxData/Archived%20CFS%20Flux)
 
 ***Real-Time Mesoscale Analysis (RTMA)***
-1. [Archived RTMA]()
+1. [Archived RTMA](https://edrewitz.github.io/WxData/Archived%20RTMA)
 
 [***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
 

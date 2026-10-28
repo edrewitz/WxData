@@ -36,8 +36,6 @@ Change this if you want your directories set up differently.
 
 -cd = Clear Data (Default=False).
   
-***Archived Clients Automatically Clear Old Data***
-
 When set to False the scanner safeguard that prevents repetative downloads is enabled.
 Set -cd False to disable this safety feature.
 

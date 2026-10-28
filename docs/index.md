@@ -505,6 +505,8 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 ## WxData Tutorials
 
+<img src="https://github.com/edrewitz/WxData/blob/main/icons/logos.png?raw=true" width="400" height="400" alt="Alt text" />
+
 [***Jupyter Lab***](https://github.com/edrewitz/WxData-Jupyter-Lab#wxdata-jupyter-lab-tutorials)
 
 [***Command Line Interface***](https://github.com/edrewitz/WxData-Shell)

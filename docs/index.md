@@ -4,6 +4,8 @@ title: My Project Home
 ---
 <img src="https://github.com/edrewitz/WxData/blob/main/icons/wxdata_logo.png.png?raw=true" width="400" height="400" alt="Alt text" />
 
+***(C) Eric J. Drewitz 2025-2026***
+
 [![Conda Recipe](https://img.shields.io/badge/recipe-wxdata-green.svg)](https://anaconda.org/conda-forge/wxdata) [![Conda Version](https://img.shields.io/conda/vn/conda-forge/wxdata.svg)](https://anaconda.org/conda-forge/wxdata) ![PyPI](https://img.shields.io/pypi/v/wxdata?label=pypi%20wxdata) 
 
 [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/wxdata.svg)](https://anaconda.org/conda-forge/wxdata) 
@@ -11,17 +13,15 @@ title: My Project Home
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17727621.svg)](https://doi.org/10.5281/zenodo.17727621)
 
-Anaconda Downloads
+**Anaconda Downloads**
 
 [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/wxdata.svg)](https://anaconda.org/conda-forge/wxdata)
 
 
-PIP Downloads:
+**PIP Downloads**
 
 [![PyPI Downloads](https://static.pepy.tech/personalized-badge/wxdata?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/wxdata)
 
-
-**(C) Eric J. Drewitz 2025-2026**
 
 ## Table of Contents
 

@@ -267,7 +267,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 2. [GFS0P50](https://edrewitz.github.io/WxData/GEFS0P50%20CLI)
 
 ***AI Global Forecast System (AIGFS)***
-1. [AIGFS](https://edrewitz.github.io/WxData/aigfs)
+1. [AIGFS](https://edrewitz.github.io/WxData/AI%20GFS%20CLI)
 
 ***Climate Forecast System (CFS)***
 1. [CFS Pressure]()

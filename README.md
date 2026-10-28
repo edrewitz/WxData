@@ -7,19 +7,19 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17727621.svg)](https://doi.org/10.5281/zenodo.17727621)
 
-Anaconda Downloads
+**Anaconda Downloads**
 
 [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/wxdata.svg)](https://anaconda.org/conda-forge/wxdata)
 
 
-PIP Downloads:
+**PIP Downloads**
 
 [![PyPI Downloads](https://static.pepy.tech/personalized-badge/wxdata?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/wxdata)
 
 
 **(C) Eric J. Drewitz 2025-2026**
 
-## WxData User Guide
+**WxData User Guide**
 
 1) [What Is WxData?](https://edrewitz.github.io/WxData/#what-is-wxdata)
 
@@ -53,7 +53,7 @@ PIP Downloads:
 
 8) [Data Sources](https://edrewitz.github.io/WxData/#data-sources)
 
-## What is WxData?
+**What is WxData?**
 
 WxData is a Python package that has many clients for retrieving and processing various types of meteorological datasets (both real-time and archived) with a focus on automation. 
 These datasets include 20+ Weather Forecast Models, Observational Data, Radar Data, Fuels Data (Fire Weather), Observed Upper-Air Sounding Data, Real-Time Mesoscale Analysis, Gridded NOAA National Weather Service Forecasts and Gridded NOAA Storm Prediction Center Outlooks, NOAA Climate Prediction Center Outlooks, as well as interfaces with the Open-Meteo and AirNow APIs. 
@@ -82,7 +82,7 @@ These datasets include 20+ Weather Forecast Models, Observational Data, Radar Da
 
 - WxData allows users who work on VPNs and behind firewalls to access data through a user-specified proxy server.
 
-## Citations
+**Citations**
 
 **MetPy**: May, R. M., Goebbert, K. H., Thielen, J. E., Leeman, J. R., Camron, M. D., Bruick, Z.,
     Bruning, E. C., Manser, R. P., Arms, S. C., and Marsh, P. T., 2022: MetPy: A
@@ -119,7 +119,7 @@ These datasets include 20+ Weather Forecast Models, Observational Data, Radar Da
 
 ----------------------------------------------------------
 
-## Data Sources
+**Data Sources**
 
 1) [National Oceanic and Atmospheric Administration/National Center for Environmental Prediction](https://nomads.ncep.noaa.gov/)
 

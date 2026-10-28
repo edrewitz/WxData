@@ -64,6 +64,12 @@ These datasets include 20+ Weather Forecast Models, Observational Data, Radar Da
 
 - WxData is also available in the command-line so users can write shell scripts to retrieve weather data. 
 
+- WxData has support for server choice and rotation (if a server fails to respond) between the following:
+
+   -  NCEP/NOMADS -> Amazon Web Services -> Google Cloud
+
+   - ECMWF Open-Data -> Amazon Web Services -> Google Cloud
+
 - WxData makes it easy for users to create automated ETL pipelines for their weather operations.
 
    - These automated ETL pipelines can be quite advanced (i.e. multiple concurrent GRIB2 file downloads between the main [i.e. NCEP/NOMADS] and cloud servers [i.e. AWS & Google Cloud] to spread the traffic between multiple servers (and you can use a proxy server if you choose) -> extracting an `xarray.array` from the GRIB2 files -> cleaning the `xarray.array` and decoding the GRIB2 variable keys into plain-language -> transforming & exporting the cleaned and decoded `xarray.array` into a NETCDF (.nc) file.    

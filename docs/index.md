@@ -591,9 +591,9 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 # - GFS 0.25x0.25 Degree Secondary Parameters
 # - GFS 0.5x0.5 Degree
 from wxdata.archived_data.model_data.noaa.gfs.gfs import(
-    gfs_0p25 as archived_gfs_0p25,
-    gfs_0p25_secondary_parameters as archived_gfs_0p25_secondary_parameters,
-    gfs_0p50 as archived_gfs_0p50
+    get_archived_gfs_0p25,
+    get_archived_gfs_0p25_secondary_parameters,
+    get_archived_gfs_0p50
 )
 
 # Global Ensemble Forecast System (GEFS)
@@ -601,9 +601,9 @@ from wxdata.archived_data.model_data.noaa.gfs.gfs import(
 # - GEFS 0.5x0.5 Degree Secondary Parameters
 # - GEFS 0.25x0.25 Degree
 from wxdata.archived_data.model_data.noaa.gefs.gefs import(
-    gefs_0p50 as archived_gefs_0p50,
-    gefs_0p50_secondary_parameters as archived_gefs_0p50_secondary_parameters,
-    gefs_0p25 as archived_gefs_0p25
+    get_archived_gefs_0p50,
+    get_archived_gefs_0p50_secondary_parameters,
+    get_archived_gefs_0p25
 )
 
 # Climate Forecast System (CFS)
@@ -615,7 +615,7 @@ from wxdata.archived_data.model_data.noaa.cfs.cfs import(
 )
 
 # Real-Time Mesoscale Analysis (RTMA)
-from wxdata.archived_data.model_data.noaa.rtma.rtma import rtma as archived_rtma
+from wxdata.archived_data.model_data.noaa.rtma.rtma import get_archived_rtma
 
 """
 

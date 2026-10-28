@@ -27,9 +27,9 @@
 
 3) [WxData Documentation](https://edrewitz.github.io/WxData/#wxdata-documentation)
    
-   1. [Current Weather Model Data Clients](https://edrewitz.github.io/WxData/#current-weather-model-data-clients)
+   1. [Real-Time Data Clients](https://edrewitz.github.io/WxData/#real-time-data-clients)
       
-   2. [Archived Weather Model Data Clients](https://edrewitz.github.io/WxData/#archived-weather-model-data-clients)
+   2. [Archived Data Clients](https://edrewitz.github.io/WxData/#archived-data-clients)
       
    3. [Command Line Interface & Shell Scripting](https://edrewitz.github.io/WxData/#command-line-interface--shell-scripting)
       
@@ -45,13 +45,13 @@
        
    9. [Open-Meteo API](https://edrewitz.github.io/WxData/#open-meteo-api)
 
-5) [WxData Tutorials](https://edrewitz.github.io/WxData/#wxdata-tutorials)
+4) [WxData Tutorials](https://edrewitz.github.io/WxData/#wxdata-tutorials)
 
-6) [Server List](https://edrewitz.github.io/WxData/#server-list)
+5) [Server List](https://edrewitz.github.io/WxData/#server-list)
 
-7) [Citations](https://edrewitz.github.io/WxData/#citations)
+6) [Citations](https://edrewitz.github.io/WxData/#citations)
 
-8) [Data Sources](https://edrewitz.github.io/WxData/#data-sources)
+7) [Data Sources](https://edrewitz.github.io/WxData/#data-sources)
 
 **About WxData**
 

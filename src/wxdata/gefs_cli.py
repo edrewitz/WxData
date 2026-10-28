@@ -17,9 +17,9 @@ from wxdata.model_data.noaa.gefs.gefs import(
     gefs_0p25 as _fetch_gefs_0p25
 )
 from wxdata.archived_data.model_data.noaa.gefs.gefs import(
-    gefs_0p50 as _fetch_archived_gefs_0p50,
-    gefs_0p50_secondary_parameters as _fetch_archived_gefs_0p50_secondary_parameters,
-    gefs_0p25 as _fetch_archived_gefs_0p25
+    get_archived_gefs_0p50 as _fetch_archived_gefs_0p50,
+    get_archived_gefs_0p50_secondary_parameters as _fetch_archived_gefs_0p50_secondary_parameters,
+    get_archived_gefs_0p25 as _fetch_archived_gefs_0p25
 )
 
 def _parse_date(date):

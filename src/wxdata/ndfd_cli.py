@@ -96,7 +96,7 @@ def ndfd_data():
 @ndfd_data.group(name='fetch')
 def ndfd():
     """
-    **Downloads the latest NWS NDFD Gridded Forecast**
+    ***NOAA/NWS NDFD Grids Command Line Interface***
     
     ***Valid Commands***
     

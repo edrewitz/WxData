@@ -1,7 +1,7 @@
 ---
-title: Global Ensemble Forecast System 0.50 X 0.50 DEGREE SECONDARY PARAMETERS (GEFS0P50 SECONDARY PARAMETERS)
+title: Global Ensemble Forecast System 0.50 X 0.50 Degree Secondary Parameters & Levels
 ---
-# Global Ensemble Forecast System 0.50 X 0.50 DEGREE SECONDARY PARAMETERS (GEFS0P50 SECONDARY PARAMETERS)
+# Global Ensemble Forecast System 0.50 X 0.50 Degree Secondary Parameters & Levels
 
 ```python
 def gefs_0p50_secondary_parameters(cat='control', 

@@ -49,13 +49,13 @@ Optional Arguments:
 
 2) cat (String) - Default='analysis'. The category of the RTMA dataset. 
 
-    ***RTMA Categories***
-    
-    i) analysis - Latest RTMA Analysis
-    
-    ii) error - Latest RTMA Error
-    
-    iii) surface 1 hour forecast - RTMA Surface 1 Hour Forecast
+   ***RTMA Categories***
+
+   i) analysis - Latest RTMA Analysis
+
+   ii) error - Latest RTMA Error
+
+   iii) surface 1 hour forecast - RTMA Surface 1 Hour Forecast
 
 3) path (String) - Default='RTMA/Archive'. The local directory where the data will be stored. 
 

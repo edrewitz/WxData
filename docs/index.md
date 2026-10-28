@@ -524,10 +524,10 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 | Client | NOAA/NCEP/NOMADS | ECMWF Open-Data | Amazon Web Services | Google Cloud | NOAA/NWS/FTP | MSC Open Data |
 | -------- | -------- | -------- | -------- | -------- | -------- | -------- | 
 | GFS0P25  |Y|N|Y|Y|N|N|
-| GFS0P25 SECONDARY PARAMETERS  |Y|N|Y|Y|N|N| 
+| GFS0P25 Secondary Levels & Parameters  |Y|N|Y|Y|N|N| 
 | GFS0P50  |Y|N|Y|Y|N|N|
 | GEFS0P50  |Y|N|Y|Y|N|N|
-| GEFS0P50 SECONDARY PARAMETERS  |Y|N|Y|Y|N|N|
+| GEFS0P50 Secondary Levels & Parameters  |Y|N|Y|Y|N|N|
 | GEFS0P25  |Y|N|Y|Y|N|N|
 | ECMWF IFS |N|Y|Y|Y|N|N|
 | ECMWF High Resolution IFS |N|Y|Y|Y|N|N|
@@ -541,7 +541,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 | ECMWF AIFS Ensemble |N|Y|Y|Y|N|N|
 | ECMWF AIFS Wave |N|Y|Y|Y|N|N|
 | ECMWF AIFS Wave Ensemble |N|Y|Y|Y|N|N|
-| Get NDFD Grids |N|N|Y|N|Y|N|
+| NOAA/NWS NDFD Grids |N|N|Y|N|Y|N|
 | RTMA |Y|N|Y|N|N|N|
 | AIGFS |Y|N|Y|N|N|N|
 | AIGEFS Pressure Members |Y|N|Y|N|N|N|
@@ -560,10 +560,10 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 | Client | Amazon Web Services | Google Cloud |
 | -------- | -------- | -------- | 
 | GFS0P25  |Y|Y|
-| GFS0P25 SECONDARY PARAMETERS  |Y|Y|
+| GFS0P25 Secondary Levels & Parameters  |Y|Y|
 | GFS0P50  |Y|Y|
 | GEFS0P50  |Y|Y|
-| GEFS0P50 SECONDARY PARAMETERS  |Y|Y|
+| GEFS0P50 Secondary Levels & Parameters  |Y|Y|
 | GEFS0P25  |Y|Y|
 | RTMA |Y|N|
 | CFS |Y|N|

@@ -263,9 +263,8 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 #### Command Line Interface & Shell Scripting
 
 ***Global Forecast System (GFS)***
-1. [GFS0P25]()
-2. [GFS0P25 SECONDARY PARAMETERS]()
-3. [GFS0P50]()
+1. [GFS0P25](https://edrewitz.github.io/WxData/GFS0P25%20CLI)
+2. [GFS0P50](https://edrewitz.github.io/WxData/GEFS0P50%20CLI)
 
 ***AI Global Forecast System (AIGFS)***
 1. [AIGFS](https://edrewitz.github.io/WxData/aigfs)
@@ -302,7 +301,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 1. [Get NDFD Grids](https://edrewitz.github.io/WxData/NDFD%20CLI)
 
 ***METAR Observations***
-1. [METAR Observations]()
+1. [METAR Observations](https://edrewitz.github.io/WxData/METAR%20CLI)
 
 
 

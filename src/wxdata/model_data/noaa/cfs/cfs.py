@@ -822,7 +822,7 @@ def cfs_flux(western_bound=-180,
         'hybrid'
 
                                 
-    17) variable (String) - Default='temperature'.
+    17) variable (String) - Default=['temperature'].
     
         The variable the user selects to download.
     
@@ -1296,7 +1296,7 @@ def cfs_pressure(western_bound=-180,
         'sigma level'
         'potential vorticity surface'
                                 
-    17) variable (String) - Default='geopotential height'.
+    17) variable (String) - Default=['geopotential height'].
     
     The variable the user selects to download.
         

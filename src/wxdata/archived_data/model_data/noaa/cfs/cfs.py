@@ -35,7 +35,7 @@ def get_archived_cfs_flux(
              chunk_size=8192,
              convert_to='celsius',
              level_type='height above ground',
-             variable='temperature',
+             variable=['temperature'],
              levels=[2],
             to_netcdf=False,
             netcdf_path=f"CFS FLUX/Archive/NETCDF",
@@ -113,7 +113,7 @@ def get_archived_cfs_flux(
         'hybrid'
 
                                 
-    14) variable (String) - Default='temperature'.
+    14) variable (String) - Default=['temperature'].
     
         The variable the user selects to download.
     
@@ -398,7 +398,7 @@ def get_archived_cfs_pressure(
              chunk_size=8192,
              convert_to='celsius',
              level_type='pressure',
-             variable='geopotential height',
+             variable=['geopotential height'],
              levels=[1000, 
                     925, 
                     850, 
@@ -481,7 +481,7 @@ def get_archived_cfs_pressure(
         'potential vorticity surface'
 
                                 
-    14) variable (String) - Default='geopotential height'.
+    14) variable (String) - Default=['geopotential height'].
     
     The variable the user selects to download.
         

@@ -489,13 +489,13 @@ def gfs0p25():
     
     Linux Shell:
         ```wxdata-gfs 0p25 latest -lt height_above_ground -l 2 -v temperature -v relative_humidity \
-            -m 1 -m 2 -m 3 -m 4 -m 5 -s aws -wb -130 -eb -65 -nb 50 -sb 20 \
+            -s aws -wb -130 -eb -65 -nb 50 -sb 20 \
             --netcdf True --ncdir Weather_Data/GFS0P25/NETCDF --ncfname gfs0p25_t2m_rh.nc \ 
             --proxy https://proxy-server-address:proxy-server-port```
             
     Windows Powershell:
         ```wxdata-gfs 0p25 latest -lt height_above_ground -l 2 -v temperature -v relative_humidity `
-            -m 1 -m 2 -m 3 -m 4 -m 5 -s aws -wb -130 -eb -65 -nb 50 -sb 20 `
+            -s aws -wb -130 -eb -65 -nb 50 -sb 20 `
             --netcdf True --ncdir Weather_Data/GFS0P25/NETCDF --ncfname gfs0p25_t2m_rh.nc ` 
             --proxy https://proxy-server-address:proxy-server-port```
     

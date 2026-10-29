@@ -605,7 +605,7 @@ def fetch_rdps_data():
 @_click.option(
     "--final_forecast_hour",
     "-f",
-    default=240,
+    default=84,
     show_default=True,
     type=int,
     help="This is the final forecast hour requested in the dataset."

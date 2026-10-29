@@ -25,7 +25,7 @@ title: My Project Home
 
 ## Table of Contents
 
-1) [What Is WxData?](https://edrewitz.github.io/WxData/#what-is-wxdata)
+1) [About WxData](https://edrewitz.github.io/WxData/#about-wxdata)
 
 2) [Installation Instructions](https://edrewitz.github.io/WxData/#installation-instructions)
 
@@ -57,7 +57,7 @@ title: My Project Home
 
 7) [Data Sources](https://edrewitz.github.io/WxData/#data-sources)
 
-## What is WxData?
+## About WxData
 
 WxData is a Python package that has many clients for retrieving and processing various types of meteorological datasets (both real-time and archived) with a focus on automation. 
 These datasets include 20+ Weather Forecast Models, Observational Data, Radar Data, Fuels Data (Fire Weather), Observed Upper-Air Sounding Data, Real-Time Mesoscale Analysis, Gridded NOAA National Weather Service Forecasts and Gridded NOAA Storm Prediction Center Outlooks, NOAA Climate Prediction Center Outlooks, as well as interfaces with the Open-Meteo and AirNow APIs. 

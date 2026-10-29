@@ -367,7 +367,6 @@ def cfs_pressure_fetch(final_forecast_hour,
             
         level_type = level_type.replace('_', ' ')
         
-        type = type.lower()
         convert_to = convert_to.lower()
         
         if custom_directory == None:

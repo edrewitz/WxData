@@ -19,7 +19,7 @@ def cfs_pressure(western_bound=-180,
             convert_to='celsius',
             source='aws',
             level_type='pressure',
-            variable='geopotential height',
+            variable=['geopotential height'],
             levels=[1000, 
                     925, 
                     850, 
@@ -113,7 +113,7 @@ establish a connection there.*
 'potential vorticity surface'
 ```
 
-17) variable (String) - Default='geopotential height'.
+17) variable (String) - Default=['geopotential height'].
 
 The variable the user selects to download.
 

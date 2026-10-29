@@ -558,7 +558,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 | ECMWF High Resolution IFS Ensemble |N|Y|Y|Y|N|N|N|N|N|
 | ECMWF IFS Wave |N|Y|Y|Y|N|N|N|N|N|
 | ECMWF High Resolution IFS Wave |N|Y|Y|Y|N|N|N|N|N|
-| ECMWF IFS Wave Ensemble |N|Y|Y|Y|N|N|N|
+| ECMWF IFS Wave Ensemble |N|Y|Y|Y|N|N|N|N|N|
 | ECMWF High Resolution IFS Wave Ensemble |N|Y|Y|Y|N|N|N|N|N|
 | ECMWF AIFS |N|Y|Y|Y|N|N|N|N|N|
 | ECMWF AIFS Ensemble |N|Y|Y|Y|N|N|N|N|N|

@@ -1319,13 +1319,13 @@ def get_gdps(final_forecast_hour,
                     return_values=False)
         
         if current_os != "Windows":
-            _click.echo(f"GDPS latest download complete, data files saved to {path}")
+            _click.echo(f"RDPS latest download complete, data files saved to {path}")
         else:
             path = path.replace('/', '\\')
-            _click.echo(rf"GDPS latest download complete, data files saved to {path}")
+            _click.echo(rf"RDPS latest download complete, data files saved to {path}")
             
     except SystemExit as e:
-        _command_error_message('gdps')
+        _command_error_message('rdps')
         _sys.exit(1)
             
 # ---------------------------------------------------------------------

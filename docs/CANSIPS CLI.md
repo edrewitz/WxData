@@ -141,7 +141,7 @@ If you are using a proxy server you can define it by using `--proxy https://prox
 
 1) Download the latest CanSIPS 500mb Geopotential Height Forecast
  
-    - Use a proxy server of address: `https://proxy-server-address:proxy-server-port` 
+- Use a proxy server of address: `https://proxy-server-address:proxy-server-port` 
             
 2) Subset the data to reflect CONUS [-130, -65, 50, 20] = [west, east, north, south]
     

@@ -16,10 +16,6 @@ title: CFS Flux CLI
 
 
 ***Globally Valid Commands (valid for both "latest" and "archived")***
-    
--t = Type (Default=primary).
-
-This determines the type of variables and levels.
 
 -f = Final Forecast Hour (Default=720).
  

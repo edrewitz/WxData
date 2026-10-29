@@ -1475,6 +1475,10 @@ def cfs_flux_fetch(final_forecast_hour,
         
     except Exception as e:
         if custom_directory != "none" and custom_directory != None:
+            if current_os == "Windows":
+                path = path.replace('/', '\\')
+            else:
+                pass
             _click.echo(f"CFS Flux latest download complete, data files saved to {path}")
         else:
             if current_os != "Windows":
@@ -1744,6 +1748,10 @@ def cfs_archived_flux_fetch(date,
                         return_values=False)
         
         d = _parse_date(date)
+        if current_os == "Windows":
+            path = path.replace('/', '\\')
+        else:
+            pass
         _click.echo(f"CFS Pressure download for {d.strftime('%Y-%m-%d')} {run}z complete, data files saved to {path}")
     except SystemExit as e:
         _command_error_message('cfs flux')

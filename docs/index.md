@@ -185,12 +185,12 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 4. [ECMWF AIFS Ensemble](https://edrewitz.github.io/WxData/ECMWF%20AIFS%20Ensemble)
 5. [ECMWF IFS Wave](https://edrewitz.github.io/WxData/ECMWF_IFS_Wave)
 6. [ECMWF IFS Wave Ensemble](https://edrewitz.github.io/WxData/ECMWF%20IFS%20Wave%20Ensemble)
-7. [ECMWF High Resolution IFS]()
-8. [ECMWF High Resolution IFS Ensemble]()
-9. [ECMWF High Resolution IFS Wave]()
-10. [ECMWF High Resolution IFS Wave Ensemble]()
-11. [ECMWF AIFS Wave]()
-12. [ECMWF AIFS Wave Ensemble]()
+7. [ECMWF High Resolution IFS](https://edrewitz.github.io/WxData/ECMWF%20High%20Res%20IFS)
+8. [ECMWF High Resolution IFS Ensemble](https://edrewitz.github.io/WxData/ECMWF%20High%20Resolution%20IFS%20Ensemble)
+9. [ECMWF High Resolution IFS Wave](https://edrewitz.github.io/WxData/ECMWF%20High%20Resolution%20IFS%20Wave)
+10. [ECMWF High Resolution IFS Wave Ensemble](https://edrewitz.github.io/WxData/ECMWF%20High%20Resolution%20IFS%20Wave%20Ensemble)
+11. [ECMWF AIFS Wave](https://edrewitz.github.io/WxData/ECMWF%20AIFS%20Wave)
+12. [ECMWF AIFS Wave Ensemble](https://edrewitz.github.io/WxData/ECMWF%20AIFS%20Wave%20Ensemble)
    
 ***Real-Time Mesoscale Analysis (RTMA)***
 1. [RTMA](https://edrewitz.github.io/WxData/rtma)
@@ -299,6 +299,9 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 
 ***NOAA Storm Prediction Center Outlooks/National Weather Service Forecasts***
 1. [Get NDFD Grids](https://edrewitz.github.io/WxData/NDFD%20CLI)
+
+***NEXRAD II Radar Data***
+1. [NEXRAD II Radar Data](https://edrewitz.github.io/WxData/NEXRAD%20II%20CLI)
 
 ***METAR Observations***
 1. [METAR Observations](https://edrewitz.github.io/WxData/METAR%20CLI)

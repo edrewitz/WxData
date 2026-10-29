@@ -1235,7 +1235,7 @@ def get_gdps(final_forecast_hour,
         else:
             path = custom_directory
         
-        _fetch_gdps(final_forecast_hour=final_forecast_hour,
+        _fetch_rdps(final_forecast_hour=final_forecast_hour,
                     clear_recycle_bin=clear_recycle_bin,
                     path=path,
                     clear_data=clear_data,
@@ -1270,7 +1270,7 @@ def get_gdps(final_forecast_hour,
 # Entry point
 # ---------------------------------------------------------------------
 def main():
-    gdps_data()
+    rdps_data()
     
 if __name__ == "__main__":
     main()

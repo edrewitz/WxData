@@ -443,15 +443,6 @@ def cfs_pressure_fetch(final_forecast_hour,
 )
 
 @_click.option(
-    "--clear_recycle_bin",
-    "-cr",
-    default=False,
-    show_default=True,
-    type=bool,
-    help="To clear your recycle bin with each run of the script set to True."
-)
-
-@_click.option(
     "--custom_directory",
     "-cdir",
     default="none",
@@ -460,14 +451,6 @@ def cfs_pressure_fetch(final_forecast_hour,
     help="If you want to save the files in a custom directory - enter the full path here."
 )
 
-@_click.option(
-    "--clear_data",
-    "-cd",
-    default=False,
-    show_default=True,
-    type=bool,
-    help="To bypass the safety scanner set --clear data to False: -cd False."
-)
 
 @_click.option(
     "--convert_temperature",
@@ -623,9 +606,7 @@ def cfs_pressure_fetch(date,
                   run,
                   final_forecast_hour,
                   proxy,
-                  clear_recycle_bin,
                   custom_directory,
-                  clear_data,
                   variable,
                   levels,
                   level_type,
@@ -684,8 +665,6 @@ def cfs_pressure_fetch(date,
                         convert_temperature=convert_temperature,
                         convert_to=convert_to,
                         proxies=proxy,
-                        clear_recycle_bin=clear_recycle_bin,
-                        clear_data=clear_data,
                         path=path,
                         process_data=process,
                         to_netcdf=netcdf,

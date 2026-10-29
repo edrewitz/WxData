@@ -470,15 +470,6 @@ def cfs_pressure_fetch(final_forecast_hour,
 )
 
 @_click.option(
-    "--source",
-    "-s",
-    default="noaa",
-    show_default=True,
-    type=str,
-    help="Default noaa is for NCEP/NOMADS - set to aws to switch to Amazon Web Services or google to switch to Google Cloud"
-)
-
-@_click.option(
     "--convert_temperature",
     "-ct",
     default=True,

@@ -3,7 +3,7 @@ title: GFS0P50 CLI
 ---
 
 
-# Global Forecast System (GEFS) 0.50x0.50 Command Line Interface.
+# Global Forecast System (GFS) 0.50x0.50 Command Line Interface.
 
  ***Archived Required Commands***
 

@@ -1979,6 +1979,22 @@ def gfs_0p25(final_forecast_hour=384,
     
     """
     
+    level_type = level_type.lower()
+    has_levs = ['pressure',
+                'hybrid',
+                'height above ground',
+                'height below ground',
+                'sigma layer',
+                'sigma level',
+                'pressure above ground',
+                'potential vorticity surface']
+    
+    if level_type in has_levs:
+        levels = levels
+    else:
+        levels = None
+    
+    
     try:
         if process_data == True:
             ds = _gfs_0p25_client(final_forecast_hour=final_forecast_hour, 
@@ -2750,6 +2766,22 @@ def gfs_0p50(final_forecast_hour=384,
     '995_sigma_theta'
     
     """
+    level_type = level_type.lower()
+    
+        
+    has_levs = ['pressure',
+                'hybrid',
+                'height above ground',
+                'height below ground',
+                'sigma layer',
+                'sigma level',
+                'pressure above ground',
+                'potential vorticity surface']
+    
+    if level_type in has_levs:
+        levels = levels
+    else:
+        levels = None
     
     try:
         if process_data == True:

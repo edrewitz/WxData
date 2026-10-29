@@ -648,7 +648,7 @@ def cfs_pressure_fetch(date,
         convert_to = convert_to.lower()
         
         if custom_directory == None:
-            path = f"CFS/Archive/PRESSURE/{date}/{run}z"
+            path = f"CFS Pressure/Archive"
         else:
             path = custom_directory
         

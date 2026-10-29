@@ -19,7 +19,7 @@ def cfs_flux(western_bound=-180,
             convert_to='celsius',
             source='aws',
             level_type='height above ground',
-            variable=['temperature'],
+            variable='temperature',
             levels=[2],
             to_netcdf=False,
             netcdf_path=f"CFS FLUX/NETCDF",
@@ -110,7 +110,7 @@ establish a connection there.*
 	'hybrid'
 	```
 							
-17) variable (String) - Default=['temperature'].
+17) variable (String) - Default='temperature'.
 
 	The variable the user selects to download.
 

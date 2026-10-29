@@ -58,6 +58,8 @@ ii) surface
 
 iii) height_above_ground
 
+iv) mean sea level
+
 -l = Levels (hPa) (Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10])
 
 -wb = Western Bound - The western bound for subsetting the data range is from -180 to 180 degrees longitude. (Default=-180)

@@ -8,9 +8,9 @@ Command Line Use: `wxdata-cfs **args`
 import click as _click
 import sys as _sys
 import platform as _platform
-import datetime as _datetime
 current_os = _platform.system()
 
+from datetime import datetime as _datetime
 from wxdata.model_data.noaa.cfs.cfs import(
     cfs_flux as _fetch_cfs_flux,
     cfs_pressure as _fetch_cfs_pressure

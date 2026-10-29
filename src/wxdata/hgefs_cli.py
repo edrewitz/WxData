@@ -19,7 +19,7 @@ def _command_error_message(model):
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
     print(f"Model: {model.upper()}")
     print(f"Please run `wxdata-hgefs -h to view the help documentation.")
-    print(f"Please visit: https://edrewitz.github.io/WxData/hgefs for full detailed documentation.")
+    print(f"Please visit: https://edrewitz.github.io/WxData/HGEFS%20CLI for full detailed documentation.")
 
 def _parse_proxy(value):
     if value is None:
@@ -45,7 +45,7 @@ def hgefs_data():
 # ---------------------------------------------------------------------
 @hgefs_data.group(name='fetch')
 def hgefs():
-    """
+    r"""
     Hybrid Global Ensemble Forecast System (HGEFS) Client.
     
     ***Valid Commands***
@@ -100,10 +100,6 @@ def hgefs():
                        'vertical velocity']) 
                        
     The list of variables the user wants to query.
-    
-    Here is a sample of how to query mean 500mb geopotential height and create a netCDF file:
-    
-    `wxdata-hgefs fetch latest -v geopotential_height -l 500 --netcdf True --ncdir HGEFS/Mean/NETCDF --ncfname gefs_gh500.nc`
     
     ***Variables***
     
@@ -160,10 +156,6 @@ def hgefs():
     
     If you are using a proxy server you can define it by using --proxy https://proxy-server-address:proxy-server-port
     
-    Example: 
-    
-    `wxdata-hgefs fetch latest -v temperature -l 850 --proxy https://proxy-server-address:proxy-server-port`
-    
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     
     ***Additional Relevant Flags when --netcdf True***
@@ -171,6 +163,30 @@ def hgefs():
     --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=HGEFS/NETCDF). 
     
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=hgefs.nc)
+    
+    ***Complex Example***
+    
+    *Important*: Any parameter of the command not explicitly stated results in the default value being used. 
+    
+    1) Download the latest HGEFS Ensemble Mean for 500mb Geopotential Height
+     
+        - Use a proxy server of address: https://proxy-server-address:proxy-server-port 
+                
+    2) Subset the data to reflect CONUS [-130, -65, 50, 20] = [west, east, north, south]
+        
+    3) Create a netCDF (.nc) file of the data called `hgefs_mean_gph_500.nc` saved at Weather_Data/HGEFS/NETCDF.
+    
+    Linux Shell:
+        ```wxdata-hgefs fetch latest -v geopotential_height -l 500 \
+            -wb -130 -eb -65 -nb 50 -sb 20 \
+            --netcdf True --Weather_Data/HGEFS/NETCDF --ncfname hgefs_mean_gph_500.nc \ 
+            --proxy https://proxy-server-address:proxy-server-port```
+            
+    Windows Powershell:
+        ```wxdata-hgefs fetch latest -v geopotential_height -l 500 `
+            -wb -130 -eb -65 -nb 50 -sb 20 `
+            --netcdf True --Weather_Data/HGEFS/NETCDF --ncfname hgefs_mean_gph_500.nc ` 
+            --proxy https://proxy-server-address:proxy-server-port```
     
     """
 @hgefs.command("latest")
@@ -302,7 +318,7 @@ def hgefs():
                        'v-component of wind',
                        'vertical velocity']
                   
-                  See https://edrewitz.github.io/WxData/HGEFS for available variables."""
+                  See https://edrewitz.github.io/WxData/HGEFS%20CLI for available variables."""
                   
                   )
 )
@@ -339,7 +355,7 @@ def hgefs():
                     100,
                     50]
           
-          See https://edrewitz.github.io/WxData/HGEFS for available levels.
+          See https://edrewitz.github.io/WxData/HGEFS%20CLI for available levels.
           
           """)
 )
@@ -354,7 +370,7 @@ def hgefs():
         
           Default='pressure'.
           
-          See https://edrewitz.github.io/WxData/HGEFS for available level types.
+          See https://edrewitz.github.io/WxData/HGEFS%20CLI for available level types.
           
           """)
 )

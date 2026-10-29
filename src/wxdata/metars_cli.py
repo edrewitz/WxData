@@ -29,7 +29,7 @@ def _command_error_message():
     
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
     print(f"Please run `wxdata-metars fetch -h to view the help documentation.")
-    print(f"Please visit: https://edrewitz.github.io/WxData/metars for full detailed documentation.")
+    print(f"Please visit: https://edrewitz.github.io/WxData/METAR%20CLI for full detailed documentation.")
 
 def _parse_proxy(value):
     if value is None:

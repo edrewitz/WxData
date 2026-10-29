@@ -172,6 +172,7 @@ def aigfs_post_processing(path,
         
         try:
             ds['2m_temperature'] = ds1['t2m']
+            ds = ds.drop_vars('t2m')
         except Exception as e:
             pass
         

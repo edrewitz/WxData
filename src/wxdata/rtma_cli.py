@@ -12,7 +12,7 @@ import platform as _platform
 current_os = _platform.system()
 
 from wxdata.model_data.noaa.rtma.rtma import rtma as _fetch_rtma
-from wxdata.archived_data.model_data.noaa.rtma.rtma import rtma as _fetch_archived_rtma
+from wxdata.archived_data.model_data.noaa.rtma.rtma import get_archived_rtma as _fetch_archived_rtma
 from datetime import datetime as _datetime
 
 def _parse_date(date):
@@ -32,7 +32,8 @@ def _command_error_message(model):
     """Error Message For Invalid Commands"""
     
     print(f"Invalid Command Error: User Entered An Invalid Command.")
-    print(f"Please run `rtma {model.lower()} -h to view the help documentation.")
+    print(f"Please visit https://edrewitz.github.io/WxData/RTMA%20CLI for help.")
+    
 
 def _parse_proxy(value):
     if value is None:
@@ -58,7 +59,9 @@ def realtime_mesoscale_analysis():
 # ---------------------------------------------------------------------
 @realtime_mesoscale_analysis.group(name='fetch')
 def rtma():
-    """Real Time Mesoscale Analysis (RTMA) Client.
+    r"""
+    
+    Real Time Mesoscale Analysis (RTMA) Command Line Interface.
     
     
     ***Archived Required Commands***

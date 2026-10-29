@@ -1100,7 +1100,8 @@ def get_ndfd_grids(parameter,
                     notifications='on',
                     clear_recycle_bin=False,
                     include_extended_grids=True,
-                    source='noaa'):
+                    source='noaa',
+                    return_values=True):
 
     """
 
@@ -1127,26 +1128,25 @@ def get_ndfd_grids(parameter,
     
     3) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    4) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
+    4) clear_recycle_bin (Boolean) - (Default=False). Set to True to clear your recycle bin. 
         
     5) include_extended_grids (Boolean) - Default=True. Most NOAA/NWS products have extended grids. However, SPC products do not have extended grids.
         When downloading SPC plots or if the user does not wish to include the extended grids, set include_extended_grids=False.
         
-    6) source (String) - Default='noaa'. The data server the client will try first.
+    6) source (String) - Default='noaa'. The data server the user wants to connect the client to.
     
-        Server List
-        -----------
+        ***Server List***
         
-        1) NOAA/NWS/FTP - source='noaa'
-        2) Amazon AWS - source='aws'
+        i) NOAA/NWS/FTP - `source='noaa'`
         
-    **If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
-        establish a connection there.**
+        ii) Amazon AWS - `source='aws'`
+                
+        *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
+        establish a connection there.*
         
-    Parameters
-    ----------
+    7) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+        
+    ***Parameters***
     
     'maximum_relative_humidity'
     'mainimum_relative_humidity'
@@ -1187,15 +1187,13 @@ def get_ndfd_grids(parameter,
     'warnings'
     'weather' 
 
-    Returns
-    -------
+    **Returns**
     
     An xarray.data array of the latest NWS/SPC Forecast data.
     
     Variable names are also changed from their origional key value into plain language.
     
-        Plain Language Variable Key List
-        --------------------------------
+        ***Plain Language Variable Key List***
         
         'maximum_relative_humidity'
         'mainimum_relative_humidity'
@@ -1250,7 +1248,10 @@ def get_ndfd_grids(parameter,
                                         notifications=notifications,
                                         clear_recycle_bin=clear_recycle_bin,
                                         include_extended_grids=True)
-                return ds1, ds2
+                if return_values == True:
+                    return ds1, ds2
+                else:
+                    pass
             except Exception as e:
                 print("NOAA NWS FTP Server Is Down.")
                 print("Rotating to Amazon AWS Server.")
@@ -1264,7 +1265,10 @@ def get_ndfd_grids(parameter,
                                 include_extended_grids=True)
                 
                 print("Retrieved Data via Amazon AWS Server.")
-                return ds1, ds2
+                if return_values == True:
+                    return ds1, ds2
+                else:
+                    pass
                 
                 
         else:
@@ -1276,8 +1280,10 @@ def get_ndfd_grids(parameter,
                                         notifications=notifications,
                                         clear_recycle_bin=clear_recycle_bin,
                                         include_extended_grids=False)
-                
-                return ds
+                if return_values == True:
+                    return ds
+                else:
+                    pass
             except Exception as e:
                 print("NOAA NWS FTP Server Is Down.")
                 print("Rotating to Amazon AWS Server")
@@ -1291,7 +1297,10 @@ def get_ndfd_grids(parameter,
                                 include_extended_grids=False)
                 
                 print("Retrieved Data via Amazon AWS Server.") 
-                return ds
+                if return_values == True:
+                    return ds
+                else:
+                    pass
             
     else:
         if include_extended_grids == True:
@@ -1303,8 +1312,10 @@ def get_ndfd_grids(parameter,
                                     notifications=notifications,
                                     clear_recycle_bin=clear_recycle_bin,
                                     include_extended_grids=True)
-                    
-                return ds1, ds2
+                if return_values == True:
+                    return ds1, ds2
+                else:
+                    pass
             except Exception as e:
                 print("Amazon AWS Server Is Down.")
                 print("Rotating to NOAA NWS FTP Server.")
@@ -1319,7 +1330,10 @@ def get_ndfd_grids(parameter,
                                             include_extended_grids=True)
                     
                     print("Retrieved Data via NOAA NWS FTP Server.") 
-                    return ds1, ds2
+                    if return_values == True:
+                        return ds1, ds2
+                    else:
+                        pass
                 except Exception as e:
                     print("Both servers are down.")
                     print("System Exit.")
@@ -1334,8 +1348,10 @@ def get_ndfd_grids(parameter,
                                     notifications=notifications,
                                     clear_recycle_bin=clear_recycle_bin,
                                     include_extended_grids=False)
-                    
-                return ds 
+                if return_values == True:
+                    return ds 
+                else:
+                    pass
             except Exception as e:
                 print("Amazon AWS Server Is Down.")
                 print("Rotating to NOAA NWS FTP Server.")
@@ -1350,8 +1366,10 @@ def get_ndfd_grids(parameter,
                                             include_extended_grids=False)
                 
                     print("Retrieved Data via NOAA NWS FTP Server.") 
-                
-                    return ds
+                    if return_values == True:
+                        return ds
+                    else:
+                        pass
                 except Exception as e:
                     print("Both servers are down.")
                     print("System Exit.")

@@ -309,7 +309,10 @@ def _aigefs_surface_members_client(final_forecast_hour=384,
              eastern_bound=180, 
              northern_bound=90, 
              southern_bound=-90, 
-             proxies=None, 
+             proxies=None,
+             levels=[2],
+             level_type='height above ground', 
+             variables=['temperature'],
              members=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
                       11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                       21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
@@ -402,6 +405,13 @@ def _aigefs_surface_members_client(final_forecast_hour=384,
     'mslp'
     '2m_temperature'
     """
+    level_type = level_type.lower()
+    
+    if level_type == "pressure" or level_type == "height above ground":
+        levels = levels
+    else:
+        levels = None
+    
     if clear_recycle_bin == True:
         _clear_recycle_bin_windows()
         _clear_trash_bin_mac()
@@ -444,26 +454,38 @@ def _aigefs_surface_members_client(final_forecast_hour=384,
         for path, url in zip(paths, urls):
             for i in range(0, stop, 6):
                 if i < 10:
-                    _client.get_gridded_data(f"{url}/aigefs.t{run}z.sfc.f00{i}.grib2",
-                                path,
-                                f"aigefs.t{run}z.sfc.f00{i}.grib2",
-                                proxies=proxies,
-                                chunk_size=chunk_size,
-                                notifications=notifications)  
+                    _client.byte_range_request(f"{url}/aigefs.t{run}z.sfc.f00{i}.grib2",
+                                                f"{url}/aigefs.t{run}z.sfc.f00{i}.grib2.idx",
+                                                variables,
+                                                levels,
+                                                level_type,
+                                                path,
+                                                f"aigefs.t{run}z.sfc.f00{i}.grib2",
+                                                proxies=proxies,
+                                                chunk_size=chunk_size,
+                                                notifications=notifications)
                 elif i >= 10 and i < 100:
-                    _client.get_gridded_data(f"{url}/aigefs.t{run}z.sfc.f0{i}.grib2",
-                                path,
-                                f"aigefs.t{run}z.sfc.f0{i}.grib2",
-                                proxies=proxies,
-                                chunk_size=chunk_size,
-                                notifications=notifications)  
+                    _client.byte_range_request(f"{url}/aigefs.t{run}z.sfc.f0{i}.grib2",
+                                                f"{url}/aigefs.t{run}z.sfc.f0{i}.grib2.idx",
+                                                variables,
+                                                levels,
+                                                level_type,
+                                                path,
+                                                f"aigefs.t{run}z.sfc.f0{i}.grib2",
+                                                proxies=proxies,
+                                                chunk_size=chunk_size,
+                                                notifications=notifications)
                 else:
-                    _client.get_gridded_data(f"{url}/aigefs.t{run}z.sfc.f{i}.grib2",
-                                path,
-                                f"aigefs.t{run}z.sfc.f{i}.grib2",
-                                proxies=proxies,
-                                chunk_size=chunk_size,
-                                notifications=notifications)    
+                    _client.byte_range_request(f"{url}/aigefs.t{run}z.sfc.f{i}.grib2",
+                                                f"{url}/aigefs.t{run}z.sfc.f{i}.grib2.idx",
+                                                variables,
+                                                levels,
+                                                level_type,
+                                                path,
+                                                f"aigefs.t{run}z.sfc.f{i}.grib2",
+                                                proxies=proxies,
+                                                chunk_size=chunk_size,
+                                                notifications=notifications)  
                     
     else:
         print(f"User has latest AIGEFS Surface Parameter Files\nSkipping Download...")  
@@ -1152,6 +1174,9 @@ def aigefs_surface_members(final_forecast_hour=384,
              northern_bound=90, 
              southern_bound=-90, 
              proxies=None, 
+             variables=['temperature'],
+             levels=[2],
+             level_type='height above ground',
              members=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
                       11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                       21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
@@ -1196,38 +1221,68 @@ def aigefs_surface_members(final_forecast_hour=384,
                                'http':'http://your-proxy-address:port',
                                'https':'http://your-proxy-address:port'
                                }
+                               
+    7) variables (String List) - Default=['temperature']. The list of variables for a level_type. 
     
-    7) members (List) - Default=All 30 ensemble members + control. The individual ensemble members. There are 30 members in this ensemble.  
+       ***Variables By Level Type***
+       
+       *height above ground*
+       
+       'u-component of wind' - 10m
+       'v-component of wind' - 10m
+       'temperature' - 2m
+       
+       *mean sea level*
+       
+       'mean sea level pressure'
+       
+       *surface*
+       
+       'total precipitation'
     
-    8) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
+    8) levels (Integer List) - Default=[2]. The height above ground in meters.
+    
+    9) level_type (String) - Default='height above ground'. The type of level surface.
+    
+       ***Level Types***
+
+        i) height above ground
+        
+        ii) surface
+        
+        iii) mean sea level
+    
+    10) members (List) - Default=All 30 ensemble members + control. The individual ensemble members. There are 30 members in this ensemble.  
+    
+    11) process_data (Boolean) - Default=True. When set to True, WxData will preprocess the model data. If the user wishes to process the 
        data via their own external method, set process_data=False which means the data will be downloaded but not processed. 
        
-    9) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+    12) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
         This setting is to help preserve memory on the machine. 
             
-    10) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
+    13) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
         the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
         be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
     
-    11) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
+    14) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
         the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
         This setting is to help preserve memory on the machine. 
         
-    12) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+    15) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
         
-    13) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
+    16) convert_to (String) - Default='celsius'. When set to 'celsius' temperature related fields convert to Celsius.
         Set convert_to='fahrenheit' for Fahrenheit. 
         
-    14) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
+    17) chunk_size (Integer) - Default=8192. The size of the chunks when writing the GRIB/NETCDF data to a file.
     
-    15) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
+    18) notifications (String) - Default='off'. Notification when a file is downloaded and saved to {path}
     
-    16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+    19) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
         
-    17) source (String) - Default='noaa'. The servers to pull the data from.
+    20) source (String) - Default='noaa'. The servers to pull the data from.
 
     ***Server Choices***
     
@@ -1238,29 +1293,30 @@ def aigefs_surface_members(final_forecast_hour=384,
         *If the client is unable to connect to the server the user specified, it will rotate to the next server and try to 
         establish a connection there.*
     
-    18) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+    21) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
     
-    19) netcdf_path (String) - Default='AIGEFS SURFACE MEMBERS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+    22) netcdf_path (String) - Default='AIGEFS SURFACE MEMBERS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
     
-    20) netcdf_filename (String) - Default='aigefs_surface_members.nc'. The name of the netCDF (.nc) file. A good practice is to 
+    23) netcdf_filename (String) - Default='aigefs_surface_members.nc'. The name of the netCDF (.nc) file. A good practice is to 
         name this netCDF file using the variable name. 
         
-    21) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+    24) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
         new netCDF file. For users who want to archive all data set this to False. 
         
-    22) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+    25) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
     
     
     **Returns**
     
     An xarray data array of the AIGEFS Surface Parameter data specified to the coordinate boundaries and variable list the user specifies. 
     
-    ***Surface-Level Plain Language Variable Keys***
+    ***Plain Language Variable Keys***
     
     '10m_u_wind_component'
     '10m_v_wind_component'
     'mslp'
     '2m_temperature'
+    'total_precipitation'
     """
     
     source = source.lower()
@@ -1281,7 +1337,10 @@ def aigefs_surface_members(final_forecast_hour=384,
                                                 chunk_size=chunk_size,
                                                 notifications=notifications,
                                                 clear_data=clear_data,
-                                                source=source)
+                                                source=source,
+                                                levels=levels,
+                                                level_type=level_type,
+                                                variables=variables)
         else:
             _aigefs_surface_members_client(final_forecast_hour=final_forecast_hour, 
                                                 western_bound=western_bound, 
@@ -1298,7 +1357,10 @@ def aigefs_surface_members(final_forecast_hour=384,
                                                 chunk_size=chunk_size,
                                                 notifications=notifications,
                                                 clear_data=clear_data,
-                                                source=source)
+                                                source=source,
+                                                levels=levels,
+                                                level_type=level_type,
+                                                variables=variables)
     except Exception as e:
         print(f"Error: Client lost connection to {source.upper()} server and is unable to restore connection.")
         if source == 'noaa':
@@ -1320,7 +1382,10 @@ def aigefs_surface_members(final_forecast_hour=384,
                                                         chunk_size=chunk_size,
                                                         notifications=notifications,
                                                         clear_data=clear_data,
-                                                        source='aws')
+                                                        source='aws',
+                                                        levels=levels,
+                                                        level_type=level_type,
+                                                        variables=variables)
                 else:
                     _aigefs_surface_members_client(final_forecast_hour=final_forecast_hour, 
                                                         western_bound=western_bound, 
@@ -1337,7 +1402,10 @@ def aigefs_surface_members(final_forecast_hour=384,
                                                         chunk_size=chunk_size,
                                                         notifications=notifications,
                                                         clear_data=clear_data,
-                                                        source='aws')
+                                                        source='aws',
+                                                        levels=levels,
+                                                        level_type=level_type,
+                                                        variables=variables)
             except Exception as e:
                 print(f"Error: Client unable to establish a connection to either server. - System Exit.")
                 _sys.exit(1)
@@ -1361,7 +1429,10 @@ def aigefs_surface_members(final_forecast_hour=384,
                                                         chunk_size=chunk_size,
                                                         notifications=notifications,
                                                         clear_data=clear_data,
-                                                        source='noaa')
+                                                        source='noaa',
+                                                        levels=levels,
+                                                        level_type=level_type,
+                                                        variables=variables)
                 else:
                     _aigefs_surface_members_client(final_forecast_hour=final_forecast_hour, 
                                                         western_bound=western_bound, 
@@ -1378,7 +1449,10 @@ def aigefs_surface_members(final_forecast_hour=384,
                                                         chunk_size=chunk_size,
                                                         notifications=notifications,
                                                         clear_data=clear_data,
-                                                        source='noaa')
+                                                        source='noaa',
+                                                        levels=levels,
+                                                        level_type=level_type,
+                                                        variables=variables)
             except Exception as e:
                 print(f"Error: Client unable to establish a connection to either server. - System Exit.")
                 _sys.exit(1)

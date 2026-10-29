@@ -364,7 +364,7 @@ def geps(final_forecast_hour=384,
             return_values=True):
     
     """
-    This function retrieves the latest GEPS data from https://dd.weather.gc.ca/ and returns an xarray.array of specified data.
+    This function retrieves the latest GEPS data from `https://dd.weather.gc.ca/` and returns an xarray.array of specified data.
     
     Required Arguments: None
     
@@ -604,7 +604,7 @@ def geps(final_forecast_hour=384,
             
     **Returns**
     
-    An xarray.array of the latest GEPS forecast data for a user-specified variable, level/layer and level_type.
+    An xarray.array of the latest GEPS forecast data for a user-specified variable, level and level_type.
     
     GEPS files are saved to directory {path}  
     """

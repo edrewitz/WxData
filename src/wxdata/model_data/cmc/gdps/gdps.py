@@ -1,5 +1,5 @@
 """
-This file hosts the functions for the GDPS Data Client
+This file hosts the functions for the Canadian Global Deterministic Prediction System (GDPS) Data Client
 
 (C) Eric J. Drewitz 2025-2026
 """
@@ -661,7 +661,7 @@ def gdps(final_forecast_hour=240,
             return_values=True):
     
     """
-    This function retrieves the latest GDPS data from https://dd.weather.gc.ca/ and returns an xarray.array of specified data.
+    This function retrieves the latest GDPS data from `https://dd.weather.gc.ca/` and returns an xarray.array of specified data.
     
     Required Arguments: None
     

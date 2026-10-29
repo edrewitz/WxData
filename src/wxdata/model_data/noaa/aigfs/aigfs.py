@@ -166,7 +166,7 @@ def _aigfs_client(final_forecast_hour=384,
     Returns
     -------
     
-    An xarray data array of the AIGEFS data specified to the coordinate boundaries and variable list the user specifies. 
+    An xarray data array of the AIGFS data specified to the coordinate boundaries and variable list the user specifies. 
     
     Pressure-Level Plain Language Variable Keys
     -------------------------------------------
@@ -188,6 +188,11 @@ def _aigfs_client(final_forecast_hour=384,
     """
     
     level_type = level_type.lower()
+    
+    if level_type == "pressure" or level_type == "height above ground":
+        levels = levels
+    else:
+        levels = None
     
     if level_type == 'pressure':
         level = 'pres'
@@ -235,86 +240,39 @@ def _aigfs_client(final_forecast_hour=384,
         stop = final_forecast_hour + 6
         
         for i in range(0, stop, 6):
-            if level_type == 'surface':
-                if i < 10:
-                    _client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f00{i}.grib2",
-                                path,
-                                f"aigfs.t{run}z.{level}.f00{i}.grib2",
-                                proxies=proxies,
-                                chunk_size=chunk_size,
-                                notifications=notifications)  
-                elif i >= 10 and i < 100:
-                    _client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f0{i}.grib2",
-                                path,
-                                f"aigfs.t{run}z.{level}.f0{i}.grib2",
-                                proxies=proxies,
-                                chunk_size=chunk_size,
-                                notifications=notifications)  
-                else:
-                    _client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f{i}.grib2",
-                                path,
-                                f"aigfs.t{run}z.{level}.f{i}.grib2",
-                                proxies=proxies,
-                                chunk_size=chunk_size,
-                                notifications=notifications)   
+            if i < 10:
+                _client.byte_range_request(f"{url}aigfs.t{run}z.{level}.f00{i}.grib2",
+                                                f"{url}aigfs.t{run}z.{level}.f00{i}.grib2.idx",
+                                                variables,
+                                                levels,
+                                                level_type,
+                                                path,
+                                                f"aigfs.t{run}z.{level}.f00{i}.grib2",
+                                                proxies=proxies,
+                                                chunk_size=chunk_size,
+                                                notifications=notifications)
+            elif i >= 10 and i < 100:
+                _client.byte_range_request(f"{url}aigfs.t{run}z.{level}.f0{i}.grib2",
+                                            f"{url}aigfs.t{run}z.{level}.f0{i}.grib2.idx",
+                                            variables,
+                                            levels,
+                                            level_type,
+                                            path,
+                                            f"aigfs.t{run}z.{level}.f0{i}.grib2",
+                                            proxies=proxies,
+                                            chunk_size=chunk_size,
+                                            notifications=notifications)
             else:
-                if len(variables) < 6 or len(levels) < 12:
-                    if i < 10:
-                        _client.byte_range_request(f"{url}aigfs.t{run}z.{level}.f00{i}.grib2",
-                                                        f"{url}aigfs.t{run}z.{level}.f00{i}.grib2.idx",
-                                                        variables,
-                                                        levels,
-                                                        'pressure',
-                                                        path,
-                                                        f"aigfs.t{run}z.{level}.f00{i}.grib2",
-                                                        proxies=proxies,
-                                                        chunk_size=chunk_size,
-                                                        notifications=notifications)
-                    elif i >= 10 and i < 100:
-                        _client.byte_range_request(f"{url}aigfs.t{run}z.{level}.f0{i}.grib2",
-                                                    f"{url}aigfs.t{run}z.{level}.f0{i}.grib2.idx",
-                                                    variables,
-                                                    levels,
-                                                    'pressure',
-                                                    path,
-                                                    f"aigfs.t{run}z.{level}.f0{i}.grib2",
-                                                    proxies=proxies,
-                                                    chunk_size=chunk_size,
-                                                    notifications=notifications)
-                    else:
-                        _client.byte_range_request(f"{url}aigfs.t{run}z.{level}.f{i}.grib2",
-                                                    f"{url}aigfs.t{run}z.{level}.f{i}.grib2.idx",
-                                                    variables,
-                                                    levels,
-                                                    'pressure',
-                                                    path,
-                                                    f"aigfs.t{run}z.{level}.f{i}.grib2",
-                                                    proxies=proxies,
-                                                    chunk_size=chunk_size,
-                                                    notifications=notifications)   
-                        
-                else:
-                    if i < 10:
-                        _client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f00{i}.grib2",
-                                    path,
-                                    f"aigfs.t{run}z.{level}.f00{i}.grib2",
-                                    proxies=proxies,
-                                    chunk_size=chunk_size,
-                                    notifications=notifications)  
-                    elif i >= 10 and i < 100:
-                        _client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f0{i}.grib2",
-                                                        path,
-                                                        f"aigfs.t{run}z.{level}.f0{i}.grib2",
-                                                        proxies=proxies,
-                                                        chunk_size=chunk_size,
-                                                        notifications=notifications)    
-                    else:
-                        _client.get_gridded_data(f"{url}aigfs.t{run}z.{level}.f{i}.grib2",
-                                                        path,
-                                                        f"aigfs.t{run}z.{level}.f{i}.grib2",
-                                                        proxies=proxies,
-                                                        chunk_size=chunk_size,
-                                                        notifications=notifications)     
+                _client.byte_range_request(f"{url}aigfs.t{run}z.{level}.f{i}.grib2",
+                                            f"{url}aigfs.t{run}z.{level}.f{i}.grib2.idx",
+                                            variables,
+                                            levels,
+                                            level_type,
+                                            path,
+                                            f"aigfs.t{run}z.{level}.f{i}.grib2",
+                                            proxies=proxies,
+                                            chunk_size=chunk_size,
+                                            notifications=notifications)   
                      
                     
     else:
@@ -390,7 +348,7 @@ def aigfs(final_forecast_hour=384,
     
     Optional Arguments:
     
-    1) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The AIGEFS
+    1) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The AIGFS
     goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
     384 by the nereast increment of 6 hours. 
     
@@ -417,11 +375,9 @@ def aigfs(final_forecast_hour=384,
             
     9) custom_directory (String, String List or None) - Default=None. If the user wishes to define their own directory to where the files are saved,
         the user must pass in a string representing the path of the directory. Otherwise, the directory created by default in WxData will
-        be used. If cat='members' then the user must pass in a string list showing the filepaths for each set of files binned by ensemble member.
+        be used. 
     
-    10) clear_recycle_bin (Boolean) - (Default=False in WxData >= 1.2.5) (Default=True in WxData < 1.2.5). When set to True, 
-        the contents in your recycle/trash bin will be deleted with each run of the program you are calling WxData. 
-        This setting is to help preserve memory on the machine. 
+    10) clear_recycle_bin (Boolean) - (Default=False). Set to True to clear your recycle bin. 
         
     11) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
         either Celsius or Fahrenheit. When False, this data remains in Kelvin.
@@ -437,9 +393,11 @@ def aigfs(final_forecast_hour=384,
     
         ***Types of Levels***
         
-        1) pressure
+        i) pressure
         
-        2) surface
+        ii) surface
+        
+        iii) height above ground
     
     16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
@@ -451,8 +409,39 @@ def aigfs(final_forecast_hour=384,
                                                                         'v-component of wind',
                                                                         'vertical velocity (pressure)']
                        
-        When the level_type = 'pressure', the user can filter by variable to the variable they want. (Surface level files are very small 
-        compared to pressure level files).
+        The list of variables the user wants to query.
+        
+        ***Variables By Level Type***
+        
+        *pressure*
+        
+        'geopotential height'
+        
+        'specific humidity'
+        
+        'temperature'
+        
+        'u-component of wind'
+        
+        'v-component of wind'
+        
+        'vertical velocity'
+        
+        *height above ground*
+        
+        'u-component of wind' - 10m
+        
+        'v-component of wind' - 10m
+        
+        'temperature' - 2m
+        
+        *mean sea level*
+        
+        'mean sea level pressure'
+        
+        *surface*
+        
+        'total precipitation'
         
     18) levels (Integer List) **level_type='pressure'** - Default=[1000,
                                                                         925,
@@ -495,7 +484,7 @@ def aigfs(final_forecast_hour=384,
     
     **Returns**
     
-    An xarray data array of the AIGEFS data specified to the coordinate boundaries and variable list the user specifies. 
+    An xarray data array of the AIGFS data specified to the coordinate boundaries and variable list the user specifies. 
     
     ***Pressure-Level Plain Language Variable Keys***
     
@@ -512,6 +501,7 @@ def aigfs(final_forecast_hour=384,
     '10m_v_wind_component'
     'mslp'
     '2m_temperature'
+    'total_precipitation'
     """
     source = source.lower()
     

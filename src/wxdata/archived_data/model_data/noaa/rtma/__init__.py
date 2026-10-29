@@ -1,1 +1,1 @@
-from wxdata.archived_data.model_data.noaa.rtma.rtma import rtma as archived_rtma
+from wxdata.archived_data.model_data.noaa.rtma.rtma import get_archived_rtma

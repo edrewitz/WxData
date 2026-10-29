@@ -17,9 +17,9 @@ from wxdata.model_data.noaa.gefs.gefs import(
     gefs_0p25 as _fetch_gefs_0p25
 )
 from wxdata.archived_data.model_data.noaa.gefs.gefs import(
-    gefs_0p50 as _fetch_archived_gefs_0p50,
-    gefs_0p50_secondary_parameters as _fetch_archived_gefs_0p50_secondary_parameters,
-    gefs_0p25 as _fetch_archived_gefs_0p25
+    get_archived_gefs_0p50 as _fetch_archived_gefs_0p50,
+    get_archived_gefs_0p50_secondary_parameters as _fetch_archived_gefs_0p50_secondary_parameters,
+    get_archived_gefs_0p25 as _fetch_archived_gefs_0p25
 )
 
 def _parse_date(date):
@@ -41,7 +41,11 @@ def _command_error_message(model):
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
     print(f"Model: {model.upper()}")
     print(f"Please run `wxdata-gefs -h to view the help documentation.")
-    print(f"Please visit: https://github.com/edrewitz/WxData/wiki#global-ensemble-forecast-system-gefs for full detailed documentation.")
+    if model.lower() == "gefs0p25":
+        print(f"Please visit: https://edrewitz.github.io/WxData/GEFS0P25%20CLI for full detailed documentation.")
+    else:
+        print(f"Please visit: https://edrewitz.github.io/WxData/GEFS0P50%20CLI for full detailed documentation.")
+    
 
 def _parse_proxy(value):
     if value is None:
@@ -67,7 +71,7 @@ def gefs_data():
 # ---------------------------------------------------------------------
 @gefs_data.group(name='0p50')
 def gefs0p50():
-    """
+    r"""
     Global Ensemble Forecast System (GEFS) 0.50x0.50 Client.
     
     ***Archived Required Commands***
@@ -91,7 +95,7 @@ def gefs0p50():
     
     This determines the category of ensemble data 
     
-    **Categories**
+    ***Categories***
     
     1) mean
     
@@ -144,14 +148,6 @@ def gefs0p50():
     -sb = Southern Bound - The southern bound for subsetting the data range is from -90 to 90 degrees latitude. (Default=-90)
     
     -m = Ensemble Members. (Default is all 30 members).
-    
-    *Example*
-    
-    Download the first 5 ensemble members for 850mb temperature
-    
-    *Category Must Be Set To Members* -> `-c members`
-    
-    `wxdata-gefs 0p50 latest -c members -v temperature -l 850 -m 1 -m 2 -m 3 -m 4 -m 5`
     
     -v = Variables(Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']) 
                        
@@ -415,10 +411,6 @@ def gefs0p50():
     
     If you are using a proxy server you can define it by using --proxy https://proxy-server-address:proxy-server-port
     
-    Example: 
-    
-    `wxdata-gefs 0p25 latest -v geopotential height -l 500 --proxy https://proxy-server-address:proxy-server-port`
-    
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     
     ***Additional Relevant Flags when --netcdf True***
@@ -440,7 +432,31 @@ def gefs0p50():
     
     WARNING: When this feature is disabled and the user submits too many requests in a short period of time the user risks
     being rate-limited by the data server. If the user gets rate-limited, the user should wait approximately 5-10 minutes and
-    retry downloading the data.     
+    retry downloading the data.  
+    
+    ***Complex Example***
+    
+    1) Download the latest GEFS0P50 for 2-meter temperature and 2-meter relative humidity from Amazon Web Services
+     
+        - Use a proxy server of address: https://proxy-server-address:proxy-server-port 
+        
+        - Download only members 1-5
+        
+    2) Subset the data to reflect CONUS [-130, -65, 50, 20] = [west, east, north, south]
+        
+    3) Create a netCDF (.nc) file of the data called `gefs0p50_members_t2m_rh.nc` saved at Weather_Data/GEFS0P50/NETCDF.
+    
+    Linux Shell:
+        ```wxdata-gefs 0p50 latest -c members -lt height_above_ground -l 2 -v temperature -v relative_humidity \
+            -m 1 -m 2 -m 3 -m 4 -m 5 -s aws -wb -130 -eb -65 -nb 50 -sb 20 \
+            --netcdf True --ncdir Weather_Data/GEFS0P50/NETCDF --ncfname gefs0p50_members_t2m_rh.nc \ 
+            --proxy https://proxy-server-address:proxy-server-port```
+            
+    Windows Powershell:
+        ```wxdata-gefs 0p50 latest -c members -lt height_above_ground -l 2 -v temperature -v relative_humidity `
+            -m 1 -m 2 -m 3 -m 4 -m 5 -s aws -wb -130 -eb -65 -nb 50 -sb 20 `
+            --netcdf True --ncdir Weather_Data/GEFS0P50/NETCDF --ncfname gefs0p50_members_t2m_rh.nc ` 
+            --proxy https://proxy-server-address:proxy-server-port``` 
     
     """
     
@@ -469,8 +485,7 @@ def gefs0p50():
     show_default=True,
     help=("""The category of the ensemble data. Default='mean'.  
     
-            Valid categories
-            -----------------
+            ***Valid categories***
             
             1) mean
             
@@ -613,7 +628,7 @@ def gefs0p50():
                   
                   Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']
                   
-                  See https://edrewitz.github.io/WxData/GEFS0P25 for available variables."""
+                  See https://edrewitz.github.io/WxData/GEFS0P50%20CLI for available variables."""
                   
                   )
 )
@@ -641,7 +656,7 @@ def gefs0p50():
           
           Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10]
           
-          See https://edrewitz.github.io/WxData/GEFS0P25 for available levels.
+          See https://edrewitz.github.io/WxData/GEFS0P50%20CLI for available levels.
           
           """)
 )
@@ -656,7 +671,7 @@ def gefs0p50():
         
           Default='pressure'.
           
-          See https://edrewitz.github.io/WxData/GEFS0P25 for available level types.
+          See https://edrewitz.github.io/WxData/GEFS0P50%20CLI for available level types.
           
           """)
 )
@@ -999,7 +1014,7 @@ def gefs0p50_fetch(final_forecast_hour,
                   
                   Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']
                   
-                  See https://edrewitz.github.io/WxData/GEFS0P25 for available variables."""
+                  See https://edrewitz.github.io/WxData/GEFS0P50%20CLI for available variables."""
                   
                   )
 )
@@ -1027,7 +1042,7 @@ def gefs0p50_fetch(final_forecast_hour,
           
           Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10]
           
-          See https://edrewitz.github.io/WxData/GEFS0P25 for available levels.
+          See https://edrewitz.github.io/WxData/GEFS0P50%20CLI for available levels.
           
           """)
 )
@@ -1041,7 +1056,7 @@ def gefs0p50_fetch(final_forecast_hour,
         
           Default='pressure'.
           
-          See https://edrewitz.github.io/WxData/GEFS0P25 for available level types.
+          See https://edrewitz.github.io/WxData/GEFS0P50%20CLI for available level types.
           
           """)
 )
@@ -1207,7 +1222,7 @@ def archived_gefs0p50_fetch(
 # ---------------------------------------------------------------------        
 @gefs_data.group(name='0p25')
 def gefs0p25():
-    """
+    r"""
     Global Ensemble Forecast System (GEFS) 0.25x0.25 Client.
     
     ***Archived Required Commands***
@@ -1227,7 +1242,7 @@ def gefs0p25():
     
     This determines the category of ensemble data 
     
-    **Categories**
+    ***Categories***
 
     1) mean
     
@@ -1280,14 +1295,6 @@ def gefs0p25():
     -sb = Southern Bound - The southern bound for subsetting the data range is from -90 to 90 degrees latitude. (Default=-90)
     
     -m = Ensemble Members. (Default is all 30 members).
-    
-    *Example*
-    
-    Download the first 5 ensemble members for 2-meter temperature
-    
-    *Category Must Be Set To Members* -> `-c members`
-    
-    `wxdata-gefs 0p25 latest -c members -v temperature -lt height_above_ground -l 2 -m 1 -m 2 -m 3 -m 4 -m 5`
     
     -v = Variables(Default=['temperature']) 
                        
@@ -1407,10 +1414,6 @@ def gefs0p25():
     
     If you are using a proxy server you can define it by using --proxy https://proxy-server-address:proxy-server-port
     
-    Example: 
-    
-    `wxdata-gefs 0p25 latest -v temperature -l 2 --proxy https://proxy-server-address:proxy-server-port`
-    
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     
     **Additional Relevant Flags when --netcdf True**
@@ -1432,7 +1435,33 @@ def gefs0p25():
     
     WARNING: When this feature is disabled and the user submits too many requests in a short period of time the user risks
     being rate-limited by the data server. If the user gets rate-limited, the user should wait approximately 5-10 minutes and
-    retry downloading the data.   
+    retry downloading the data.  
+    
+    ***Complex Example***
+    
+    *Important*: Any parameter of the command not explicitly stated results in the default value being used.
+    
+    1) Download the latest GEFS0P25 for 2-meter temperature and 2-meter relative humidity from Amazon Web Services
+     
+        - Use a proxy server of address: https://proxy-server-address:proxy-server-port 
+        
+        - Download only members 1-5
+        
+    2) Subset the data to reflect CONUS [-130, -65, 50, 20] = [west, east, north, south]
+        
+    3) Create a netCDF (.nc) file of the data called `gefs0p25_members_t2m_rh.nc` saved at Weather_Data/GEFS0P25/NETCDF.
+    
+    Linux Shell:
+        ```wxdata-gefs 0p25 latest -c members -lt height_above_ground -l 2 -v temperature -v relative_humidity \
+            -m 1 -m 2 -m 3 -m 4 -m 5 -s aws -wb -130 -eb -65 -nb 50 -sb 20 \
+            --netcdf True --ncdir Weather_Data/GEFS0P25/NETCDF --ncfname gefs0p50_members_t2m_rh.nc \ 
+            --proxy https://proxy-server-address:proxy-server-port```
+            
+    Windows Powershell:
+        ```wxdata-gefs 0p25 latest -c members -lt height_above_ground -l 2 -v temperature -v relative_humidity `
+            -m 1 -m 2 -m 3 -m 4 -m 5 -s aws -wb -130 -eb -65 -nb 50 -sb 20 `
+            --netcdf True --ncdir Weather_Data/GEFS0P25/NETCDF --ncfname gefs0p25_members_t2m_rh.nc ` 
+            --proxy https://proxy-server-address:proxy-server-port```
     
     """
     
@@ -1584,7 +1613,7 @@ def gefs0p25():
                   
                   Default=['temperature']
                   
-                  See https://edrewitz.github.io/WxData/GEFS0P25 for available variables."""
+                  See https://edrewitz.github.io/WxData/GEFS0P25%20CLI for available variables."""
                   
                   )
 )
@@ -1601,7 +1630,7 @@ def gefs0p25():
           
           Default=[2]
           
-          See https://edrewitz.github.io/WxData/GEFS0P25 for available levels.
+          See https://edrewitz.github.io/WxData/GEFS0P25%20CLI for available levels.
           
           """)
 )
@@ -1616,7 +1645,7 @@ def gefs0p25():
         
           Default='height above ground'.
           
-          See https://edrewitz.github.io/WxData/GEFS0P25 for available level types.
+          See https://edrewitz.github.io/WxData/GEFS0P25%20CLI for available level types.
           
           """)
 )
@@ -1780,8 +1809,7 @@ def gefs0p25_fetch(members,
     show_default=True,
     help=("""The category of the ensemble data. Default='mean'.  
     
-            Valid categories
-            -----------------
+            ***Valid categories***
             
             1) mean
             
@@ -1912,7 +1940,7 @@ def gefs0p25_fetch(members,
                   
                   Default=['temperature']
                   
-                  See https://edrewitz.github.io/WxData/GEFS0P25 for available variables."""
+                  See https://edrewitz.github.io/WxData/GEFS0P25%20CLI for available variables."""
                   
                   )
 )
@@ -1929,7 +1957,7 @@ def gefs0p25_fetch(members,
           
           Default=[2]
           
-          See https://edrewitz.github.io/WxData/GEFS0P25 for available levels.
+          See https://edrewitz.github.io/WxData/GEFS0P25%20CLI for available levels.
           
           """)
 )
@@ -1944,7 +1972,7 @@ def gefs0p25_fetch(members,
         
           Default='height above ground'.
           
-          See https://edrewitz.github.io/WxData/GEFS0P25 for available level types.
+          See https://edrewitz.github.io/WxData/GEFS0P25%20CLI for available level types.
           
           """)
 )

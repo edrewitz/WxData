@@ -77,7 +77,10 @@ def _command_error_message(model):
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
     print(f"Model: {model.upper()}")
     print(f"Please run `wxdata-ifs -h to view the help documentation.")
-    print(f"Please visit: https://github.com/edrewitz/WxData/wiki#ecmwf-open-data for full detailed documentation.")
+    if "aifs" not in model.lower():
+        print(f"Please visit: https://edrewitz.github.io/WxData/ECMWF%20IFS%20CLI for full detailed documentation.")
+    else:
+        print(f"Please visit: https://edrewitz.github.io/WxData/ECMWF%20AIFS%20CLI for full detailed documentation.")
     
 def _parse_proxy(value):
     if value is None:
@@ -104,7 +107,7 @@ def ecmwf_data():
 @ecmwf_data.group(name='ifs')
 def ifs():
     
-    """
+    r"""
     **Downloads The Latest ECMWF IFS Data**
     
     ***Valid Commands***
@@ -130,12 +133,6 @@ def ifs():
     -hwd = High Resolution IFS Wave Deterministic (0.10x0.10 Degree)
     
     -hwe = High Resolution Wave IFS Ensemble (0.10x0.10 Degree)
-    
-    ***Example***
-    
-    Download the ECMWF High Resolution IFS Ensemble for 500mb and 850mb geopotential height and temperature for members 1 through 5 from Google Cloud.
-    
-    `wxdata-ecmwf ifs latest -t he -v geopotential_height -v temperature -l 850 -l 500 -m 1 -m 2 -m 3 -m 4 -m 5 -s google`
     
     -f = Final Forecast Hour (Default=360).
      
@@ -330,10 +327,6 @@ def ifs():
     
     If you are using a proxy server you can define it by using --proxy https://proxy-server-address:proxy-server-port
     
-    Example: 
-    
-    `wxdata-ecmwf ifs latest -v geopotential height -l 500 --proxy https://proxy-server-address:proxy-server-port`
-    
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     
     **Additional Relevant Flags when --netcdf True**
@@ -341,6 +334,32 @@ def ifs():
     --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=ECMWF IFS/NETCDF). 
     
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=ecmwf_ifs.nc)
+    
+    ***Complex Example***
+    
+    *Important*: Any parameter of the command not explicitly stated results in the default value being used.
+    
+    1) Download the latest IFS High Resolution Ensemble for 2-meter temperature from Amazon Web Services
+     
+        - Use a proxy server of address: https://proxy-server-address:proxy-server-port 
+        
+        - Download only members 1-5
+        
+    2) Subset the data to reflect CONUS [-130, -65, 50, 20] = [west, east, north, south]
+        
+    3) Create a netCDF (.nc) file of the data called `high_res_ifs_members_t2m.nc` saved at Weather_Data/HIGH RES IFS/NETCDF.
+    
+    Linux Shell:
+        ```wxdata-ecmwf ifs latest -t he -c members -lt surface -v 2-meter_temperature \
+            -m 1 -m 2 -m 3 -m 4 -m 5 -s aws -wb -130 -eb -65 -nb 50 -sb 20 \
+            --netcdf True --ncdir Weather_Data/HIGH RES IFS/NETCDF --ncfname high_res_ifs_members_t2m.nc \ 
+            --proxy https://proxy-server-address:proxy-server-port```
+            
+    Windows Powershell:
+        ```wxdata-ecmwf ifs latest -t he -c members -lt surface -v 2-meter_temperature `
+            -m 1 -m 2 -m 3 -m 4 -m 5 -s aws -wb -130 -eb -65 -nb 50 -sb 20 `
+            --netcdf True --ncdir Weather_Data/HIGH RES IFS/NETCDF --ncfname high_res_ifs_members_t2m.nc ` 
+            --proxy https://proxy-server-address:proxy-server-port```
     
     """
     
@@ -943,7 +962,7 @@ def fetch_ifs(type,
 @ecmwf_data.group(name='aifs')
 def aifs():
     
-    """
+    r"""
     **Downloads The Latest ECMWF AIFS Data**
     
     ***Valid Commands***
@@ -959,12 +978,6 @@ def aifs():
     -wd = AIFS Wave Deterministic (0.25x0.25 Degree)
     
     -we = AIFS Wave Ensemble (0.25x0.25 Degree)
-    
-    ***Example***
-    
-    Download the ECMWF High Resolution AIFS Ensemble for 500mb and 850mb geopotential height and temperature for members 1 through 5 from Google Cloud.
-    
-    `wxdata-ecmwf aifs latest -t e -v geopotential_height -v temperature -l 850 -l 500 -m 1 -m 2 -m 3 -m 4 -m 5 -s google`
     
     -c = Category. (Default="control").
     
@@ -1164,11 +1177,7 @@ def aifs():
     Client assumes user is not trying to download data through a proxy server.
     
     If you are using a proxy server you can define it by using --proxy https://proxy-server-address:proxy-server-port
-    
-    Example: 
-    
-    `wxdata-ecmwf ifs latest -v geopotential height -l 500 --proxy https://proxy-server-address:proxy-server-port`
-    
+        
     --netcdf = Converts GRIB data into netCDF4 and saves a netCDF (.nc) file. (Default=False). Set to True to create netCDF files.
     
     **Additional Relevant Flags when --netcdf True**
@@ -1176,6 +1185,32 @@ def aifs():
     --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=ECMWF AIFS/NETCDF). 
     
     --ncfname = Defines the filename for the netCDF (.nc) file. (Default=ecmwf_aifs.nc)
+    
+    ***Complex Example***
+    
+    *Important*: Any parameter of the command not explicitly stated results in the default value being used.
+    
+    1) Download the latest AIFS Ensemble for 2-meter temperature from Amazon Web Services
+     
+        - Use a proxy server of address: https://proxy-server-address:proxy-server-port 
+        
+        - Download only members 1-5
+        
+    2) Subset the data to reflect CONUS [-130, -65, 50, 20] = [west, east, north, south]
+        
+    3) Create a netCDF (.nc) file of the data called `aifs_members_t2m.nc` saved at Weather_Data/AIFS/NETCDF.
+    
+    Linux Shell:
+        ```wxdata-ecmwf aifs latest -t e -c members -lt surface -v 2-meter_temperature \
+            -m 1 -m 2 -m 3 -m 4 -m 5 -s aws -wb -130 -eb -65 -nb 50 -sb 20 \
+            --netcdf True --ncdir Weather_Data/AIFS/NETCDF --ncfname aifs_members_t2m.nc \ 
+            --proxy https://proxy-server-address:proxy-server-port```
+            
+    Windows Powershell:
+        ```wxdata-ecmwf aifs latest -t e -c members -lt surface -v 2-meter_temperature `
+            -m 1 -m 2 -m 3 -m 4 -m 5 -s aws -wb -130 -eb -65 -nb 50 -sb 20 `
+            --netcdf True --ncdir Weather_Data/AIFS/NETCDF --ncfname aifs_members_t2m.nc ` 
+            --proxy https://proxy-server-address:proxy-server-port```
     
     """
     

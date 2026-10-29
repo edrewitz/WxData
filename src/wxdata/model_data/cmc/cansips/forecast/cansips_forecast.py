@@ -1,5 +1,5 @@
 """
-This file hosts the functions for the CanSIPS Forecast Data Client
+This file hosts the functions for the Canadian Seasonal to Inter-annual Prediction System (CanSIPS) Forecast Data Client
 
 (C) Eric J. Drewitz 2025-2026
 """
@@ -44,7 +44,7 @@ def cansips_forecast(western_bound=-180,
             return_values=True):
     
     """
-    This function retrieves the latest CanSIPS data from https://dd.weather.gc.ca/ and returns an xarray.array of specified data.
+    This function retrieves the latest CanSIPS data from `https://dd.weather.gc.ca/` and returns an xarray.array of specified data.
     
     Required Arguments: None
     

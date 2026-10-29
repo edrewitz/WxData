@@ -1446,7 +1446,7 @@ def _gefs_0p25_client(date,
 
     
     
-def gefs_0p50(date,
+def get_archived_gefs_0p50(date,
               run,
              cat='mean', 
              final_forecast_hour=384, 
@@ -1500,15 +1500,15 @@ def gefs_0p50(date,
     
     1) cat (string) - Default='mean'. The category of the ensemble data. 
     
-    Valid categories
-    
-    i) mean
-    
-    ii) members
-    
-    iii) spread
-    
-    iv) control
+        ***Valid categories***
+        
+        i) mean
+        
+        ii) members
+        
+        iii) spread
+        
+        iv) control
     
     2) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The GEFS0P50
     goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
@@ -1885,7 +1885,7 @@ def gefs_0p50(date,
         
 
 
-def gefs_0p50_secondary_parameters(date,
+def get_archived_gefs_0p50_secondary_parameters(date,
               run,
              cat='mean', 
              final_forecast_hour=384, 
@@ -1928,15 +1928,15 @@ def gefs_0p50_secondary_parameters(date,
     
     1) cat (string) - Default='control'. The category of the ensemble data. 
     
-    ***Valid categories***
-    
-    i) mean
-    
-    ii) members
-    
-    iii) spread
-    
-    iv) control
+        ***Valid categories***
+        
+        i) mean
+        
+        ii) members
+        
+        iii) spread
+        
+        iv) control
     
     2) final_forecast_hour (Integer) - Default = 384. The final forecast hour the user wishes to download. The GEFS0P50 SECONDARY PARAMETERS
     goes out to 384 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 
@@ -2401,7 +2401,7 @@ def gefs_0p50_secondary_parameters(date,
         
 
 
-def gefs_0p25(date,
+def get_archived_gefs_0p25(date,
               run,
              cat='mean', 
              final_forecast_hour=240, 
@@ -2444,15 +2444,15 @@ def gefs_0p25(date,
     
     1) cat (string) - Default='mean'. The category of the ensemble data. 
     
-    ***Valid categories***
-    
-    i) mean
-    
-    ii) members
-    
-    iii) spread
-    
-    iv) control
+        ***Valid categories***
+        
+        i) mean
+        
+        ii) members
+        
+        iii) spread
+        
+        iv) control
     
     2) final_forecast_hour (Integer) - Default = 240. The final forecast hour the user wishes to download. The GEFS0P25
     goes out to 240 hours. For those who wish to have a shorter dataset, they may set final_forecast_hour to a value lower than 

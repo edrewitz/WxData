@@ -407,7 +407,7 @@ def fetch_cansips(type,
         if current_os != "Windows":
             _click.echo(f"CanSIPS {type.upper()} latest download complete, data files saved to {path}")
         else:
-            path = path.replace('/', '\\')}
+            path = path.replace('/', '\\')
             _click.echo(rf"CanSIPS {type.upper()} latest download complete, data files saved to {path}")
             
     except SystemExit as e:

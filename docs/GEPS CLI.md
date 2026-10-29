@@ -8,7 +8,7 @@ Canadian Global Ensemble Prediction System (GEPS) Command Line Interface
 
 ***Valid Commands***
 
--f = Final Forecast Hour. Default=240.
+-f = Final Forecast Hour. Default=384.
 
 -cr = Clear Recycle Bin (Default=False).
 

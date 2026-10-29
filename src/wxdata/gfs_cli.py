@@ -1111,7 +1111,7 @@ def archived_gfs0p25_fetch(
         convert_to = convert_to.lower()
         
         type = type.lower()
-        
+                
         if type == 'primary':
         
             _fetch_archived_gfs_0p25(
@@ -2047,7 +2047,6 @@ def archived_gfs0p50_fetch(
 
         level_type = level_type.replace('_', ' ')
         convert_to = convert_to.lower()
-        
         
         _fetch_archived_gfs_0p50(
                         date,

@@ -270,8 +270,8 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 1. [AIGFS](https://edrewitz.github.io/WxData/AI%20GFS%20CLI)
 
 ***Climate Forecast System (CFS)***
-1. [CFS Pressure]()
-2. [CFS Flux]()
+1. [CFS Pressure](https://edrewitz.github.io/WxData/CFS%20Pressure%20CLI)
+2. [CFS Flux](https://edrewitz.github.io/WxData/CFS%20Flux%20CLI)
 
 ***Hybrid Global Ensemble Forecast System (HGEFS)***
 1. [HGEFS](https://edrewitz.github.io/WxData/HGEFS%20CLI)

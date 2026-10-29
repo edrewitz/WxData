@@ -288,7 +288,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 2. [RDPS]()
 3. [HRDPS]()
 4. [GEPS]()
-5. [CanSIPS]()
+5. [CanSIPS](https://edrewitz.github.io/WxData/CANSIPS%20CLI)
 
 ***ECMWF Open Data***
 1. [ECMWF IFS](https://edrewitz.github.io/WxData/ECMWF%20IFS%20CLI)

@@ -250,7 +250,10 @@ def cfs_post_processing(path,
     
     try:
         var = str(list(ds.data_vars)[0])
-        variable = variable.replace(' ', '_')
+        try:
+            variable = variable.replace(' ', '_')
+        except Exception as e:
+            pass
         
         ds[variable] = ds[var]
         ds = ds.drop_vars(var)

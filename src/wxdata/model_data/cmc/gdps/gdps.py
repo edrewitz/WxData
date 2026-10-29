@@ -1,5 +1,5 @@
 """
-This file hosts the functions for the GDPS Data Client
+This file hosts the functions for the Canadian Global Deterministic Prediction System (GDPS) Data Client
 
 (C) Eric J. Drewitz 2025-2026
 """

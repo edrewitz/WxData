@@ -42,7 +42,7 @@ def cansips_data():
     pass
 
 # ---------------------------------------------------------------------
-# CFS Commands
+# CanSIPS Commands
 # ---------------------------------------------------------------------
 @cansips_data.group(name='fetch')
 def get_cansips_data():

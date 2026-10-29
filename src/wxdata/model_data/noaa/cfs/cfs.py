@@ -1032,7 +1032,7 @@ def cfs_flux(western_bound=-180,
         levels = None
     
     variables = [variable]
-    path = f"{path}/{variable.upper()}"
+    path = f"{path}/{variable[0].upper()}"
     
     source = source.lower()
     try:
@@ -1496,7 +1496,7 @@ def cfs_pressure(western_bound=-180,
     source = source.lower()
     
     variables = [variable]
-    path = f"{path}/{variable.upper()}"
+    path = f"{path}/{variable[0].upper()}"
     
     try:
         if process_data == True:

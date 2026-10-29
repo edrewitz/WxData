@@ -44,6 +44,7 @@ wxdata-aigefs = "wxdata.aigefs_cli:main"
 wxdata-aigfs = "wxdata.aigfs_cli:main"
 wxdata-hgefs = "wxdata.hgefs_cli:main"
 wxdata-ecmwf = "wxdata.ecmwf_cli:main"
+wxdata-cansips = "wxdata.cansips_cli:main"
 wxdata-ndfd = "wxdata.ndfd_cli:main"
 wxdata-soundings = "wxdata.soundings_cli:main"
 wxdata-metars = "wxdata.metars_cli:main"
@@ -57,5 +58,5 @@ build-backend = "setuptools.build_meta"
 where = ["src"]  # Look for packages in the src directory
 
 [project.urls]
-Documentation = "https://github.com/edrewitz/WxData/wiki"
+Documentation = "https://edrewitz.github.io/WxData/"
 Repository = "https://github.com/edrewitz/wxdata/tree/main"

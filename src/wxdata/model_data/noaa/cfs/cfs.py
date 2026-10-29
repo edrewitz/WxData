@@ -301,7 +301,6 @@ def _cfs_flux_client(western_bound=-180,
         '995_sigma_geopotential_height'   
     """
     
-    
     if clear_recycle_bin == True:
         _clear_recycle_bin_windows()
         _clear_trash_bin_mac()
@@ -1021,6 +1020,13 @@ def cfs_flux(western_bound=-180,
         '995_sigma_geopotential_height'   
     """
     
+    level_type = level_type.lower()
+    
+    if level_type == "height above ground" or level_type == "height below ground" or level_type == "hybrid":
+        levels = levels
+    else:
+        levels = None
+    
     variables = [variable]
     path = f"{path}/{variable.upper()}"
     
@@ -1467,6 +1473,14 @@ def cfs_pressure(western_bound=-180,
             'potential_vorticity_level_air_pressure'
             'potential_vorticity_level_vertical_speed_shear'        
     """
+    
+    level_type = level_type.lower()
+    
+    
+    if level_type == "surface" or level_type == "entire atmosphere" or level_type == "mean sea level" or level_type == "tropopause" or level_type == "isothermal" or level_type == "highest tropospheric freezing level":
+        levels = None
+    else:
+        levels = levels
     
     source = source.lower()
     

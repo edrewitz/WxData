@@ -28,7 +28,10 @@ def _command_error_message(model):
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
     print(f"Model: {model.upper()}")
     print(f"Please run `wxdata-cfs -h to view the help documentation.")
-    print(f"Please visit: https://edrewitz.github.io/WxData/AI%20GFS%20CLI for full detailed documentation.")
+    if model.lower() == "cfs flux":
+        print(f"Please visit: https://edrewitz.github.io/WxData/CFS%20Flux%20CLI for full detailed documentation.")
+    else:
+        print(f"Please visit: https://edrewitz.github.io/WxData/CFS%20Pressure%20CLI for full detailed documentation.")
 
 def _parse_proxy(value):
     if value is None:
@@ -453,7 +456,7 @@ def cfs_pressure():
                   
                   Default='geopotential_height'
                   
-                  See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
+                  See https://edrewitz.github.io/WxData/CFS%20Pressure%20CLI for available variables."""
                   
                   )
 )
@@ -476,7 +479,7 @@ def cfs_pressure():
           
           Default=[1000, 925, 850, 700, 500, 400, 300, 250]
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available levels.
+          See https://edrewitz.github.io/WxData/CFS%20Pressure%20CLI for available levels.
           
           """)
 )
@@ -491,7 +494,7 @@ def cfs_pressure():
         
           Default='pressure'.
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available level types.
+          See https://edrewitz.github.io/WxData/CFS%20Pressure%20CLI for available level types.
           
           """)
 )
@@ -738,7 +741,7 @@ def cfs_pressure_fetch(final_forecast_hour,
                   
                   Default='geopotential_height'
                   
-                  See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
+                  See https://edrewitz.github.io/WxData/CFS%20Pressure%20CLI for available variables."""
                   
                   )
 )
@@ -761,7 +764,7 @@ def cfs_pressure_fetch(final_forecast_hour,
           
           Default=[1000, 925, 850, 700, 500, 400, 300, 250]
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available levels.
+          See https://edrewitz.github.io/WxData/CFS%20Pressure%20CLI for available levels.
           
           """)
 )
@@ -772,11 +775,11 @@ def cfs_pressure_fetch(final_forecast_hour,
     default="pressure",
     type=str,
     show_default=True,
-    help=("""Type of level (i.e. pressure, height above ground etc.). 
+    help=(r"""Type of level (i.e. pressure, height above ground etc.). 
         
           Default='pressure'.
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available level types.
+          See https://edrewitz.github.io/WxData/CFS%20Pressure%20CLI for available level types.
           
           """)
 )
@@ -1325,7 +1328,7 @@ def cfs_flux():
                   
                   Default='geopotential_height'
                   
-                  See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
+                  See https://edrewitz.github.io/WxData/CFS%20Flux%20CLI for available variables."""
                   
                   )
 )
@@ -1342,7 +1345,7 @@ def cfs_flux():
           
           Default=[2]
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available levels.
+          See https://edrewitz.github.io/WxData/CFS%20Flux%20CLI for available levels.
           
           """)
 )
@@ -1357,7 +1360,7 @@ def cfs_flux():
         
           Default='pressure'.
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available level types.
+          See https://edrewitz.github.io/WxData/CFS%20Flux%20CLI for available level types.
           
           """)
 )
@@ -1608,13 +1611,13 @@ def cfs_flux_fetch(final_forecast_hour,
     default=[2],
     multiple=True, 
     type=int,  
-    help=("""Levels for pressure, height, PVU etc. 
+    help=("""Levels for level_type. 
           
           Height (m above ground)
           
           Default=[2]
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available levels.
+          See https://edrewitz.github.io/WxData/CFS%20Flux%20CLI for available levels.
           
           """)
 )
@@ -1629,7 +1632,7 @@ def cfs_flux_fetch(final_forecast_hour,
         
           Default='pressure'.
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available level types.
+          See https://edrewitz.github.io/WxData/CFS%20Flux%20CLI for available level types.
           
           """)
 )

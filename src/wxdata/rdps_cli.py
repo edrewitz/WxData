@@ -81,14 +81,6 @@ def fetch_rdps_data():
     
     When -ct True this is where you declare the units for temperature to be converted to. 
     
-    -wb = Western Bound - The western bound for subsetting the data range is from -180 to 180 degrees longitude. (Default=-180)
-    
-    -eb = Eastern Bound - The eastern bound for subsetting the data range is from -180 to 180 degrees longitude. (Default=180)
-    
-    -nb = Northern Bound - The northern bound for subsetting the data range is from -90 to 90 degrees latitude. (Default=90)
-    
-    -sb = Southern Bound - The southern bound for subsetting the data range is from -90 to 90 degrees latitude. (Default=-90)
-    
     -v = Variable. Variable to pass into the function. 
         
         Default='geopotential_height'
@@ -581,21 +573,17 @@ def fetch_rdps_data():
     
     1) Download the latest RDPS for 2-meter temperature 
      
-        - Use a proxy server of address: https://proxy-server-address:proxy-server-port 
+    - Use a proxy server of address: https://proxy-server-address:proxy-server-port 
                 
-    2) Subset the data to reflect CONUS [-130, -65, 50, 20] = [west, east, north, south]
-        
-    3) Create a netCDF (.nc) file of the data called `rdps_t2m.nc` saved at Weather_Data/RDPS/NETCDF.
+    2) Create a netCDF (.nc) file of the data called `rdps_t2m.nc` saved at Weather_Data/RDPS/NETCDF.
     
     Linux Shell:
         ```wxdata-rdps fetch latest -lt height_above_ground -l 2 -v temperature \
-            -wb -130 -eb -65 -nb 50 -sb 20 \
             --netcdf True --ncdir Weather_Data/RDPS/NETCDF --ncfname rdps_t2m.nc \ 
             --proxy https://proxy-server-address:proxy-server-port```
             
     Windows Powershell:
         ```wxdata-rdps fetch latest -lt height_above_ground -l 2 -v temperature `
-            -wb -130 -eb -65 -nb 50 -sb 20 `
             --netcdf True --ncdir Weather_Data/RDPS/NETCDF --ncfname rdps_t2m.nc ` 
             --proxy https://proxy-server-address:proxy-server-port```
     
@@ -657,41 +645,6 @@ def fetch_rdps_data():
     help="When -ct True this is where you declare the units for temperature to be converted to."
 )
 
-@_click.option(
-    "--western_bound",
-    "-wb",
-    default=-180,
-    show_default=True,
-    type=int,
-    help="Western Bound for subsetting the data. Range: -180 to 180 in Degrees Longitude. Default=-180."
-)
-
-@_click.option(
-    "--eastern_bound",
-    "-eb",
-    default=180,
-    show_default=True,
-    type=int,
-    help="Eastern Bound for subsetting the data. Range: -180 to 180 in Degrees Longitude. Default=180."
-)
-
-@_click.option(
-    "--northern_bound",
-    "-nb",
-    default=90,
-    show_default=True,
-    type=int,
-    help="Northern Bound for subsetting the data. Range: -90 to 90 in Degrees Latitude. Default=90."
-)
-
-@_click.option(
-    "--southern_bound",
-    "-sb",
-    default=-90,
-    show_default=True,
-    type=int,
-    help="Southern Bound for subsetting the data. Range: -90 to 90 in Degrees Latitude. Default=-90."
-)
         
 @_click.option('--variable', 
               '-v', 
@@ -1254,10 +1207,6 @@ def get_gdps(final_forecast_hour,
              clear_data,
              convert_temperature,
              convert_to,
-             western_bound,
-             eastern_bound,
-             southern_bound,
-             northern_bound,
              variable,
              level,
              layer,
@@ -1303,10 +1252,6 @@ def get_gdps(final_forecast_hour,
                     clear_data=clear_data,
                     convert_temperature=convert_temperature,
                     convert_to=convert_to,
-                    western_bound=western_bound,
-                    eastern_bound=eastern_bound,
-                    southern_bound=southern_bound,
-                    northern_bound=northern_bound,
                     variable=variable,
                     level=level,
                     layer=layer,

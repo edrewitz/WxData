@@ -52,7 +52,7 @@ def fetch_geps_data():
     
     ***Valid Commands***
     
-    -f = Final Forecast Hour. Default=240.
+    -f = Final Forecast Hour. Default=384.
     
     -cr = Clear Recycle Bin (Default=False).
     
@@ -320,7 +320,7 @@ def fetch_geps_data():
 @_click.option(
     "--final_forecast_hour",
     "-f",
-    default=240,
+    default=384,
     show_default=True,
     type=int,
     help="This is the final forecast hour requested in the dataset."

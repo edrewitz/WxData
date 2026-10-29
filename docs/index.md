@@ -402,6 +402,8 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 ***Linear Anti-Aliasing Between Two Points***
 1. [linear_anti_aliasing](https://edrewitz.github.io/WxData/linear_anti_aliasing)
 
+***GRIB2 to NETCDF***
+1. [GRIB2 to NETCDF](https://edrewitz.github.io/WxData/grib%20to%20netcdf)
 
 [***Return To Table Of Contents***](https://edrewitz.github.io/WxData/#table-of-contents)
 

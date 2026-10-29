@@ -362,7 +362,8 @@ def cfs_pressure_fetch(final_forecast_hour,
             else:
                 pass
         
-
+        
+        variable = variable.lower()
         variable = variable.replace('_', ' ')
             
         level_type = level_type.replace('_', ' ')

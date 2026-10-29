@@ -2,7 +2,7 @@
 title: GFS0P25 CLI
 ---
 
-# Global Forecast System (GEFS) 0.25x0.25 Command Line Interface.
+# Global Forecast System (GFS) 0.25x0.25 Command Line Interface.
 
 ***Archived Required Commands***
 

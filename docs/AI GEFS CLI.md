@@ -94,7 +94,7 @@ The list of variables the user wants to query.
 
 'geopotential_height'
 
-'specific humidity'
+'specific_humidity'
 
 'temperature'
 

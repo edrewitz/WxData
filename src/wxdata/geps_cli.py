@@ -288,9 +288,9 @@ def fetch_geps_data():
     
     ***Additional Relevant Flags when --netcdf True***
     
-    --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=GDPS/NETCDF). 
+    --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=GEPS/NETCDF). 
     
-    --ncfname = Defines the filename for the netCDF (.nc) file. (Default=gfs_0p50.nc)
+    --ncfname = Defines the filename for the netCDF (.nc) file. (Default=geps.nc)
     
     ***Complex Example***
     

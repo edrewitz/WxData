@@ -544,7 +544,7 @@ def fetch_gdps_data():
     
     --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=GDPS/NETCDF). 
     
-    --ncfname = Defines the filename for the netCDF (.nc) file. (Default=gfs_0p50.nc)
+    --ncfname = Defines the filename for the netCDF (.nc) file. (Default=gdps.nc)
     
     ***Complex Example***
     

@@ -414,4 +414,11 @@ def fetch_cansips(type,
         _command_error_message('cansips')
         _sys.exit(1)
             
-            
+# ---------------------------------------------------------------------
+# Entry point
+# ---------------------------------------------------------------------
+def main():
+    cansips_data()
+    
+if __name__ == "__main__":
+    main()

@@ -311,6 +311,19 @@ def get_archived_cfs_flux(
         '995_sigma_geopotential_height'   
                                
     """
+    level_type = level_type.lower()
+    
+    no_levs = ["surface",
+               "entire atmosphere",
+               "mean sea level",
+               "tropopause",
+               "isothermal",
+               "highest tropospheric freezing level"]
+    
+    if level_type in no_levs:
+        levels = None
+    else:
+        levels = levels
     
     variables = [variable]
     path = f"{path}/{variable.upper()}"
@@ -662,6 +675,19 @@ def get_archived_cfs_pressure(
             'potential_vorticity_level_vertical_speed_shear'    
                                
     """
+    level_type = level_type.lower()
+    
+    no_levs = ["surface",
+               "entire atmosphere",
+               "mean sea level",
+               "tropopause",
+               "isothermal",
+               "highest tropospheric freezing level"]
+    
+    if level_type in no_levs:
+        levels = None
+    else:
+        levels = levels
     
     variables = [variable]
     path = f"{path}/{variable.upper()}"

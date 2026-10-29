@@ -32,7 +32,8 @@ def _command_error_message(model):
     """Error Message For Invalid Commands"""
     
     print(f"Invalid Command Error: User Entered An Invalid Command.")
-    print(f"Please run `rtma {model.lower()} -h to view the help documentation.")
+    print(f"Please visit https://edrewitz.github.io/WxData/RTMA%20CLI for help.")
+    
 
 def _parse_proxy(value):
     if value is None:

@@ -375,7 +375,7 @@ def cfs_pressure_fetch(final_forecast_hour,
         else:
             path = custom_directory
         
-        _fetch_cfs_flux(final_forecast_hour=final_forecast_hour,
+        _fetch_cfs_pressure(final_forecast_hour=final_forecast_hour,
                         western_bound=western_bound,
                         eastern_bound=eastern_bound,
                         southern_bound=southern_bound,

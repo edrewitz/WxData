@@ -234,7 +234,7 @@ retry downloading the data.
 Linux Shell:
 ```shell
 wxdata-gefs 0p25 latest -c members -lt height_above_ground -l 2 -v temperature -v relative_humidity \
--m 1 -m 2 -m 3 -m 4 -m 5 -s aws -wb -130 -eb -65 -nb 50 -sb 20 \
+-s aws -wb -130 -eb -65 -nb 50 -sb 20 \
 --netcdf True --ncdir Weather_Data/GEFS0P25/NETCDF --ncfname gefs0p50_members_t2m_rh.nc \ 
 --proxy https://proxy-server-address:proxy-server-port
 ```
@@ -242,7 +242,7 @@ wxdata-gefs 0p25 latest -c members -lt height_above_ground -l 2 -v temperature -
 Windows Powershell:
 ```powershell
 wxdata-gefs 0p25 latest -c members -lt height_above_ground -l 2 -v temperature -v relative_humidity `
--m 1 -m 2 -m 3 -m 4 -m 5 -s aws -wb -130 -eb -65 -nb 50 -sb 20 `
+-s aws -wb -130 -eb -65 -nb 50 -sb 20 `
 --netcdf True --ncdir Weather_Data/GEFS0P25/NETCDF --ncfname gefs0p25_members_t2m_rh.nc ` 
 --proxy https://proxy-server-address:proxy-server-port
 ```

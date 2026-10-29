@@ -1070,7 +1070,7 @@ def fetch_gdps_data():
                                                 
                             level_type='height above ground' (m): 10, 40, 80, 120
                   
-                  See https://edrewitz.github.io/WxData/CFS%20Pressure%20CLI for available variables."""
+                  See https://edrewitz.github.io/WxData/GDPS%20CLI for available variables."""
                   
                   )
 )
@@ -1084,7 +1084,7 @@ def fetch_gdps_data():
                     
           Default=500 hPa
           
-          See https://edrewitz.github.io/WxData/GFS0P25%20CLI for available levels.
+          See https://edrewitz.github.io/WxData/GDPS%20CLI for available levels.
           
           """)
 )
@@ -1137,7 +1137,7 @@ def fetch_gdps_data():
             
             'entire_atmosphere'
           
-          See https://edrewitz.github.io/WxData/GFS0P25%20CLI for available level types.
+          See https://edrewitz.github.io/WxData/GDPS%20CLI for available level types.
           
           """)
 )

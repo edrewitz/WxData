@@ -303,6 +303,9 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 ***NEXRAD II Radar Data***
 1. [NEXRAD II Radar Data](https://edrewitz.github.io/WxData/NEXRAD%20II%20CLI)
 
+***Observed Atmospheric Soundings***
+1. [University Of Wyoming Soundings](https://edrewitz.github.io/WxData/Observed%20Soundings%20CLI)
+
 ***METAR Observations***
 1. [METAR Observations](https://edrewitz.github.io/WxData/METAR%20CLI)
 

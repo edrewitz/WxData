@@ -190,6 +190,7 @@ def aigefs_members_post_processing(paths,
         
         try:
             ds['2m_temperature'] = ds1['t2m']
+            ds = ds.drop_vars('t2m')
         except Exception as e:
             pass
         

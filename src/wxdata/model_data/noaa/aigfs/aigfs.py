@@ -189,6 +189,11 @@ def _aigfs_client(final_forecast_hour=384,
     
     level_type = level_type.lower()
     
+    if level_type == "pressure" or level_type == "height above ground":
+        levels = levels
+    else:
+        levels = None
+    
     if level_type == 'pressure':
         level = 'pres'
     else:
@@ -388,9 +393,11 @@ def aigfs(final_forecast_hour=384,
     
         ***Types of Levels***
         
-        1) pressure
+        i) pressure
         
-        2) surface
+        ii) surface
+        
+        iii) height above ground
     
     16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
@@ -402,8 +409,39 @@ def aigfs(final_forecast_hour=384,
                                                                         'v-component of wind',
                                                                         'vertical velocity (pressure)']
                        
-        When the level_type = 'pressure', the user can filter by variable to the variable they want. (Surface level files are very small 
-        compared to pressure level files).
+        The list of variables the user wants to query.
+        
+        ***Variables By Level Type***
+        
+        *pressure*
+        
+        'geopotential height'
+        
+        'specific humidity'
+        
+        'temperature'
+        
+        'u-component of wind'
+        
+        'v-component of wind'
+        
+        'vertical velocity'
+        
+        *height above ground*
+        
+        'u-component of wind' - 10m
+        
+        'v-component of wind' - 10m
+        
+        'temperature' - 2m
+        
+        *mean sea level*
+        
+        'mean sea level pressure'
+        
+        *surface*
+        
+        'total precipitation'
         
     18) levels (Integer List) **level_type='pressure'** - Default=[1000,
                                                                         925,
@@ -463,6 +501,7 @@ def aigfs(final_forecast_hour=384,
     '10m_v_wind_component'
     'mslp'
     '2m_temperature'
+    'total_precipitation'
     """
     source = source.lower()
     

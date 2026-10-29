@@ -120,6 +120,8 @@ def aigefs():
     
     ii) surface
     
+    iii) height_above_ground
+    
     -l = Levels (hPa) (Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10])
     
     -wb = Western Bound - The western bound for subsetting the data range is from -180 to 180 degrees longitude. (Default=-180)
@@ -130,9 +132,41 @@ def aigefs():
     
     -sb = Southern Bound - The southern bound for subsetting the data range is from -90 to 90 degrees latitude. (Default=-90)
     
-    -v = Variables(Default=['geopotential_height', 'specific humidity', 'temperature', 'u-component_of_wind', 'v-component_of_wind', 'vertical velocity']) 
+    -v = Variables(Default=['geopotential_height', 'specific humidity', 'temperature', 'u-component_of_wind', 'v-component_of_wind', 'vertical_velocity']) 
                        
     The list of variables the user wants to query.
+    
+    ***Variables By Level Type***
+    
+    *pressure*
+    
+    'geopotential_height'
+    
+    'specific_humidity'
+    
+    'temperature'
+    
+    'u-component_of_wind'
+    
+    'v-component_of_wind'
+    
+    'vertical_velocity'
+    
+    *height_above_ground*
+    
+    'u-component_of_wind' - 10m
+    
+    'v-component_of_wind' - 10m
+    
+    'temperature' - 2m
+    
+    *mean_sea_level*
+    
+    'mean_sea_level_pressure'
+    
+    *surface*
+    
+    'total_precipitation'
     
     ***Pressure-Level Plain Language Variable Keys***
     
@@ -539,6 +573,9 @@ def aigefs_fetch(final_forecast_hour,
                                             southern_bound=southern_bound,
                                             proxies=proxy,
                                             members=members,
+                                            levels=levels,
+                                            variables=vars_fixed,
+                                            level_type=level_type,
                                             process_data=process,
                                             clear_recycle_bin=clear_recycle_bin,
                                             clear_data=clear_data,
@@ -555,9 +592,9 @@ def aigefs_fetch(final_forecast_hour,
                     _click.echo(f"AIGEFS {category.upper()} latest download complete, data files saved to {custom_directory}")
                 else:
                     if current_os != "Windows":
-                        _click.echo(f"AIGEFS {category.upper()} latest download complete, data files saved to AIGEFS/SURFACE/[Member]")
+                        _click.echo(f"AIGEFS {category.upper()} latest download complete, data files saved to AIGEFS/{level_type.upper()}/[Member]")
                     else:
-                        _click.echo(rf"AIGEFS {category.upper()} latest download complete, data files saved to AIGEFS\SURFACE\[Member]")
+                        _click.echo(rf"AIGEFS {category.upper()} latest download complete, data files saved to AIGEFS\{level_type.upper()}\[Member]")
                         
         else:
             _fetch_aigefs_single(final_forecast_hour=final_forecast_hour,

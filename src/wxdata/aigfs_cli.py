@@ -109,6 +109,8 @@ def aigfs():
     
     ii) surface
     
+    iii) height_above_ground
+    
     -l = Levels (hPa) (Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10])
     
     -wb = Western Bound - The western bound for subsetting the data range is from -180 to 180 degrees longitude. (Default=-180)
@@ -119,9 +121,41 @@ def aigfs():
     
     -sb = Southern Bound - The southern bound for subsetting the data range is from -90 to 90 degrees latitude. (Default=-90)
     
-    -v = Variables(Default=['geopotential_height', 'specific humidity', 'temperature', 'u-component_of_wind', 'v-component_of_wind', 'vertical velocity']) 
+    -v = Variables(Default=['geopotential_height', 'specific humidity', 'temperature', 'u-component_of_wind', 'v-component_of_wind', 'vertical_velocity']) 
                        
     The list of variables the user wants to query.
+    
+       ***Variables By Level Type***
+       
+       *pressure*
+       
+       'geopotential_height'
+       
+       'specific_humidity'
+       
+       'temperature'
+       
+       'u-component_of_wind'
+       
+       'v-component_of_wind'
+       
+       'vertical_velocity'
+       
+       *height_above_ground*
+       
+       'u-component_of_wind' - 10m
+       
+       'v-component_of_wind' - 10m
+       
+       'temperature' - 2m
+       
+       *mean_sea_level*
+       
+       'mean_sea_level_pressure'
+       
+       *surface*
+       
+       'total_precipitation'
     
     ***Pressure-Level Plain Language Variable Keys***
     

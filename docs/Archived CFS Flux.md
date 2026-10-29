@@ -20,7 +20,7 @@ def get_archived_cfs_flux(
              chunk_size=8192,
              convert_to='celsius',
              level_type='height above ground',
-             variable=['temperature'],
+             variable='temperature',
              levels=[2],
             to_netcdf=False,
             netcdf_path=f"CFS FLUX/Archive/NETCDF",
@@ -101,7 +101,7 @@ Optional Arguments:
     'hybrid'
     ```
                             
-14) variable (String) - Default=['temperature'].
+14) variable (String) - Default='temperature'.
 
     The variable the user selects to download.
 

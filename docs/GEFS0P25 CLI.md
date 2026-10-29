@@ -224,7 +224,7 @@ retry downloading the data.
 1) Download the latest GEFS0P25 for 2-meter temperature and 2-meter relative humidity from Amazon Web Services
  
     - Use a proxy server of address: `https://proxy-server-address:proxy-server-port` 
-    
+
     - Download only members 1-5
     
 2) Subset the data to reflect CONUS [-130, -65, 50, 20] = [west, east, north, south]

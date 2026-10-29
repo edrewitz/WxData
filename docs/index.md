@@ -284,7 +284,7 @@ ii) Set up a new environment with an earlier version of Python (must be Python >
 1. [AIGEFS](https://edrewitz.github.io/WxData/AI%20GEFS%20CLI)
 
 ***Canadian Meteorological Centre***
-1. [GDPS]()
+1. [GDPS](https://edrewitz.github.io/WxData/GDPS%20CLI)
 2. [RDPS]()
 3. [HRDPS]()
 4. [GEPS]()

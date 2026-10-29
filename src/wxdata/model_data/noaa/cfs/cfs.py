@@ -1022,7 +1022,11 @@ def cfs_flux(western_bound=-180,
     
     level_type = level_type.lower()
     
-    if level_type == "height above ground" or level_type == "height below ground" or level_type == "hybrid":
+    has_levs = ["height above ground",
+                "height below ground",
+                "hybrid"]
+    
+    if level_type in has_levs:
         levels = levels
     else:
         levels = None
@@ -1476,11 +1480,18 @@ def cfs_pressure(western_bound=-180,
     
     level_type = level_type.lower()
     
+    no_levs = ["surface",
+               "entire atmosphere",
+               "mean sea level",
+               "tropopause",
+               "isothermal",
+               "highest tropospheric freezing level"]
     
-    if level_type == "surface" or level_type == "entire atmosphere" or level_type == "mean sea level" or level_type == "tropopause" or level_type == "isothermal" or level_type == "highest tropospheric freezing level":
+    if level_type in no_levs:
         levels = None
     else:
         levels = levels
+    
     
     source = source.lower()
     

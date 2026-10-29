@@ -1,5 +1,5 @@
 ---
-title: CanSIPS CLI
+title: GDPS CLI
 ---
 
 # Canadian Global Deterministic Prediction System (GDPS) Command Line Interface

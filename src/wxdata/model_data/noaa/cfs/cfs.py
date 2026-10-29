@@ -353,7 +353,7 @@ def _cfs_flux_client(western_bound=-180,
                                                         eastern_bound,
                                                         northern_bound,
                                                         southern_bound,
-                                                        variables)
+                                                        variables[0])
         
         if convert_temperature == True:
                 ds = _convert_temperature_units(ds, 
@@ -701,7 +701,7 @@ def _cfs_pressure_client(western_bound=-180,
                                                         eastern_bound,
                                                         northern_bound,
                                                         southern_bound,
-                                                        variables)
+                                                        variables[0])
         
         if convert_temperature == True:
                 ds = _convert_temperature_units(ds, 
@@ -732,7 +732,7 @@ def cfs_flux(western_bound=-180,
             convert_temperature=True,
             convert_to='celsius',
             source='aws',
-            level_type=['height above ground'],
+            level_type='height above ground',
             variable='temperature',
             levels=[2],
             to_netcdf=False,
@@ -822,7 +822,7 @@ def cfs_flux(western_bound=-180,
         'hybrid'
 
                                 
-    17) variable (String) - Default=['temperature'].
+    17) variable (String) - Default='temperature'.
     
         The variable the user selects to download.
     
@@ -1204,7 +1204,7 @@ def cfs_pressure(western_bound=-180,
             convert_to='celsius',
             source='aws',
             level_type='pressure',
-            variable=['geopotential height'],
+            variable='geopotential height',
             levels=[1000, 
                     925, 
                     850, 
@@ -1296,7 +1296,7 @@ def cfs_pressure(western_bound=-180,
         'sigma level'
         'potential vorticity surface'
                                 
-    17) variable (String) - Default=['geopotential height'].
+    17) variable (String) - Default='geopotential height'.
     
     The variable the user selects to download.
         

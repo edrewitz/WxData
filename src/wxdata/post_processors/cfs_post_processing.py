@@ -228,8 +228,6 @@ def cfs_post_processing(path,
     An xarray.array of the latest CFS forecast data for a user-specified variable, level/layer and level_type.
     """
 
-    variable = variable[0]
-
     western_bound, eastern_bound = _convert_lon(western_bound, 
                                                 eastern_bound) 
 

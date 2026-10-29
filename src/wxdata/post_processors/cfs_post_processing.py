@@ -228,6 +228,7 @@ def cfs_post_processing(path,
     An xarray.array of the latest CFS forecast data for a user-specified variable, level/layer and level_type.
     """
 
+    variable = variable[0]
 
     western_bound, eastern_bound = _convert_lon(western_bound, 
                                                 eastern_bound) 
@@ -250,8 +251,8 @@ def cfs_post_processing(path,
     
     try:
         var = str(list(ds.data_vars)[0])
-        if ' ' in variable[0]:
-            variable = variable[0].replace(' ', '_')
+        if ' ' in variable:
+            variable = variable.replace(' ', '_')
         else:
             pass
         

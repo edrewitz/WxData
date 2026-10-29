@@ -499,7 +499,7 @@ If you are using a proxy server you can define it by using `--proxy https://prox
 
 --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=GDPS/NETCDF). 
 
---ncfname = Defines the filename for the netCDF (.nc) file. (Default=gfs_0p50.nc)
+--ncfname = Defines the filename for the netCDF (.nc) file. (Default=gdps.nc)
 
 ***Complex Example***
 

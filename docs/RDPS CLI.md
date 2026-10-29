@@ -35,14 +35,6 @@ When set to True any temperature fields are converted from Kelvin to either Cels
 
 When -ct True this is where you declare the units for temperature to be converted to. 
 
--wb = Western Bound - The western bound for subsetting the data range is from -180 to 180 degrees longitude. (Default=-180)
-
--eb = Eastern Bound - The eastern bound for subsetting the data range is from -180 to 180 degrees longitude. (Default=180)
-
--nb = Northern Bound - The northern bound for subsetting the data range is from -90 to 90 degrees latitude. (Default=90)
-
--sb = Southern Bound - The southern bound for subsetting the data range is from -90 to 90 degrees latitude. (Default=-90)
-
 -v = Variable. Variable to pass into the function. 
     
   Default='geopotential_height'
@@ -537,15 +529,12 @@ If you are using a proxy server you can define it by using `--proxy https://prox
 1) Download the latest RDPS for 2-meter temperature 
  
   - Use a proxy server of address: `https://proxy-server-address:proxy-server-port` 
-            
-2) Subset the data to reflect CONUS [-130, -65, 50, 20] = [west, east, north, south]
-    
-3) Create a netCDF (.nc) file of the data called `rdps_t2m.nc` saved at Weather_Data/RDPS/NETCDF.
+                
+2) Create a netCDF (.nc) file of the data called `rdps_t2m.nc` saved at Weather_Data/RDPS/NETCDF.
 
 Linux Shell:
 ```shell
 wxdata-rdps fetch latest -lt height_above_ground -l 2 -v temperature \
--wb -130 -eb -65 -nb 50 -sb 20 \
 --netcdf True --ncdir Weather_Data/RDPS/NETCDF --ncfname rdps_t2m.nc \ 
 --proxy https://proxy-server-address:proxy-server-port
 ```
@@ -553,7 +542,6 @@ wxdata-rdps fetch latest -lt height_above_ground -l 2 -v temperature \
 Windows Powershell:
 ```powershell
 wxdata-rdps fetch latest -lt height_above_ground -l 2 -v temperature `
--wb -130 -eb -65 -nb 50 -sb 20 `
 --netcdf True --ncdir Weather_Data/RDPS/NETCDF --ncfname rdps_t2m.nc ` 
 --proxy https://proxy-server-address:proxy-server-port
 ```

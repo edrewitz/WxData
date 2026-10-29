@@ -106,6 +106,8 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
   
   iii) height above ground
 
+  iv) mean sea level
+
 16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
 When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
 

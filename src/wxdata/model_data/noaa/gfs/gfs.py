@@ -3397,6 +3397,20 @@ def gfs_0p25_secondary_parameters(final_forecast_hour=384,
     
     """
     
+    level_type = level_type.lower()
+        
+    has_levs = ['pressure',
+                'height below ground',
+                'height above ground',
+                'height above sea level',
+                'pressure above ground',
+                'potential vorticity surface']
+    
+    if level_type in has_levs:
+        levels = levels
+    else:
+        levels = None
+    
     try:
         if process_data == True:
             ds = _gfs_0p25_secondary_parameters_client(final_forecast_hour=final_forecast_hour, 

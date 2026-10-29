@@ -98,24 +98,58 @@ goes out to 384 hours. For those who wish to have a shorter dataset, they may se
 
 15) level_type (String) - Default='pressure'. The type of level the data is in.
 
-    ***Types of Levels***
-    
-    1) pressure
-    
-    2) surface
+  ***Types of Levels***
+  
+  i) pressure
+  
+  ii) surface
+  
+  iii) height above ground
 
 16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
-    When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
-    
+When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
+
 17) variables (String List) **level_type='pressure'** - Default=['geopotential height',
-                                                                    'specific humidity',
-                                                                    'temperature',
-                                                                    'u-component of wind',
-                                                                    'v-component of wind',
-                                                                    'vertical velocity (pressure)']
-                   
-    When the level_type = 'pressure', the user can filter by variable to the variable they want. (Surface level files are very small 
-    compared to pressure level files).
+                                                                'specific humidity',
+                                                                'temperature',
+                                                                'u-component of wind',
+                                                                'v-component of wind',
+                                                                'vertical velocity (pressure)']
+               
+The list of variables the user wants to query.
+
+***Variables By Level Type***
+
+*pressure*
+
+```python
+'geopotential height'
+'specific humidity'
+'temperature'
+'u-component of wind'
+'v-component of wind'
+'vertical velocity'
+```
+
+*height above ground*
+
+```python
+'u-component of wind' - 10m
+'v-component of wind' - 10m
+'temperature' - 2m
+```
+
+*mean sea level*
+
+```python
+'mean sea level pressure'
+```
+
+*surface*
+
+```python
+'total precipitation'
+```
     
 18) levels (Integer List) **level_type='pressure'** - Default=[1000,
                                                                     925,

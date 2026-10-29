@@ -20,7 +20,7 @@ def get_archived_cfs_pressure(
              chunk_size=8192,
              convert_to='celsius',
              level_type='pressure',
-             variable=['geopotential height'],
+             variable='geopotential height',
              levels=[1000, 
                     925, 
                     850, 
@@ -106,7 +106,7 @@ Set convert_to='fahrenheit' for Fahrenheit.
 'potential vorticity surface'
 ```
                     
-14) variable (String) - Default=['geopotential height'].
+14) variable (String) - Default='geopotential height'.
 
 The variable the user selects to download.
 

@@ -250,8 +250,8 @@ def cfs_post_processing(path,
     
     try:
         var = str(list(ds.data_vars)[0])
-        if ' ' in variable:
-            variable = variable.replace(' ', '_')
+        if ' ' in variable[0]:
+            variable = variable[0].replace(' ', '_')
         else:
             pass
         

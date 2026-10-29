@@ -337,7 +337,7 @@ def aigfs():
                   
                   Default=['geopotential_height', 'specific humidity', 'temperature', 'u-component_of_wind', 'v-component_of_wind', 'vertical velocity']
                   
-                  See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
+                  See https://edrewitz.github.io/WxData/AI%20GFS%20CLI for available variables."""
                   
                   )
 )
@@ -357,6 +357,8 @@ def aigfs():
           1) pressure => -lt pressure
           
           2) surface => -lt surface
+          
+          3) height above ground => height_above_ground
           
           """)
 )
@@ -384,7 +386,7 @@ def aigfs():
           
           Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10]
           
-          See https://edrewitz.github.io/WxData/GEFS0P25 for available levels.
+          See https://edrewitz.github.io/WxData/AI%20GFS%20CLI for available levels.
           
           """)
 )

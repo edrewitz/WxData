@@ -19,7 +19,7 @@ def _command_error_message(model):
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
     print(f"Model: {model.upper()}")
     print(f"Please run `wxdata-hgefs -h to view the help documentation.")
-    print(f"Please visit: https://edrewitz.github.io/WxData/hgefs for full detailed documentation.")
+    print(f"Please visit: https://edrewitz.github.io/WxData/HGEFS%20CLI for full detailed documentation.")
 
 def _parse_proxy(value):
     if value is None:
@@ -318,7 +318,7 @@ def hgefs():
                        'v-component of wind',
                        'vertical velocity']
                   
-                  See https://edrewitz.github.io/WxData/HGEFS for available variables."""
+                  See https://edrewitz.github.io/WxData/HGEFS%20CLI for available variables."""
                   
                   )
 )
@@ -355,7 +355,7 @@ def hgefs():
                     100,
                     50]
           
-          See https://edrewitz.github.io/WxData/HGEFS for available levels.
+          See https://edrewitz.github.io/WxData/HGEFS%20CLI for available levels.
           
           """)
 )
@@ -370,7 +370,7 @@ def hgefs():
         
           Default='pressure'.
           
-          See https://edrewitz.github.io/WxData/HGEFS for available level types.
+          See https://edrewitz.github.io/WxData/HGEFS%20CLI for available level types.
           
           """)
 )

@@ -631,7 +631,7 @@ def gfs0p25():
                   
                   Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']
                   
-                  See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
+                  See https://edrewitz.github.io/WxData/GFS0P25%20CLI for available variables."""
                   
                   )
 )
@@ -659,7 +659,7 @@ def gfs0p25():
           
           Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10]
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available levels.
+          See https://edrewitz.github.io/WxData/GFS0P25%20CLI for available levels.
           
           """)
 )
@@ -674,7 +674,7 @@ def gfs0p25():
         
           Default='pressure'.
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available level types.
+          See https://edrewitz.github.io/WxData/GFS0P25%20CLI for available level types.
           
           """)
 )
@@ -974,7 +974,7 @@ def gfs0p25_fetch(final_forecast_hour,
                   
                   Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']
                   
-                  See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
+                  See https://edrewitz.github.io/WxData/GFS0P25%20CLI for available variables."""
                   
                   )
 )
@@ -1002,7 +1002,7 @@ def gfs0p25_fetch(final_forecast_hour,
           
           Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10]
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available levels.
+          See https://edrewitz.github.io/WxData/GFS0P25%20CLI for available levels.
           
           """)
 )
@@ -1016,7 +1016,7 @@ def gfs0p25_fetch(final_forecast_hour,
         
           Default='pressure'.
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available level types.
+          See https://edrewitz.github.io/WxData/GFS0P25%20CLI for available level types.
           
           """)
 )
@@ -1620,7 +1620,7 @@ def gfs0p50():
                   
                   Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']
                   
-                  See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
+                  See https://edrewitz.github.io/WxData/GFS0P50%20CLI for available variables."""
                   
                   )
 )
@@ -1648,7 +1648,7 @@ def gfs0p50():
           
           Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10]
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available levels.
+          See https://edrewitz.github.io/WxData/GFS0P50%20CLI for available levels.
           
           """)
 )
@@ -1663,7 +1663,7 @@ def gfs0p50():
         
           Default='pressure'.
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available level types.
+          See https://edrewitz.github.io/WxData/GFS0P50%20CLI for available level types.
           
           """)
 )
@@ -1919,7 +1919,7 @@ def gfs0p50_fetch(final_forecast_hour,
                   
                   Default=['geopotential_height', 'temperature', 'relative_humidity', 'u-component_of_wind', 'v-component_of_wind']
                   
-                  See https://edrewitz.github.io/WxData/GFS0P25 for available variables."""
+                  See https://edrewitz.github.io/WxData/GFS0P50%20CLI for available variables."""
                   
                   )
 )
@@ -1947,7 +1947,7 @@ def gfs0p50_fetch(final_forecast_hour,
           
           Default=[1000, 925, 850, 700, 500, 400, 300, 250, 200, 100, 50, 10]
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available levels.
+          See https://edrewitz.github.io/WxData/GFS0P50%20CLI for available levels.
           
           """)
 )
@@ -1961,7 +1961,7 @@ def gfs0p50_fetch(final_forecast_hour,
         
           Default='pressure'.
           
-          See https://edrewitz.github.io/WxData/GFS0P25 for available level types.
+          See https://edrewitz.github.io/WxData/GFS0P50%20CLI for available level types.
           
           """)
 )

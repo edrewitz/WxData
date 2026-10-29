@@ -107,9 +107,11 @@ goes out to 240 hours. For those who wish to have a shorter dataset, they may se
 
     ***Types of Levels***
     
-    1) pressure
+    i) pressure
     
-    2) surface
+    ii) surface
+   
+    iii) height above ground
     
 17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
     When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 

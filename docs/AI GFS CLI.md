@@ -78,7 +78,7 @@ iii) height_above_ground
    
    'geopotential_height'
    
-   'specific humidity'
+   'specific_humidity'
    
    'temperature'
    

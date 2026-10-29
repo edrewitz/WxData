@@ -1,5 +1,5 @@
 """
-This file hosts the functions for the CanSIPS Forecast Data Client
+This file hosts the functions for the Canadian Seasonal to Inter-annual Prediction System (CanSIPS) Forecast Data Client
 
 (C) Eric J. Drewitz 2025-2026
 """

@@ -85,10 +85,6 @@ def cfs_pressure():
     
     
     ***Globally Valid Commands (valid for both "latest" and "archived")***
-        
-    -t = Type (Default=primary).
-    
-    This determines the type of variables and levels.
     
     -f = Final Forecast Hour (Default=720).
      
@@ -922,10 +918,6 @@ def cfs_flux():
     
     
     ***Globally Valid Commands (valid for both "latest" and "archived")***
-        
-    -t = Type (Default=primary).
-    
-    This determines the type of variables and levels.
     
     -f = Final Forecast Hour (Default=720).
      

@@ -157,7 +157,7 @@ def get_cansips_data():
         
         ***Level Types***
     
-        'height above ground'
+        'height_above_ground'
         
         'pressure'
         
@@ -165,7 +165,7 @@ def get_cansips_data():
         
         'geoid'
         
-        'mean sea level'
+        'mean_sea_level'
     
     --process = Process Data. This flag when set to True will process the data in addition to downloading the data. (Default=True)
     

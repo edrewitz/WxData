@@ -58,7 +58,7 @@
 WxData is a Python package that has many clients for retrieving and processing various types of meteorological datasets (both real-time and archived) with a focus on automation. 
 These datasets include 20+ Weather Forecast Models, Observational Data, Radar Data, Fuels Data (Fire Weather), Observed Upper-Air Sounding Data, Real-Time Mesoscale Analysis, Gridded NOAA National Weather Service Forecasts and Gridded NOAA Storm Prediction Center Outlooks, NOAA Climate Prediction Center Outlooks, as well as interfaces with the Open-Meteo and AirNow APIs. 
 
-- WxData is also available in the command-line so users can write shell scripts to retrieve weather data. 
+- WxData has a command-line interface so users can write shell scripts to retrieve weather data. 
 
 - WxData has support for server choice and rotation (if a server fails to respond) between the following:
 

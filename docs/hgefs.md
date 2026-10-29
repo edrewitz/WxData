@@ -112,11 +112,13 @@ goes out to 240 hours. For those who wish to have a shorter dataset, they may se
     ii) surface
    
     iii) height above ground
+
+    iv) mean sea level
     
-17) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
+18) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
     When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
 
-18) variables (String List) **level_type='pressure'** - Default=['geopotential height',
+19) variables (String List) **level_type='pressure'** - Default=['geopotential height',
                                                                     'specific humidity',
                                                                     'temperature',
                                                                     'u-component of wind',
@@ -126,7 +128,7 @@ goes out to 240 hours. For those who wish to have a shorter dataset, they may se
     When the level_type = 'pressure', the user can filter by variable to the variable they want. (Surface level files are very small 
     compared to pressure level files).
     
-19) levels (Integer List) **level_type='pressure'** - Default=[1000,
+20) levels (Integer List) **level_type='pressure'** - Default=[1000,
                                                                     925,
                                                                     850,
                                                                     700,
@@ -142,17 +144,17 @@ goes out to 240 hours. For those who wish to have a shorter dataset, they may se
     When the level_type = 'pressure', the user can filter by level to the level they want. (Surface level files are very small 
     compared to pressure level files).
     
-20) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
+21) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
 
-21) netcdf_path (String) - Default='HGEFS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
+22) netcdf_path (String) - Default='HGEFS/NETCDF'. The directory where the converted netCDF (.nc) file will be written to.
 
-22) netcdf_filename (String) - Default='hgefs.nc'. The name of the netCDF (.nc) file. A good practice is to 
+23) netcdf_filename (String) - Default='hgefs.nc'. The name of the netCDF (.nc) file. A good practice is to 
     name this netCDF file using the variable name. 
     
-23) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
+24) delete_previous_netcdf_file (Boolean) - Default=True. When set to True the previous netCDF (.nc) will be deleted before writing a 
     new netCDF file. For users who want to archive all data set this to False. 
     
-24) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
+25) return_values (Boolean) - Default=True. When set to True, an xarray.array is returned. Set to False to have no values returned. 
 
 **Returns**
 

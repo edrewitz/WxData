@@ -19,7 +19,7 @@ def _command_error_message(model):
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
     print(f"Model: {model.upper()}")
     print(f"Please run `wxdata-hrdps -h to view the help documentation.")
-    print(f"Please visit: https://edrewitz.github.io/WxData/RDPS%20CLI for full detailed documentation.")
+    print(f"Please visit: https://edrewitz.github.io/WxData/HRDPS%20CLI for full detailed documentation.")
 
 def _parse_proxy(value):
     if value is None:
@@ -48,7 +48,7 @@ def fetch_hrdps_data():
     
     r"""
     
-    Canadian Regional Deterministic Prediction System (RDPS) Command Line Interface
+    Canadian High Resolution Deterministic Prediction System (HRDPS) Command Line Interface
     
     ***Valid Commands***
     
@@ -97,284 +97,262 @@ def fetch_hrdps_data():
     
         Any area where valid_levels = None -> Users do not need to edit the optional argument `level`
         
-        'absolute vorticity': 
+        'air density':
+            valid level type(s) = 'height above ground', 'surface'.
+            valid levels:
+                level_type='height above ground' (m): 40, 80, 120 
+                
+                level_type='surface': None (level_type='surface' -> 'surface' is the only level) 
+        
+        
+        'absolute vorticity':
             valid level type(s): 'pressure'
             valid levels: 
-                level_type='pressure' (hPa): 850, 700, 500, 250, 200
-            
-        'temperature': 
-            valid level type(s) = 'pressure', 'height above ground'.
-            valid levels:
-                level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
-                                    350, 300, 275, 250, 225, 200, 175, 150, 100, 50, 30, 20, 10, 5, 1.
-                                    
-                level_type='height above ground' (m): 2, 40, 80, 120
-                
+                level_type='pressure' (hPa): 1000, 850, 700, 500, 250
+        
+        
         'albedo':
             valid level type(s): 'surface'
             valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
+        
+        
+        'blowing snow':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        
+        'boundary layer height':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        
         'cape':
             valid level type(s): 'surface'
             valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
-        'cin':
+        
+        
+        'character of precipitation':
             valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)  
-            
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        
         'cloud water':
             valid level type(s): 'entire atmosphere'
             valid levels: None (level_type='entire atmosphere' -> 'entire atmosphere' is the only level)  
-            
-        'total convective precipitation':
+        
+        
+        'conditional freezing precipitation':
             valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)  
-            
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        
+        'conditional amount of liquid precipitation':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        
+        'conditional amount of solid ice pellets':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        
+        'conditional amount of solid snow':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        
+        'conditional precipitation rate':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        
+        'convective precipitation':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        
         'dew point depression':
             valid level type(s) = 'pressure', 'height above ground'.
             valid levels:
                 level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
-                                    350, 300, 275, 250, 225, 200, 175, 150, 100, 50, 30, 20, 10, 5, 1.
+                                    350, 300, 275, 250, 225, 200, 175, 150, 100, 50.
                                     
-                level_type='height above ground' (m): 2
-                
-        'dew point':   
-            valid level type(s) = 'height above ground'.
+                level_type='height above ground' (m): 2, 40, 80, 120
+        
+        
+        'dew point':
+            valid level type(s) = 'height above ground', 'surface'.
             valid levels:                      
-                level_type='height above ground' (m): 2
+                level_type='height above ground' (m): 2, 40, 80, 120
                 
+                level_type='surface': None (level_type='surface' -> 'surface' is the only level) 
+        
+        
+        'dominant precipitation type':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        
         'downward longwave radiation flux':
             valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level) 
-            
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        
         'downward shortwave radiation flux':
             valid level type(s): 'surface', 'nominal top'
             valid levels: None (level_type='surface' -> 'surface' is the only level) 
                                                     OR 
                             (level_type='nominal top' -> 'nominal top' is the only level)  
-                            
-        'freezing rain accumulation 12hr':
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level) 
-            
-        'freezing rain accumulation 1hr':
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)   
-            
-        'freezing rain accumulation 24hr':
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)   
-            
-        'freezing rain accumulation 3hr':
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)  
-            
-        'freezing rain accumulation 6hr':
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)  
-            
-        'freezing rain accumulation total':  
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)              
-                            
+        
         'geopotential height':
-            valid level type(s) = 'pressure', 'surface'.
-            valid levels:
-                level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
-                                    350, 300, 275, 250, 225, 200, 175, 150, 100, 50, 30, 20, 10, 5, 1.   
-                                    
-                level_type='surface' (surface elevation): None (level_type='surface' -> 'surface' is the only level) 
-                
-        'humidex':
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
-        'ice pellets accumulation 12hr':
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level) 
-            
-        'ice pellets accumulation 1hr':
+            valid level type(s) = 'pressure'.
+            valid levels: (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
+                                    350, 300, 275, 250, 225, 200, 175, 150, 100, 50.   
+        
+        'latent heat net flux':
             valid level type(s): 'surface'
             valid levels: None (level_type='surface' -> 'surface' is the only level)   
-            
-        'ice pellets accumulation 24hr':
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)   
-            
-        'ice pellets accumulation 3hr':
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)  
-            
-        'ice pellets accumulation 6hr':
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)  
-            
-        'ice pellets accumulation total':  
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)    
-            
-        'k index':
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
-        'land water proportion':
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
-        'latent heat net flux'
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
-        'lifted index'
+        
+        
+        'lifted index':
             valid level type(s) = 'pressure'.
             valid levels:
                 level_type='pressure' (hPa): 500.
-                
-        'maximum wind gust':
-            valid level type(s) = 'height above ground'.
-            valid levels:
-                level_type='height above ground' (m): 10 
-                
-        'minimum wind gust':
-            valid level type(s) = 'height above ground'.
-            valid levels:
-                level_type='height above ground' (m): 10    
-                
+        
+        
+        'mean sea level pressure':
+            valid level type(s): 'mean sea level'.
+            valid_levels: None (level_type='mean sea level' -> 'mean sea level' is the only level) 
+        
         'net longwave radiation flux':
             valid level type(s): 'surface'
             valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
-        'net shortwave radiation flux'  
+        
+        'net shortwave radiation flux':
             valid level type(s): 'surface'
             valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
-        'ozone mixing ratio':
+        
+        'snow level height':
             valid level type(s): 'surface'
             valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
-        'ozone':
-            valid level type(s): 'entire atmosphere'
-            valid levels: None (level_type='entire atmosphere' -> 'entire atmosphere' is the only level) 
-            
-        'boundary layer height':
+        
+        'humidex':
             valid level type(s): 'surface'
             valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
+        
+        'orography':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        'precipitation rate':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
         'precipitation type':
             valid level type(s): 'surface'
             valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
+        
         'pressure':
-            valid level type(s): 'mean sea level', 'potential vorticity surface', 'surface'
-            valid_levels: 
-                level_type='mean sea level': None (level_type='mean sea level' -> 'mean sea level' is the only level) 
-                
-                level_type='potential vorticity surface' (PVU): 1, 1.5, 2
-                
-                level_type='surface': None (level_type='surface' -> 'surface' is the only level) 
-                
-        'radiative temperature':
             valid level type(s): 'surface'
             valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
-        'rain accumulation 12hr':
+        
+        'probability of blowing snow':
             valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level) 
-            
-        'rain accumulation 1hr':
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        'probability of drizzle':
             valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)   
-            
-        'rain accumulation 24hr':
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        'probability of freezing drizzle':
             valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)   
-            
-        'rain accumulation 3hr':
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        'probability of freezing precipitation':
             valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)  
-            
-        'rain accumulation 6hr':
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        'probability of freezing rain':
             valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)  
-            
-        'rain accumulation total':  
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        'probability of ice pellets':
             valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)   
-            
-        'relative humidity':    
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        'probability of liquid precipitation':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        'probability of precipitation':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        'probability of rain':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        'probability of snow squalls':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        'probability of snow':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        'probability of thunderstorms':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        'relative humidity':
             valid level type(s) = 'pressure', 'height above ground'.
             valid levels:
                 level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
-                                    350, 300, 275, 250, 225, 200, 175, 150, 100, 50, 30, 20, 10, 5, 1.
+                                    350, 300, 275, 250, 225, 200, 175, 150, 100, 50.
                                     
-                level_type='height above ground' (m): 2
-                
-        'relative vorticity': 
-            valid level type(s): 'pressure'
-            valid levels: 
-                level_type='pressure' (hPa): 850, 700, 500, 250, 200
-                
-        'surface runoff':
+                level_type='height above ground' (m): 2, 40, 80, 120
+        
+        'sea ice fraction':
             valid level type(s): 'surface'
             valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
-        'sea ice fraction'
+        
+        'secondary precipitation type':
             valid level type(s): 'surface'
             valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
-        'sea surface temperature'
+        
+        'sensible heat net flux':
             valid level type(s): 'surface'
             valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
-        'seeing index':
-            valid level type(s): 'entire atmosphere'
-            valid levels: None (level_type='entire atmosphere' -> 'entire atmosphere' is the only level) 
-            
-        'sensible heat net flux'
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
+        
         'showalter index':
             valid level type(s) = 'pressure'.
             valid levels:
-                level_type='pressure' (hPa): 500. 
-                
-        'sky transparency index': 
-            valid level type(s): 'entire atmosphere'
-            valid levels: None (level_type='entire atmosphere' -> 'entire atmosphere' is the only level) 
-                
-        'snow accumulation 12hr':
+                level_type='pressure' (hPa): 500.
+        
+        'skin temperature':
             valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level) 
-            
-        'snow accumulation 1hr':
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        'sky state':
             valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)   
-            
-        'snow accumulation 24hr':
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)   
-            
-        'snow accumulation 3hr':
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)  
-            
-        'snow accumulation 6hr':
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)  
-            
-        'snow accumulation total':  
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)   
-                
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        
         'snow density':
             valid level type(s): 'surface'
             valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
+        
+        
+        'snow depth water equivalent':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        
         'snow depth':
             valid level type(s): 'surface'
             valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
+        
+        
         'soil temperature':
             valid level type(s): 'surface', 'depth below surface'.
             valid_levels:
@@ -382,39 +360,45 @@ def fetch_hrdps_data():
                     layers=[0, 10] -> 0cm to 10cm below the surface.
                     
                 level_type='surface': None (level_type='surface' -> 'surface' is the only level) 
-                
+        
         'soil volumetric ice content':
             valid level type(s): 'surface'
             valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
-        'soil volumetric water content'     
-            valid level type(s): 'depth below surface'.
-            valid_levels:
-                level_type='depth below surface' (cm):
-                    layers=[0, 10] -> 0cm to 10cm below the surface.
-                    layers=[0, 1] -> 0cm to 1cm below the surface.
-                    
+                
+        
         'specific humidity':
-            valid level type(s) = 'pressure', 'height above ground'.
+            valid level type(s) = 'pressure', 'height above ground', 'surface'.
             valid levels:
                 level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
-                                    350, 300, 275, 250, 225, 200, 175, 150, 100, 50, 30, 20, 10, 5, 1.
+                                    350, 300, 275, 250, 225, 200, 175, 150, 100, 50.
                                     
                 level_type='height above ground' (m): 2, 40, 80, 120
                 
+                level_type='surface': None (level_type='surface' -> 'surface' is the only level) 
+        
         'storm relative helicity':
-            valid level type(s): 'eta'
-            valid levels: None (level_type='eta' -> 'eta' is the only level)    
-            
-        'storm severity index':
-            valid level type(s): 'eta'
-            valid levels: None (level_type='eta' -> 'eta' is the only level)      
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        
+        'surface runoff':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
         
         'sweat index':
             valid level type(s): 'surface'
             valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
+        
+        'temperature':
+            valid level type(s) = 'pressure', 'height above ground'.
+            valid levels:
+                level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
+                                    350, 300, 275, 250, 225, 200, 175, 150, 100, 50.
+                                    
+                level_type='height above ground' (m): 2, 40, 80, 120
                 
+        
         'thickness':
             valid level type(s): 'pressure layer'.
             valid_levels:
@@ -422,109 +406,114 @@ def fetch_hrdps_data():
                     layers=[1000, 500] -> 1000mb to 500mb layer.
                     layers=[850, 700] -> 850mb to 700mb layer. 
                     layers=[1000, 850] -> 1000mb to 850mb layer. 
-                    
+        
+        
         'total cloud cover':
             valid level type(s): 'surface'
             valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
-        'total precitation 12hr':
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level) 
-            
-        'total precitation 1hr':
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)   
-            
-        'total precitation 24hr':
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)   
-            
-        'total precitation 3hr':
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)  
-            
-        'total precitation 6hr':
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)  
-            
-        'total precitation total':  
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)   
-            
-        'total totals index':
+        
+        
+        'total precipitation intensity index':
             valid level type(s): 'surface'
             valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
-        'uv index (clear sky)':                  
+        
+        
+        'total precipitation':
             valid level type(s): 'surface'
             valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
-        'uv index':
-            valid level type(s): 'surface'
-            valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
+        
+        
         'upward longwave radiation flux':
             valid level type(s): 'nominal top'
             valid levels: None (level_type='nominal top' -> 'nominal top' is the only level)
-            
+        
+        
         'upward shortwave radiation flux':
             valid level type(s): 'nominal top'
             valid levels: None (level_type='nominal top' -> 'nominal top' is the only level)
-            
+        
+        
+        'uv index':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        'uv index (clear sky)':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        'ventilation index':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        'vertical wind shear':
+            valid level type(s): 'eta'
+            valid levels: None (level_type='eta' -> 'eta' is the only level) 
+        
         'vertical velocity':
             valid level type(s): 'pressure'
             valid levels: 
-                level_type='pressure' (hPa): 850, 700, 500, 250, 200
-                
+                level_type='pressure' (hPa): 1000, 850, 700, 500, 250
+        
+        'visibility through ice fog':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        'visibility through liquid fog':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
+        'land sea mask':
+            valid level type(s): 'surface'
+            valid levels: None (level_type='surface' -> 'surface' is the only level)
+        
         'wind chill':
             valid level type(s): 'surface'
             valid levels: None (level_type='surface' -> 'surface' is the only level)
-            
+        
         'wind direction':
             valid level type(s) = 'pressure', 'height above ground'.
             valid levels:
                 level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
-                                    350, 300, 275, 250, 225, 200, 175, 150, 100, 50, 30, 20, 10, 5, 1.
+                                    350, 300, 275, 250, 225, 200, 175, 150, 100, 50.
                                     
                 level_type='height above ground' (m): 10, 40, 80, 120
-                
+        
         'wind gust':
-            valid level type(s) = 'height above ground'.
+            valid level type(s) = 'pressure', 'height above ground'.
             valid levels:
-                level_type='height above ground' (m): 10 
-                
+                level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
+                                    350, 300, 275, 250, 225, 200, 175, 150, 100, 50.
+                                    
+                level_type='height above ground' (m): 10, 40, 80, 120
+        
         'wind speed':
             valid level type(s) = 'pressure', 'height above ground'.
             valid levels:
                 level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
-                                    350, 300, 275, 250, 225, 200, 175, 150, 100, 50, 30, 20, 10, 5, 1.
+                                    350, 300, 275, 250, 225, 200, 175, 150, 100, 50.
                                     
                 level_type='height above ground' (m): 10, 40, 80, 120
-                
-        'u-component of wind':
+        
+        'u-wind component':
             valid level type(s) = 'pressure', 'height above ground'.
             valid levels:
                 level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
-                                    350, 300, 275, 250, 225, 200, 175, 150, 100, 50, 30, 20, 10, 5, 1.
+                                    350, 300, 275, 250, 225, 200, 175, 150, 100, 50.
                                     
                 level_type='height above ground' (m): 10, 40, 80, 120
-                
-        'v-component of wind':
+        
+        'v-wind component':
             valid level type(s) = 'pressure', 'height above ground'.
             valid levels:
                 level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
-                                    350, 300, 275, 250, 225, 200, 175, 150, 100, 50, 30, 20, 10, 5, 1.
+                                    350, 300, 275, 250, 225, 200, 175, 150, 100, 50.
                                     
-                level_type='height above ground' (m): 10, 40, 80, 120
-                
-        'vertical wind shear':
-            valid level type(s): 'eta'
-            valid levels: None (level_type='eta' -> 'eta' is the only level)     
+                level_type='height above ground' (m): 10, 40, 80, 120   
                 
                 
     -l = Level. The pressure level in hPa or height above ground in meters.
                     
-        Default=500 hPa
+    Default=500 hPa
           
     -la = Layer. Default=[1000, 500]. 
           
@@ -573,30 +562,30 @@ def fetch_hrdps_data():
     
     ***Additional Relevant Flags when --netcdf True***
     
-    --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=RDPS/NETCDF). 
+    --ncdir = Defines the local directory where the netCDF (.nc) file saves to. (Default=HRDPS/NETCDF). 
     
-    --ncfname = Defines the filename for the netCDF (.nc) file. (Default=rdps.nc)
+    --ncfname = Defines the filename for the netCDF (.nc) file. (Default=hrdps.nc)
     
     ***Complex Example***
     
-    1) Download the latest RDPS for 2-meter temperature 
+    1) Download the latest HRDPS for 2-meter temperature 
      
         - Use a proxy server of address: https://proxy-server-address:proxy-server-port 
                 
-    2) Subset the data to reflect CONUS [-130, -65, 50, 20] = [west, east, north, south]
+    2) Subset the data to reflect central Canada [-110, -80, 60, 49] = [west, east, north, south]
         
-    3) Create a netCDF (.nc) file of the data called `rdps_t2m.nc` saved at Weather_Data/RDPS/NETCDF.
+    3) Create a netCDF (.nc) file of the data called `hrdps_t2m.nc` saved at Weather_Data/HRDPS/NETCDF.
     
     Linux Shell:
-        ```wxdata-rdps fetch latest -lt height_above_ground -l 2 -v temperature \
-            -wb -130 -eb -65 -nb 50 -sb 20 \
-            --netcdf True --ncdir Weather_Data/RDPS/NETCDF --ncfname rdps_t2m.nc \ 
+        ```wxdata-hrdps fetch latest -lt height_above_ground -l 2 -v temperature \
+            -wb -110 -eb -80 -nb 60 -sb 49 \
+            --netcdf True --ncdir Weather_Data/HRDPS/NETCDF --ncfname hrdps_t2m.nc \ 
             --proxy https://proxy-server-address:proxy-server-port```
             
     Windows Powershell:
-        ```wxdata-rdps fetch latest -lt height_above_ground -l 2 -v temperature `
-            -wb -130 -eb -65 -nb 50 -sb 20 `
-            --netcdf True --ncdir Weather_Data/RDPS/NETCDF --ncfname rdps_t2m.nc ` 
+        ```wxdata-hrdps fetch latest -lt height_above_ground -l 2 -v temperature `
+            -wb -110 -eb -80 -nb 60 -sb 49 `
+            --netcdf True --ncdir Weather_Data/HRDPS/NETCDF --ncfname hrdps_t2m.nc ` 
             --proxy https://proxy-server-address:proxy-server-port```
     
     
@@ -605,7 +594,7 @@ def fetch_hrdps_data():
 @_click.option(
     "--final_forecast_hour",
     "-f",
-    default=240,
+    default=48,
     show_default=True,
     type=int,
     help="This is the final forecast hour requested in the dataset."
@@ -706,431 +695,420 @@ def fetch_hrdps_data():
                 
                     Any area where valid_levels = None -> Users do not need to edit the optional argument `level`
                     
-                'absolute vorticity': 
-                    valid level type(s): 'pressure'
-                    valid levels: 
-                        level_type='pressure' (hPa): 850, 700, 500, 250, 200
-                    
-                'temperature': 
-                    valid level type(s) = 'pressure', 'height above ground'.
-                    valid levels:
-                        level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
-                                            350, 300, 275, 250, 225, 200, 175, 150, 100, 50, 30, 20, 10, 5, 1.
-                                            
-                        level_type='height above ground' (m): 2, 40, 80, 120
-                        
-                'albedo':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
-                    
-                'cape':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
-                    
-                'cin':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)  
-                    
-                'cloud water':
-                    valid level type(s): 'entire atmosphere'
-                    valid levels: None (level_type='entire atmosphere' -> 'entire atmosphere' is the only level)  
-                    
-                'total convective precipitation':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)  
-                    
-                'dew point depression':
-                    valid level type(s) = 'pressure', 'height above ground'.
-                    valid levels:
-                        level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
-                                            350, 300, 275, 250, 225, 200, 175, 150, 100, 50, 30, 20, 10, 5, 1.
-                                            
-                        level_type='height above ground' (m): 2
-                        
-                'dew point':   
-                    valid level type(s) = 'height above ground'.
-                    valid levels:                      
-                        level_type='height above ground' (m): 2
-                        
-                'downward longwave radiation flux':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level) 
-                    
-                'downward shortwave radiation flux':
-                    valid level type(s): 'surface', 'nominal top'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level) 
-                                                            OR 
-                                    (level_type='nominal top' -> 'nominal top' is the only level)  
-                                    
-                'freezing rain accumulation 12hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level) 
-                    
-                'freezing rain accumulation 1hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)   
-                    
-                'freezing rain accumulation 24hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)   
-                    
-                'freezing rain accumulation 3hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)  
-                    
-                'freezing rain accumulation 6hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)  
-                    
-                'freezing rain accumulation total':  
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)              
-                                    
-                'geopotential height':
-                    valid level type(s) = 'pressure', 'surface'.
-                    valid levels:
-                        level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
-                                            350, 300, 275, 250, 225, 200, 175, 150, 100, 50, 30, 20, 10, 5, 1.   
-                                            
-                        level_type='surface' (surface elevation): None (level_type='surface' -> 'surface' is the only level) 
-                        
-                'humidex':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
-                    
-                'ice pellets accumulation 12hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level) 
-                    
-                'ice pellets accumulation 1hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)   
-                    
-                'ice pellets accumulation 24hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)   
-                    
-                'ice pellets accumulation 3hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)  
-                    
-                'ice pellets accumulation 6hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)  
-                    
-                'ice pellets accumulation total':  
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)    
-                    
-                'k index':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
-                    
-                'land water proportion':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
-                    
-                'latent heat net flux'
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
-                    
-                'lifted index'
-                    valid level type(s) = 'pressure'.
-                    valid levels:
-                        level_type='pressure' (hPa): 500.
-                        
-                'maximum wind gust':
-                    valid level type(s) = 'height above ground'.
-                    valid levels:
-                        level_type='height above ground' (m): 10 
-                        
-                'minimum wind gust':
-                    valid level type(s) = 'height above ground'.
-                    valid levels:
-                        level_type='height above ground' (m): 10    
-                        
-                'net longwave radiation flux':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
-                    
-                'net shortwave radiation flux'  
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
-                    
-                'ozone mixing ratio':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
-                    
-                'ozone':
-                    valid level type(s): 'entire atmosphere'
-                    valid levels: None (level_type='entire atmosphere' -> 'entire atmosphere' is the only level) 
-                    
-                'boundary layer height':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
-                    
-                'precipitation type':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
-                    
-                'pressure':
-                    valid level type(s): 'mean sea level', 'potential vorticity surface', 'surface'
-                    valid_levels: 
-                        level_type='mean sea level': None (level_type='mean sea level' -> 'mean sea level' is the only level) 
-                        
-                        level_type='potential vorticity surface' (PVU): 1, 1.5, 2
-                        
-                        level_type='surface': None (level_type='surface' -> 'surface' is the only level) 
-                        
-                'radiative temperature':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
-                    
-                'rain accumulation 12hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level) 
-                    
-                'rain accumulation 1hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)   
-                    
-                'rain accumulation 24hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)   
-                    
-                'rain accumulation 3hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)  
-                    
-                'rain accumulation 6hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)  
-                    
-                'rain accumulation total':  
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)   
-                    
-                'relative humidity':    
-                    valid level type(s) = 'pressure', 'height above ground'.
-                    valid levels:
-                        level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
-                                            350, 300, 275, 250, 225, 200, 175, 150, 100, 50, 30, 20, 10, 5, 1.
-                                            
-                        level_type='height above ground' (m): 2
-                        
-                'relative vorticity': 
-                    valid level type(s): 'pressure'
-                    valid levels: 
-                        level_type='pressure' (hPa): 850, 700, 500, 250, 200
-                        
-                'surface runoff':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
-                    
-                'sea ice fraction'
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
-                    
-                'sea surface temperature'
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
-                    
-                'seeing index':
-                    valid level type(s): 'entire atmosphere'
-                    valid levels: None (level_type='entire atmosphere' -> 'entire atmosphere' is the only level) 
-                    
-                'sensible heat net flux'
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
-                    
-                'showalter index':
-                    valid level type(s) = 'pressure'.
-                    valid levels:
-                        level_type='pressure' (hPa): 500. 
-                        
-                'sky transparency index': 
-                    valid level type(s): 'entire atmosphere'
-                    valid levels: None (level_type='entire atmosphere' -> 'entire atmosphere' is the only level) 
-                        
-                'snow accumulation 12hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level) 
-                    
-                'snow accumulation 1hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)   
-                    
-                'snow accumulation 24hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)   
-                    
-                'snow accumulation 3hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)  
-                    
-                'snow accumulation 6hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)  
-                    
-                'snow accumulation total':  
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)   
-                        
-                'snow density':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
-                    
-                'snow depth':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
-                    
-                'soil temperature':
-                    valid level type(s): 'surface', 'depth below surface'.
-                    valid_levels:
-                        level_type='depth below surface' (cm):
-                            layers=[0, 10] -> 0cm to 10cm below the surface.
+                    'air density':
+                        valid level type(s) = 'height above ground', 'surface'.
+                        valid levels:
+                            level_type='height above ground' (m): 40, 80, 120 
                             
-                        level_type='surface': None (level_type='surface' -> 'surface' is the only level) 
-                        
-                'soil volumetric ice content':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
+                            level_type='surface': None (level_type='surface' -> 'surface' is the only level) 
                     
-                'soil volumetric water content'     
-                    valid level type(s): 'depth below surface'.
-                    valid_levels:
-                        level_type='depth below surface' (cm):
-                            layers=[0, 10] -> 0cm to 10cm below the surface.
-                            layers=[0, 1] -> 0cm to 1cm below the surface.
+                    
+                    'absolute vorticity':
+                        valid level type(s): 'pressure'
+                        valid levels: 
+                            level_type='pressure' (hPa): 1000, 850, 700, 500, 250
+                    
+                    
+                    'albedo':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    
+                    'blowing snow':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    
+                    'boundary layer height':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    
+                    'cape':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    
+                    'character of precipitation':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    
+                    'cloud water':
+                        valid level type(s): 'entire atmosphere'
+                        valid levels: None (level_type='entire atmosphere' -> 'entire atmosphere' is the only level)  
+                    
+                    
+                    'conditional freezing precipitation':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    
+                    'conditional amount of liquid precipitation':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    
+                    'conditional amount of solid ice pellets':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    
+                    'conditional amount of solid snow':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    
+                    'conditional precipitation rate':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    
+                    'convective precipitation':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    
+                    'dew point depression':
+                        valid level type(s) = 'pressure', 'height above ground'.
+                        valid levels:
+                            level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
+                                                350, 300, 275, 250, 225, 200, 175, 150, 100, 50.
+                                                
+                            level_type='height above ground' (m): 2, 40, 80, 120
+                    
+                    
+                    'dew point':
+                        valid level type(s) = 'height above ground', 'surface'.
+                        valid levels:                      
+                            level_type='height above ground' (m): 2, 40, 80, 120
                             
-                'specific humidity':
-                    valid level type(s) = 'pressure', 'height above ground'.
-                    valid levels:
-                        level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
-                                            350, 300, 275, 250, 225, 200, 175, 150, 100, 50, 30, 20, 10, 5, 1.
-                                            
-                        level_type='height above ground' (m): 2, 40, 80, 120
-                        
-                'storm relative helicity':
-                    valid level type(s): 'eta'
-                    valid levels: None (level_type='eta' -> 'eta' is the only level)    
+                            level_type='surface': None (level_type='surface' -> 'surface' is the only level) 
                     
-                'storm severity index':
-                    valid level type(s): 'eta'
-                    valid levels: None (level_type='eta' -> 'eta' is the only level)      
-                
-                'sweat index':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
                     
-                        
-                'thickness':
-                    valid level type(s): 'pressure layer'.
-                    valid_levels:
-                        level_type='pressure layer' (hPa):
-                            layers=[1000, 500] -> 1000mb to 500mb layer.
-                            layers=[850, 700] -> 850mb to 700mb layer. 
-                            layers=[1000, 850] -> 1000mb to 850mb layer. 
+                    'dominant precipitation type':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    
+                    'downward longwave radiation flux':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    
+                    'downward shortwave radiation flux':
+                        valid level type(s): 'surface', 'nominal top'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level) 
+                                                                OR 
+                                        (level_type='nominal top' -> 'nominal top' is the only level)  
+                    
+                    'geopotential height':
+                        valid level type(s) = 'pressure'.
+                        valid levels: (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
+                                                350, 300, 275, 250, 225, 200, 175, 150, 100, 50.   
+                    
+                    'latent heat net flux':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)   
+                    
+                    
+                    'lifted index':
+                        valid level type(s) = 'pressure'.
+                        valid levels:
+                            level_type='pressure' (hPa): 500.
+                    
+                    
+                    'mean sea level pressure':
+                        valid level type(s): 'mean sea level'.
+                        valid_levels: None (level_type='mean sea level' -> 'mean sea level' is the only level) 
+                    
+                    'net longwave radiation flux':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'net shortwave radiation flux':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'snow level height':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'humidex':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'orography':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'precipitation rate':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'precipitation type':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'pressure':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'probability of blowing snow':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'probability of drizzle':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'probability of freezing drizzle':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'probability of freezing precipitation':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'probability of freezing rain':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'probability of ice pellets':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'probability of liquid precipitation':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'probability of precipitation':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'probability of rain':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'probability of snow squalls':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'probability of snow':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'probability of thunderstorms':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'relative humidity':
+                        valid level type(s) = 'pressure', 'height above ground'.
+                        valid levels:
+                            level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
+                                                350, 300, 275, 250, 225, 200, 175, 150, 100, 50.
+                                                
+                            level_type='height above ground' (m): 2, 40, 80, 120
+                    
+                    'sea ice fraction':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'secondary precipitation type':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'sensible heat net flux':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'showalter index':
+                        valid level type(s) = 'pressure'.
+                        valid levels:
+                            level_type='pressure' (hPa): 500.
+                    
+                    'skin temperature':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'sky state':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    
+                    'snow density':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    
+                    'snow depth water equivalent':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    
+                    'snow depth':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    
+                    'soil temperature':
+                        valid level type(s): 'surface', 'depth below surface'.
+                        valid_levels:
+                            level_type='depth below surface' (cm):
+                                layers=[0, 10] -> 0cm to 10cm below the surface.
+                                
+                            level_type='surface': None (level_type='surface' -> 'surface' is the only level) 
+                    
+                    'soil volumetric ice content':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
                             
-                'total cloud cover':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
                     
-                'total precitation 12hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level) 
+                    'specific humidity':
+                        valid level type(s) = 'pressure', 'height above ground', 'surface'.
+                        valid levels:
+                            level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
+                                                350, 300, 275, 250, 225, 200, 175, 150, 100, 50.
+                                                
+                            level_type='height above ground' (m): 2, 40, 80, 120
+                            
+                            level_type='surface': None (level_type='surface' -> 'surface' is the only level) 
                     
-                'total precitation 1hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)   
+                    'storm relative helicity':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
                     
-                'total precitation 24hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)   
                     
-                'total precitation 3hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)  
+                    'surface runoff':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
                     
-                'total precitation 6hr':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)  
                     
-                'total precitation total':  
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)   
+                    'sweat index':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
                     
-                'total totals index':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    'temperature':
+                        valid level type(s) = 'pressure', 'height above ground'.
+                        valid levels:
+                            level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
+                                                350, 300, 275, 250, 225, 200, 175, 150, 100, 50.
+                                                
+                            level_type='height above ground' (m): 2, 40, 80, 120
+                            
                     
-                'uv index (clear sky)':                  
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    'thickness':
+                        valid level type(s): 'pressure layer'.
+                        valid_levels:
+                            level_type='pressure layer' (hPa):
+                                layers=[1000, 500] -> 1000mb to 500mb layer.
+                                layers=[850, 700] -> 850mb to 700mb layer. 
+                                layers=[1000, 850] -> 1000mb to 850mb layer. 
                     
-                'uv index':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
                     
-                'upward longwave radiation flux':
-                    valid level type(s): 'nominal top'
-                    valid levels: None (level_type='nominal top' -> 'nominal top' is the only level)
+                    'total cloud cover':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
                     
-                'upward shortwave radiation flux':
-                    valid level type(s): 'nominal top'
-                    valid levels: None (level_type='nominal top' -> 'nominal top' is the only level)
                     
-                'vertical velocity':
-                    valid level type(s): 'pressure'
-                    valid levels: 
-                        level_type='pressure' (hPa): 850, 700, 500, 250, 200
-                        
-                'wind chill':
-                    valid level type(s): 'surface'
-                    valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    'total precipitation intensity index':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
                     
-                'wind direction':
-                    valid level type(s) = 'pressure', 'height above ground'.
-                    valid levels:
-                        level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
-                                            350, 300, 275, 250, 225, 200, 175, 150, 100, 50, 30, 20, 10, 5, 1.
-                                            
-                        level_type='height above ground' (m): 10, 40, 80, 120
-                        
-                'wind gust':
-                    valid level type(s) = 'height above ground'.
-                    valid levels:
-                        level_type='height above ground' (m): 10 
-                        
-                'wind speed':
-                    valid level type(s) = 'pressure', 'height above ground'.
-                    valid levels:
-                        level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
-                                            350, 300, 275, 250, 225, 200, 175, 150, 100, 50, 30, 20, 10, 5, 1.
-                                            
-                        level_type='height above ground' (m): 10, 40, 80, 120
-                        
-                'u-component of wind':
-                    valid level type(s) = 'pressure', 'height above ground'.
-                    valid levels:
-                        level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
-                                            350, 300, 275, 250, 225, 200, 175, 150, 100, 50, 30, 20, 10, 5, 1.
-                                            
-                        level_type='height above ground' (m): 10, 40, 80, 120
-                        
-                'v-component of wind':
-                    valid level type(s) = 'pressure', 'height above ground'.
-                    valid levels:
-                        level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
-                                            350, 300, 275, 250, 225, 200, 175, 150, 100, 50, 30, 20, 10, 5, 1.
-                                            
-                        level_type='height above ground' (m): 10, 40, 80, 120
-                        
-                'vertical wind shear':
-                    valid level type(s): 'eta'
-                    valid levels: None (level_type='eta' -> 'eta' is the only level)     
+                    
+                    'total precipitation':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    
+                    'upward longwave radiation flux':
+                        valid level type(s): 'nominal top'
+                        valid levels: None (level_type='nominal top' -> 'nominal top' is the only level)
+                    
+                    
+                    'upward shortwave radiation flux':
+                        valid level type(s): 'nominal top'
+                        valid levels: None (level_type='nominal top' -> 'nominal top' is the only level)
+                    
+                    
+                    'uv index':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'uv index (clear sky)':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'ventilation index':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'vertical wind shear':
+                        valid level type(s): 'eta'
+                        valid levels: None (level_type='eta' -> 'eta' is the only level) 
+                    
+                    'vertical velocity':
+                        valid level type(s): 'pressure'
+                        valid levels: 
+                            level_type='pressure' (hPa): 1000, 850, 700, 500, 250
+                    
+                    'visibility through ice fog':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'visibility through liquid fog':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'land sea mask':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'wind chill':
+                        valid level type(s): 'surface'
+                        valid levels: None (level_type='surface' -> 'surface' is the only level)
+                    
+                    'wind direction':
+                        valid level type(s) = 'pressure', 'height above ground'.
+                        valid levels:
+                            level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
+                                                350, 300, 275, 250, 225, 200, 175, 150, 100, 50.
+                                                
+                            level_type='height above ground' (m): 10, 40, 80, 120
+                    
+                    'wind gust':
+                        valid level type(s) = 'pressure', 'height above ground'.
+                        valid levels:
+                            level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
+                                                350, 300, 275, 250, 225, 200, 175, 150, 100, 50.
+                                                
+                            level_type='height above ground' (m): 10, 40, 80, 120
+                    
+                    'wind speed':
+                        valid level type(s) = 'pressure', 'height above ground'.
+                        valid levels:
+                            level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
+                                                350, 300, 275, 250, 225, 200, 175, 150, 100, 50.
+                                                
+                            level_type='height above ground' (m): 10, 40, 80, 120
+                    
+                    'u-wind component':
+                        valid level type(s) = 'pressure', 'height above ground'.
+                        valid levels:
+                            level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
+                                                350, 300, 275, 250, 225, 200, 175, 150, 100, 50.
+                                                
+                            level_type='height above ground' (m): 10, 40, 80, 120
+                    
+                    'v-wind component':
+                        valid level type(s) = 'pressure', 'height above ground'.
+                        valid levels:
+                            level_type='pressure' (hPa): 1015, 1000, 985, 975, 950, 925, 900, 875, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400,
+                                                350, 300, 275, 250, 225, 200, 175, 150, 100, 50.
+                                                
+                            level_type='height above ground' (m): 10, 40, 80, 120 
                   
-                  See https://edrewitz.github.io/WxData/RDPS%20CLI for available variables."""
+                  See https://edrewitz.github.io/WxData/HRDPS%20CLI for available variables."""
                   
                   )
 )
@@ -1144,7 +1122,7 @@ def fetch_hrdps_data():
                     
           Default=500 hPa
           
-          See https://edrewitz.github.io/WxData/RDPS%20CLI for available levels.
+          See https://edrewitz.github.io/WxData/HRDPS%20CLI for available levels.
           
           """)
 )
@@ -1199,7 +1177,7 @@ def fetch_hrdps_data():
             
             'eta'
           
-          See https://edrewitz.github.io/WxData/RDPS%20CLI for available level types.
+          See https://edrewitz.github.io/WxData/HRDPS%20CLI for available level types.
           
           """)
 )
@@ -1232,7 +1210,7 @@ def fetch_hrdps_data():
 
 @_click.option(
     "--ncdir",
-    default=f"RDPS/NETCDF",
+    default=f"HRDPS/NETCDF",
     type=str,
     show_default=True,
     help=("""This flag is needed when --netcdf True to define the directory where the netCDF (.nc) file will save to.
@@ -1241,7 +1219,7 @@ def fetch_hrdps_data():
 
 @_click.option(
     "--ncfname",
-    default=f"rdps.nc",
+    default=f"hrdps.nc",
     type=str,
     show_default=True,
     help=("""This flag is needed when --netcdf True to define the filename for the netCDF (.nc) file. 
@@ -1268,7 +1246,7 @@ def get_gdps(final_forecast_hour,
              ncdir,
              ncfname):
     
-    """Downloads Latest RDPS Data"""
+    """Downloads Latest HRDPS Data"""
     
     try:
         if custom_directory.lower() == "none":
@@ -1293,7 +1271,7 @@ def get_gdps(final_forecast_hour,
         convert_to = convert_to.lower()
         
         if custom_directory == None:
-            path = f"RDPS"
+            path = f"HRDPS"
         else:
             path = custom_directory
         
@@ -1319,13 +1297,13 @@ def get_gdps(final_forecast_hour,
                     return_values=False)
         
         if current_os != "Windows":
-            _click.echo(f"GDPS latest download complete, data files saved to {path}")
+            _click.echo(f"HRDPS latest download complete, data files saved to {path}")
         else:
             path = path.replace('/', '\\')
-            _click.echo(rf"GDPS latest download complete, data files saved to {path}")
+            _click.echo(rf"HRDPS latest download complete, data files saved to {path}")
             
     except SystemExit as e:
-        _command_error_message('gdps')
+        _command_error_message('hrdps')
         _sys.exit(1)
             
 # ---------------------------------------------------------------------

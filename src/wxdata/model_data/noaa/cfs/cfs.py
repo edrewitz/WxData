@@ -897,7 +897,23 @@ def cfs_flux(western_bound=-180,
             
     18) levels (Integer List) - Default=[2].
     
-    The units for the level in the atmosphere (i.e. levels=[2] -> 2-meters above ground)
+        ***Available Levels***
+        
+        *height above ground*
+        
+        m above ground
+        
+        [2, 10]
+        
+        *height below ground*
+        
+        m below ground
+        
+        [0-0.1, 0.1-0.4, 0.4-1, 0.1-0.4, 1-2, 0-2]
+        
+        *hybrid*
+        
+        [1]
 
     19) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
     

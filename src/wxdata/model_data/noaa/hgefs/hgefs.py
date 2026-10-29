@@ -203,7 +203,7 @@ def hgefs_mean_spread(final_forecast_hour=240,
     cat = cat.lower()
     level_type = level_type.lower()
     
-    if level_type == "surface":
+    if level_type == "surface" or level_type == "mean sea level":
         levels = None
     else:
         levels = levels

@@ -127,7 +127,8 @@ def pixel_query(ds,
                 station_id=None,
                 coord_names=['latitude',
                             'longitude'],
-                proxies=None):
+                proxies=None,
+               grid_mapping_name='latitude_longitude'):
     
     """
     This function queries for the nearest pixel to a user specified point of (latitude/longitude). 
@@ -162,6 +163,8 @@ def pixel_query(ds,
        proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = pixel_query(proxies=proxies)
        
        This is in the event the user needs to download the list of airports when the mode is set to station coordinates.
+       
+    6) grid_mapping_name (String) - Default='latitude_longitude'. The name of the grid mapping system
     
     Returns
     -------
@@ -172,7 +175,7 @@ def pixel_query(ds,
     try:
         ds = ds.metpy.parse_cf()
     except Exception as e:
-        ds = ds.metpy.quantify()
+        ds.metpy.assign_crs(grid_mapping_name=grid_mapping_name)
     
     if station_id == None:
         
@@ -206,13 +209,13 @@ def line_query(ds,
                surface_pressure_key='surface_pressure',
                north_to_south=False,
                pressure_level_key='isobaricInhPa',
-               proxies=None):
+               proxies=None,
+               grid_mapping_name='latitude_longitude'):
     
     """
     This function is to query for a line that connects a starting_point (A) with an ending_point (B)
     
-    Applications Include
-    --------------------
+    ***Applications Include***
     
     1) Forecast cross-sections between two different geographical points.
     
@@ -241,10 +244,11 @@ def line_query(ds,
     
     5) proxies (String or None) - Default=None. If the user is using a VPN/PROXY server connection, the user must pass a value for
             proxies in the form of a string. Here is an example: proxies='http://address:port'
+            
+    6) grid_mapping_name (String) - Default='latitude_longitude'. The name of the grid mapping system
     
     
-    Returns
-    -------
+    **Returns**
     
     5 xarray.array data arrays of pixels along a line between points A and B.
     
@@ -262,7 +266,7 @@ def line_query(ds,
     try:
         ds = ds.metpy.parse_cf()
     except Exception as e:
-        ds = ds.metpy.quantify()
+        ds.metpy.assign_crs(grid_mapping_name=grid_mapping_name)
     
     sfc_pressure = (ds[surface_pressure_key][:]) / 100
     

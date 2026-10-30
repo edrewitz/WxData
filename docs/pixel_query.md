@@ -9,7 +9,8 @@ def pixel_query(ds,
                 station_id=None,
                 coord_names=['latitude',
                             'longitude'],
-                proxies=None):
+                proxies=None,
+               grid_mapping_name='latitude_longitude'):
 ```
 This function queries for the nearest pixel to a user specified point of (latitude/longitude). 
 
@@ -25,7 +26,7 @@ This function is useful for people interested in a point forecast.
 
 Required Arguments:
 
-1) ds (`xarray.array`) - The forecast model dataset in GRIB format. 
+1) ds (xarray.array) - The forecast model dataset in GRIB format. 
 
 Optional Arguments:
 
@@ -35,14 +36,16 @@ Optional Arguments:
 
 3) longitude (Float) - Default=None. The longitude of the point in decimal degrees.
 
-4) coord_names (String List) - Default=['latitude', 'longitude'] A list of the coordinate names (`i.e. 'longitude/latitude', 'lon'/'lat', 'easting'/'northing'`)
+4) coord_names (String List) - Default=['latitude', 'longitude'] A list of the coordinate names (i.e. 'longitude/latitude', 'lon'/'lat', 'easting'/'northing')
 
 5) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
-  ```python
-   proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = pixel_query(proxies=proxies)
-   ```
-This is in the event the user needs to download the list of airports when the mode is set to station coordinates.
+
+   proxies=None ---> `proxies="http://your-proxy-address:port"` ---> `ds = pixel_query(proxies=proxies)`
+   
+   This is in the event the user needs to download the list of airports when the mode is set to station coordinates.
+   
+6) grid_mapping_name (String) - Default='latitude_longitude'. The name of the grid mapping system
 
 **Returns**
 
-An `xarray.array` for the pixel closest to the user specified coordinates or ASOS station.    
+An xarray.array for the pixel closest to the user specified coordinates or ASOS station.    

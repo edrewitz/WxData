@@ -445,8 +445,9 @@ def cfs_pressure():
         
 @_click.option('--variable', 
               '-v', 
-              default='geopotential_height',
+              default=['geopotential_height'],
               type=str,
+              multiple=True,
               help=(
                   """Variable to pass into the function. 
                   
@@ -730,8 +731,9 @@ def cfs_pressure_fetch(final_forecast_hour,
         
 @_click.option('--variable', 
               '-v', 
-              default='geopotential_height',
+              default=['geopotential_height'],
               type=str,
+              multiple=True,
               help=(
                   """Variable to pass into the function. 
                   

@@ -1707,6 +1707,20 @@ def get_archived_gfs_0p25(date,
     '3km_helicity'
     
     """
+    level_type = level_type.lower()
+    has_levs = ['pressure',
+                'hybrid',
+                'height above ground',
+                'height below ground',
+                'sigma layer',
+                'sigma level',
+                'pressure above ground',
+                'potential vorticity surface']
+    
+    if level_type in has_levs:
+        levels = levels
+    else:
+        levels = None
     
     try:
         if process_data == True:
@@ -2275,6 +2289,22 @@ def get_archived_gfs_0p50(
     '995_sigma_theta'
     
     """
+    level_type = level_type.lower()
+    
+        
+    has_levs = ['pressure',
+                'hybrid',
+                'height above ground',
+                'height below ground',
+                'sigma layer',
+                'sigma level',
+                'pressure above ground',
+                'potential vorticity surface']
+    
+    if level_type in has_levs:
+        levels = levels
+    else:
+        levels = None
     
     try:
         if process_data == True:
@@ -2685,6 +2715,19 @@ def get_archived_gfs_0p25_secondary_parameters(
     'potential_vorticity_level_vertical_speed_shear' 
     
     """
+    level_type = level_type.lower()
+        
+    has_levs = ['pressure',
+                'height below ground',
+                'height above ground',
+                'height above sea level',
+                'pressure above ground',
+                'potential vorticity surface']
+    
+    if level_type in has_levs:
+        levels = levels
+    else:
+        levels = None
     
     try:
         if process_data == True:

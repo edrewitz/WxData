@@ -301,7 +301,6 @@ def _cfs_flux_client(western_bound=-180,
         '995_sigma_geopotential_height'   
     """
     
-    
     if clear_recycle_bin == True:
         _clear_recycle_bin_windows()
         _clear_trash_bin_mac()
@@ -354,7 +353,7 @@ def _cfs_flux_client(western_bound=-180,
                                                         eastern_bound,
                                                         northern_bound,
                                                         southern_bound,
-                                                        variables)
+                                                        variables[0])
         
         if convert_temperature == True:
                 ds = _convert_temperature_units(ds, 
@@ -702,7 +701,7 @@ def _cfs_pressure_client(western_bound=-180,
                                                         eastern_bound,
                                                         northern_bound,
                                                         southern_bound,
-                                                        variables)
+                                                        variables[0])
         
         if convert_temperature == True:
                 ds = _convert_temperature_units(ds, 
@@ -1020,6 +1019,17 @@ def cfs_flux(western_bound=-180,
         '995_sigma_u_wind_component'
         '995_sigma_geopotential_height'   
     """
+    
+    level_type = level_type.lower()
+    
+    has_levs = ["height above ground",
+                "height below ground",
+                "hybrid"]
+    
+    if level_type in has_levs:
+        levels = levels
+    else:
+        levels = None
     
     variables = [variable]
     path = f"{path}/{variable.upper()}"
@@ -1467,6 +1477,21 @@ def cfs_pressure(western_bound=-180,
             'potential_vorticity_level_air_pressure'
             'potential_vorticity_level_vertical_speed_shear'        
     """
+    
+    level_type = level_type.lower()
+    
+    no_levs = ["surface",
+               "entire atmosphere",
+               "mean sea level",
+               "tropopause",
+               "isothermal",
+               "highest tropospheric freezing level"]
+    
+    if level_type in no_levs:
+        levels = None
+    else:
+        levels = levels
+    
     
     source = source.lower()
     

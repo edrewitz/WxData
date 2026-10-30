@@ -1687,6 +1687,18 @@ def get_archived_gefs_0p50(date,
     'v_wind_component'
     
     """
+    level_type = level_type.lower()
+        
+    has_levs = ['pressure',
+                'height below ground',
+                'height above ground',
+                'pressure above ground']
+    
+    if level_type in has_levs:
+        levels = levels
+    else:
+        levels = None
+        
     if run == 18 or run == '18':
         run = '18'
     elif run == 12 or run == '12':
@@ -2191,6 +2203,23 @@ def get_archived_gefs_0p50_secondary_parameters(date,
     'pressure_level_from_which_a_parcel_was_lifted'
     
     """
+    level_type = level_type.lower()
+        
+    has_levs = ['pressure',
+                'hybrid',
+                'height above ground',
+                'height below ground',
+                'height above sea level',
+                'sigma layer',
+                'sigma level',
+                'isentropic level',
+                'potential vorticity surface']
+    
+    if level_type in has_levs:
+        levels = levels
+    else:
+        levels = None
+        
     if run == 18 or run == '18':
         run = '18'
     elif run == 12 or run == '12':
@@ -2622,6 +2651,17 @@ def get_archived_gefs_0p25(date,
     '3km_helicity'
     
     """
+    level_type = level_type.lower()
+    
+    has_levs = ['height above ground',
+                'height below ground',
+                'pressure above ground']
+    
+    if level_type in has_levs:
+        levels = levels
+    else:
+        levels = None
+        
     if run == 18 or run == '18':
         run = '18'
     elif run == 12 or run == '12':

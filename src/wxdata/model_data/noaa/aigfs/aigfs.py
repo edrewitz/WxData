@@ -398,6 +398,8 @@ def aigfs(final_forecast_hour=384,
         ii) surface
         
         iii) height above ground
+        
+        iv) mean sea level
     
     16) clear_data (Boolean) - Default=False. When set to False, the scanner safe-guard remains in place (recommended for most users).
         When set to True, the scanner safe-guard is disabled and directory branch is cleared and new data is downloaded. 
@@ -504,6 +506,13 @@ def aigfs(final_forecast_hour=384,
     'total_precipitation'
     """
     source = source.lower()
+    
+    level_type = level_type.lower()
+    
+    if level_type == "surface" or level_type == "mean sea level":
+        levels = None
+    else:
+        levels = levels
     
     try:
         if process_data == True:

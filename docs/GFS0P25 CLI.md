@@ -424,16 +424,28 @@ retry downloading the data.
 
 Linux Shell:
 ```shell
+# Define our coordinates so we don't pass in negative numbers into the command
+western_bound=-130
+eastern_bound=-65
+northern_bound=50
+southern_bound=20
+
 wxdata-gfs 0p25 latest -lt height_above_ground -l 2 -v temperature -v relative_humidity \
--s aws -wb -130 -eb -65 -nb 50 -sb 20 \
+-s aws -wb=$western_bound -eb=$eastern_bound -nb=$northern_bound -sb=$southern_bound \
 --netcdf True --ncdir Weather_Data/GFS0P25/NETCDF --ncfname gfs0p25_t2m_rh.nc \ 
 --proxy https://proxy-server-address:proxy-server-port
 ```
         
 Windows Powershell:
 ```powershell
+# Define our coordinates so we don't pass in negative numbers into the command
+$WESTERN_BOUND=-130
+$EASTERN_BOUND=-65
+$NORTHERN_BOUND=50
+$SOUTHERN_BOUND=20
+
 wxdata-gfs 0p25 latest -lt height_above_ground -l 2 -v temperature -v relative_humidity `
--s aws -wb -130 -eb -65 -nb 50 -sb 20 `
+-s aws -wb=$WESTERN_BOUND -eb=$EASTERN_BOUND -nb=$NORTHERN_BOUND -sb=$SOUTHERN_BOUND `
 --netcdf True --ncdir Weather_Data/GFS0P25/NETCDF --ncfname gfs0p25_t2m_rh.nc ` 
 --proxy https://proxy-server-address:proxy-server-port
 ```

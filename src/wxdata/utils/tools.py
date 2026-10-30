@@ -135,8 +135,7 @@ def pixel_query(ds,
     
     This function is useful for people interested in a point forecast.
     
-    Applications include
-    ---------------------
+    ***Applications include***
     
     1) forecast soundings
     
@@ -160,14 +159,13 @@ def pixel_query(ds,
     
     5) proxies (String or None) - Default=None. If the user is using proxy server(s), the user must change the following:
 
-       proxies=None ---> proxies="http://your-proxy-address:port" ---> ds = pixel_query(proxies=proxies)
+       proxies=None ---> `proxies="http://your-proxy-address:port"` ---> `ds = pixel_query(proxies=proxies)`
        
        This is in the event the user needs to download the list of airports when the mode is set to station coordinates.
        
     6) grid_mapping_name (String) - Default='latitude_longitude'. The name of the grid mapping system
     
-    Returns
-    -------
+    **Returns**
     
     An xarray.array for the pixel closest to the user specified coordinates or ASOS station.    
     """

@@ -297,16 +297,28 @@ retry downloading the data.
 
 Linux Shell:
 ```shell
+# Define our coordinates so we don't pass in negative numbers into the command
+western_bound=-130
+eastern_bound=-65
+northern_bound=50
+southern_bound=20
+
 wxdata-cfs flux latest -lt height_above_ground -l 2 -v temperature \
--s noaa -wb -130 -eb -65 -nb 50 -sb 20 \
+-s noaa -wb=$western_bound -eb=$eastern_bound -nb=$northern_bound -sb=$southern_bound \
 --netcdf True --ncdir Weather_Data/CFS/TMP/2/NETCDF --ncfname cfs_t2m_gph.nc \ 
 --proxy https://proxy-server-address:proxy-server-port
 ```
         
 Windows Powershell:
 ```powershell
+# Define our coordinates so we don't pass in negative numbers into the command
+$WESTERN_BOUND=-130
+$EASTERN_BOUND=-65
+$NORTHERN_BOUND=50
+$SOUTHERN_BOUND=20
+
 wxdata-cfs flux latest -lt height_above_ground -l 2 -v temperature `
--s noaa -wb -130 -eb -65 -nb 50 -sb 20 `
+-s noaa -wb=$WESTERN_BOUND -eb=$EASTERN_BOUND -nb=$NORTHERN_BOUND -sb=$SOUTHERN_BOUND `
 --netcdf True --ncdir Weather_Data/CFS/TMP/2/NETCDF --ncfname cfs_t2m_gph.nc ` 
 --proxy https://proxy-server-address:proxy-server-port
 ```

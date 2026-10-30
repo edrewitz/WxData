@@ -263,6 +263,7 @@ def line_query(ds,
         ds = ds.metpy.parse_cf()
     except Exception as e:
         pass
+    
     sfc_pressure = (ds[surface_pressure_key][:]) / 100
     
     if north_to_south == False:

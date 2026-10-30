@@ -10,7 +10,9 @@ def line_query(ds,
                             'longitude'],
                surface_pressure_key='surface_pressure',
                north_to_south=False,
-               pressure_level_key='isobaricInhPa'):
+               pressure_level_key='isobaricInhPa',
+               proxies=None,
+               grid_mapping_name='latitude_longitude'):
 ```
 
 This function is to query for a line that connects a starting_point (A) with an ending_point (B)
@@ -42,6 +44,11 @@ Optional Arguments:
    
 4) pressure_level_key (String) - Default='isobaricInhPa'. The key for the pressure level. 
 
+5) proxies (String or None) - Default=None. If the user is using a VPN/PROXY server connection, the user must pass a value for
+        proxies in the form of a string. Here is an example: `proxies='http://address:port'`
+        
+6) grid_mapping_name (String) - Default='latitude_longitude'. The name of the grid mapping system
+
 
 **Returns**
 
@@ -55,4 +62,4 @@ Optional Arguments:
 
 4) lon - Array of longitude.
 
-5) height - Array of height levels.     
+5) height - Array of height levels.      

@@ -242,16 +242,28 @@ If you are using a proxy server you can define it by using `--proxy https://prox
 
 Linux Shell:
 ```shell
+# Define our coordinates so we don't pass in negative numbers into the command
+western_bound=-130
+eastern_bound=-65
+northern_bound=50
+southern_bound=20
+
 wxdata-ecmwf aifs latest -t e -c members -lt surface -v 2-meter_temperature \
--m 1 -m 2 -m 3 -m 4 -m 5 -s aws -wb -130 -eb -65 -nb 50 -sb 20 \
+-m 1 -m 2 -m 3 -m 4 -m 5 -s aws -wb=$western_bound -eb=$eastern_bound -nb=$northern_bound -sb=$southern_bound \
 --netcdf True --ncdir Weather_Data/AIFS/NETCDF --ncfname aifs_members_t2m.nc \ 
 --proxy https://proxy-server-address:proxy-server-port
 ```
       
 Windows Powershell:
 ```powershell
+# Define our coordinates so we don't pass in negative numbers into the command
+$WESTERN_BOUND=-130
+$EASTERN_BOUND=-65
+$NORTHERN_BOUND=50
+$SOUTHERN_BOUND=20
+
 wxdata-ecmwf aifs latest -t e -c members -lt surface -v 2-meter_temperature `
--m 1 -m 2 -m 3 -m 4 -m 5 -s aws -wb -130 -eb -65 -nb 50 -sb 20 `
+-m 1 -m 2 -m 3 -m 4 -m 5 -s aws -wb=$WESTERN_BOUND -eb=$EASTERN_BOUND -nb=$NORTHERN_BOUND -sb=$SOUTHERN_BOUND `
 --netcdf True --ncdir Weather_Data/AIFS/NETCDF --ncfname aifs_members_t2m.nc ` 
 --proxy https://proxy-server-address:proxy-server-port
 ```

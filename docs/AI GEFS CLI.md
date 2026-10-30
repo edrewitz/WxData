@@ -176,16 +176,28 @@ If you are using a proxy server you can define it by using `--proxy https://prox
 
 Linux Shell:
 ```shell
+# Define our coordinates so we don't pass in negative numbers into the command
+western_bound=-180
+eastern_bound=180
+northern_bound=90
+southern_bound=0
+
 wxdata-aigefs fetch latest -c spread -v geopotential_height -l 500 \
--s aws -wb -180 -eb 180 -nb 90 -sb 0 \
+-s aws -wb=$western_bound -eb=$eastern_bound -nb=$northern_bound -sb=$southern_bound \
 --netcdf True --ncdir Weather_Data/AIGEFS/NETCDF --ncfname aigefs_spread_gph.nc \ 
 --proxy https://proxy-server-address:proxy-server-port
 ```
       
 Windows Powershell:
 ```powershell
+# Define our coordinates so we don't pass in negative numbers into the command
+$WESTERN_BOUND=-180
+$EASTERN_BOUND=180
+$NORTHERN_BOUND=90
+$SOUTHERN_BOUND=0
+
 wxdata-aigefs fetch latest -c spread -v geopotential_height -l 500 `
--s aws -wb -180 -eb 180 -nb 90 -sb 0 `
+-s aws -wb=$WESTERN_BOUND -eb=$EASTERN_BOUND -nb=$NORTHERN_BOUND -sb=$SOUTHERN_BOUND `
 --netcdf True --ncdir Weather_Data/AIGEFS/NETCDF --ncfname aigefs_spread_gph.nc ` 
 --proxy https://proxy-server-address:proxy-server-port
 ```

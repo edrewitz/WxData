@@ -172,7 +172,7 @@ def pixel_query(ds,
     try:
         ds = ds.metpy.parse_cf()
     except Exception as e:
-        pass
+        ds = ds.metpy.quantify()
     
     if station_id == None:
         
@@ -262,7 +262,7 @@ def line_query(ds,
     try:
         ds = ds.metpy.parse_cf()
     except Exception as e:
-        pass
+        ds = ds.metpy.quantify()
     
     sfc_pressure = (ds[surface_pressure_key][:]) / 100
     

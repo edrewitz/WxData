@@ -169,7 +169,10 @@ def pixel_query(ds,
     An xarray.array for the pixel closest to the user specified coordinates or ASOS station.    
     """
     
-    ds = ds.metpy.parse_cf()
+    try:
+        ds = ds.metpy.parse_cf()
+    except Exception as e:
+        pass
     
     if station_id == None:
         
@@ -256,7 +259,10 @@ def line_query(ds,
     5) height - Array of height levels.      
     """
     
-    ds = ds.metpy.parse_cf()
+    try:
+        ds = ds.metpy.parse_cf()
+    except Exception as e:
+        pass
     sfc_pressure = (ds[surface_pressure_key][:]) / 100
     
     if north_to_south == False:

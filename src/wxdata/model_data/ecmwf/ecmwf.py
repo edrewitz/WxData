@@ -2507,7 +2507,10 @@ def _ecmwf_aifs_client(final_forecast_hour=360,
     
     
     date = _parse_filename(filename)
-    levels = _get_levels(levels)
+    if level_type == 'pl':
+        levels = _get_levels(levels)
+    else:
+        pass
     
     if download == True:
         print(f"Downloading ECMWF AIFS...\n")
@@ -2954,7 +2957,10 @@ def _ecmwf_aifs_ens_client(final_forecast_hour=360,
     
     date = _parse_filename(filename)
     
-    levels = _get_levels(levels)
+    if level_type == 'pl':
+        levels = _get_levels(levels)
+    else:
+        pass
 
     if download == True:
         print(f"Downloading ECMWF AIFS ENSEMBLE...\n")
@@ -8849,8 +8855,7 @@ def ecmwf_aifs(final_forecast_hour=360,
                 _sys.exit(1)       
             
     else:
-        pass
-    
+        pass    
     
 def ecmwf_aifs_ens(final_forecast_hour=360,
                     western_bound=-180,

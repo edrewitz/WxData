@@ -65,6 +65,12 @@ def nexrad2():
     
     -cr = Clear Recycle Bin. To clear your recycle bin with each run of the script set to True. (Default=False)
     
+    --proxy = Proxy Server (Default=None).
+    
+    Client assumes user is not trying to download data through a proxy server.
+    
+    If you are using a proxy server you can define it by using --proxy https://proxy-server-address:proxy-server-port
+    
     ***Additional Required Field For Archived Data***
     
     -st = Start Time. The time in 'YYYY-mm-dd:HH' of the last scan in the set.
@@ -129,7 +135,7 @@ def nexrad2():
     default=None,
     callback=lambda _, __, v: _parse_proxy(v),
     show_default=True,
-    help="Proxy URL (e.g., https://address:port). Default: no proxy.",
+    help="Proxy URL (e.g., https://proxy-server-address:proxy-server-port). Default: no proxy.",
 )
 
 def fetch_latest_nexrad2_data(site_id,
@@ -240,7 +246,7 @@ def fetch_latest_nexrad2_data(site_id,
     default=None,
     callback=lambda _, __, v: _parse_proxy(v),
     show_default=True,
-    help="Proxy URL (e.g., https://address:port). Default: no proxy.",
+    help="Proxy URL (e.g., https://proxy-server-address:proxy-server-port). Default: no proxy.",
 )
 
 def fetch_archived_nexrad2_data(site_id,

@@ -29,17 +29,6 @@ def _command_error_message():
     
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
     print(f"Please visit: https://edrewitz.github.io/WxData/METAR%20CLI for full detailed documentation.")
-
-def _parse_proxy(value):
-    if value is None:
-        return None
-
-    else:
-        # Accept either http://host:port or https://host:port
-        return {
-            "http": value,
-            "https": value,
-        }
         
 # ---------------------------------------------------------------------
 # Top-level CLI group
@@ -89,10 +78,10 @@ def metars():
 
 @_click.option(
     "--proxy",
-    default=None,
-    callback=lambda _, __, v: _parse_proxy(v),
+    default="none",
     show_default=True,
-    help="Proxy URL (e.g., https://address:port). Default: no proxy.",
+    type=str,
+    help="Proxy URL (e.g., https://proxy-server-address:proxy-server-port). Default: no proxy.",
 )
 
 
@@ -102,6 +91,12 @@ def metar_fetch(clear_recycle_bin,
     """Downloads Latest METAR Observations from https://aviationweather.gov"""
     
     try:
+        if proxy == "none":
+            proxy = None
+        else:
+            proxy=proxy
+        
+        
         _fetch_metars(clear_recycle_bin=clear_recycle_bin,
                     proxies=proxy)
         

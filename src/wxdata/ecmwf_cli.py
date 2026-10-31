@@ -76,7 +76,6 @@ def _command_error_message(model):
     
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
     print(f"Model: {model.upper()}")
-    print(f"Please run `wxdata-ifs -h to view the help documentation.")
     if "aifs" not in model.lower():
         print(f"Please visit: https://edrewitz.github.io/WxData/ECMWF%20IFS%20CLI for full detailed documentation.")
     else:

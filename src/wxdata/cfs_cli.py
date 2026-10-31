@@ -27,7 +27,6 @@ def _command_error_message(model):
     
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
     print(f"Model: {model.upper()}")
-    print(f"Please run `wxdata-cfs -h to view the help documentation.")
     if model.lower() == "cfs flux":
         print(f"Please visit: https://edrewitz.github.io/WxData/CFS%20Flux%20CLI for full detailed documentation.")
     else:

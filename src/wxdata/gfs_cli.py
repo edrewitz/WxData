@@ -42,7 +42,6 @@ def _command_error_message(model):
     
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
     print(f"Model: {model.upper()}")
-    print(f"Please run `wxdata-gfs -h to view the help documentation.")
     if model.lower() == "gfs0p50":
         print(f"Please visit: https://edrewitz.github.io/WxData/GFS0P50%20CLI for full detailed documentation.")
     else:

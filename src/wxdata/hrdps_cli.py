@@ -18,7 +18,6 @@ def _command_error_message(model):
     
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
     print(f"Model: {model.upper()}")
-    print(f"Please run `wxdata-hrdps -h to view the help documentation.")
     print(f"Please visit: https://edrewitz.github.io/WxData/HRDPS%20CLI for full detailed documentation.")
 
 def _parse_proxy(value):

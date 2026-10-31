@@ -68,7 +68,6 @@ def _command_error_message(parameter):
     """Error Message For Invalid Commands"""
     
     print(f"\n\nInvalid Command Error: User Entered An Invalid Command.")
-    print(f"Please run `wxdata-ndfd -h to view the help documentation.")
     print(f"Please visit: https://edrewitz.github.io/WxData/NDFD%20CLI for full detailed documentation.")
     
 def _parse_proxy(value):

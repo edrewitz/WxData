@@ -63,7 +63,7 @@ wxdata-nexrad2 fetch latest -sid kokx -hr 4 -cdir=$CURRENT_DIR\NEXRAD_2\KOKX\Cur
 current_dir=$(pwd)
 
 # Retrieves radar data
-wxdata-nexrad2 fetch archive -st 2025-12-25:18 -sid kokx -hr 4 -cdir=$current_dir/NEXRAD_2/KOKX/Archived
+wxdata-nexrad2 fetch archived -st 2025-12-25:18 -sid kokx -hr 4 -cdir=$current_dir/NEXRAD_2/KOKX/Archived
 ```
 
 *Windows Powershell*

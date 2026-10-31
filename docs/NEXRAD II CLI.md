@@ -38,6 +38,7 @@ Example: start_time='2025-08-01:18' & hours = 3 = Radar scans from 2025-08-01:15
 
 1) Download the latest NEXRAD II data from Upton, NY (OKX) for the past 4 hours and creates and saves the radar data in a directory called "NEXRAD_2/KOKX/Current" which is within the current working directory. 
 
+*Linux Shell*
 ```shell
 # Gets current Directory
 current_dir=$(pwd)
@@ -46,6 +47,7 @@ current_dir=$(pwd)
 wxdata-nexrad2 fetch latest -sid kokx -hr 4 -cdir=$current_dir/NEXRAD_2/KOKX/Current
 ```
 
+*Windows Powershell*
 ```powershell
 # Gets current Directory
 $CURRENT_DIR = (Get-Location).Path
@@ -55,6 +57,7 @@ wxdata-nexrad2 fetch latest -sid kokx -hr 4 -cdir=$CURRENT_DIR\NEXRAD_2\KOKX\Cur
 ```
 2) Download archived NEXRAD II data from Upton, NY (OKX) for the past 4 hours starting at 2025-12-25:18 (UTC) and creates and saves the radar data in a directory called "NEXRAD_2/KOKX/Archived" which is within the current working directory. 
 
+*Linux Shell*
 ```shell
 # Gets current Directory
 current_dir=$(pwd)
@@ -63,6 +66,7 @@ current_dir=$(pwd)
 wxdata-nexrad2 fetch archive -st 2025-12-25:18 -sid kokx -hr 4 -cdir=$current_dir/NEXRAD_2/KOKX/Archived
 ```
 
+*Windows Powershell*
 ```powershell
 # Gets current Directory
 $CURRENT_DIR = (Get-Location).Path

@@ -680,7 +680,7 @@ def gefs0p50():
     default=None,
     callback=lambda _, __, v: _parse_proxy(v),
     show_default=True,
-    help="Proxy URL (e.g., https://address:port). Default: no proxy.",
+    help="Proxy URL (e.g., https://proxy-server-address:proxy-server-port). Default: no proxy.",
 )
 
 @_click.option(
@@ -1065,7 +1065,7 @@ def gefs0p50_fetch(final_forecast_hour,
     default=None,
     callback=lambda _, __, v: _parse_proxy(v),
     show_default=True,
-    help="Proxy URL (e.g., https://address:port). Default: no proxy.",
+    help="Proxy URL (e.g., https://proxy-server-address:proxy-server-port). Default: no proxy.",
 )
 
 @_click.option(
@@ -1654,7 +1654,7 @@ def gefs0p25():
     default=None,
     callback=lambda _, __, v: _parse_proxy(v),
     show_default=True,
-    help="Proxy URL (e.g., https://address:port). Default: no proxy.",
+    help="Proxy URL (e.g., https://proxy-server-address:proxy-server-port). Default: no proxy.",
 )
 
 @_click.option(
@@ -1981,7 +1981,7 @@ def gefs0p25_fetch(members,
     default=None,
     callback=lambda _, __, v: _parse_proxy(v),
     show_default=True,
-    help="Proxy URL (e.g., https://address:port). Default: no proxy.",
+    help="Proxy URL (e.g., https://proxy-server-address:proxy-server-port). Default: no proxy.",
 )
 
 @_click.option(

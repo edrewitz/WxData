@@ -395,7 +395,7 @@ def aigfs():
     default=None,
     callback=lambda _, __, v: _parse_proxy(v),
     show_default=True,
-    help="Proxy URL (e.g., https://address:port). Default: no proxy.",
+    help="Proxy URL (e.g., https://proxy-server-address:proxy-server-port). Default: no proxy.",
 )
 
 @_click.option(

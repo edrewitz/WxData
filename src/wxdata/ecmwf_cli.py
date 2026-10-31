@@ -706,7 +706,7 @@ def fetch_ifs(type,
             _command_error_message('ecmwf ifs')
             _sys.exit(1)
             
-    elif type == 'fd':        
+    elif type == 'hd':        
         try:
             _fetch_ecmwf_high_res_ifs(final_forecast_hour=final_forecast_hour,
                             western_bound=western_bound,

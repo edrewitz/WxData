@@ -53,7 +53,7 @@ wxdata-nexrad2 fetch latest -sid kokx -hr 4 -cdir=$current_dir/NEXRAD_2/KOKX/Cur
 $CURRENT_DIR = (Get-Location).Path
 
 # Retrieves radar data
-wxdata-nexrad2 fetch latest -sid kokx -hr 4 -cdir=$CURRENT_DIR\NEXRAD_2\KOKX\Current
+wxdata-nexrad2 fetch latest -sid kokx -hr 4 -cdir="$CURRENT_DIR\NEXRAD_2\KOKX\Current"
 ```
 2) Download archived NEXRAD II data from Upton, NY (OKX) for the past 4 hours starting at 2025-12-25:18 (UTC) and creates and saves the radar data in a directory called "NEXRAD_2/KOKX/Archived" which is within the current working directory. 
 
@@ -72,6 +72,6 @@ wxdata-nexrad2 fetch archived -st 2025-12-25:18 -sid kokx -hr 4 -cdir=$current_d
 $CURRENT_DIR = (Get-Location).Path
 
 # Retrieves radar data
-wxdata-nexrad2 fetch archived -st 2025-12-25:18 -sid kokx -hr 4 -cdir=$CURRENT_DIR\NEXRAD_2\KOKX\Archived
+wxdata-nexrad2 fetch archived -st 2025-12-25:18 -sid kokx -hr 4 -cdir="$CURRENT_DIR\NEXRAD_2\KOKX\Archived"
 ```
 

@@ -18,6 +18,9 @@
 
 [![PyPI Downloads](https://static.pepy.tech/personalized-badge/wxdata?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/wxdata)
 
+![PyPI Downloads](https://img.shields.io/pypi/dm/wxdata)
+
+
 
 **WxData User Guide**
 

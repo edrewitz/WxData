@@ -307,7 +307,8 @@ def primary_gefs_post_processing(paths,
         ds['mslp'] = ds['prmsl']
         ds = ds.drop_vars('prmsl')
     except Exception as e:
-        pass           
+        pass    
+           
     try:        
         ds['soil_temperature'] = ds['st']
         ds = ds.drop_vars('st')
@@ -760,7 +761,8 @@ def secondary_gefs_post_processing(paths,
         ds['mslp_eta_reduction'] = ds['mslet']  
         ds = ds.drop_vars('mslet')
     except Exception as e:
-        pass              
+        pass    
+              
     try:        
         ds['ventilation_rate'] = ds['VRATE']   
         ds = ds.drop_vars('VRATE')

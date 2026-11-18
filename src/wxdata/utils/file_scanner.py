@@ -8,7 +8,7 @@ This file hosts the functions that scan files to make sure existing files are up
 import os
 import time
 
-from datetime import datetime, timedelta
+from datetime import datetime
     
 # Gets local time
 local = datetime.now()

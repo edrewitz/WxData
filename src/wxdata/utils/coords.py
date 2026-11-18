@@ -40,7 +40,8 @@ def convert_lon(western_bound,
     return western_bound, eastern_bound
 
 def shift_longitude(ds, 
-                    lon_name='longitude'):
+                    lon_name='longitude',
+                    x_y_dims=False):
     """
     Shifts longitude values to ensure continuity across the Prime Meridian.
 
@@ -51,16 +52,29 @@ def shift_longitude(ds,
     Optional Arguments:
 
     1) lon_name (String) - Default = longitude. The abbreviation for the longitude key.
+    
+    2) x_y_dims (Boolean) - Default=False.
+    
+        When set to True lat/lon coords are in (x,y)
 
     Returns
     -------
 
     An xarray.dataarray with longitude coordinates ranging from -180 to 180
     """
-    lon = ds[lon_name].values
-    lon_shifted = (lon + 180) % 360 - 180
-    ds = ds.assign_coords({lon_name: lon_shifted})
-    ds = ds.sortby(lon_name)
+    if x_y_dims == False:
+        lon = ds[lon_name].values
+        lon_shifted = (lon + 180) % 360 - 180
+        ds = ds.assign_coords({lon_name: lon_shifted})
+        ds = ds.sortby(lon_name)
+    else:
+        new_lon = ((ds.longitude + 180) % 360) - 180
+        new_lat = ds.latitude
+
+        ds = ds.assign_coords(
+            longitude=(ds.longitude.dims, new_lon.values),
+            latitude=(ds.latitude.dims, new_lat.values)
+        )
     return ds
 
 def lon_bounds(western_bound, 

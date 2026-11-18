@@ -210,6 +210,11 @@ from wxdata.model_data.cmc.geps.geps import geps
 from wxdata.model_data.cmc.cansips.forecast.cansips_forecast import cansips_forecast
 from wxdata.model_data.cmc.cansips.hindcast.cansips_hindcast import cansips_hindcast
 
+##################
+# Recast Systems #
+##################
+# - WOOF-NAM
+from wxdata.model_data.recast_systems.woof_nam.woof_nam import woof_nam
 
 
 """
@@ -346,6 +351,9 @@ import wxdata.post_processors.cmc_post_processing as cmc_post_processing
 
 # Real-Time Mesoscale Analysis (RTMA)
 from wxdata.post_processors.rtma_post_processing import process_rtma_data
+
+# WOOF-NAM
+from wxdata.post_processors.woof_nam_post_processing import woof_nam_post_processing
 
 
 """

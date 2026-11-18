@@ -153,8 +153,20 @@ def var_keys(varKey):
         'vegetation type':'VGTYP',
         'geopotential height anomaly':'GPA',
         'stream function':'STRM',
-        'velocity potential':'VPOT'
-        
+        'velocity potential':'VPOT',
+        'radar echo top height':'RETOP',
+        'turbulent kinetic energy':'TKE',
+        'moisture availability':'MSTAV',
+        'direct evaporation cease':'SMDRY',
+        'soil porosity':'POROS',
+        'transpiration stress onset':'SMREF',
+        'number of soil layers':'RLYRS',
+        'vertical shear u-component':'VUCSH',
+        'vertical shear v-component':'VVCSH',
+        'maximum wind u-component':'MAXUW',
+        'maximum wind v-component':'MAXVW',
+        'maximum relative humidity':'MAXRH',
+        'minimum relative humidity':'MINRH'
     }
     
     return params[varKey]

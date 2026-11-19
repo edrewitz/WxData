@@ -910,7 +910,7 @@ def woof_nam_post_processing(path,
     try:
         if level_type == 'surface':
             ds['planetary_boundary_layer_height'] = ds['unknown']
-        elif level_type == 'entire atmosphere single layer':
+        else:
             ds['radar_echo_top_height'] = ds['unknown']
 
         ds = ds.drop_vars('unknown')     

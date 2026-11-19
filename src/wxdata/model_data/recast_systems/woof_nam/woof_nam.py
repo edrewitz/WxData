@@ -80,7 +80,8 @@ def woof_nam(final_forecast_hour=84,
                   'height below ground',
                   'pressure above ground',
                   'sigma layer',
-                  'hybrid']
+                  'hybrid',
+                  'depth below land layer']
     
     if level_type in has_levs:
         levels = levels

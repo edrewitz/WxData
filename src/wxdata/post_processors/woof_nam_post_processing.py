@@ -408,6 +408,162 @@ def woof_nam_post_processing(path,
             ds = ds.drop_vars('v')
         except Exception as e:
             pass
+        
+    elif level_type == 'depth below land layer':
+        try:
+            ds1 = _xr.open_mfdataset(files, 
+                                concat_dim='step', 
+                                combine='nested', 
+                                coords='minimal', 
+                                engine='cfgrib', 
+                                compat='override', 
+                                decode_timedelta=False,
+                                backend_kwargs={"indexpath": ""},
+                                filter_by_keys={'typeOfLevel': 'depthBelowLandLayer', 'paramId':260187})
+            
+            ds1 = _shift_longitude(ds1,
+                                x_y_dims=True)
+            
+            ds['moisture_availability'] = ds1['mstav']
+            ds = ds.drop_vars('mstav')
+        except Exception as e:
+            pass
+        
+        try:
+            ds2 = _xr.open_mfdataset(files, 
+                                concat_dim='step', 
+                                combine='nested', 
+                                coords='minimal', 
+                                engine='cfgrib', 
+                                compat='override', 
+                                decode_timedelta=False,
+                                backend_kwargs={"indexpath": ""},
+                                filter_by_keys={'typeOfLevel': 'depthBelowLandLayer', 'paramId':3086})
+            
+            ds2 = _shift_longitude(ds2,
+                                x_y_dims=True)
+            
+            ds['soil_moisture_content'] = ds2['ssw']
+            ds = ds.drop_vars('ssw')
+        except Exception as e:
+            pass
+        
+    elif level_type == 'height above ground layer (shear)':
+        try:
+            ds1 = _xr.open_mfdataset(files, 
+                                concat_dim='step', 
+                                combine='nested', 
+                                coords='minimal', 
+                                engine='cfgrib', 
+                                compat='override', 
+                                decode_timedelta=False,
+                                backend_kwargs={"indexpath": ""},
+                                filter_by_keys={'typeOfLevel': 'heightAboveGroundLayer', 'paramId':3045})
+            
+            ds1 = _shift_longitude(ds1,
+                                x_y_dims=True)
+            
+            ds['vertical_shear_u_component'] = ds1['vucsh']
+            ds = ds.drop_vars('vucsh')
+        except Exception as e:
+            pass
+        
+        try:
+            ds2 = _xr.open_mfdataset(files, 
+                                concat_dim='step', 
+                                combine='nested', 
+                                coords='minimal', 
+                                engine='cfgrib', 
+                                compat='override', 
+                                decode_timedelta=False,
+                                backend_kwargs={"indexpath": ""},
+                                filter_by_keys={'typeOfLevel': 'heightAboveGroundLayer', 'paramId':3046})
+            
+            ds2 = _shift_longitude(ds2,
+                                x_y_dims=True)
+            
+            ds['vertical_shear_v_component'] = ds2['vvcsh']
+            ds = ds.drop_vars('vvcsh')
+        except Exception as e:
+            pass
+        
+    else:
+        try:
+            ds1 = _xr.open_mfdataset(files, 
+                                concat_dim='step', 
+                                combine='nested', 
+                                coords='minimal', 
+                                engine='cfgrib', 
+                                compat='override', 
+                                decode_timedelta=False,
+                                backend_kwargs={"indexpath": ""},
+                                filter_by_keys={'typeOfLevel': 'pressureFromGroundLayer', 'paramId':3024})
+            
+            ds1 = _shift_longitude(ds1,
+                                x_y_dims=True)
+            
+            ds['parcel_lifted_index_to_500hPa'] = ds1['pli']
+            ds = ds.drop_vars('pli')
+        except Exception as e:
+            pass
+        
+        try:
+            ds2 = _xr.open_mfdataset(files, 
+                                concat_dim='step', 
+                                combine='nested', 
+                                coords='minimal', 
+                                engine='cfgrib', 
+                                compat='override', 
+                                decode_timedelta=False,
+                                backend_kwargs={"indexpath": ""},
+                                filter_by_keys={'typeOfLevel': 'heightAboveGroundLayer', 'paramId':260128})
+            
+            ds2 = _shift_longitude(ds2,
+                                x_y_dims=True)
+            
+            ds['best_4_layer_lifted_index'] = ds2['lftx4']
+            ds = ds.drop_vars('lftx4')
+        except Exception as e:
+            pass
+        
+        try:
+            ds3 = _xr.open_mfdataset(files, 
+                                concat_dim='step', 
+                                combine='nested', 
+                                coords='minimal', 
+                                engine='cfgrib', 
+                                compat='override', 
+                                decode_timedelta=False,
+                                backend_kwargs={"indexpath": ""},
+                                filter_by_keys={'typeOfLevel': 'heightAboveGroundLayer', 'paramId':59})
+            
+            ds3 = _shift_longitude(ds3,
+                                x_y_dims=True)
+            
+            ds['convective_available_potential_energy'] = ds3['cape']
+            ds = ds.drop_vars('cape')
+        except Exception as e:
+            pass
+        
+        try:
+            ds4 = _xr.open_mfdataset(files, 
+                                concat_dim='step', 
+                                combine='nested', 
+                                coords='minimal', 
+                                engine='cfgrib', 
+                                compat='override', 
+                                decode_timedelta=False,
+                                backend_kwargs={"indexpath": ""},
+                                filter_by_keys={'typeOfLevel': 'heightAboveGroundLayer', 'paramId':228001})
+            
+            ds4 = _shift_longitude(ds4,
+                                x_y_dims=True)
+            
+            ds['convective_inhibition'] = ds3['cin']
+            ds = ds.drop_vars('cin')
+        except Exception as e:
+            pass
+        
 
     try:
         ds['vertical_velocity_height'] = ds['wz']
@@ -703,7 +859,53 @@ def woof_nam_post_processing(path,
     except Exception as e:
         pass
     
+    try:
+        ds['soil_temperature'] = ds['st']
+        ds = ds.drop_vars('st')
+    except Exception as e:
+        pass
     
+    try:        
+        ds['volumetric_soil_moisture_content'] = ds['soilw']
+        ds = ds.drop_vars('soilw')
+    except Exception as e:
+        pass
+    
+    try:        
+        ds['liquid_volumetric_soil_moisture_non_frozen'] = ds['soill']
+        ds = ds.drop_vars('soill')
+    except Exception as e:
+        pass  
+    
+    try:        
+        ds['surface_lifted_index'] = ds['lftx']
+        ds = ds.drop_vars('lftx')
+    except Exception as e:
+        pass    
+    
+    try:
+        ds['storm_relative_helicity'] = ds['hlcy']
+        ds = ds.drop_vars('hlcy')
+    except Exception as e:
+        pass
+    
+    try:
+        ds['tropopause_pressure'] = ds['trpp']
+        ds = ds.drop_vars('trpp')
+    except Exception as e:
+        pass
+    
+    try:
+        ds['pressure'] = ds['pres']
+        ds = ds.drop_vars('pres')
+    except Exception as e:
+        pass
+    
+    try:
+        ds['relative_humidity'] = ds['r']
+        ds = ds.drop_vars('r')
+    except Exception as e:
+        pass
     
     try:
         if level_type == 'surface':

@@ -143,7 +143,12 @@ def get_level_suffix(level_type,
             'pressure above ground':'mb above ground',
             'isentropic level':'K isentropic level',
             'convective cloud bottom level':'convective cloud bottom level',
-            'convective cloud top level':'convective cloud top level'
+            'convective cloud top level':'convective cloud top level',
+            'lowest level wetbulb zero':'lowest level of the wet bulb zero',
+            'isobaric layer':'500-1000 mb',
+            'cloud base':'cloud base',
+            'height above ground layer (helicity)':'3000-0 m above',
+            'height above ground layer (shear)':'0-6000 m above ground'
         }
     
     return level_types[level_type]

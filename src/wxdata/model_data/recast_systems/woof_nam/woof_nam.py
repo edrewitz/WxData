@@ -125,7 +125,8 @@ def woof_nam(final_forecast_hour=84,
                                            chunk_size=chunk_size,
                                            notifications=notifications,
                                            clear_recycle_bin=False,
-                                           source='recast-systems')
+                                           source='recast-systems',
+                                           model='woof-nam')
             else:
                 _client.byte_range_request(f"{url}woof-nam.t{run}z.awphys{i}.tm00.grib2",
                                            f"{url}woof-nam.t{run}z.awphys{i}.tm00.grib2.idx",
@@ -138,7 +139,8 @@ def woof_nam(final_forecast_hour=84,
                                            chunk_size=chunk_size,
                                            notifications=notifications,
                                            clear_recycle_bin=False,
-                                           source='recast-systems')
+                                           source='recast-systems',
+                                           model='woof-nam')
                 
         print(f"WOOF-NAM Download Complete")
     else:

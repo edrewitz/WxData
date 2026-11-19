@@ -586,7 +586,8 @@ def byte_range_request(grib_url,
                       chunk_size=1024,
                       notifications='on',
                       clear_recycle_bin=False,
-                      source='noaa'):
+                      source='noaa',
+                      model='gfs0p25'):
     
     """
     This client downloads GRIB data for a specific variable that is defined by the range in bytes in that GRIB file. 
@@ -652,6 +653,9 @@ def byte_range_request(grib_url,
     will be deleted with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
     
     5) source (String) - Default='noaa'. When downloading from recast_systems we must use User-Agent headers to avoid 403 response codes.
+    
+    6) model (String) - Default='gfs0p25'. The weather forecast model. This is to distinguish from the WOOF-NAM to handle the
+        WOOF-NAM index file. 
         
     Returns
     -------
@@ -768,7 +772,8 @@ def byte_range_request(grib_url,
             })
             
         req_levels, levels = _get_level_expression(levels,
-                                                    level_type)
+                                                    level_type,
+                                                    model=model)
         
         if levels is not None:
             reqs = list(_itertools.product(variables, req_levels))

@@ -1068,7 +1068,7 @@ def fetch_hrdps_data():
     '--level', 
     '-l', 
     default=500,
-    type=int,  
+    type=str,  
     help=("""The pressure level in hPa or height above ground in meters.
                     
           Default=500 hPa
@@ -1082,7 +1082,7 @@ def fetch_hrdps_data():
     '--layer', 
     '-la', 
     default=[1000, 500],
-    type=int,  
+    type=str,  
     multiple=True,
     help=("""Default=[1000, 500]. 
           

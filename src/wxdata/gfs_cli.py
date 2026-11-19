@@ -651,7 +651,7 @@ def gfs0p25():
             50,
             10],
     multiple=True, 
-    type=int,  
+    type=str,  
     help=("""Levels for pressure, height, PVU etc. 
           
           Pressure (hPa)
@@ -994,7 +994,7 @@ def gfs0p25_fetch(final_forecast_hour,
             50,
             10],
     multiple=True, 
-    type=int,  
+    type=str,  
     help=("""Levels for pressure, height, PVU etc. 
           
           Pressure (hPa)
@@ -1640,7 +1640,7 @@ def gfs0p50():
             50,
             10],
     multiple=True, 
-    type=int,  
+    type=str,  
     help=("""Levels for pressure, height, PVU etc. 
           
           Pressure (hPa)
@@ -1939,7 +1939,7 @@ def gfs0p50_fetch(final_forecast_hour,
             50,
             10],
     multiple=True, 
-    type=int,  
+    type=str,  
     help=("""Levels for pressure, height, PVU etc. 
           
           Pressure (hPa)

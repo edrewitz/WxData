@@ -338,7 +338,7 @@ def hgefs():
             100,
             50],
     multiple=True, 
-    type=int,  
+    type=str,  
     help=("""Levels for pressure in hPa. 
           
           Default=[1000,

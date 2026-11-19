@@ -535,7 +535,7 @@ def ifs():
             100, 
             50],
     multiple=True, 
-    type=int,  
+    type=str,  
     help=("""Levels for pressure, height, PVU etc. 
           
           Pressure (hPa)
@@ -1392,7 +1392,7 @@ def aifs():
             100, 
             50],
     multiple=True, 
-    type=int,  
+    type=str,  
     help=("""Levels for pressure, height, PVU etc. 
           
           Pressure (hPa)

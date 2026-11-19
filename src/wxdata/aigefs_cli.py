@@ -425,7 +425,7 @@ def aigefs():
             100,
             50],
     multiple=True, 
-    type=int,  
+    type=str,  
     help=("""Levels for pressure. 
           
           Pressure (hPa)

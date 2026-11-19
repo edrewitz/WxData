@@ -387,7 +387,7 @@ def get_cansips_data():
     '--level', 
     '-l', 
     default=500,
-    type=int,  
+    type=str,  
     help=("""The pressure level in hPa or height above ground in meters.
                     
           Default=500 hPa

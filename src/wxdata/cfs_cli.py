@@ -468,7 +468,7 @@ def cfs_pressure():
                 300, 
                 250],
     multiple=True, 
-    type=int,  
+    type=str,  
     help=("""Levels for pressure, height, PVU etc. 
           
           Pressure (hPa)
@@ -754,7 +754,7 @@ def cfs_pressure_fetch(final_forecast_hour,
                 300, 
                 250],
     multiple=True, 
-    type=int,  
+    type=str,  
     help=("""Levels for pressure, height, PVU etc. 
           
           Pressure (hPa)
@@ -1331,7 +1331,7 @@ def cfs_flux():
     '-l', 
     default=[2],
     multiple=True, 
-    type=int,  
+    type=str,  
     help=("""Levels for pressure, height, PVU etc. 
           
           Height (m above ground)
@@ -1607,7 +1607,7 @@ def cfs_flux_fetch(final_forecast_hour,
     '-l', 
     default=[2],
     multiple=True, 
-    type=int,  
+    type=str,  
     help=("""Levels for level_type. 
           
           Height (m above ground)

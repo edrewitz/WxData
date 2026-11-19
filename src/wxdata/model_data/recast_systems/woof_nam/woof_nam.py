@@ -3,7 +3,6 @@ This file hosts the client that downloads WOOF-NAM data from Recast Systems.
 
 (C) Eric J. Drewitz 2025-2026
 """
-import sys as _sys
 import wxdata.client.client as _client
 import os as _os
 import warnings as _warnings
@@ -12,10 +11,7 @@ _warnings.filterwarnings('ignore')
 from wxdata.post_processors.woof_nam_post_processing import woof_nam_post_processing as _woof_nam_post_processing
 from wxdata.model_data.recast_systems.woof_nam.url_scanner import woof_nam_url_scanner as _woof_nam_url_scanner
 from wxdata.utils.transforms import grib_to_netcdf as _grib_to_netcdf
-from wxdata.utils.warnings import(
-    eccodes_warning as _eccodes_warning,
-    version_warning as _version_warning
-)
+from wxdata.utils.warnings import eccodes_warning as _eccodes_warning
 from wxdata.calc.unit_conversion import convert_temperature_units as _convert_temperature_units
 from wxdata.model_data.recast_systems.woof_nam.file_scanner import local_file_scanner as _local_file_scanner
 from wxdata.utils.recycle_bin import(

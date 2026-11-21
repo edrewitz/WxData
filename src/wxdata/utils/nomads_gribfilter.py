@@ -166,7 +166,8 @@ def var_keys(varKey):
         'maximum wind u-component':'MAXUW',
         'maximum wind v-component':'MAXVW',
         'maximum relative humidity':'MAXRH',
-        'minimum relative humidity':'MINRH'
+        'minimum relative humidity':'MINRH',
+        'drag coefficient': 'CD'
     }
     
     return params[varKey]

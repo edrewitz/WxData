@@ -1357,12 +1357,12 @@ def aifs():
         
 @_click.option('--variables', 
               '-v', 
-              default=['geopotential height',
-                        'specific humidity',
-                        'relative humidity',
+              default=['geopotential_height',
+                        'specific_humidity',
+                        'relative_humidity',
                         'temperature',
-                        'u-wind component',
-                        'v-wind component'],
+                        'u-wind_component',
+                        'v-wind_component'],
               multiple=True, 
               type=str,
               help=(

@@ -33,7 +33,6 @@ being rate-limited by the data server. If the user gets rate-limited, the user s
 retry downloading the data.   
 
 -v = Variables(Default=['geopotential height',
-                    'absolute vorticity',
                     'temperature',
                     'relative humidity',
                     'vertical velocity (pressure)',

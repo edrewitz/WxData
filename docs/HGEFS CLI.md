@@ -142,7 +142,7 @@ southern_bound=20
 
 wxdata-hgefs fetch latest -v geopotential_height -l 500 \
 -wb=$western_bound -eb=$eastern_bound -nb=$northern_bound -sb=$southern_bound \
---netcdf True --Weather_Data/HGEFS/NETCDF --ncfname hgefs_mean_gph_500.nc \ 
+--netcdf True --ncdir Weather_Data/HGEFS/NETCDF --ncfname hgefs_mean_gph_500.nc \ 
 --proxy https://proxy-server-address:proxy-server-port
 ```
         
@@ -156,6 +156,6 @@ $SOUTHERN_BOUND=20
 
 wxdata-hgefs fetch latest -v geopotential_height -l 500 `
 -wb=$WESTERN_BOUND -eb=$EASTERN_BOUND -nb=$NORTHERN_BOUND -sb=$SOUTHERN_BOUND `
---netcdf True --Weather_Data/HGEFS/NETCDF --ncfname hgefs_mean_gph_500.nc ` 
+--netcdf True --ncdir Weather_Data/HGEFS/NETCDF --ncfname hgefs_mean_gph_500.nc ` 
 --proxy https://proxy-server-address:proxy-server-port
 ```

@@ -70,7 +70,7 @@ def fetch_gdps_data():
     
     -cdir = Custom Directory (Default=None).
     
-    If the user wishes to build their own directory to hold the data files set -cd directory_branch_path.
+    If the user wishes to build their own directory to hold the data files set -cdir directory_branch_path.
 
     -ct = Convert Temperature (Default=True).
     
@@ -1077,7 +1077,7 @@ def fetch_gdps_data():
 @_click.option(
     '--level', 
     '-l', 
-    default=500,
+    default='500',
     type=str,  
     help=("""The pressure level in hPa or height above ground in meters.
                     
@@ -1091,7 +1091,7 @@ def fetch_gdps_data():
 @_click.option(
     '--layer', 
     '-la', 
-    default=[1000, 500],
+    default=['1000', '500'],
     type=str,  
     multiple=True,
     help=("""Default=[1000, 500]. 

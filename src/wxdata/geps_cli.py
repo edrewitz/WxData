@@ -582,7 +582,7 @@ def fetch_geps_data():
 @_click.option(
     '--level', 
     '-l', 
-    default=500,
+    default='500',
     type=str,  
     help=("""The pressure level in hPa or height above ground in meters.
                     

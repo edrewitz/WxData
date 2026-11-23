@@ -116,7 +116,7 @@ def gfs0p25():
     
     -cdir = Custom Directory (Default=None).
     
-    If the user wishes to build their own directory to hold the data files set -cd directory_branch_path.
+    If the user wishes to build their own directory to hold the data files set -cdir directory_branch_path.
     The default path is f:GFS0P25/ATMOSPHERIC. 
     
     -cr = Clear Recycle Bin (Default=False).
@@ -638,18 +638,18 @@ def gfs0p25():
 @_click.option(
     '--levels', 
     '-l', 
-    default=[1000,
-            925,
-            850,
-            700,
-            500,
-            400,
-            300,
-            250,
-            200,
-            100,
-            50,
-            10],
+    default=['1000',
+            '925',
+            '850',
+            '700',
+            '500',
+            '400',
+            '300',
+            '250',
+            '200',
+            '100',
+            '50',
+            '10'],
     multiple=True, 
     type=str,  
     help=("""Levels for pressure, height, PVU etc. 
@@ -1228,7 +1228,7 @@ def gfs0p50():
     
     -cdir = Custom Directory (Default=None).
     
-    If the user wishes to build their own directory to hold the data files set -cd directory_branch_path.
+    If the user wishes to build their own directory to hold the data files set -cdir directory_branch_path.
     The default path is f:GFS0P50/ATMOSPHERIC. 
     
     -cr = Clear Recycle Bin (Default=False).

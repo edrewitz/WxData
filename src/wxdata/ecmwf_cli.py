@@ -154,7 +154,7 @@ def ifs():
     
     -cdir = Custom Directory (Default=None).
     
-    If the user wishes to build their own directory to hold the data files set -cd directory_branch_path.
+    If the user wishes to build their own directory to hold the data files set -cdir directory_branch_path.
     
     -cr = Clear Recycle Bin (Default=False).
     
@@ -521,19 +521,19 @@ def ifs():
 @_click.option(
     '--levels', 
     '-l', 
-    default=[1000, 
-            925, 
-            850, 
-            700, 
-            600, 
-            500, 
-            400, 
-            300, 
-            250, 
-            200, 
-            150, 
-            100, 
-            50],
+    default=['1000', 
+            '925', 
+            '850', 
+            '700', 
+            '600', 
+            '500', 
+            '400', 
+            '300', 
+            '250', 
+            '200', 
+            '150', 
+            '100', 
+            '50'],
     multiple=True, 
     type=str,  
     help=("""Levels for pressure, height, PVU etc. 
@@ -1005,7 +1005,7 @@ def aifs():
     
     -cdir = Custom Directory (Default=None).
     
-    If the user wishes to build their own directory to hold the data files set -cd directory_branch_path.
+    If the user wishes to build their own directory to hold the data files set -cdir directory_branch_path.
     
     -cr = Clear Recycle Bin (Default=False).
     

@@ -379,7 +379,6 @@ def woof_nam():
 @_click.option('--variables', 
               '-v', 
               default=['geopotential_height',
-                        'absolute_vorticity',
                         'temperature',
                         'relative_humidity',
                         'vertical_velocity_pressure',
@@ -393,7 +392,6 @@ def woof_nam():
                   """Variables to pass into the function. 
                   
                   Default=['geopotential height',
-                        'absolute vorticity',
                         'temperature',
                         'relative humidity',
                         'vertical velocity (pressure)',

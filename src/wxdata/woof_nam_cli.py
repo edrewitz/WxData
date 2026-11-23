@@ -378,14 +378,14 @@ def woof_nam():
         
 @_click.option('--variables', 
               '-v', 
-              default=['geopotential_height'
-                        'absolute_vorticity'
-                        'temperature'
-                        'relative_humidity'
-                        'vertical_velocity_pressure'
-                        'vertical_velocity_height'
-                        'u-component_of_wind'
-                        'v-component_of_wind'
+              default=['geopotential_height',
+                        'absolute_vorticity',
+                        'temperature',
+                        'relative_humidity',
+                        'vertical_velocity_pressure',
+                        'vertical_velocity_height',
+                        'u-component_of_wind',
+                        'v-component_of_wind',
                         'turbulent_kinetic_energy'],
               multiple=True, 
               type=str,

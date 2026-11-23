@@ -271,7 +271,7 @@ If you are using a proxy server you can define it by using `--proxy https://prox
 Linux Shell:
 ```shell
 wxdata-woof-nam fetch latest -v geopotential_height -l 500 \
---netcdf True --ncdir Weather_Data/WOOF-NAM/NETCDF --woof_nam_gph_500.nc \ 
+--netcdf True --ncdir Weather_Data/WOOF-NAM/NETCDF --ncfname woof_nam_gph_500.nc \ 
 --proxy https://proxy-server-address:proxy-server-port
 ```
         

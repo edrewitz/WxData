@@ -85,27 +85,27 @@ Optional Arguments:
 
     ***Level Types***
 
-    ```python
-    'mean sea level'
-    'hybrid'
-    'entire atmosphere single layer'
-    'surface'
-    'boundary layer'
-    'pressure'
-    'height above ground'
-    'depth below land layer'
-    'height below ground'
-    'lowest level wetbulb zero'
-    'isobaric layer'
-    'cloud base'
-    'height above ground layer (helicity)'
-    'height above ground layer (shear)'
-    'tropopause'
-    'max wind'
-    'isothermal'
-    'pressure above ground'
-    'sigma layer'
-    ```
+```python
+'mean sea level'
+'hybrid'
+'entire atmosphere single layer'
+'surface'
+'boundary layer'
+'pressure'
+'height above ground'
+'depth below land layer'
+'height below ground'
+'lowest level wetbulb zero'
+'isobaric layer'
+'cloud base'
+'height above ground layer (helicity)'
+'height above ground layer (shear)'
+'tropopause'
+'max wind'
+'isothermal'
+'pressure above ground'
+'sigma layer'
+```
     
 12) variables (String List) - The list of variables at a given level_type for the query.
 

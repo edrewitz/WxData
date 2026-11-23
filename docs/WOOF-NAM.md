@@ -83,7 +83,7 @@ Optional Arguments:
 
 11) level_type (String) - The type of level surface for the set of variables.
 
-    ***Level Types***
+***Level Types***
 
 ```python
 'mean sea level'
@@ -202,7 +202,7 @@ Optional Arguments:
                                                     100,
                                                     50]
                                                     
-    ***Available Levels***
+***Available Levels***
 
 ```python
 level_type="pressure":

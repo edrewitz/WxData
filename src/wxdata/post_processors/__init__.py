@@ -9,3 +9,4 @@ import wxdata.post_processors.cfs_post_processing as cfs_post_processing
 import wxdata.post_processors.cmc_post_processing as cmc_post_processing
 
 from wxdata.post_processors.rtma_post_processing import process_rtma_data
+from wxdata.post_processors.woof_nam_post_processing import woof_nam_post_processing

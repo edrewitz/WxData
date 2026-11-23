@@ -102,7 +102,7 @@ def get_cansips_data():
     
     -cdir = Custom Directory (Default=none).
     
-    If the user wishes to build their own directory to hold the data files set -cd directory_branch_path. 
+    If the user wishes to build their own directory to hold the data files set -cdir directory_branch_path. 
     
     -cr = Clear Recycle Bin (Default=False).
     
@@ -386,8 +386,8 @@ def get_cansips_data():
 @_click.option(
     '--level', 
     '-l', 
-    default=500,
-    type=int,  
+    default='500',
+    type=str,  
     help=("""The pressure level in hPa or height above ground in meters.
                     
           Default=500 hPa

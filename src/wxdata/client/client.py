@@ -585,7 +585,9 @@ def byte_range_request(grib_url,
                       proxies=None,
                       chunk_size=1024,
                       notifications='on',
-                      clear_recycle_bin=False):
+                      clear_recycle_bin=False,
+                      source='noaa',
+                      model='gfs0p25'):
     
     """
     This client downloads GRIB data for a specific variable that is defined by the range in bytes in that GRIB file. 
@@ -649,6 +651,11 @@ def byte_range_request(grib_url,
     
     4) clear_recycle_bin (Boolean) - Default=False. When set to True, the contents in your recycle/trash bin 
     will be deleted with each run of the program you are calling WxData. This setting is to help preserve memory on the machine. 
+    
+    5) source (String) - Default='noaa'. When downloading from recast_systems we must use User-Agent headers to avoid 403 response codes.
+    
+    6) model (String) - Default='gfs0p25'. The weather forecast model. This is to distinguish from the WOOF-NAM to handle the
+        WOOF-NAM index file. 
         
     Returns
     -------
@@ -669,39 +676,80 @@ def byte_range_request(grib_url,
 
     variables = _key_list(variables)
     
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/141.0 Safari/537.36"
+        ),
+        "Referer": "https://woof-nam.recastsystems.com/"
+    }
+    
     try:
-
-        if proxies == None:
-            try:
-                idx_text = _requests.get(idx_url).text
-            except Exception as e:
-                for i in range(0, 10, 1):
-                    print(f"Client lost connection to server - Waiting 30 seconds and trying again.")
-                    _time.sleep(30)
-                    try:
-                        idx_text = _requests.get(idx_url).text
-                        break
-                    except Exception as e:
-                        i = i
-                        if i >= 9:
-                            print(f"Client cannot establish connection to server - System Exit.")
-                            _sys.exit(1)
-                        
+        if source == 'noaa':
+            if proxies == None:
+                try:
+                    idx_text = _requests.get(idx_url).text
+                except Exception as e:
+                    for i in range(0, 10, 1):
+                        print(f"Client lost connection to server - Waiting 30 seconds and trying again.")
+                        _time.sleep(30)
+                        try:
+                            idx_text = _requests.get(idx_url).text
+                            break
+                        except Exception as e:
+                            i = i
+                            if i >= 9:
+                                print(f"Client cannot establish connection to server - System Exit.")
+                                _sys.exit(1)
+                            
+            else:
+                try:
+                    idx_text = _requests.get(idx_url, proxies=proxies).text
+                except Exception as e:
+                    for i in range(0, 10, 1):
+                        print(f"Client lost connection to server - Waiting 30 seconds and trying again.")
+                        _time.sleep(30)
+                        try:
+                            idx_text = _requests.get(idx_url, proxies=proxies).text
+                            break
+                        except Exception as e:
+                            i = i
+                            if i >= 9:
+                                print(f"Client cannot establish connection to server - System Exit.")
+                                _sys.exit(1)
         else:
-            try:
-                idx_text = _requests.get(idx_url, proxies=proxies).text
-            except Exception as e:
-                for i in range(0, 10, 1):
-                    print(f"Client lost connection to server - Waiting 30 seconds and trying again.")
-                    _time.sleep(30)
-                    try:
-                        idx_text = _requests.get(idx_url, proxies=proxies).text
-                        break
-                    except Exception as e:
-                        i = i
-                        if i >= 9:
-                            print(f"Client cannot establish connection to server - System Exit.")
-                            _sys.exit(1)
+            if proxies == None:
+                try:
+                    idx_text = _requests.get(idx_url, headers=headers).text
+                except Exception as e:
+                    for i in range(0, 10, 1):
+                        print(f"Client lost connection to server - Waiting 30 seconds and trying again.")
+                        _time.sleep(30)
+                        try:
+                            idx_text = _requests.get(idx_url, headers=headers).text
+                            break
+                        except Exception as e:
+                            i = i
+                            if i >= 9:
+                                print(f"Client cannot establish connection to server - System Exit.")
+                                _sys.exit(1)
+                            
+            else:
+                try:
+                    idx_text = _requests.get(idx_url, proxies=proxies, headers=headers).text
+                except Exception as e:
+                    for i in range(0, 10, 1):
+                        print(f"Client lost connection to server - Waiting 30 seconds and trying again.")
+                        _time.sleep(30)
+                        try:
+                            idx_text = _requests.get(idx_url, proxies=proxies, headers=headers).text
+                            break
+                        except Exception as e:
+                            i = i
+                            if i >= 9:
+                                print(f"Client cannot establish connection to server - System Exit.")
+                                _sys.exit(1)
             
         records = []
         for line in idx_text.strip().splitlines():
@@ -724,7 +772,8 @@ def byte_range_request(grib_url,
             })
             
         req_levels, levels = _get_level_expression(levels,
-                                                    level_type)
+                                                    level_type,
+                                                    model=model)
         
         if levels is not None:
             reqs = list(_itertools.product(variables, req_levels))
@@ -762,7 +811,8 @@ def byte_range_request(grib_url,
                                 grib_url,
                                 start,
                                 end,
-                                proxies)
+                                proxies,
+                                source=source)
         
         if notifications == 'on':
             print(f"{filename} saved to {path}")
@@ -771,38 +821,70 @@ def byte_range_request(grib_url,
         for i in range(0, 10, 1):
             _time.sleep(30)
             try:
-                
-                if proxies == None:
-                    try:
-                        idx_text = _requests.get(idx_url).text
-                    except Exception as e:
-                        for i in range(0, 10, 1):
-                            print(f"Client lost connection to server - Waiting 30 seconds and trying again.")
-                            _time.sleep(30)
-                            try:
-                                idx_text = _requests.get(idx_url).text
-                                break
-                            except Exception as e:
-                                i = i
-                                if i >= 9:
-                                    print(f"Client cannot establish connection to server - System Exit.")
-                                    _sys.exit(1)
-                                
+                if source == 'noaa':
+                    if proxies == None:
+                        try:
+                            idx_text = _requests.get(idx_url).text
+                        except Exception as e:
+                            for i in range(0, 10, 1):
+                                print(f"Client lost connection to server - Waiting 30 seconds and trying again.")
+                                _time.sleep(30)
+                                try:
+                                    idx_text = _requests.get(idx_url).text
+                                    break
+                                except Exception as e:
+                                    i = i
+                                    if i >= 9:
+                                        print(f"Client cannot establish connection to server - System Exit.")
+                                        _sys.exit(1)
+                                    
+                    else:
+                        try:
+                            idx_text = _requests.get(idx_url, proxies=proxies).text
+                        except Exception as e:
+                            for i in range(0, 10, 1):
+                                print(f"Client lost connection to server - Waiting 30 seconds and trying again.")
+                                _time.sleep(30)
+                                try:
+                                    idx_text = _requests.get(idx_url, proxies=proxies).text
+                                    break
+                                except Exception as e:
+                                    i = i
+                                    if i >= 9:
+                                        print(f"Client cannot establish connection to server - System Exit.")
+                                        _sys.exit(1)
                 else:
-                    try:
-                        idx_text = _requests.get(idx_url, proxies=proxies).text
-                    except Exception as e:
-                        for i in range(0, 10, 1):
-                            print(f"Client lost connection to server - Waiting 30 seconds and trying again.")
-                            _time.sleep(30)
-                            try:
-                                idx_text = _requests.get(idx_url, proxies=proxies).text
-                                break
-                            except Exception as e:
-                                i = i
-                                if i >= 9:
-                                    print(f"Client cannot establish connection to server - System Exit.")
-                                    _sys.exit(1)
+                    if proxies == None:
+                        try:
+                            idx_text = _requests.get(idx_url, headers=headers).text
+                        except Exception as e:
+                            for i in range(0, 10, 1):
+                                print(f"Client lost connection to server - Waiting 30 seconds and trying again.")
+                                _time.sleep(30)
+                                try:
+                                    idx_text = _requests.get(idx_url, headers=headers).text
+                                    break
+                                except Exception as e:
+                                    i = i
+                                    if i >= 9:
+                                        print(f"Client cannot establish connection to server - System Exit.")
+                                        _sys.exit(1)
+                                    
+                    else:
+                        try:
+                            idx_text = _requests.get(idx_url, proxies=proxies, headers=headers).text
+                        except Exception as e:
+                            for i in range(0, 10, 1):
+                                print(f"Client lost connection to server - Waiting 30 seconds and trying again.")
+                                _time.sleep(30)
+                                try:
+                                    idx_text = _requests.get(idx_url, proxies=proxies, headers=headers).text
+                                    break
+                                except Exception as e:
+                                    i = i
+                                    if i >= 9:
+                                        print(f"Client cannot establish connection to server - System Exit.")
+                                        _sys.exit(1)
                     
                 records = []
                 for line in idx_text.strip().splitlines():
@@ -863,7 +945,8 @@ def byte_range_request(grib_url,
                                         grib_url,
                                         start,
                                         end,
-                                        proxies)
+                                        proxies,
+                                        source=source)
                 
                 if notifications == 'on':
                     print(f"{filename} saved to {path}")
@@ -894,7 +977,8 @@ def byte_range_request(grib_url,
                             proxies=proxies,
                             chunk_size=chunk_size,
                             notifications=notifications,
-                            clear_recycle_bin=clear_recycle_bin)
+                            clear_recycle_bin=clear_recycle_bin,
+                            source=source)
                 break
             except Exception as e:
                 i = i

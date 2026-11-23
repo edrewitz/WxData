@@ -129,7 +129,7 @@ def gefs0p50():
     
     -cdir = Custom Directory (Default=None).
     
-    If the user wishes to build their own directory to hold the data files set -cd directory_branch_path.
+    If the user wishes to build their own directory to hold the data files set -cdir directory_branch_path.
     The default path is f:GEFS0P50/{CATEGORY}. 
     
     -cr = Clear Recycle Bin (Default=False).
@@ -648,7 +648,7 @@ def gefs0p50():
             50,
             10],
     multiple=True, 
-    type=int,  
+    type=str,  
     help=("""Levels for pressure, height, PVU etc. 
           
           Pressure (hPa)
@@ -1034,7 +1034,7 @@ def gefs0p50_fetch(final_forecast_hour,
             50,
             10],
     multiple=True, 
-    type=int,  
+    type=str,  
     help=("""Levels for pressure, height, PVU etc. 
           
           Pressure (hPa)
@@ -1276,7 +1276,7 @@ def gefs0p25():
     
     -cdir = Custom Directory (Default=None).
     
-    If the user wishes to build their own directory to hold the data files set -cd directory_branch_path.
+    If the user wishes to build their own directory to hold the data files set -cdir directory_branch_path.
     The default path is f:GEFS0P25/{CATEGORY}. 
     
     -cr = Clear Recycle Bin (Default=False).
@@ -1622,7 +1622,7 @@ def gefs0p25():
     '-l', 
     default=[2],
     multiple=True, 
-    type=int,  
+    type=str,  
     help=("""Levels for pressure, height, PVU etc. 
           
           Height Above Ground [m]
@@ -1947,9 +1947,9 @@ def gefs0p25_fetch(members,
 @_click.option(
     '--levels', 
     '-l', 
-    default=[2],
+    default=['2'],
     multiple=True, 
-    type=int,  
+    type=str,  
     help=("""Levels for pressure, height, PVU etc. 
           
           Height Above Ground [m]

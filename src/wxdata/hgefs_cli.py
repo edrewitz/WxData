@@ -61,11 +61,11 @@ def hgefs():
         
     -f = Final Forecast Hour (Default=240).
      
-    The last hour the user wishes to download in the dataset. GEFS0P25 has 240 forecast hours.
+    The last hour the user wishes to download in the dataset. HGEFS has 240 forecast hours.
     
     -cdir = Custom Directory (Default=None).
     
-    If the user wishes to build their own directory to hold the data files set -cd directory_branch_path.
+    If the user wishes to build their own directory to hold the data files set -cdir directory_branch_path.
     The default path is f:HGEFS/{CATEGORY}. 
     
     -cr = Clear Recycle Bin (Default=False).
@@ -178,13 +178,13 @@ def hgefs():
     Linux Shell:
         ```wxdata-hgefs fetch latest -v geopotential_height -l 500 \
             -wb -130 -eb -65 -nb 50 -sb 20 \
-            --netcdf True --Weather_Data/HGEFS/NETCDF --ncfname hgefs_mean_gph_500.nc \ 
+            --netcdf True --ncdir Weather_Data/HGEFS/NETCDF --ncfname hgefs_mean_gph_500.nc \ 
             --proxy https://proxy-server-address:proxy-server-port```
             
     Windows Powershell:
         ```wxdata-hgefs fetch latest -v geopotential_height -l 500 `
             -wb -130 -eb -65 -nb 50 -sb 20 `
-            --netcdf True --Weather_Data/HGEFS/NETCDF --ncfname hgefs_mean_gph_500.nc ` 
+            --netcdf True --ncdir Weather_Data/HGEFS/NETCDF --ncfname hgefs_mean_gph_500.nc ` 
             --proxy https://proxy-server-address:proxy-server-port```
     
     """
@@ -325,20 +325,20 @@ def hgefs():
 @_click.option(
     '--levels', 
     '-l', 
-    default=[1000,
-            925,
-            850,
-            700,
-            600,
-            500,
-            400,
-            300,
-            250,
-            150,
-            100,
-            50],
+    default=['1000',
+            '925',
+            '850',
+            '700',
+            '600',
+            '500',
+            '400',
+            '300',
+            '250',
+            '150',
+            '100',
+            '50'],
     multiple=True, 
-    type=int,  
+    type=str,  
     help=("""Levels for pressure in hPa. 
           
           Default=[1000,

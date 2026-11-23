@@ -4,7 +4,8 @@ This file hosts the functions that handle the level coordinates for byte-range r
 (C) Eric J. Drewitz 2025-2026
 """
 
-def get_level_suffix(level_type):
+def get_level_suffix(level_type,
+                     model='gfs0p25'):
     
     """
     This function returns the level type suffix.
@@ -12,6 +13,10 @@ def get_level_suffix(level_type):
     Required Arguments:
     
     1) level_type (String) - The type of level the coordinates are on.
+    
+    Optional Arguments:
+    
+    1) model (String) - Default='gfs0p25'. The weather forecast model.
     
     Level Types
     -----------
@@ -59,50 +64,99 @@ def get_level_suffix(level_type):
     The level type suffix.    
     """
     
-    level_types = {
+    if model.lower() != 'woof-nam':
+    
+        level_types = {
+            
+            'hybrid':'hybrid level',
+            'entire atmosphere':'entire atmosphere',
+            'surface':'surface',
+            'boundary layer':'planetary boundary layer',
+            'pressure':'mb',
+            'mean sea level':'mean sea level',
+            'height above ground':'m above ground',
+            'height below ground':'m below ground',
+            'height above sea level':'m above mean sea level',
+            'entire atmosphere single layer':'entire atmosphere (considered as a single layer)',
+            'low cloud layer':'low cloud layer',
+            'middle cloud layer':'middle cloud layer',
+            'high cloud layer':'high cloud layer',
+            'cloud ceiling':'cloud ceiling',
+            'tropopause':'tropopause',
+            'max wind':'max wind',
+            'isothermal':'0C isotherm',
+            'highest tropospheric freezing level':'highest tropospheric freezing level',
+            'sigma layer':'sigma layer',
+            'sigma level':'sigma level',
+            'potential vorticity surface':'(Km^2/kg/s) surface',
+            'reserved':'reserved',
+            'top of atmosphere':'top of atmosphere',
+            'high cloud top level':'high cloud top level',
+            'middle cloud top level':'middle cloud top level',
+            'low cloud top level':'low cloud top level',
+            'high cloud bottom level':'high cloud bottom level',
+            'middle cloud bottom level':'middle cloud bottom level',
+            'low cloud bottom level':'low cloud bottom level',
+            'convective cloud layer':'convective cloud layer',
+            'boundary layer cloud layer':'boundary layer cloud layer',
+            'pressure above ground':'mb above ground',
+            'isentropic level':'K isentropic level',
+            'convective cloud bottom level':'convective cloud bottom level',
+            'convective cloud top level':'convective cloud top level'
+        }
         
-        'hybrid':'hybrid level',
-        'entire atmosphere':'entire atmosphere',
-        'surface':'surface',
-        'boundary layer':'planetary boundary layer',
-        'pressure':'mb',
-        'mean sea level':'mean sea level',
-        'height above ground':'m above ground',
-        'height below ground':'m below ground',
-        'height above sea level':'m above mean sea level',
-        'entire atmosphere single layer':'entire atmosphere (considered as a single layer)',
-        'low cloud layer':'low cloud layer',
-        'middle cloud layer':'middle cloud layer',
-        'high cloud layer':'high cloud layer',
-        'cloud ceiling':'cloud ceiling',
-        'tropopause':'tropopause',
-        'max wind':'max wind',
-        'isothermal':'0C isotherm',
-        'highest tropospheric freezing level':'highest tropospheric freezing level',
-        'sigma layer':'sigma layer',
-        'sigma level':'sigma level',
-        'potential vorticity surface':'(Km^2/kg/s) surface',
-        'reserved':'reserved',
-        'top of atmosphere':'top of atmosphere',
-        'high cloud top level':'high cloud top level',
-        'middle cloud top level':'middle cloud top level',
-        'low cloud top level':'low cloud top level',
-        'high cloud bottom level':'high cloud bottom level',
-        'middle cloud bottom level':'middle cloud bottom level',
-        'low cloud bottom level':'low cloud bottom level',
-        'convective cloud layer':'convective cloud layer',
-        'boundary layer cloud layer':'boundary layer cloud layer',
-        'pressure above ground':'mb above ground',
-        'isentropic level':'K isentropic level',
-        'convective cloud bottom level':'convective cloud bottom level',
-        'convective cloud top level':'convective cloud top level'
-    }
+    else:
+        level_types = {
+            
+            'hybrid':'hybrid level',
+            'entire atmosphere':'entire atmosphere',
+            'surface':'surface',
+            'boundary layer':'planetary boundary layer',
+            'pressure':'mb',
+            'mean sea level':'mean sea level',
+            'height above ground':'m above ground',
+            'depth below land layer':'m below ground',
+            'height below ground':'underground',
+            'height above sea level':'m above mean sea level',
+            'entire atmosphere single layer':'entire atmosphere (considered as a single layer)',
+            'low cloud layer':'low cloud layer',
+            'middle cloud layer':'middle cloud layer',
+            'high cloud layer':'high cloud layer',
+            'cloud ceiling':'cloud ceiling',
+            'tropopause':'tropopause',
+            'max wind':'max wind',
+            'isothermal':'0C isotherm',
+            'highest tropospheric freezing level':'highest tropospheric freezing level',
+            'sigma layer':'sigma layer',
+            'sigma level':'sigma level',
+            'potential vorticity surface':'(Km^2/kg/s) surface',
+            'reserved':'reserved',
+            'top of atmosphere':'top of atmosphere',
+            'high cloud top level':'high cloud top level',
+            'middle cloud top level':'middle cloud top level',
+            'low cloud top level':'low cloud top level',
+            'high cloud bottom level':'high cloud bottom level',
+            'middle cloud bottom level':'middle cloud bottom level',
+            'low cloud bottom level':'low cloud bottom level',
+            'convective cloud layer':'convective cloud layer',
+            'boundary layer cloud layer':'boundary layer cloud layer',
+            'pressure above ground':'mb above ground',
+            'isentropic level':'K isentropic level',
+            'convective cloud bottom level':'convective cloud bottom level',
+            'convective cloud top level':'convective cloud top level',
+            'lowest level wetbulb zero':'lowest level of the wet bulb zero',
+            'isobaric layer':'500-1000 mb',
+            'cloud base':'cloud base',
+            'height above ground layer (helicity)':'3000-0 m above',
+            'height above ground layer (shear)':'0-6000 m above ground'
+        }
     
     return level_types[level_type]
 
 
 def get_level_expression(levels,
-                         level_type):
+                         level_type,
+                         model='gfs0p25'):
     
     """
     This function returns the full expression for the level.
@@ -113,6 +167,10 @@ def get_level_expression(levels,
         (i.e. [700, 500, 250] if level type is 'pressure' or [2, 10] if level type is 'height above ground')
     
     2) level_type (String) - The type of level the coordinates are on.
+    
+    Optional Arguments:
+    
+    1) model (String) - Default='gfs0p25'. The weather forecast model.
     
     Level Types
     -----------
@@ -164,8 +222,10 @@ def get_level_expression(levels,
     The full expression for the level to make the bytes-range request.
     """
     level_type = level_type.lower()
+    model = model.lower()
 
-    suffix = get_level_suffix(level_type)    
+    suffix = get_level_suffix(level_type,
+                              model=model)    
     if levels is not None:
         expression = []
         for level in levels:

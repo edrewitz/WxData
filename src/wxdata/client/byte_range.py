@@ -14,7 +14,8 @@ from tqdm.auto import tqdm
 def fetch_range(url, 
                 start, 
                 end,
-                proxies):
+                proxies,
+                source='noaa'):
     
     """
     This function downloads the data corresponding to the bytes-range for each variable
@@ -34,15 +35,27 @@ def fetch_range(url,
                                'https':'http://your-proxy-address:port'
                                }
                                
-    Optional Arguments: None
+    Optional Arguments: 
+    
+    1) source (String) - Default='noaa'. When downloading from recast_systems we must use User-Agent headers to avoid 403 response codes.
     
     Returns
     -------
     
     The data to be written to a GRIB file.
     """
-    
-    headers = {"Range": f"bytes={start}-{end}" if end else f"bytes={start}-"}
+    if source == 'noaa':
+        headers = {"Range": f"bytes={start}-{end}" if end else f"bytes={start}-"}
+    else:
+        headers = {
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/141.0 Safari/537.36"
+            ),
+            "Referer": "https://woof-nam.recastsystems.com/",
+            "Range": f"bytes={start}-{end}" if end else f"bytes={start}-"
+        }
 
     if proxies == None:
         try:
@@ -147,7 +160,8 @@ def fetch_data(ranges,
                 url, 
                 start, 
                 end,
-                proxies):
+                proxies,
+                source='noaa'):
     
     """
     This function downloads the data corresponding to the bytes-range for each variable
@@ -167,7 +181,9 @@ def fetch_data(ranges,
                                'https':'http://your-proxy-address:port'
                                }
                                
-    Optional Arguments: None
+    Optional Arguments: 
+    
+    1) source (String) - Default='noaa'. When downloading from recast_systems we must use User-Agent headers to avoid 403 response codes.
     
     Returns
     -------
@@ -182,7 +198,8 @@ def fetch_data(ranges,
                 url,
                 start,
                 end,
-                proxies
+                proxies,
+                source=source
             )
         except Exception as e:
             for i in range(0, 10, 1):
@@ -194,7 +211,8 @@ def fetch_data(ranges,
                         url,
                         start,
                         end,
-                        proxies
+                        proxies,
+                        source=source
                     ) 
                     break
                 except Exception as e:
@@ -214,7 +232,8 @@ def download_grib_data_by_byte_range(ranges,
                              grib_url,
                              start,
                              end,
-                             proxies):
+                             proxies,
+                             source):
     """
     results: dict[(var, level)] = bytes
     Writes all GRIB messages to a single file with polished progress bars.
@@ -245,7 +264,9 @@ def download_grib_data_by_byte_range(ranges,
                                'https':'http://your-proxy-address:port'
                                }
     
-    Optional Arguments: None
+    Optional Arguments: 
+    
+    1) source (String) - Default='noaa'. When downloading from recast_systems we must use User-Agent headers to avoid 403 response codes.
     
     Returns
     -------
@@ -257,7 +278,8 @@ def download_grib_data_by_byte_range(ranges,
                             grib_url, 
                             start, 
                             end,
-                            proxies)
+                            proxies,
+                            source=source)
 
     ordered = sorted(results.items(), key=lambda x: (x[0][0], x[0][1]))
 

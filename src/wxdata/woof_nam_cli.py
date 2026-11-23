@@ -75,7 +75,6 @@ def woof_nam():
     retry downloading the data.   
     
     -v = Variables(Default=['geopotential height',
-                        'absolute vorticity',
                         'temperature',
                         'relative humidity',
                         'vertical velocity (pressure)',

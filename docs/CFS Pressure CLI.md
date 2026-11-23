@@ -38,7 +38,7 @@ aws - Amazon Web Services
     
 -cdir = Custom Directory (Default=None).
 
-If the user wishes to build their own directory to hold the data files set -cd directory_branch_path.
+If the user wishes to build their own directory to hold the data files set -cdir directory_branch_path.
 
 -cr = Clear Recycle Bin (Default=False).
 

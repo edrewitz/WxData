@@ -17,7 +17,6 @@ def woof_nam(final_forecast_hour=84,
              notifications='off',
              level_type='pressure',
              variables=['geopotential height',
-                        'absolute vorticity',
                         'temperature',
                         'relative humidity',
                         'vertical velocity (pressure)',
@@ -111,7 +110,6 @@ Optional Arguments:
 
   ```python
   Default=['geopotential height',
-          'absolute vorticity',
           'temperature',
           'relative humidity',
           'vertical velocity (pressure)',

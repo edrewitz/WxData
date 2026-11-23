@@ -511,6 +511,8 @@ def get_woof_nam(final_forecast_hour,
                  ncdir,
                  ncfname):
     
+    """Downloads Latest WOOF-NAM Data"""
+    
     try:
         if custom_directory.lower() == "none":
             custom_directory = f"WOOF-NAM"

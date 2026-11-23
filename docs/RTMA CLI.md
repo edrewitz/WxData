@@ -35,7 +35,7 @@ This ensures if any old files are moved to the recycle bin are deleted if they a
 
 -cdir = Custom Directory (Default=None).
 
-If the user wishes to build their own directory to hold the data files set -cd directory_branch_path.
+If the user wishes to build their own directory to hold the data files set -cdir directory_branch_path.
 The default path is f:RTMA/ANALYSIS. 
 
 -ct = Convert Temperature (Default=True).

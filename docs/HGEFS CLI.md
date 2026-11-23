@@ -22,7 +22,7 @@ The last hour the user wishes to download in the dataset. GEFS0P25 has 240 forec
 
 -cdir = Custom Directory (Default=None).
 
-If the user wishes to build their own directory to hold the data files set -cd directory_branch_path.
+If the user wishes to build their own directory to hold the data files set -cdir directory_branch_path.
 The default path is f:HGEFS/{CATEGORY}. 
 
 -cr = Clear Recycle Bin (Default=False).

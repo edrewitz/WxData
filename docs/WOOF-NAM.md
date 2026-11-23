@@ -204,30 +204,30 @@ Optional Arguments:
                                                     
     ***Available Levels***
 
-    ```python
-    level_type="pressure":
-        (hPa) [1000, 975, 925, 900, 875, 850, 825, 800, 775, 750, 725, 700, 675, 650, 625, 600,
-        575, 550, 525, 500, 475, 450, 425, 400, 375, 350, 325, 300, 375, 250, 225, 200,
-        175, 150, 125, 100, 75, 50, 20, 10, 5]
-        
-    level_type="height above ground":
-        (m) [2, 10, 80, 1000, 4000]
-        
-    level_type="depth below land layer":
-        (m) [0-0.1, 0.1-0.4, 0.4-1, 1-2, 0-1, 0-2]
-        
-    level_type="height below ground":
-        (m) [3]
-        
-    level_type="pressure above ground":
-        (hPa) [30-0, 60-30, 90-60, 120-90, 150-120, 180-150, 180-0]
-        
-    level_type="sigma layer":
-        (sigma) [0.33-1]
-        
-    level_type="hybrid":
-        (hybrid) [1]
-    ```
+```python
+level_type="pressure":
+    (hPa) [1000, 975, 925, 900, 875, 850, 825, 800, 775, 750, 725, 700, 675, 650, 625, 600,
+    575, 550, 525, 500, 475, 450, 425, 400, 375, 350, 325, 300, 375, 250, 225, 200,
+    175, 150, 125, 100, 75, 50, 20, 10, 5]
+    
+level_type="height above ground":
+    (m) [2, 10, 80, 1000, 4000]
+    
+level_type="depth below land layer":
+    (m) [0-0.1, 0.1-0.4, 0.4-1, 1-2, 0-1, 0-2]
+    
+level_type="height below ground":
+    (m) [3]
+    
+level_type="pressure above ground":
+    (hPa) [30-0, 60-30, 90-60, 120-90, 150-120, 180-150, 180-0]
+    
+level_type="sigma layer":
+    (sigma) [0.33-1]
+    
+level_type="hybrid":
+    (hybrid) [1]
+```
     
 13) to_netcdf (Boolean) - Default=False. When set to True, the xarray.array in GRIB2 format and will be written to a netCDF (.nc) file.
 

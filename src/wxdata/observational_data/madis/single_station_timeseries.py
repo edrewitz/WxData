@@ -551,5 +551,3 @@ def madis_single_station_timeseries(station_id,
         pass
 
     
-
-

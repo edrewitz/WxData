@@ -6,6 +6,42 @@ This file has all the functions to construct the Pandas.DataFrame of the MADIS d
 import pandas as pd
 import numpy as np
 
+def convert_temperature(df,
+                        convert_to):
+    
+    """
+    Converts from Kelvin to Celsius or Fahrenheit.
+    
+    Required Arguments:
+    
+    1) df (Pandas.DataFrame) - The Pandas.DataFrame
+    
+    2) convert_to (String) - The units to convert to (celsius or fahrenheit).
+    
+    **Returns**
+    
+    All temperature related fields are converted to the proper units    
+    """
+    
+    keyword_1 = "temperature"
+    keyword_2 = "dew point"
+    params = list(df.columns)
+    for param in params:
+        if keyword_1 in param or keyword_2 in param:
+            if convert_to == 'celsius':
+                try:
+                    df[param] = df[param] - 273.15
+                except Exception as e:
+                    pass
+            else:
+                try:
+                    df[param] = df[param] - 273.15
+                    df[param] = (df[param] * (9/5)) + 32
+                except Exception as e:
+                    pass
+                
+    return df
+    
 def clean_data(df):
     
     """
@@ -304,29 +340,17 @@ def clean_data(df):
 
     df = df.dropna(axis=1, how="all")
 
-    if (
-        "observation date" in df.columns
-        and "observation time" in df.columns
-    ):
-
-        df["observation time"] = pd.to_datetime(
-            df["observation date"].astype(str)
-            + " "
-            + df["observation time"].astype(str),
-            format="%m/%d/%Y %H:%M",
-            errors="coerce"
-        )
-
-        df = df.drop(columns=["observation date"])
-
-    else:
-
-        raise KeyError(
-            "Expected columns "
-            "'observation date' and "
-            "'observation time' were not found.\n\n"
-            f"Available columns:\n{list(df.columns)}"
-        )
+    df = df.drop(
+        columns=[
+            col
+            for col in df.columns
+            if (
+                col.endswith(" qc flag")
+                and col.removesuffix(" qc flag") not in df.columns
+            )
+        ],
+        errors="ignore"
+    )
 
     ordered_cols = [
         col
@@ -341,5 +365,28 @@ def clean_data(df):
     ]
 
     df = df[ordered_cols + extra_cols]
+    
+    for col in df.columns:
 
+        # Skip date/time columns
+        if "date" in col.lower() or "time" in col.lower():
+            continue
+
+        if df[col].dtype == object:
+
+            converted = pd.to_numeric(
+                df[col],
+                errors="coerce"
+            )
+
+            original_non_null = df[col].notna().sum()
+            converted_non_null = converted.notna().sum()
+
+            # Convert only if all non-null values are numeric
+            if (
+                original_non_null > 0
+                and converted_non_null == original_non_null
+            ):
+                df[col] = converted.astype(float)
+    
     return df

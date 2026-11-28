@@ -11,7 +11,10 @@ import os as _os
 from wxdata.observational_data.madis.exceptions import request_error as _request_error
 from wxdata.observational_data.madis.variables import url_variables as _url_variables
 from wxdata.observational_data.madis.qc_levels import qc_level as _qc_level
-from wxdata.observational_data.madis.dataframe import clean_data as _clean_data
+from wxdata.observational_data.madis.dataframe import(
+    clean_data as _clean_data,
+    convert_temperature as _convert_temperature
+)
 from bs4 import BeautifulSoup as _BeautifulSoup
 from io import StringIO as _StringIO
 
@@ -120,7 +123,9 @@ def madis_single_station_timeseries(station_id,
                                     to_csv=False,
                                     path='MADIS Data/Single Station Timeseries',
                                     filename='default',
-                                    return_pandas_df=True):
+                                    return_pandas_df=True,
+                                    convert_temperature=True,
+                                    convert_to='fahrenheit'):
     
     """
     This function downloads single station time series observations from the NOAA MADIS API and returns a Pandas.DataFrame of this data.
@@ -420,6 +425,12 @@ def madis_single_station_timeseries(station_id,
         The case where you may want to set `return_pandas_df=False` is when `to_csv=True` as you will be creating a 
         CSV file of the data.
         
+    10) convert_temperature (Boolean) - Default=True. When set to True, the temperature related fields will be converted from Kelvin to
+        either Celsius or Fahrenheit. When False, this data remains in Kelvin.
+        
+    11) convert_to (String) - Default='fahrenheit'. When set to 'fahrenheit' temperature related fields convert to Fahrenheit.
+        Set convert_to='celsius' for Celsius. 
+        
     **Returns**
     
     A Pandas.DataFrame of the cleaned up Single Station Time Series MADIS Data
@@ -438,7 +449,7 @@ def madis_single_station_timeseries(station_id,
                                 interval_units)
     
     qc_checks = _qc_level(qc_level)
-    variables = _url_variables(variables)
+    url_variables = _url_variables(variables)
     
     df_list = []
     
@@ -448,14 +459,14 @@ def madis_single_station_timeseries(station_id,
                                      f"rdr=&time={t.strftime('%Y%m%d_%H%M')}&minbck=0&minfwd=0&recwin=3&timefilter=0&dfltrsel=3&"
                                      f"state=CA&latll=0.0&lonll=0.0&latur=90.0&lonur=0.0&stanam={station_id}&stasel=1&"
                                      f"pvdrsel=0&varsel=1&qctype=0&qcsel={qc_checks}&xml=5&csvmiss=0&"
-                                     f"{variables}")
+                                     f"{url_variables}")
             
         else:
             response = _requests.get(f"https://madis-data.ncep.noaa.gov/madisPublic/cgi-bin/madisXmlPublicDir?"
                                      f"rdr=&time={t.strftime('%Y%m%d_%H%M')}&minbck=0&minfwd=0&recwin=3&timefilter=0&dfltrsel=3&"
                                      f"state=CA&latll=0.0&lonll=0.0&latur=90.0&lonur=0.0&stanam={station_id}&stasel=1&"
                                      f"pvdrsel=0&varsel=1&qctype=0&qcsel={qc_checks}&xml=5&csvmiss=0&"
-                                     f"{variables}",
+                                     f"{url_variables}",
                                     proxies=proxies)
             
         _request_error(response)
@@ -468,6 +479,12 @@ def madis_single_station_timeseries(station_id,
     df = _pd.concat(df_list)
     
     df = _clean_data(df)
+    
+    if convert_temperature == True:
+        df = _convert_temperature(df,
+                                  convert_to)
+    else:
+        pass
     
     if to_csv == True:
         _os.makedirs(path, exist_ok=True)

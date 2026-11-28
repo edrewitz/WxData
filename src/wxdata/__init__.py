@@ -308,6 +308,10 @@ from wxdata.observational_data.radar.nexrad2 import(
     download_current_multi_station_nexrad2_radar_data
 )
 
+# MADIS
+# - Single Station Time Series
+from wxdata.observational_data.madis.single_station_timeseries import madis_single_station_timeseries
+
 """
 *********************************************************************************
 

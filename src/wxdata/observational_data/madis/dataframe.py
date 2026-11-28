@@ -25,21 +25,29 @@ def convert_temperature(df,
     
     keyword_1 = "temperature"
     keyword_2 = "dew point"
-    params = list(df.columns)
-    for param in params:
-        if keyword_1 in param or keyword_2 in param:
-            if convert_to == 'celsius':
-                try:
-                    df[param] = df[param] - 273.15
-                except Exception as e:
-                    pass
+
+    for param in df.columns:
+
+        if keyword_1 in param.lower() or keyword_2 in param.lower():
+
+            if param.endswith(" qc flag"):
+                continue
+
+            df[param] = pd.to_numeric(
+                df[param],
+                errors="coerce"
+            )
+
+            if convert_to.lower() == "celsius":
+
+                df[param] = df[param] - 273.15
+
             else:
-                try:
-                    df[param] = df[param] - 273.15
-                    df[param] = (df[param] * (9/5)) + 32
-                except Exception as e:
-                    pass
-                
+
+                df[param] = (
+                    (df[param] - 273.15) * (9/5)
+                ) + 32
+
     return df
     
 def clean_data(df):
@@ -366,9 +374,43 @@ def clean_data(df):
 
     df = df[ordered_cols + extra_cols]
     
+    if (
+        "observation date" in df.columns
+        and "observation time" in df.columns
+    ):
+        df.insert(
+            1,
+            "datetime",
+            pd.to_datetime(
+                df["observation date"].astype(str)
+                + " "
+                + df["observation time"].astype(str),
+                errors="coerce"
+            )
+        )
+        
+        df = df.drop(columns=["observation date", "observation time"])
+        df["observation date"] = df["datetime"]
+        df = df.drop(columns=["datetime"])
+
+        cols = df.columns.tolist()
+
+        # Remove observation date from its current position
+        cols.remove("observation date")
+
+        # Insert it immediately after station id
+        station_idx = cols.index("station id")
+
+        cols.insert(
+            station_idx + 1,
+            "observation date"
+        )
+
+        # Apply the new ordering
+        df = df[cols]
+    
     for col in df.columns:
 
-        # Skip date/time columns
         if "date" in col.lower() or "time" in col.lower():
             continue
 
@@ -382,11 +424,10 @@ def clean_data(df):
             original_non_null = df[col].notna().sum()
             converted_non_null = converted.notna().sum()
 
-            # Convert only if all non-null values are numeric
             if (
                 original_non_null > 0
                 and converted_non_null == original_non_null
             ):
                 df[col] = converted.astype(float)
-    
+        
     return df

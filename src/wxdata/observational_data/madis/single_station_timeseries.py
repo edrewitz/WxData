@@ -7,6 +7,8 @@ import requests as _requests
 import sys as _sys
 import pandas as _pd
 import os as _os
+import warnings as _warnings
+_warnings.filterwarnings('ignore')
 
 from wxdata.observational_data.madis.exceptions import request_error as _request_error
 from wxdata.observational_data.madis.variables import url_variables as _url_variables
@@ -17,6 +19,7 @@ from wxdata.observational_data.madis.dataframe import(
 )
 from bs4 import BeautifulSoup as _BeautifulSoup
 from io import StringIO as _StringIO
+from time import sleep as _sleep
 
 try:
     from datetime import(
@@ -125,7 +128,8 @@ def madis_single_station_timeseries(station_id,
                                     filename='default',
                                     return_pandas_df=True,
                                     convert_temperature=True,
-                                    convert_to='fahrenheit'):
+                                    convert_to='fahrenheit',
+                                    notifications="on"):
     
     """
     This function downloads single station time series observations from the NOAA MADIS API and returns a Pandas.DataFrame of this data.
@@ -417,7 +421,7 @@ def madis_single_station_timeseries(station_id,
     
     8) filename (String) - Default='default'. When set to 'default' the filename convention is as follows:
     
-        `filename = {STATION_ID}_{START_TIME}_{END_TIME}.csv`
+        `filename = {STATION_ID}-{START_TIME}-{END_TIME}.csv`
         
         Change 'default' to 'custom_file_name.csv' for manual file naming. 
         
@@ -430,6 +434,8 @@ def madis_single_station_timeseries(station_id,
         
     11) convert_to (String) - Default='fahrenheit'. When set to 'fahrenheit' temperature related fields convert to Fahrenheit.
         Set convert_to='celsius' for Celsius. 
+        
+    12) notifications (String) - Default='on'. Notification when a file is downloaded and saved to {path}
         
     **Returns**
     
@@ -461,6 +467,20 @@ def madis_single_station_timeseries(station_id,
                                      f"pvdrsel=0&varsel=1&qctype=0&qcsel={qc_checks}&xml=5&csvmiss=0&"
                                      f"{url_variables}")
             
+            if response.status_code != 200:
+                for i in range(0, 10, 1):
+                    _sleep(60)
+                    response = _requests.get(f"https://madis-data.ncep.noaa.gov/madisPublic/cgi-bin/madisXmlPublicDir?"
+                                            f"rdr=&time={t.strftime('%Y%m%d_%H%M')}&minbck=0&minfwd=0&recwin=3&timefilter=0&dfltrsel=3&"
+                                            f"state=CA&latll=0.0&lonll=0.0&latur=90.0&lonur=0.0&stanam={station_id}&stasel=1&"
+                                            f"pvdrsel=0&varsel=1&qctype=0&qcsel={qc_checks}&xml=5&csvmiss=0&"
+                                            f"{url_variables}")
+                    if response.status_code == 200:
+                        break
+                    else:
+                        i = i
+                        if i >= 9:
+                            _request_error(response)
         else:
             response = _requests.get(f"https://madis-data.ncep.noaa.gov/madisPublic/cgi-bin/madisXmlPublicDir?"
                                      f"rdr=&time={t.strftime('%Y%m%d_%H%M')}&minbck=0&minfwd=0&recwin=3&timefilter=0&dfltrsel=3&"
@@ -469,8 +489,22 @@ def madis_single_station_timeseries(station_id,
                                      f"{url_variables}",
                                     proxies=proxies)
             
-        _request_error(response)
-        
+            if response.status_code != 200:
+                for i in range(0, 10, 1):
+                    _sleep(60)
+                    response = _requests.get(f"https://madis-data.ncep.noaa.gov/madisPublic/cgi-bin/madisXmlPublicDir?"
+                                            f"rdr=&time={t.strftime('%Y%m%d_%H%M')}&minbck=0&minfwd=0&recwin=3&timefilter=0&dfltrsel=3&"
+                                            f"state=CA&latll=0.0&lonll=0.0&latur=90.0&lonur=0.0&stanam={station_id}&stasel=1&"
+                                            f"pvdrsel=0&varsel=1&qctype=0&qcsel={qc_checks}&xml=5&csvmiss=0&"
+                                            f"{url_variables}",
+                                            proxies=proxies)
+                    if response.status_code == 200:
+                        break
+                    else:
+                        i = i
+                        if i >= 9:
+                            _request_error(response)
+                
         soup = _BeautifulSoup(response.content, "html.parser")
         data = _StringIO(soup.find_all('pre')[0].contents[0])
         df = _pd.read_csv(data)
@@ -490,11 +524,24 @@ def madis_single_station_timeseries(station_id,
         _os.makedirs(path, exist_ok=True)
         
         if filename == 'default':
-            filename = f"{station_id}_{start_time.strftime('%Y%m%d%H%M')}_{end_time.strftime('%Y%m%d%H%M')}.csv"
+            if type(start_time) == type(now) and type(end_time) == type(now):
+                filename = f"{station_id}-{start_time.strftime('%Y-%m-%d-%H%M')}-{end_time.strftime('%Y-%m-%d-%H%M')}.csv"
+            else:
+                start_time = start_time.replace(' ', '-')
+                start_time = start_time.replace(':', '')
+                
+                end_time = end_time.replace(' ', '-')
+                end_time = end_time.replace(':', '')
+                
+                filename = f"{station_id}-{start_time}-{end_time}.csv"
         else:
             filename = filename
             
-        df.to_csv(f"{path}/{filename}")
+        df.to_csv(f"{path}/{filename}", index=False)
+        if notifications == "on":
+            print(f"{filename} saved to {path}")
+        else:
+            pass
     else:
         pass
     

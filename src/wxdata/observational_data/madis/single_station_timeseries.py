@@ -478,6 +478,8 @@ def madis_single_station_timeseries(station_id,
             filename = filename
             
         df.to_csv(f"{path}/{filename}")
+    else:
+        pass
     
     if return_pandas_df == True:
         return df
